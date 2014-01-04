@@ -1,9 +1,9 @@
 #pragma region include and define
 
-#include "stdafx.h"
-#include "SelectedTextTranslate.h"
-#include "Translator.h"
-#include "ScrollbarManager.h"
+#include "Include\stdafx.h"
+#include "Include\SelectedTextTranslate.h"
+#include "Include\Translator.h"
+#include "Include\ScrollbarManager.h"
 
 #ifdef UNICODE
 	#define stringcopy wcscpy
@@ -60,17 +60,17 @@ void InitNotifyIconData()
 	g_notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE |  NIF_TIP;  
 	g_notifyIconData.uCallbackMessage = WM_TRAYICON; 
 	g_notifyIconData.hIcon = LoadIcon(g_hinst, MAKEINTRESOURCE(IDI_SELECTEDTEXTTRANSLATE));
-	stringcopy(g_notifyIconData.szTip, TEXT("Selected text translate.."));
+	wcscpy_s(g_notifyIconData.szTip, TEXT("Selected text translate.."));
 }
 
 void ShowTranslateWindow()
 {
 	translateResult = Translator::GetTranslationResults();
 
-	int horizontalChars = 0;
-	int verticalChars = 4; // 2 chars for header
-	for(int i = 0; i < translateResult.Categories.size(); ++i) {
-		for(int j = 0; j <translateResult.Categories[i].Words.size(); ++j)
+	unsigned int horizontalChars = 0;
+	unsigned int verticalChars = 4; // 2 chars for header
+	for(size_t i = 0; i < translateResult.Categories.size(); ++i) {
+		for (size_t j = 0; j <translateResult.Categories[i].Words.size(); ++j)
 			horizontalChars = max(horizontalChars,translateResult.Categories[i].Words[j].Word.length());
 		verticalChars += translateResult.Categories[i].Words.size() + 1;
 	}
@@ -261,6 +261,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			return DefWindowProc(hwnd, message, wParam, lParam);
 	}
+	return 0;
 }
 
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -305,15 +306,15 @@ void DrawWindow()
 	
 	RECT rect;
 
-	int scrollX = ScrollbarManager().xPos * ScrollbarManager().xChar * -1;
-	int scrollY = ScrollbarManager().yPos * ScrollbarManager().yChar * -1;
+	int scrollX = int(ScrollbarManager().xPos * ScrollbarManager().xChar * -1);
+	int scrollY = int(ScrollbarManager().yPos * ScrollbarManager().yChar * -1);
 	
 	const int padding = 15, lineHeight = 20;
 	const int categoryMargin = 10;
 	int curY = padding/2;
 
     long lfHeight = -MulDiv(lineHeight/2, GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	long lfHeightHeader = -MulDiv(lineHeight*3/5.0, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	long lfHeightHeader = -MulDiv(int(lineHeight*3/5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
     HFONT fontNormal = CreateFont(lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 	HFONT fontHeader = CreateFont(lfHeightHeader, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 	HFONT fontItalic = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
@@ -324,7 +325,7 @@ void DrawWindow()
 
 	rect.right = 0;
 	rect.left = WINDOW_WIDTH;
-	rect.top = curY + 5/4.0*lineHeight + scrollY;
+	rect.top = curY + int(5/4.0*lineHeight) + scrollY;
 	rect.bottom = rect.top + 1;						
 	FillRect(hdc,&rect,ratingBrush);
 
@@ -337,7 +338,7 @@ void DrawWindow()
 		PrintText(hdc,translateResult.Word, fontNormal,padding + scrollX,curY + scrollY);
 		curY += lineHeight;
 	}
-	for(int i = 0; i < categories.size(); ++i)
+	for(size_t i = 0; i < categories.size(); ++i)
 	{
 		// Draw category header
 		SIZE textSize;
@@ -353,7 +354,7 @@ void DrawWindow()
 		curY += lineHeight;
 		SetTextColor(hdc,RGB(0, 0, 0));	
 		auto words = categories[i].Words;
-		for(int j = 0; j < words.size(); ++j)
+		for (size_t j = 0; j < words.size(); ++j)
 		{
 			PrintText(hdc, words[j].Word, fontNormal,padding * 3 + scrollX ,curY + scrollY);
 

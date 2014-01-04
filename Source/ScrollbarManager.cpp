@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ScrollbarManager.h"
+#include "Include\stdafx.h"
+#include "Include\ScrollbarManager.h"
 
 int ScrollbarManager::xPos;        
 int ScrollbarManager::yPos;
@@ -76,7 +76,7 @@ void ScrollbarManager::OnHorizontalScroll(HWND hwnd,  WPARAM wParam, LPARAM lPar
          
 	if (si.nPos != xPos)
 	{
-		ScrollWindow(hwnd, xChar * (xPos - si.nPos), 0, NULL, NULL);
+		ScrollWindow(hwnd, int(xChar * (xPos - si.nPos)), 0, NULL, NULL);
 	}
 }
 
@@ -128,6 +128,6 @@ void ScrollbarManager::OnVerticalScroll(HWND hwnd,  WPARAM wParam, LPARAM lParam
 
     if (si.nPos != yPos)
     {                    
-        ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos), NULL, NULL);
+        ScrollWindow(hwnd, 0, int(yChar * (yPos - si.nPos)), NULL, NULL);
     }
 }

@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "Translator.h"
+#include "Include\stdafx.h"
+#include "Include\Translator.h"
 
 TranslateResult Translator::GetTranslationResults()
 {
@@ -90,9 +90,9 @@ string Translator::GetTraslatorJSONResponse(string text)
             if((CURLE_OK == res) && ct)
                 return downloadedResponse;
         }
-		curl_easy_cleanup(curl);
-		
+		curl_easy_cleanup(curl);		
     }
+	return "";
 }
 
 int Translator::Writer(void *data, size_t size, size_t nmemb, std::string *buffer_in)
@@ -122,12 +122,12 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	}
 
 	Json::Value dict = root.get("dict","[]");
-	for(int i = 0; i < dict.size(); ++i)
+	for(size_t i = 0; i < dict.size(); ++i)
 	{
 		TranslateResultCategory category;
 		category.CategoryName = dict[i].get("pos","").asString();
 		Json::Value entries = dict[i].get("entry","[]");
-		for(int j = 0; j < entries.size(); ++j)
+		for (size_t j = 0; j < entries.size(); ++j)
 		{
 			TranslateResultWord word;
 			word.Word = entries[j].get("word","").asString();

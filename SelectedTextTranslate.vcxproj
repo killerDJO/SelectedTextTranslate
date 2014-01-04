@@ -18,23 +18,20 @@
     <ResourceCompile Include="Resources\SelectedTextTranslate.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Resource.h" />
-    <ClInclude Include="Source\ScrollbarManager.h" />
-    <ClInclude Include="Source\SelectedTextTranslate.h" />
-    <ClInclude Include="Source\stdafx.h" />
-    <ClInclude Include="Source\targetver.h" />
-    <ClInclude Include="Source\Translator.h" />
-    <ClInclude Include="src\Resource.h" />
-    <ClInclude Include="src\ScrollbarManager.h" />
-    <ClInclude Include="src\SelectedTextTranslate.h" />
-    <ClInclude Include="src\stdafx.h" />
-    <ClInclude Include="src\targetver.h" />
-    <ClInclude Include="src\Translator.h" />
+    <ClInclude Include="Source\Include\Resource.h" />
+    <ClInclude Include="Source\Include\ScrollbarManager.h" />
+    <ClInclude Include="Source\Include\SelectedTextTranslate.h" />
+    <ClInclude Include="Source\Include\stdafx.h" />
+    <ClInclude Include="Source\Include\targetver.h" />
+    <ClInclude Include="Source\Include\Translator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ScrollbarManager.cpp" />
     <ClCompile Include="Source\SelectedTextTranslate.cpp" />
-    <ClCompile Include="Source\stdafx.cpp" />
+    <ClCompile Include="Source\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Translator.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -68,24 +65,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
-    <IncludePath>.\Source;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\jsoncpp\build\vs71\debug\lib_json;.\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\Source\Include;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Евгений\Dropbox\Projects\jsoncpp-src-0.5.0\include;C:\Users\Евгений\Dropbox\Projects\libcurl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Евгений\Dropbox\Projects\jsoncpp-src-0.5.0\build\vs71\debug\lib_json;C:\Users\Евгений\Dropbox\Projects\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\Source\Include;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Include\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -93,7 +90,7 @@
       <AdditionalDependencies>%(AdditionalDependencies);curllib.lib;lib_json.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir)</Command>
+      <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>
       <Message>Copy DLLs to output directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -105,14 +102,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>Include\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>curllib.lib;json_vc71_libmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>curllib.lib;lib_json.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
