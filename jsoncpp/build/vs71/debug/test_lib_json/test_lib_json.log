@@ -1,0 +1,69 @@
+﻿Build started 1/4/2014 4:22:53 PM.
+     1>Project "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp-src-0.5.0\makefiles\vs71\test_lib_json.vcxproj" on node 3 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../../include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"../../build/vs71/debug/test_lib_json\\" /Fd"../../build/vs71/debug/test_lib_json\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\test_lib_json\jsontest.cpp ..\..\src\test_lib_json\main.cpp
+         main.cpp
+         jsontest.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"../../build/vs71/debug/test_lib_json\test_lib_json.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"../../build/vs71/debug/test_lib_json\test_lib_json.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../../build/vs71/debug/test_lib_json\test_lib_json.lib" /MACHINE:X86 /SAFESEH ../../build/vs71/debug/test_lib_json\jsontest.obj
+         ../../build/vs71/debug/test_lib_json\main.obj
+         "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp-src-0.5.0\build\vs71\debug\lib_json\json_vc71_libmtd.lib"
+     1>jsontest.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+     1>json_vc71_libmtd.lib(json_value.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MDd_DynamicDebug' doesn't match value 'MTd_StaticDebug' in jsontest.obj
+     1>json_vc71_libmtd.lib(json_writer.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MDd_DynamicDebug' doesn't match value 'MTd_StaticDebug' in jsontest.obj
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __thiscall std::_Lockit::_Lockit(int)" (??0_Lockit@std@@QAE@H@Z) already defined in libcpmtd.lib(xlock.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __thiscall std::_Lockit::~_Lockit(void)" (??1_Lockit@std@@QAE@XZ) already defined in libcpmtd.lib(xlock.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "void __cdecl std::_Debug_message(wchar_t const *,wchar_t const *,unsigned int)" (?_Debug_message@std@@YAXPB_W0I@Z) already defined in libcpmtd.lib(stdthrow.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __thiscall std::_Container_base12::_Container_base12(void)" (??0_Container_base12@std@@QAE@XZ) already defined in jsontest.obj
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __thiscall std::_Container_base12::~_Container_base12(void)" (??1_Container_base12@std@@QAE@XZ) already defined in jsontest.obj
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: struct std::_Iterator_base12 * * __thiscall std::_Container_base12::_Getpfirst(void)const " (?_Getpfirst@_Container_base12@std@@QBEPAPAU_Iterator_base12@2@XZ) already defined in jsontest.obj
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: void __thiscall std::_Container_base12::_Orphan_all(void)" (?_Orphan_all@_Container_base12@std@@QAEXXZ) already defined in jsontest.obj
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "void __cdecl std::_Xbad_alloc(void)" (?_Xbad_alloc@std@@YAXXZ) already defined in libcpmtd.lib(xthrow.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "void __cdecl std::_Xlength_error(char const *)" (?_Xlength_error@std@@YAXPBD@Z) already defined in libcpmtd.lib(xthrow.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "void __cdecl std::_Xout_of_range(char const *)" (?_Xout_of_range@std@@YAXPBD@Z) already defined in libcpmtd.lib(xthrow.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __thiscall std::locale::id::id(unsigned int)" (??0id@locale@std@@QAE@I@Z) already defined in jsontest.obj
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "char const * __cdecl std::_Syserror_map(int)" (?_Syserror_map@std@@YAPBDH@Z) already defined in libcpmtd.lib(syserror.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "char const * __cdecl std::_Winerror_map(int)" (?_Winerror_map@std@@YAPBDH@Z) already defined in libcpmtd.lib(syserror.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: int __thiscall std::ios_base::flags(void)const " (?flags@ios_base@std@@QBEHXZ) already defined in libcpmtd.lib(locale.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __int64 __thiscall std::ios_base::width(void)const " (?width@ios_base@std@@QBE_JXZ) already defined in libcpmtd.lib(locale.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __int64 __thiscall std::ios_base::width(__int64)" (?width@ios_base@std@@QAE_J_J@Z) already defined in libcpmtd.lib(locale.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::basic_streambuf<char,struct std::char_traits<char> >(void)" (??0?$basic_streambuf@DU?$char_traits@D@std@@@std@@IAE@XZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: virtual __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::~basic_streambuf<char,struct std::char_traits<char> >(void)" (??1?$basic_streambuf@DU?$char_traits@D@std@@@std@@UAE@XZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: int __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::sputc(char)" (?sputc@?$basic_streambuf@DU?$char_traits@D@std@@@std@@QAEHD@Z) already defined in libcpmtd.lib(locale.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: char * __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::eback(void)const " (?eback@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: char * __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::gptr(void)const " (?gptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: char * __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::pptr(void)const " (?pptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: char * __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::egptr(void)const " (?egptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: void __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::gbump(int)" (?gbump@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IAEXH@Z) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: void __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::setg(char *,char *,char *)" (?setg@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IAEXPAD00@Z) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: char * __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::epptr(void)const " (?epptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: void __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::pbump(int)" (?pbump@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IAEXH@Z) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: void __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::setp(char *,char *)" (?setp@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IAEXPAD0@Z) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: char * __thiscall std::basic_streambuf<char,struct std::char_traits<char> >::_Pninc(void)" (?_Pninc@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IAEPADXZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: virtual __thiscall std::basic_ios<char,struct std::char_traits<char> >::~basic_ios<char,struct std::char_traits<char> >(void)" (??1?$basic_ios@DU?$char_traits@D@std@@@std@@UAE@XZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: void __thiscall std::basic_ios<char,struct std::char_traits<char> >::setstate(int,bool)" (?setstate@?$basic_ios@DU?$char_traits@D@std@@@std@@QAEXH_N@Z) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "protected: __thiscall std::basic_ios<char,struct std::char_traits<char> >::basic_ios<char,struct std::char_traits<char> >(void)" (??0?$basic_ios@DU?$char_traits@D@std@@@std@@IAE@XZ) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: __thiscall std::basic_ostream<char,struct std::char_traits<char> >::basic_ostream<char,struct std::char_traits<char> >(class std::basic_streambuf<char,struct std::char_traits<char> > *,bool)" (??0?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@PAV?$basic_streambuf@DU?$char_traits@D@std@@@1@_N@Z) already defined in libcpmtd.lib(cout.obj)
+     1>msvcprtd.lib(MSVCP120D.dll) : error LNK2005: "public: virtual __thiscall std::basic_ostream<char,struct std::char_traits<char> >::~basic_ostream<char,struct std::char_traits<char> >(void)" (??1?$basic_ostream@DU?$char_traits@D@std@@@std@@UAE@XZ) already defined in libcpmtd.lib(cout.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: __invalid_parameter already defined in LIBCMTD.lib(invarg.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: __hypot already defined in LIBCMTD.lib(hypot.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: _free already defined in LIBCMTD.lib(dbgfree.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: _malloc already defined in LIBCMTD.lib(dbgmalloc.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: _memmove already defined in LIBCMTD.lib(memmove.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: _strchr already defined in LIBCMTD.lib(strchr.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: "public: __thiscall std::exception::exception(char const * const &)" (??0exception@std@@QAE@ABQBD@Z) already defined in LIBCMTD.lib(stdexcpt.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: "public: __thiscall std::exception::exception(class std::exception const &)" (??0exception@std@@QAE@ABV01@@Z) already defined in LIBCMTD.lib(stdexcpt.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: "public: virtual __thiscall std::exception::~exception(void)" (??1exception@std@@UAE@XZ) already defined in LIBCMTD.lib(stdexcpt.obj)
+     1>MSVCRT.lib(MSVCR120.dll) : error LNK2005: _sprintf_s already defined in LIBCMTD.lib(sprintf.obj)
+     1>MSVCRT.lib(ti_inst.obj) : error LNK2005: "private: __thiscall type_info::type_info(class type_info const &)" (??0type_info@@AAE@ABV0@@Z) already defined in LIBCMTD.lib(typinfo.obj)
+     1>MSVCRT.lib(ti_inst.obj) : error LNK2005: "private: class type_info & __thiscall type_info::operator=(class type_info const &)" (??4type_info@@AAEAAV0@ABV0@@Z) already defined in LIBCMTD.lib(typinfo.obj)
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+     1>json_vc71_libmtd.lib(json_value.obj) : warning LNK4217: locally defined symbol __CrtDbgReportW imported in function "public: bool __thiscall std::_Tree_const_iterator<class std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<class Json::Value::CZString const ,class Json::Value> > > >::operator==(class std::_Tree_const_iterator<class std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<class Json::Value::CZString const ,class Json::Value> > > > const &)const " (??8?$_Tree_const_iterator@V?$_Tree_val@U?$_Tree_simple_types@U?$pair@$$CBVCZString@Value@Json@@V23@@std@@@std@@@std@@@std@@QBE_NABV01@@Z)
+     1>json_vc71_libmtd.lib(json_writer.obj) : warning LNK4049: locally defined symbol __CrtDbgReportW imported
+     1>../../build/vs71/debug/test_lib_json\test_lib_json.exe : fatal error LNK1169: one or more multiply defined symbols found
+     1>Done Building Project "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp-src-0.5.0\makefiles\vs71\test_lib_json.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:06.01

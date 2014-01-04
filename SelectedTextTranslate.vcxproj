@@ -10,6 +10,33 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\SelectedTextTranslate.ico" />
+    <Image Include="Resources\small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\SelectedTextTranslate.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\ScrollbarManager.h" />
+    <ClInclude Include="Source\SelectedTextTranslate.h" />
+    <ClInclude Include="Source\stdafx.h" />
+    <ClInclude Include="Source\targetver.h" />
+    <ClInclude Include="Source\Translator.h" />
+    <ClInclude Include="src\Resource.h" />
+    <ClInclude Include="src\ScrollbarManager.h" />
+    <ClInclude Include="src\SelectedTextTranslate.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\Translator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\ScrollbarManager.cpp" />
+    <ClCompile Include="Source\SelectedTextTranslate.cpp" />
+    <ClCompile Include="Source\stdafx.cpp" />
+    <ClCompile Include="Source\Translator.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -41,8 +68,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Users\Евгений\Dropbox\Projects\jsoncpp-src-0.5.0\build\vs71\debug\jsontest;C:\Users\Евгений\Dropbox\Projects\jsoncpp-src-0.5.0\build\vs71\debug\lib_json;C:\Users\Евгений\Dropbox\Projects\libcurl\lib\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\Евгений\Dropbox\Projects\jsoncpp-src-0.5.0\include;C:\Users\Евгений\Dropbox\Projects\libcurl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\Source;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -51,16 +81,21 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>curllib.lib;json_vc71_libmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);curllib.lib;lib_json.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir)</Command>
+      <Message>Copy DLLs to output directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -79,33 +114,6 @@
       <AdditionalDependencies>curllib.lib;json_vc71_libmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="ScrollbarManager.h" />
-    <ClInclude Include="SelectedTextTranslate.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Translator.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ScrollbarManager.cpp" />
-    <ClCompile Include="SelectedTextTranslate.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Translator.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SelectedTextTranslate.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="SelectedTextTranslate.ico" />
-    <Image Include="small.ico" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
