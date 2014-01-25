@@ -19,11 +19,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 	{
 		return -1;
     }
-	
-	g_mainWindow = new MainWindow(hInstance, WndProc);
-	
 	WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
 
+	g_mainWindow = new MainWindow(hInstance, WndProc);
+	
 	RegisterHotKey(g_mainWindow->GetHandle(), ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
 	
 	MSG msg;

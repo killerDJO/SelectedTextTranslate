@@ -29,8 +29,8 @@ private:
 
 	TranslateResult translateResult;
 
-	int scrollOffsetX;
-	int scrollOffsetY;
+	int scrollOffsetX = 0;
+	int scrollOffsetY = 0;
 
 	void InitNotifyIconData();
 	void InitializeScrollbars(UINT horizontalChars, UINT verticalChars);

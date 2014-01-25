@@ -38,12 +38,8 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 		hInstance,
 		NULL);
 
-	if (!IsWindowVisible(this->hWindow))
-	{
-		Shell_NotifyIcon(NIM_DELETE, &this->notifyIconData);
-	}
-
 	this->InitNotifyIconData();
+	Minimize();
 }
 
 HWND MainWindow::GetHandle()
