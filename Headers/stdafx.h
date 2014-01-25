@@ -1,9 +1,9 @@
 #pragma once
 
-#include "targetver.h"
-
 #define WIN32_LEAN_AND_MEAN 
 #define _SCL_SECURE_NO_WARNINGS
+
+#include <SDKDDKVer.h>
 
 #include <windows.h>
 #include <shellapi.h>
@@ -22,5 +22,7 @@
 
 #include "curl\curl.h"
 #include "json\json.h"
+
+#include "resource.h"
 
 using namespace std;

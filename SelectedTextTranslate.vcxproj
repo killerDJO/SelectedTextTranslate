@@ -18,21 +18,27 @@
     <ResourceCompile Include="Resources\SelectedTextTranslate.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Include\Resource.h" />
-    <ClInclude Include="Source\Include\ScrollbarManager.h" />
-    <ClInclude Include="Source\Include\SelectedTextTranslate.h" />
-    <ClInclude Include="Source\Include\stdafx.h" />
-    <ClInclude Include="Source\Include\targetver.h" />
-    <ClInclude Include="Source\Include\Translator.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\ScrollbarManager.cpp" />
-    <ClCompile Include="Source\SelectedTextTranslate.cpp" />
+    <ClCompile Include="Source\MainWindow.cpp" />
+    <ClCompile Include="Source\RequestHelper.cpp" />
+    <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\TextExtractor.cpp" />
     <ClCompile Include="Source\Translator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Headers\MainWindow.h" />
+    <ClInclude Include="Headers\RequestHelper.h" />
+    <ClInclude Include="Headers\Resource.h" />
+    <ClInclude Include="Headers\stdafx.h" />
+    <ClInclude Include="Headers\TextExtractor.h" />
+    <ClInclude Include="Headers\TranslateResult.h" />
+    <ClInclude Include="Headers\TranslateResultDictionary.h" />
+    <ClInclude Include="Headers\TranslateResultDictionaryEntry.h" />
+    <ClInclude Include="Headers\TranslateResultSentence.h" />
+    <ClInclude Include="Headers\Translator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}</ProjectGuid>
@@ -66,14 +72,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>.\jsoncpp\build\vs71\debug\lib_json;.\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
-    <IncludePath>.\Source\Include;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\Source\Include;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
     <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -82,7 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>Include\stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,7 +108,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>Include\stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,6 +121,9 @@
     <PostBuildEvent>
       <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>
     </PostBuildEvent>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
