@@ -11,11 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\Audio.bmp" />
     <Image Include="Resources\SelectedTextTranslate.ico" />
-    <Image Include="Resources\small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resources\SelectedTextTranslate.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\MainWindow.cpp" />
@@ -26,19 +23,24 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\TextExtractor.cpp" />
+    <ClCompile Include="Source\TextPlayer.cpp" />
     <ClCompile Include="Source\Translator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\MainWindow.h" />
     <ClInclude Include="Headers\RequestHelper.h" />
-    <ClInclude Include="Headers\Resource.h" />
     <ClInclude Include="Headers\stdafx.h" />
     <ClInclude Include="Headers\TextExtractor.h" />
+    <ClInclude Include="Headers\TextPlayer.h" />
     <ClInclude Include="Headers\TranslateResult.h" />
     <ClInclude Include="Headers\TranslateResultDictionary.h" />
     <ClInclude Include="Headers\TranslateResultDictionaryEntry.h" />
     <ClInclude Include="Headers\TranslateResultSentence.h" />
     <ClInclude Include="Headers\Translator.h" />
+    <ClInclude Include="Resources\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\SelectedTextTranslate.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}</ProjectGuid>
@@ -93,7 +95,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);curllib.lib;lib_json.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);curllib.lib;lib_json.lib;Winmm.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>

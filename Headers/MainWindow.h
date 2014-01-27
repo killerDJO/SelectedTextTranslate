@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "TranslateResult.h"
+#include "TextPlayer.h"
 
 #ifdef UNICODE
 	#define stringcopy wcscpy
@@ -25,14 +26,18 @@ private:
 
 	NOTIFYICONDATA	notifyIconData;
 	HWND			hWindow;
+	HWND			hAudioButton;
 	HINSTANCE		hInstance;
 
 	TranslateResult translateResult;
+
+	HFONT fontNormal, fontHeader, fontItalic;
 
 	int scrollOffsetX = 0;
 	int scrollOffsetY = 0;
 
 	void InitNotifyIconData();
+	void InitAudioButton();
 	void InitializeScrollbars(UINT horizontalChars, UINT verticalChars);
 	void WriteToBuffer(TCHAR* dest, string src);
 	void PrintText(HDC hdc, string text, HFONT font, int x, int y);
@@ -44,9 +49,14 @@ public:
 	HWND GetHandle();
 
 	void Minimize();
+	void Maximize();
+
 	void SetTranslateResult(TranslateResult translateResult);
+	void PlayText();
+	
 	void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);
 	void ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam);
 	UINT ProcessSizing(WPARAM wParam, LPARAM lParam);
+	
 	void DrawWindow();
 };

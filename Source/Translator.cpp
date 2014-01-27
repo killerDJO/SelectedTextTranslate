@@ -58,3 +58,4 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	}
 	return result;
 }
+

@@ -13,7 +13,7 @@ HMENU g_menu;
 MainWindow* g_mainWindow;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
-{
+{ 
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 	{
@@ -42,6 +42,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 void ShowTranslateWindow()
 {
 	TranslateResult translateResult = Translator::TranslateSelectedText();
+	InvalidateRect(g_mainWindow->GetHandle(), NULL, TRUE);
 	g_mainWindow->SetTranslateResult(translateResult);
 }
 
@@ -74,6 +75,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			g_mainWindow->ProcessVerticalScroll(wParam, lParam);
 			InvalidateRect(g_mainWindow->GetHandle(), NULL, TRUE);
 			break;
+
 		case WM_MOUSEWHEEL:
 			zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
 			if(zDelta < 0)
@@ -126,7 +128,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_KILLFOCUS:
-			g_mainWindow->Minimize();
+			if (GetParent((HWND)wParam) != g_mainWindow->GetHandle())
+			{
+				g_mainWindow->Minimize();
+			}			
 			break;
 
 		case WM_PAINT:
@@ -136,8 +141,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_DESTROY:
 		case WM_CLOSE:
 			PostQuitMessage(0);
-			break;					
+			break;	
 
+		case WM_COMMAND:
+			if (LOWORD(wParam) == BN_CLICKED)
+			{
+				g_mainWindow->PlayText();
+				g_mainWindow->Maximize();
+			}
+			return TRUE;
+	
 		default:
 			return DefWindowProc(hwnd, message, wParam, lParam);
 	}

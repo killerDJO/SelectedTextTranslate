@@ -6,6 +6,7 @@
 #include <SDKDDKVer.h>
 
 #include <windows.h>
+#include <mmsystem.h>
 #include <shellapi.h>
 
 #include <stdlib.h>
@@ -23,6 +24,6 @@
 #include "curl\curl.h"
 #include "json\json.h"
 
-#include "resource.h"
+#include "..\Resources\resource.h"
 
 using namespace std;

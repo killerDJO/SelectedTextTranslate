@@ -45,23 +45,21 @@
     <ClCompile Include="Source\TextExtractor.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Translator.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resources\SelectedTextTranslate.rc">
-      <Filter>Resources</Filter>
-    </ResourceCompile>
+    <ClCompile Include="Source\Translator.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextPlayer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="Resources\small.ico">
+    <Image Include="Resources\Audio.bmp">
       <Filter>Resources</Filter>
     </Image>
   </ItemGroup>
@@ -78,12 +76,6 @@
     <ClInclude Include="Headers\TextExtractor.h">
       <Filter>Headers\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Translator.h">
-      <Filter>Headers\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Resource.h">
-      <Filter>Headers\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\TranslateResult.h">
       <Filter>Headers\Entities</Filter>
     </ClInclude>
@@ -96,5 +88,19 @@
     <ClInclude Include="Headers\TranslateResultSentence.h">
       <Filter>Headers\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Translator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TextPlayer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\resource.h">
+      <Filter>Headers\Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\SelectedTextTranslate.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -7,15 +7,11 @@ string RequestHelper::GetResponse(string url)
 	CURLcode res;
 	curl = curl_easy_init();
 
-	struct curl_slist *headers = NULL;
-	curl_slist_append(headers, "Accept-Charset: utf-8");
-	curl_slist_append(headers, "Content-Type: application/json; charset=UTF-8");
 	string downloadedResponse;
 
 	if (curl)
 	{
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Writer);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &downloadedResponse);

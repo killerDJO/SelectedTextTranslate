@@ -13,10 +13,10 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 	wnd.lpfnWndProc = wndProc;
 	wnd.cbSize = sizeof (WNDCLASSEX);
 	wnd.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SELECTEDTEXTTRANSLATE));
-	wnd.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wnd.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SELECTEDTEXTTRANSLATE));
 	wnd.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wnd.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
-
+	
 	if (!RegisterClassEx(&wnd))
 	{
 		FatalAppExit(0, TEXT("Couldn't register window class!"));
@@ -39,6 +39,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 		NULL);
 
 	this->InitNotifyIconData();
+	this->InitAudioButton();
 	Minimize();
 }
 
@@ -61,32 +62,61 @@ void MainWindow::InitNotifyIconData()
 	wcscpy_s(this->notifyIconData.szTip, TEXT("Selected text translate.."));
 }
 
+void MainWindow::InitAudioButton()
+{
+	this->hAudioButton = CreateWindowA(
+		"button",
+		"play",
+		WS_CHILD | WS_VISIBLE | BS_BITMAP | BS_FLAT,
+		10,
+		7,
+		20,
+		20,
+		this->hWindow,
+		NULL,
+		this->hInstance,
+		NULL);
+	
+	HBITMAP hBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO));
+	SendMessage(this->hAudioButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+}
+
 void MainWindow::Minimize()
 {
 	Shell_NotifyIcon(NIM_ADD, &this->notifyIconData);
 	ShowWindow(this->hWindow, SW_HIDE);
 }
-
-void MainWindow::SetTranslateResult(TranslateResult translateResult)
+void MainWindow::Maximize()
 {
-	this->translateResult = translateResult;
-
 	UINT horizontalChars = 0;
 	UINT verticalChars = 4;
 
-	for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i) {
-		for (size_t j = 0; j <translateResult.TranslateCategories[i].Entries.size(); ++j)
-			horizontalChars = max(horizontalChars, translateResult.TranslateCategories[i].Entries[j].Word.length());
-		verticalChars += translateResult.TranslateCategories[i].Entries.size() + 1;
+	for (size_t i = 0; i < this->translateResult.TranslateCategories.size(); ++i) {
+		for (size_t j = 0; j <this->translateResult.TranslateCategories[i].Entries.size(); ++j)
+			horizontalChars = max(horizontalChars, this->translateResult.TranslateCategories[i].Entries[j].Word.length());
+		verticalChars += this->translateResult.TranslateCategories[i].Entries.size() + 1;
 	}
 
 	horizontalChars += 4;
-	horizontalChars = max(horizontalChars, translateResult.Sentence.Origin.length() + 3);
-	horizontalChars = max(horizontalChars, translateResult.Sentence.Translation.length() + 3);
+	horizontalChars = max(horizontalChars, this->translateResult.Sentence.Origin.length() + 3);
+	horizontalChars = max(horizontalChars, this->translateResult.Sentence.Translation.length() + 3);
 
 	this->InitializeScrollbars(horizontalChars, verticalChars);
 	ShowWindow(this->hWindow, SW_SHOW);
 	SwitchToThisWindow(this->hWindow, TRUE);
+}
+
+void MainWindow::SetTranslateResult(TranslateResult translateResult)
+{
+	this->translateResult = translateResult;
+	this->Maximize();
+}
+
+void MainWindow::PlayText()
+{
+	SendMessage(this->hAudioButton, WM_KILLFOCUS, NULL, NULL);
+	TextPlayer::PlayText(this->translateResult.Sentence.Origin);
+	SendMessage(this->hAudioButton, WM_KILLFOCUS, NULL, NULL);
 }
 
 void MainWindow::InitializeScrollbars(UINT horizontalChars, UINT verticalChars)
@@ -116,7 +146,7 @@ void MainWindow::ProcessVerticalScroll(WPARAM wParam, LPARAM lParam)
 	si.fMask = SIF_ALL;
 	GetScrollInfo(this->hWindow, SB_VERT, &si);
 
-	this->scrollOffsetY = si.nPos;
+	
 	switch (LOWORD(wParam))
 	{
 		case SB_TOP:
@@ -157,8 +187,17 @@ void MainWindow::ProcessVerticalScroll(WPARAM wParam, LPARAM lParam)
 
 	if (si.nPos != this->scrollOffsetY)
 	{
-		ScrollWindow(this->hWindow, 0, int(yChar * (this->scrollOffsetY - si.nPos)), NULL, NULL);
+		ScrollWindowEx(
+			this->hWindow,
+			0,
+			int(yChar * (this->scrollOffsetY - si.nPos)),
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			SW_SCROLLCHILDREN);
 	}
+	this->scrollOffsetY = si.nPos;
 }
 void MainWindow::ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam)
 {
@@ -167,7 +206,6 @@ void MainWindow::ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam)
 	si.fMask = SIF_ALL;
 
 	GetScrollInfo(this->hWindow, SB_HORZ, &si);
-	this->scrollOffsetX = si.nPos;
 	switch (LOWORD(wParam))
 	{
 		case SB_LINELEFT:
@@ -200,16 +238,24 @@ void MainWindow::ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam)
 	SetScrollInfo(this->hWindow, SB_HORZ, &si, TRUE);
 	GetScrollInfo(this->hWindow, SB_HORZ, &si);
 
-	if (si.nPos != this->scrollOffsetY)
+	if (si.nPos != this->scrollOffsetX)
 	{
-		ScrollWindow(this->hWindow, int(xChar * (this->scrollOffsetY - si.nPos)), 0, NULL, NULL);
+		ScrollWindowEx(
+			this->hWindow, 
+			int(xChar * (this->scrollOffsetX - si.nPos)),
+			0, 
+			NULL,
+			NULL,
+			NULL, 
+			NULL, 
+			SW_SCROLLCHILDREN);
 	}
+	this->scrollOffsetX = si.nPos;
 }
 UINT MainWindow::ProcessSizing(WPARAM wParam, LPARAM lParam)
 {
 	RECT* sizingBox;
 	RECT workarea;
-
 	SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
 	sizingBox = (RECT*)lParam;
 	sizingBox->top = workarea.bottom - WINDOW_HEIGHT - WINDOW_PADDING;
@@ -230,9 +276,12 @@ void MainWindow::WriteToBuffer(TCHAR* dest, string src)
 
 void MainWindow::PrintText(HDC hdc, string text, HFONT font, int x, int y)
 {
+	int scrollX = int(this->scrollOffsetX * this->xChar * -1);
+	int scrollY = int(this->scrollOffsetY * this->yChar * -1);
+
 	SelectObject(hdc, font);
 	WriteToBuffer(this->buffer, text);
-	TextOut(hdc, x, y, this->buffer, _tcslen(this->buffer));
+	TextOut(hdc, x + scrollX, y + scrollY, this->buffer, _tcslen(this->buffer));
 }
 
 void MainWindow::DrawWindow()
@@ -241,9 +290,6 @@ void MainWindow::DrawWindow()
 	HDC hdc = BeginPaint(this->hWindow, &ps);
 
 	RECT rect;
-
-	int scrollX = int(this->scrollOffsetX * this->xChar * -1);
-	int scrollY = int(this->scrollOffsetY * this->yChar * -1);
 
 	const int padding = 15, lineHeight = 20;
 	const int categoryMargin = 10;
@@ -257,11 +303,11 @@ void MainWindow::DrawWindow()
 
 	HBRUSH ratingBrush = CreateSolidBrush(RGB(170, 170, 170));
 
-	PrintText(hdc, this->translateResult.Sentence.Translation, fontHeader, padding + scrollX, curY + scrollY);
+	PrintText(hdc, this->translateResult.Sentence.Translation, fontHeader, padding + 20, curY);
 
 	rect.right = 0;
 	rect.left = WINDOW_WIDTH;
-	rect.top = curY + int(5 / 4.0*lineHeight) + scrollY;
+	rect.top = curY + int(5 / 4.0*lineHeight);
 	rect.bottom = rect.top + 1;
 	FillRect(hdc, &rect, ratingBrush);
 
@@ -271,7 +317,7 @@ void MainWindow::DrawWindow()
 	if (categories.size() == 0)
 	{
 		SetTextColor(hdc, RGB(119, 119, 119));
-		PrintText(hdc, this->translateResult.Sentence.Origin, fontNormal, padding + scrollX, curY + scrollY);
+		PrintText(hdc, this->translateResult.Sentence.Origin, fontNormal, padding, curY);
 		curY += lineHeight;
 	}
 	for (size_t i = 0; i < categories.size(); ++i)
@@ -281,10 +327,10 @@ void MainWindow::DrawWindow()
 		WriteToBuffer(buffer, this->translateResult.Sentence.Origin);
 		SelectObject(hdc, fontNormal);
 		GetTextExtentPoint32(hdc, buffer, _tcslen(buffer), &textSize);
-		TextOut(hdc, padding + scrollX, curY + scrollY, buffer, _tcslen(buffer));
+		TextOut(hdc, padding, curY, buffer, _tcslen(buffer));
 
 		SetTextColor(hdc, RGB(119, 119, 119));
-		PrintText(hdc, " - " + categories[i].PartOfSpeech, fontItalic, padding + textSize.cx + scrollX + 2, curY + scrollY);
+		PrintText(hdc, " - " + categories[i].PartOfSpeech, fontItalic, padding + textSize.cx + 2, curY);
 
 		// Draw words
 		curY += lineHeight;
@@ -292,22 +338,21 @@ void MainWindow::DrawWindow()
 		auto words = categories[i].Entries;
 		for (size_t j = 0; j < words.size(); ++j)
 		{
-			PrintText(hdc, words[j].Word, fontNormal, padding * 3 + scrollX, curY + scrollY);
+			PrintText(hdc, words[j].Word, fontNormal, padding * 3, curY);
 
 			int k = words[j].Score >= 0.05 ? 0 : (words[j].Score >= 0.003 ? 1 : 2);
 			int rateUnit = 8;
 
 			RECT rect;
-			rect.right = padding + rateUnit * 3 + scrollX;
-			rect.top = curY + lineHeight / 3 + scrollY;
+			rect.right = padding + rateUnit * 3 ;
+			rect.top = curY + lineHeight / 3;
 			rect.bottom = rect.top + lineHeight / 3;
-			rect.left = padding + k * rateUnit + scrollX;
+			rect.left = padding + k * rateUnit;
 
 			FillRect(hdc, &rect, ratingBrush);
-
 			curY += lineHeight;
 		}
-
+		
 		curY += categoryMargin;
 	}
 
