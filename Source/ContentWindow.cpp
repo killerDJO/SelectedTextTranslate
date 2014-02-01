@@ -73,8 +73,7 @@ LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 		pos = MAKEPOINTS(lParam);
 		GetWindowRect(hWnd, &rcWindow);
 		MoveWindow(hWnd, pos.x, pos.y, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, FALSE);
-		InvalidateRect(hWnd, NULL, TRUE);
-		instance->Draw();
+		InvalidateRect(hWnd, NULL, FALSE);
 		return TRUE;
 	
 	case WM_NCPAINT:

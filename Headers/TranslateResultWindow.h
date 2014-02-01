@@ -8,5 +8,7 @@ class TranslateResultWindow : public ContentWindow
 public:
 	TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
 	~TranslateResultWindow();
+
+	virtual void RenderResult(TranslateResult translateResult);
 	virtual void Draw();
 };

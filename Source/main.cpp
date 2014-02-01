@@ -14,6 +14,10 @@ MainWindow* g_mainWindow;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
 { 
+	 AllocConsole();
+	 AttachConsole( GetCurrentProcessId() ) ;
+	 freopen( "CON", "w", stdout ) ;
+
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 	{

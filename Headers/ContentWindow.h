@@ -6,7 +6,7 @@
 class ContentWindow
 {
 protected:
-	const int WINDOW_WIDTH = 2000;
+	const int WINDOW_WIDTH = 500;
 	const int WINDOW_HEIGHT = 2000;
 	const int PADDING = 15;
 	const int LINE_HEIGHT = 20;
@@ -19,6 +19,8 @@ protected:
 	HWND parentWindow;
 	HWND hWindow;
 	HINSTANCE hInstance;
+
+	HDC inMemoryHDC;
 	
 	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
 
@@ -32,6 +34,6 @@ public:
 	HWND GetHandle();
 	HINSTANCE GetInstance();
 
-	void RenderResult(TranslateResult translateResult);
+	virtual void RenderResult(TranslateResult translateResult);
 	virtual void Draw();
 };

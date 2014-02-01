@@ -41,7 +41,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 	this->InitNotifyIconData();
 
 	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0);
-	this->translateResultWindow = new TranslateResultWindow(this->hWindow, this->hInstance, 0, 60);
+	this->translateResultWindow = new TranslateResultWindow(this->hWindow, this->hInstance, 0, 50);
 
 	Minimize();
 }
@@ -82,7 +82,7 @@ void MainWindow::Maximize()
 	for (size_t i = 0; i < this->translateResult.TranslateCategories.size(); ++i) {
 		for (size_t j = 0; j <this->translateResult.TranslateCategories[i].Entries.size(); ++j)
 			horizontalChars = max(horizontalChars, _tcslen(this->translateResult.TranslateCategories[i].Entries[j].Word));
-		verticalChars += this->translateResult.TranslateCategories[i].Entries.size() + 1;
+		verticalChars += this->translateResult.TranslateCategories[i].Entries.size() + 2;
 	}
 
 	horizontalChars += 4;
