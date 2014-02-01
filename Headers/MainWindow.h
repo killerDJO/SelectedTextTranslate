@@ -1,7 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include "TranslateResult.h"
-#include "TextPlayer.h"
+#include "HeaderWindow.h"
+#include "TranslateResultWindow.h"
 
 #ifdef UNICODE
 	#define stringcopy wcscpy
@@ -17,46 +18,36 @@ class MainWindow
 private:
 	const UINT		WINDOW_WIDTH	= 300;
 	const UINT		WINDOW_HEIGHT	= 400;
-	const UINT		WINDOW_PADDING	= 5;
+	const UINT		WINDOW_PADDING  = 5;
 
-	const double	xChar = 8;
-	const double	yChar = 20;
-
-	TCHAR buffer[65535];
+	const double	SCROLL_CHAR_X = 8;
+	const double	SCROLL_CHAR_Y = 20;
 
 	NOTIFYICONDATA	notifyIconData;
 	HWND			hWindow;
-	HWND			hAudioButton;
 	HINSTANCE		hInstance;
+
+	HeaderWindow * headerWindow;
+	TranslateResultWindow  * translateResultWindow;
 
 	TranslateResult translateResult;
 
-	HFONT fontNormal, fontHeader, fontItalic;
-
-	int scrollOffsetX = 0;
-	int scrollOffsetY = 0;
-
 	void InitNotifyIconData();
-	void InitAudioButton();
 	void InitializeScrollbars(UINT horizontalChars, UINT verticalChars);
-	void WriteToBuffer(TCHAR* dest, string src);
-	void PrintText(HDC hdc, string text, HFONT font, int x, int y);
-	
+
 public:
 	MainWindow(HINSTANCE hInstance, WNDPROC wndProc);
 	~MainWindow();
 
 	HWND GetHandle();
+	HINSTANCE GetInstance();
 
 	void Minimize();
 	void Maximize();
 
 	void SetTranslateResult(TranslateResult translateResult);
-	void PlayText();
 	
 	void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);
 	void ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam);
 	UINT ProcessSizing(WPARAM wParam, LPARAM lParam);
-	
-	void DrawWindow();
 };

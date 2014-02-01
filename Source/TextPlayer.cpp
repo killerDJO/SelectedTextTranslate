@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "TextPlayer.h"
 #include "RequestHelper.h"
+#include "Utilities.h"
+
+wchar_t TextPlayer::buffer[1000];
 
 string TextPlayer::GetAudioFilePath(string extension)
 {
@@ -20,19 +23,30 @@ string TextPlayer::SaveToFile(string text)
 	return path;
 }
 
-void TextPlayer::PlayText(string text)
+DWORD WINAPI TextPlayer::Play(LPVOID arg)
 {
+	string text = Utilities::GetString((wchar_t*)arg);
 	string responseQuery = "http://translate.google.com/translate_tts?tl=en&q=" + RequestHelper::EscapeText(text);
 	string audio = RequestHelper::GetResponse(responseQuery);
-	
+
 	string filePath = SaveToFile(audio);
-	
-	string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);	
+
+	string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
 	mciSendStringA(openFileCommand.c_str(), NULL, 0, 0);
-	
+
 	string playAudioCommand = "play " + string(AUDIO_FILE_NAME) + " wait";
 	mciSendStringA(playAudioCommand.c_str(), NULL, 0, 0);
 
 	string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
 	mciSendStringA(closeAudioCommand.c_str(), NULL, 0, 0);
+
+	return 0;
+}
+
+void TextPlayer::PlayText(wchar_t* text)
+{
+	wcscpy(TextPlayer::buffer, text);
+	DWORD threadId;
+	HANDLE hThread = CreateThread(NULL, 0, TextPlayer::Play, TextPlayer::buffer, 0, &threadId);
+	CloseHandle(hThread);
 }

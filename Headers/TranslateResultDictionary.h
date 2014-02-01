@@ -4,6 +4,7 @@
 
 struct TranslateResultDictionary
 {
-	string PartOfSpeech;
+	wchar_t* PartOfSpeech;
+	wchar_t* BaseForm;
 	vector<TranslateResultDictionaryEntry> Entries;
 };

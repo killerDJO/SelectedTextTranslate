@@ -3,8 +3,11 @@
 #include "TranslateResultDictionary.h"
 #include "TranslateResultSentence.h"
 
-struct TranslateResult
+class TranslateResult
 {
+public:
 	TranslateResultSentence Sentence;
 	vector<TranslateResultDictionary> TranslateCategories;
+	TranslateResult();
+	void Free();
 };

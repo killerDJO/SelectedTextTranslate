@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Translator.h"
-#include "TextExtractor.h"
-#include "RequestHelper.h"
 
 TranslateResult Translator::TranslateSelectedText()
 {
@@ -32,25 +30,29 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	if(sentences.size() > 0)
 	{
 		int idx = 0;
-		result.Sentence.Translation = sentences[idx].get("trans","").asString();
-		result.Sentence.Origin = sentences[idx].get("orig", "").asString();
-		result.Sentence.Translit = sentences[idx].get("translit", "").asString();
+		result.Sentence.Translation = Utilities::GetWideChar(sentences[idx].get("trans", "").asString());
+		result.Sentence.Origin = Utilities::GetWideChar(sentences[idx].get("orig", "").asString());
+		result.Sentence.Translit = Utilities::GetWideChar(sentences[idx].get("translit", "").asString());
 	}
 
 	Json::Value dict = root.get("dict","[]");
 	for(size_t i = 0; i < dict.size(); ++i)
 	{
 		TranslateResultDictionary category;
-		category.PartOfSpeech = dict[i].get("pos","").asString();
-		Json::Value entries = dict[i].get("entry","[]");
+		category.PartOfSpeech = Utilities::GetWideChar(dict[i].get("pos", "").asString());
+		category.BaseForm = Utilities::GetWideChar(dict[i].get("base_form", "").asString());
+		Json::Value entries =dict[i].get("entry", "[]");
 		for (size_t j = 0; j < entries.size(); ++j)
 		{
 			TranslateResultDictionaryEntry entry;
-			entry.Word = entries[j].get("word", "").asString();
+			entry.Word = Utilities::GetWideChar(entries[j].get("word", "").asString());
 			entry.Score = entries[j].get("score", 0.0).asDouble();
 			
 			auto reverseTranslations = entries[j].get("reverse_translation", "[]");
-			//entry.ReverseTranslation.insert(entry.ReverseTranslation.begin(), reverseTranslations.begin(), reverseTranslations.end());
+			for (size_t k = 0; k < reverseTranslations.size(); ++k)
+			{
+				entry.ReverseTranslation.push_back(Utilities::GetWideChar(reverseTranslations[k].asString()));
+			}
 			
 			category.Entries.push_back(entry);
 		}

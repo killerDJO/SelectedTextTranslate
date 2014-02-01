@@ -1,6 +1,9 @@
 #pragma once
 #include "stdafx.h"
 #include "TranslateResult.h"
+#include "TextExtractor.h"
+#include "RequestHelper.h"
+#include "Utilities.h"
 
 class Translator
 {

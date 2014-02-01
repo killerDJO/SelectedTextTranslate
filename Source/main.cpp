@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 	{
-		return -1;
+		FatalAppExit(0, TEXT("App already started!"));
     }
 	WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
 
@@ -42,7 +42,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 void ShowTranslateWindow()
 {
 	TranslateResult translateResult = Translator::TranslateSelectedText();
-	InvalidateRect(g_mainWindow->GetHandle(), NULL, TRUE);
 	g_mainWindow->SetTranslateResult(translateResult);
 }
 
@@ -65,15 +64,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		case WM_SIZING:			
 			return g_mainWindow->ProcessSizing(wParam, lParam);
+		
+		case WM_SETCURSOR:
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			return TRUE;
 
 		case WM_HSCROLL:
 			g_mainWindow->ProcessHorizontalScroll(wParam, lParam);
-			InvalidateRect(g_mainWindow->GetHandle(), NULL, TRUE);
 			break;
 
 		case WM_VSCROLL:
 			g_mainWindow->ProcessVerticalScroll(wParam, lParam);
-			InvalidateRect(g_mainWindow->GetHandle(), NULL, TRUE);
 			break;
 
 		case WM_MOUSEWHEEL:
@@ -134,22 +135,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}			
 			break;
 
-		case WM_PAINT:
-			g_mainWindow->DrawWindow();
-			break;
-
 		case WM_DESTROY:
 		case WM_CLOSE:
 			PostQuitMessage(0);
-			break;	
-
-		case WM_COMMAND:
-			if (LOWORD(wParam) == BN_CLICKED)
-			{
-				g_mainWindow->PlayText();
-				g_mainWindow->Maximize();
-			}
-			return TRUE;
+			break;
 	
 		default:
 			return DefWindowProc(hwnd, message, wParam, lParam);

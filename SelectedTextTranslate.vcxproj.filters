@@ -31,11 +31,23 @@
     <Filter Include="Source\Helpers">
       <UniqueIdentifier>{d57738c5-794c-477f-a525-226210be81d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\Windows">
+      <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows">
+      <UniqueIdentifier>{78f06b4d-3990-40a6-a7bf-09dba8eb05e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Entities">
+      <UniqueIdentifier>{8ebbfb1e-a750-437d-9e35-7c85c11e79f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Base">
+      <UniqueIdentifier>{3d09291e-4b90-41ff-95ac-b1f681efbb19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Windows\Base">
+      <UniqueIdentifier>{b75eba6c-5cae-4370-a87e-16715df8b44d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\MainWindow.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source\Precomplied Headers</Filter>
     </ClCompile>
@@ -54,6 +66,27 @@
     <ClCompile Include="Source\TextPlayer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\MainWindow.cpp">
+      <Filter>Source\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TranslateResult.cpp">
+      <Filter>Source\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HeaderWindow.cpp">
+      <Filter>Source\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ContentWindow.cpp">
+      <Filter>Source\Windows\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TranslateResultWindow.cpp">
+      <Filter>Source\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AudioButtonWindow.cpp">
+      <Filter>Source\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -62,11 +95,11 @@
     <Image Include="Resources\Audio.bmp">
       <Filter>Resources</Filter>
     </Image>
+    <Image Include="Resources\Audio_Inactive.bmp">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\MainWindow.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\stdafx.h">
       <Filter>Headers\Precompiled Headers</Filter>
     </ClInclude>
@@ -96,6 +129,24 @@
     </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Headers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\MainWindow.h">
+      <Filter>Headers\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Utilities.h">
+      <Filter>Headers\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\HeaderWindow.h">
+      <Filter>Headers\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TranslateResultWindow.h">
+      <Filter>Headers\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ContentWindow.h">
+      <Filter>Headers\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\AudioButtonWindow.h">
+      <Filter>Headers\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

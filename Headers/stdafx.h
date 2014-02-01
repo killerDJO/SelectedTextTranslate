@@ -20,6 +20,7 @@
 #include <ostream>
 #include <stdio.h>
 #include <cstdio>
+#include <commctrl.h>
 
 #include "curl\curl.h"
 #include "json\json.h"

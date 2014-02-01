@@ -3,7 +3,7 @@
 
 struct TranslateResultSentence
 {
-	string Translation;
-	string Origin;
-	string Translit;
+	wchar_t* Translation;
+	wchar_t* Origin;
+	wchar_t* Translit;
 };
