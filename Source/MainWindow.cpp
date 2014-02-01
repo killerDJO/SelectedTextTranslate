@@ -40,8 +40,8 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 	this->InitNotifyIconData();
 
-	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0);
 	this->translateResultWindow = new TranslateResultWindow(this->hWindow, this->hInstance, 0, 50);
+	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0);
 
 	Minimize();
 }

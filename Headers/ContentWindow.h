@@ -6,33 +6,35 @@
 class ContentWindow
 {
 protected:
-	const int WINDOW_WIDTH = 500;
-	const int WINDOW_HEIGHT = 2000;
 	const int PADDING = 15;
 	const int LINE_HEIGHT = 20;
 
 	int initialX;
 	int initialY;
-	
-	TranslateResult translateResult;
+	int width;
+	int height;
 
 	HWND parentWindow;
 	HWND hWindow;
 	HINSTANCE hInstance;
 
 	HDC inMemoryHDC;
+
+	TranslateResult translateResult;
 	
 	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	virtual void InitializeFonts();
-	
+	virtual void InitializeInMemoryDC();
+	virtual void RenderDC();
+
 public:
-	ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
+	ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
 	~ContentWindow();
 
-	HWND GetHandle();
-	HINSTANCE GetInstance();
+	virtual HWND GetHandle();
+	virtual HINSTANCE GetInstance();
 
 	virtual void RenderResult(TranslateResult translateResult);
 	virtual void Draw();

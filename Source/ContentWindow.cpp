@@ -2,12 +2,14 @@
 #include "ContentWindow.h"
 #include "TranslateResult.h"
 
-ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y)
+ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
 {
 	this->parentWindow = parentWindow;
 	this->hInstance = hInstance;
 	this->initialX = x;
 	this->initialY = y;
+	this->width = width;
+	this->height = height;
 
 	const TCHAR* className = TEXT("STT_CONTENT");
 	WNDCLASSEX wnd;
@@ -33,13 +35,14 @@ ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DW
 		WS_CHILD | WS_VISIBLE,
 		x,
 		y,
-		WINDOW_WIDTH,
-		WINDOW_HEIGHT,
+		width,
+		height,
 		this->parentWindow,
 		NULL,
 		this->hInstance,
 		this);
 
+	this->InitializeInMemoryDC();
 	this->InitializeFonts();
 }
 
@@ -94,14 +97,6 @@ LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	return 0;
 }
 
-void ContentWindow::RenderResult(TranslateResult translateResult)
-{
-	this->translateResult = translateResult;
-	MoveWindow(this->hWindow, this->initialX, this->initialY, WINDOW_WIDTH, WINDOW_HEIGHT, TRUE);
-	InvalidateRect(this->hWindow, NULL, TRUE);
-	this->Draw();
-}
-
 void ContentWindow::InitializeFonts()
 {
 	HDC hdc = GetDC(hWindow);
@@ -116,8 +111,52 @@ void ContentWindow::InitializeFonts()
 	this->fontSmall = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
+void ContentWindow::InitializeInMemoryDC()
+{
+	this->inMemoryHDC = CreateCompatibleDC(NULL);
+
+	BITMAPINFO i;
+	ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
+	i.bmiHeader.biWidth = width;
+	i.bmiHeader.biHeight = height;
+	i.bmiHeader.biPlanes = 1;
+	i.bmiHeader.biBitCount = 24;
+	i.bmiHeader.biSizeImage = 0;
+	i.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	i.bmiHeader.biClrUsed = 0;
+	i.bmiHeader.biClrImportant = 0;
+	VOID *pvBits;
+	HBITMAP bitmap = CreateDIBSection(this->inMemoryHDC, &i, DIB_RGB_COLORS, &pvBits, NULL, 0);
+
+	SelectObject(this->inMemoryHDC, bitmap);
+}
+
+void ContentWindow::RenderResult(TranslateResult translateResult)
+{
+	this->translateResult = translateResult;
+	RenderDC();
+	MoveWindow(this->hWindow, this->initialX, this->initialY, width, height, FALSE);
+	InvalidateRect(this->hWindow, NULL, FALSE);
+}
+
+void ContentWindow::RenderDC()
+{
+	RECT rect;
+	rect.top = 0;
+	rect.left = 0;
+	rect.bottom = height;
+	rect.right = width;
+	FillRect(inMemoryHDC, &rect, CreateSolidBrush(RGB(255, 255, 255)));
+}
+
 void ContentWindow::Draw()
 {
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(this->hWindow, &ps);
+	
+	DWORD res = BitBlt(hdc, 0, 0, width, height, inMemoryHDC, 0, 0, SRCCOPY);
+
+	EndPaint(this->hWindow, &ps);
 }
 
 ContentWindow::~ContentWindow()

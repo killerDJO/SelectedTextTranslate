@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "HeaderWindow.h"
 
-HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) : ContentWindow(parentWindow, hInstance, x, y) 
+HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) : ContentWindow(parentWindow, hInstance, x, y, 1000, 50) 
 { 
 	this->InitializeAudioButton();
 	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)HeaderWindow::WndProc);
@@ -34,20 +34,19 @@ void HeaderWindow::PlayText()
 	TextPlayer::PlayText(this->translateResult.Sentence.Origin);
 }
 
-void HeaderWindow::Draw()
-{
-	PAINTSTRUCT ps;
-	HDC hdc = BeginPaint(this->hWindow, &ps);
 
-	const int categoryMargin = 10;
+void HeaderWindow::RenderDC()
+{
+	ContentWindow::RenderDC();
+
 	int curY = PADDING / 2;
 
 	HBRUSH ratingBrush = CreateSolidBrush(RGB(170, 170, 170));
 
-	Utilities::PrintText(hdc, this->translateResult.Sentence.Translation, fontHeader, PADDING, curY);
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, PADDING, curY);
 
-	SetTextColor(hdc, RGB(119, 119, 119));
-	Utilities::PrintText(hdc, this->translateResult.Sentence.Origin, fontSmall, PADDING + 17, curY + 20);
+	SetTextColor(this->inMemoryHDC, RGB(119, 119, 119));
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, PADDING + 17, curY + 20);
 	curY += 13;
 
 	RECT rect;
@@ -55,9 +54,7 @@ void HeaderWindow::Draw()
 	rect.left = 1000;
 	rect.top = curY + int(5 / 4.0*LINE_HEIGHT);
 	rect.bottom = rect.top + 1;
-	FillRect(hdc, &rect, ratingBrush);
-
-	EndPaint(this->hWindow, &ps);
+	FillRect(this->inMemoryHDC, &rect, ratingBrush);
 }
 
 HeaderWindow::~HeaderWindow()

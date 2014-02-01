@@ -5,10 +5,10 @@
 
 class TranslateResultWindow : public ContentWindow
 {
+private:
+	virtual void RenderDC();
+
 public:
 	TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
-	~TranslateResultWindow();
-
-	virtual void RenderResult(TranslateResult translateResult);
-	virtual void Draw();
+	~TranslateResultWindow();	
 };

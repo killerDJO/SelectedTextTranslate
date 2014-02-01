@@ -11,12 +11,11 @@ class HeaderWindow : public ContentWindow
 
 	void InitializeAudioButton();
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	virtual void RenderDC();
 	
 public:
 	HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
 	~HeaderWindow();
 
-	void PlayText();
-	virtual void Draw();
-	
+	void PlayText();	
 };
