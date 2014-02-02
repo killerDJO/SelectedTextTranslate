@@ -23,7 +23,6 @@ LRESULT CALLBACK HeaderWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, L
 			if (LOWORD(wParam) == BN_CLICKED)
 			{
 				instance->PlayText();
-				return TRUE;
 			}
 			break;
 	}
@@ -61,6 +60,14 @@ POINT HeaderWindow::RenderDC()
 
 void HeaderWindow::ResetWindow(POINT bottomRight)
 {
+	if (wcslen(this->translateResult.Sentence.Origin) != 0)
+	{
+		this->audioButton->Show();
+	}
+	else 
+	{
+		this->audioButton->Hide();
+	}
 	MoveWindow(this->hWindow, this->initialX, this->initialY, 2000, bottomRight.y, FALSE);
 }
 

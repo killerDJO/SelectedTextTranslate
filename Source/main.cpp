@@ -5,6 +5,7 @@
 #define ID_TRAY_EXIT_CONTEXT_MENU_ITEM		3000
 #define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM 3002
 #define ID_TRANSLATE_HOTKEY					3003
+#define ID_PLAYTEXT_HOTKEY					3004
 
 LRESULT CALLBACK  WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -24,6 +25,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 	g_mainWindow = new MainWindow(hInstance, WndProc);
 	
 	RegisterHotKey(g_mainWindow->GetHandle(), ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
+	RegisterHotKey(g_mainWindow->GetHandle(), ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
 	
 	MSG msg;
 	while (GetMessage (&msg, NULL, 0, 0))
@@ -42,7 +44,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 void ShowTranslateWindow()
 {
 	TranslateResult translateResult = Translator::TranslateSelectedText();
-	g_mainWindow->SetTranslateResult(translateResult);
+	g_mainWindow->SetTranslateResult(translateResult, TRUE);
+}
+
+void PlayText()
+{
+	TranslateResult translateResult = Translator::TranslateSelectedText();
+	g_mainWindow->SetTranslateResult(translateResult, FALSE);
+	g_mainWindow->PlayText();
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -125,6 +134,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if(wParam == ID_TRANSLATE_HOTKEY)
 			{
 				ShowTranslateWindow();
+			}
+			if (wParam == ID_PLAYTEXT_HOTKEY)
+			{
+				PlayText();
 			}
 			break;
 

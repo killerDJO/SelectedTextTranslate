@@ -33,7 +33,7 @@ private:
 	TranslateResult translateResult;
 
 	void InitNotifyIconData();
-	void InitializeScrollbars(int contentWidht, int contentHeight);
+	void InitializeScrollbars(int contentWidth, int contentHeight);
 
 public:
 	MainWindow(HINSTANCE hInstance, WNDPROC wndProc);
@@ -45,7 +45,8 @@ public:
 	void Minimize();
 	void Maximize();
 
-	void SetTranslateResult(TranslateResult translateResult);
+	void SetTranslateResult(TranslateResult translateResult, BOOL maximize);
+	void PlayText();
 	
 	void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);
 	void ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam);

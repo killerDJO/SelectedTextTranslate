@@ -80,7 +80,12 @@ void MainWindow::Maximize()
 	SwitchToThisWindow(this->hWindow, TRUE);
 }
 
-void MainWindow::SetTranslateResult(TranslateResult translateResult)
+void MainWindow::PlayText()
+{
+	this->headerWindow->PlayText();
+}
+
+void MainWindow::SetTranslateResult(TranslateResult translateResult, BOOL maximize)
 {
 	this->translateResult.Free();
 	this->translateResult = translateResult;
@@ -89,7 +94,10 @@ void MainWindow::SetTranslateResult(TranslateResult translateResult)
 	POINT contentBottomRight = this->translateResultWindow->RenderResult(this->translateResult);
 
 	this->InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
-	this->Maximize();
+	if (maximize)
+	{
+		this->Maximize();
+	}
 }
 
 void MainWindow::InitializeScrollbars(int contentWidth, int contentHeight)

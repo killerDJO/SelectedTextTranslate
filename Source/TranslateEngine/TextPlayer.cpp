@@ -43,7 +43,7 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 
 void TextPlayer::PlayText(wchar_t* text)
 {
-	wcscpy(TextPlayer::buffer, text);
+	wcscpy_s(TextPlayer::buffer, text);
 	DWORD threadId;
 	HANDLE hThread = CreateThread(NULL, 0, TextPlayer::Play, TextPlayer::buffer, 0, &threadId);
 	CloseHandle(hThread);

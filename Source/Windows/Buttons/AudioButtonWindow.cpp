@@ -19,8 +19,15 @@ AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWO
 
 	SetWindowSubclass(this->hWindow, AudioButtonWindow::WndProc, 0, (DWORD)this);
 
-	HBITMAP hBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO_INACTIVE));
-	SendMessage(this->hWindow, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+	this->InitializeBitmaps();
+	
+	SendMessage(this->hWindow, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)this->imageNormal);
+}
+
+void AudioButtonWindow::InitializeBitmaps()
+{
+	this->imageNormal = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO_INACTIVE));
+	this->imageHover = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO));
 }
 
 HWND AudioButtonWindow::GetHandle()
@@ -33,30 +40,66 @@ HINSTANCE AudioButtonWindow::GetInstance()
 	return this->hInstance;
 }
 
+HBITMAP AudioButtonWindow::GetNormalImage()
+{
+	return this->imageNormal;
+}
+
+HBITMAP AudioButtonWindow::GetHoverImage()
+{
+	return this->imageHover;
+}
+
+void AudioButtonWindow::Show()
+{
+	ShowWindow(this->hWindow, SW_SHOW);
+}
+
+void AudioButtonWindow::Hide()
+{
+	ShowWindow(this->hWindow, SW_HIDE);
+}
+
 LRESULT CALLBACK AudioButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
 {
 	TRACKMOUSEEVENT tme;
 	tme.cbSize = sizeof(TRACKMOUSEEVENT);
 	tme.hwndTrack = hWnd;
-	tme.dwHoverTime = HOVER_DEFAULT;
+	tme.dwHoverTime = 10;
 
 	AudioButtonWindow* instance = (AudioButtonWindow*)dwRefData;
 	HBITMAP hBitmap;
 	switch (message)
 	{
 	case WM_MOUSEMOVE:
-		hBitmap = LoadBitmap(instance->GetInstance(), MAKEINTRESOURCE(IDB_AUDIO));
-		SendMessage(hWnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+		SendMessage(hWnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)instance->GetHoverImage());
+
 		tme.dwFlags = TME_HOVER | TME_LEAVE;
 		TrackMouseEvent(&tme);
 		return TRUE;
-	case WM_MOUSELEAVE:
-		hBitmap = LoadBitmap(instance->GetInstance(), MAKEINTRESOURCE(IDB_AUDIO_INACTIVE));
-		SendMessage(hWnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+
+	case WM_MOUSEHOVER:
+		SetCursor(LoadCursor(NULL, IDC_HAND));
+		break;
+
+	case WM_SETCURSOR:
 		return TRUE;
+
+	case WM_MOUSELEAVE:
+		SendMessage(hWnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)instance->GetNormalImage());	
+
+		SetCursor(LoadCursor(NULL, IDC_ARROW));	
+		return TRUE;
+
 
 	default:
 		break;
 	}
 	return DefSubclassProc(hWnd, message, wParam, lParam);
+}
+
+AudioButtonWindow::~AudioButtonWindow()
+{
+	DeleteObject(this->imageHover);
+	DeleteObject(this->imageNormal);
 }
