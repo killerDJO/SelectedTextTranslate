@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "Translator.h"
-#include "MainWindow.h"
+#include "PrecompiledHeaders\stdafx.h"
+#include "TranslateEngine\Translator.h"
+#include "Windows\MainWindow.h"
 
 #define ID_TRAY_EXIT_CONTEXT_MENU_ITEM		3000
 #define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM 3002
@@ -14,10 +14,6 @@ MainWindow* g_mainWindow;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
 { 
-	 /*AllocConsole();
-	 AttachConsole( GetCurrentProcessId() ) ;
-	 freopen( "CON", "w", stdout ) ;*/
-
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 	{

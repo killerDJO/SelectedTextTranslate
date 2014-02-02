@@ -16,12 +16,6 @@
     <Filter Include="Headers\Entities">
       <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Precompiled Headers">
-      <UniqueIdentifier>{e1a7bde5-b6e4-4265-844b-1892921145d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Precomplied Headers">
-      <UniqueIdentifier>{68bfe051-f900-4a55-8b9a-b6bc8f709e60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headers\Helpers">
       <UniqueIdentifier>{3974d202-4013-43ee-b10e-900c7cc3fd4d}</UniqueIdentifier>
     </Filter>
@@ -52,9 +46,6 @@
     <Filter Include="Headers\Windows\Content">
       <UniqueIdentifier>{921224de-b7af-4c67-a280-7aa7cb14a63f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Windows\Button">
-      <UniqueIdentifier>{f0bb7d86-ece3-4552-b0da-ddf1e05099fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headers\Windows\Content\Base">
       <UniqueIdentifier>{b75eba6c-5cae-4370-a87e-16715df8b44d}</UniqueIdentifier>
     </Filter>
@@ -64,46 +55,55 @@
     <Filter Include="Headers\TranslateEngine">
       <UniqueIdentifier>{5550d246-f9d9-41e2-9665-358023bd6fd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\PrecompiledHeaders">
+      <UniqueIdentifier>{e1a7bde5-b6e4-4265-844b-1892921145d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\PrecompliedHeaders">
+      <UniqueIdentifier>{68bfe051-f900-4a55-8b9a-b6bc8f709e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Windows\Buttons">
+      <UniqueIdentifier>{f0bb7d86-ece3-4552-b0da-ddf1e05099fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\stdafx.cpp">
-      <Filter>Source\Precomplied Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\RequestHelper.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TextExtractor.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utilities.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TranslateResult.cpp">
-      <Filter>Source\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ContentWindow.cpp">
-      <Filter>Source\Windows\Content\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\HeaderWindow.cpp">
-      <Filter>Source\Windows\Content</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TranslateResultWindow.cpp">
-      <Filter>Source\Windows\Content</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MainWindow.cpp">
-      <Filter>Source\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\AudioButtonWindow.cpp">
+    <ClCompile Include="Source\Windows\Buttons\AudioButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TextPlayer.cpp">
+    <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp">
+      <Filter>Source\Windows\Content\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\HeaderWindow.cpp">
+      <Filter>Source\Windows\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\MainWindow.cpp">
+      <Filter>Source\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Helpers\RequestHelper.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
+      <Filter>Source\PrecompliedHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Helpers\TextExtractor.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp">
       <Filter>Source\TranslateEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Translator.cpp">
+    <ClCompile Include="Source\Entities\TranslateResult.cpp">
+      <Filter>Source\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\TranslateResultWindow.cpp">
+      <Filter>Source\Windows\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TranslateEngine\Translator.cpp">
       <Filter>Source\TranslateEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Helpers\Utilities.cpp">
+      <Filter>Source\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,53 +118,53 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\stdafx.h">
-      <Filter>Headers\Precompiled Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\RequestHelper.h">
-      <Filter>Headers\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TextExtractor.h">
-      <Filter>Headers\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TranslateResult.h">
-      <Filter>Headers\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TranslateResultDictionary.h">
-      <Filter>Headers\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TranslateResultDictionaryEntry.h">
-      <Filter>Headers\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TranslateResultSentence.h">
-      <Filter>Headers\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Headers\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\MainWindow.h">
-      <Filter>Headers\Windows</Filter>
+    <ClInclude Include="Headers\Entities\TranslateResult.h">
+      <Filter>Headers\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Utilities.h">
+    <ClInclude Include="Headers\Entities\TranslateResultDictionary.h">
+      <Filter>Headers\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Entities\TranslateResultDictionaryEntry.h">
+      <Filter>Headers\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Entities\TranslateResultSentence.h">
+      <Filter>Headers\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Helpers\RequestHelper.h">
       <Filter>Headers\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ContentWindow.h">
+    <ClInclude Include="Headers\Helpers\TextExtractor.h">
+      <Filter>Headers\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Helpers\Utilities.h">
+      <Filter>Headers\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\PrecompiledHeaders\stdafx.h">
+      <Filter>Headers\PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TranslateEngine\TextPlayer.h">
+      <Filter>Headers\TranslateEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TranslateEngine\Translator.h">
+      <Filter>Headers\TranslateEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\WIndows\Buttons\AudioButtonWindow.h">
+      <Filter>Headers\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\WIndows\Content\Base\ContentWindow.h">
       <Filter>Headers\Windows\Content\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\HeaderWindow.h">
+    <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h">
       <Filter>Headers\Windows\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\TranslateResultWindow.h">
+    <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h">
       <Filter>Headers\Windows\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\AudioButtonWindow.h">
-      <Filter>Headers\Windows\Button</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TextPlayer.h">
-      <Filter>Headers\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Translator.h">
-      <Filter>Headers\TranslateEngine</Filter>
+    <ClInclude Include="Headers\WIndows\MainWindow.h">
+      <Filter>Headers\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,39 +16,39 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\AudioButtonWindow.cpp" />
-    <ClCompile Include="Source\ContentWindow.cpp" />
-    <ClCompile Include="Source\HeaderWindow.cpp" />
-    <ClCompile Include="Source\MainWindow.cpp" />
-    <ClCompile Include="Source\RequestHelper.cpp" />
+    <ClCompile Include="Source\Entities\TranslateResult.cpp" />
+    <ClCompile Include="Source\Helpers\RequestHelper.cpp" />
+    <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
+    <ClCompile Include="Source\Helpers\Utilities.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\stdafx.cpp">
+    <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\TextExtractor.cpp" />
-    <ClCompile Include="Source\TextPlayer.cpp" />
-    <ClCompile Include="Source\TranslateResult.cpp" />
-    <ClCompile Include="Source\TranslateResultWindow.cpp" />
-    <ClCompile Include="Source\Translator.cpp" />
-    <ClCompile Include="Source\Utilities.cpp" />
+    <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp" />
+    <ClCompile Include="Source\TranslateEngine\Translator.cpp" />
+    <ClCompile Include="Source\Windows\Buttons\AudioButtonWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\HeaderWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\TranslateResultWindow.cpp" />
+    <ClCompile Include="Source\Windows\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\AudioButtonWindow.h" />
-    <ClInclude Include="Headers\ContentWindow.h" />
-    <ClInclude Include="Headers\HeaderWindow.h" />
-    <ClInclude Include="Headers\MainWindow.h" />
-    <ClInclude Include="Headers\RequestHelper.h" />
-    <ClInclude Include="Headers\stdafx.h" />
-    <ClInclude Include="Headers\TextExtractor.h" />
-    <ClInclude Include="Headers\TextPlayer.h" />
-    <ClInclude Include="Headers\TranslateResult.h" />
-    <ClInclude Include="Headers\TranslateResultDictionary.h" />
-    <ClInclude Include="Headers\TranslateResultDictionaryEntry.h" />
-    <ClInclude Include="Headers\TranslateResultSentence.h" />
-    <ClInclude Include="Headers\TranslateResultWindow.h" />
-    <ClInclude Include="Headers\Translator.h" />
-    <ClInclude Include="Headers\Utilities.h" />
+    <ClInclude Include="Headers\Entities\TranslateResult.h" />
+    <ClInclude Include="Headers\Entities\TranslateResultDictionary.h" />
+    <ClInclude Include="Headers\Entities\TranslateResultDictionaryEntry.h" />
+    <ClInclude Include="Headers\Entities\TranslateResultSentence.h" />
+    <ClInclude Include="Headers\Helpers\RequestHelper.h" />
+    <ClInclude Include="Headers\Helpers\TextExtractor.h" />
+    <ClInclude Include="Headers\Helpers\Utilities.h" />
+    <ClInclude Include="Headers\PrecompiledHeaders\stdafx.h" />
+    <ClInclude Include="Headers\TranslateEngine\TextPlayer.h" />
+    <ClInclude Include="Headers\TranslateEngine\Translator.h" />
+    <ClInclude Include="Headers\WIndows\Buttons\AudioButtonWindow.h" />
+    <ClInclude Include="Headers\WIndows\Content\Base\ContentWindow.h" />
+    <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h" />
+    <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h" />
+    <ClInclude Include="Headers\WIndows\MainWindow.h" />
     <ClInclude Include="Resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,7 +122,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
