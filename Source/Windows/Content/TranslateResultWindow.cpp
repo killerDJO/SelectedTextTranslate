@@ -29,7 +29,23 @@ POINT TranslateResultWindow::RenderDC()
 		for (size_t j = 0; j < category.Entries.size(); ++j)
 		{
 			TranslateResultDictionaryEntry entry = category.Entries[j];
-			Utilities::PrintText(inMemoryHDC, entry.Word, fontNormal, COLOR_BLACK, PADDING * 3, curY, &bottomRight);
+			POINT wordBottomRight = Utilities::PrintText(inMemoryHDC, entry.Word, fontNormal, COLOR_BLACK, PADDING * 3, curY, &bottomRight);
+
+			// Draw reverse translation
+			if (entry.ReverseTranslation.size() != 0)
+			{
+				wordBottomRight = Utilities::PrintText(inMemoryHDC, L" - ", fontNormal, COLOR_GRAY, wordBottomRight.x + 2, curY, &bottomRight);
+				for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
+				{
+					wstring text = wstring(entry.ReverseTranslation[k]);
+					if (k != entry.ReverseTranslation.size() - 1)
+					{
+						text += L", ";
+					}
+					wordBottomRight = Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY, &bottomRight);
+				}
+			}
+			
 
 			int k = entry.Score >= 0.05 ? 0 : (entry.Score >= 0.003 ? 1 : 2);
 			int rateUnit = 8;
