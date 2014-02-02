@@ -6,7 +6,7 @@
 class TranslateResultWindow : public ContentWindow
 {
 private:
-	virtual void RenderDC();
+	virtual POINT RenderDC();
 
 public:
 	TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);

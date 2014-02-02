@@ -40,11 +40,29 @@
     <Filter Include="Source\Entities">
       <UniqueIdentifier>{8ebbfb1e-a750-437d-9e35-7c85c11e79f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Base">
+    <Filter Include="Source\Windows\Content">
+      <UniqueIdentifier>{537636ef-40f6-455f-9a7e-1df7e17b8159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Content\Base">
       <UniqueIdentifier>{3d09291e-4b90-41ff-95ac-b1f681efbb19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Windows\Base">
+    <Filter Include="Source\Windows\Buttons">
+      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Windows\Content">
+      <UniqueIdentifier>{921224de-b7af-4c67-a280-7aa7cb14a63f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Windows\Button">
+      <UniqueIdentifier>{f0bb7d86-ece3-4552-b0da-ddf1e05099fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Windows\Content\Base">
       <UniqueIdentifier>{b75eba6c-5cae-4370-a87e-16715df8b44d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\TranslateEngine">
+      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\TranslateEngine">
+      <UniqueIdentifier>{5550d246-f9d9-41e2-9665-358023bd6fd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,32 +78,32 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Translator.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TextPlayer.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MainWindow.cpp">
-      <Filter>Source\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Utilities.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source\TranslateResult.cpp">
       <Filter>Source\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Source\HeaderWindow.cpp">
-      <Filter>Source\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ContentWindow.cpp">
-      <Filter>Source\Windows\Base</Filter>
+      <Filter>Source\Windows\Content\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HeaderWindow.cpp">
+      <Filter>Source\Windows\Content</Filter>
     </ClCompile>
     <ClCompile Include="Source\TranslateResultWindow.cpp">
+      <Filter>Source\Windows\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainWindow.cpp">
       <Filter>Source\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Source\AudioButtonWindow.cpp">
-      <Filter>Source\Windows</Filter>
+      <Filter>Source\Windows\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextPlayer.cpp">
+      <Filter>Source\TranslateEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Translator.cpp">
+      <Filter>Source\TranslateEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,12 +139,6 @@
     <ClInclude Include="Headers\TranslateResultSentence.h">
       <Filter>Headers\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Translator.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TextPlayer.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Headers\Resources</Filter>
     </ClInclude>
@@ -136,17 +148,23 @@
     <ClInclude Include="Headers\Utilities.h">
       <Filter>Headers\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\ContentWindow.h">
+      <Filter>Headers\Windows\Content\Base</Filter>
+    </ClInclude>
     <ClInclude Include="Headers\HeaderWindow.h">
-      <Filter>Headers\Windows</Filter>
+      <Filter>Headers\Windows\Content</Filter>
     </ClInclude>
     <ClInclude Include="Headers\TranslateResultWindow.h">
-      <Filter>Headers\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ContentWindow.h">
-      <Filter>Headers\Windows\Base</Filter>
+      <Filter>Headers\Windows\Content</Filter>
     </ClInclude>
     <ClInclude Include="Headers\AudioButtonWindow.h">
-      <Filter>Headers\Windows</Filter>
+      <Filter>Headers\Windows\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TextPlayer.h">
+      <Filter>Headers\TranslateEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Translator.h">
+      <Filter>Headers\TranslateEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

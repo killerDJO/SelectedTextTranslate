@@ -35,18 +35,16 @@ void HeaderWindow::PlayText()
 }
 
 
-void HeaderWindow::RenderDC()
+POINT HeaderWindow::RenderDC()
 {
 	ContentWindow::RenderDC();
 
+	POINT bottomRight = { 0, 0 };
+
 	int curY = PADDING / 2;
 
-	HBRUSH ratingBrush = CreateSolidBrush(RGB(170, 170, 170));
-
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, PADDING, curY);
-
-	SetTextColor(this->inMemoryHDC, RGB(119, 119, 119));
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, PADDING + 17, curY + 20);
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, COLOR_BLACK, PADDING, curY, &bottomRight);
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING + 17, curY + 20, &bottomRight);
 	curY += 13;
 
 	RECT rect;
@@ -54,9 +52,12 @@ void HeaderWindow::RenderDC()
 	rect.left = 1000;
 	rect.top = curY + int(5 / 4.0*LINE_HEIGHT);
 	rect.bottom = rect.top + 1;
-	FillRect(this->inMemoryHDC, &rect, ratingBrush);
+	Utilities::DrawRect(this->inMemoryHDC, rect, this->grayBrush, &bottomRight);
+
+	return bottomRight;
 }
 
 HeaderWindow::~HeaderWindow()
 {	
+
 }

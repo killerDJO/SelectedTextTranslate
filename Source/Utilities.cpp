@@ -18,8 +18,27 @@ string Utilities::GetString(wchar_t* text)
 	return string(buffer);
 }
 
-void Utilities::PrintText(HDC hdc, wchar_t* text, HFONT font, int x, int y)
+POINT Utilities::PrintText(HDC hdc, wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight)
 {
 	SelectObject(hdc, font);
+	SetTextColor(hdc, color);
+	
+	SIZE textSize;
+	GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+
 	TextOut(hdc, x, y, text, _tcslen(text));
+
+	bottomRight->x = max(bottomRight->x, x + textSize.cx);
+	bottomRight->y = max(bottomRight->y, y + textSize.cy);
+
+	return { x + textSize.cx, y + textSize.cy };
+}
+
+
+void Utilities::DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight)
+{
+	FillRect(hdc, &rect, brush);
+
+	bottomRight->x = max(bottomRight->x, rect.right);
+	bottomRight->y = max(bottomRight->y, rect.bottom);
 }

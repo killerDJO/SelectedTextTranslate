@@ -42,8 +42,9 @@ ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DW
 		this->hInstance,
 		this);
 
-	this->InitializeInMemoryDC();
 	this->InitializeFonts();
+	this->InitializeBrushes();
+	this->InitializeInMemoryDC();
 }
 
 HWND ContentWindow::GetHandle()
@@ -111,6 +112,11 @@ void ContentWindow::InitializeFonts()
 	this->fontSmall = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
+void ContentWindow::InitializeBrushes()
+{
+	this->grayBrush = CreateSolidBrush(RGB(170, 170, 170));
+}
+
 void ContentWindow::InitializeInMemoryDC()
 {
 	this->inMemoryHDC = CreateCompatibleDC(NULL);
@@ -139,7 +145,7 @@ void ContentWindow::RenderResult(TranslateResult translateResult)
 	InvalidateRect(this->hWindow, NULL, FALSE);
 }
 
-void ContentWindow::RenderDC()
+POINT ContentWindow::RenderDC()
 {
 	RECT rect;
 	rect.top = 0;
@@ -147,6 +153,7 @@ void ContentWindow::RenderDC()
 	rect.bottom = height;
 	rect.right = width;
 	FillRect(inMemoryHDC, &rect, CreateSolidBrush(RGB(255, 255, 255)));
+	return { 0 };
 }
 
 void ContentWindow::Draw()
@@ -161,4 +168,11 @@ void ContentWindow::Draw()
 
 ContentWindow::~ContentWindow()
 {	
+	DeleteObject(this->fontNormal);
+	DeleteObject(this->fontHeader);
+	DeleteObject(this->fontItalic);
+	DeleteObject(this->fontSmall);
+	DeleteObject(this->grayBrush);
+
+	DeleteDC(this->inMemoryHDC);
 }
