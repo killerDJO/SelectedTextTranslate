@@ -33,7 +33,7 @@ private:
 	TranslateResult translateResult;
 
 	void InitNotifyIconData();
-	void InitializeScrollbars(UINT horizontalChars, UINT verticalChars);
+	void InitializeScrollbars(int contentWidht, int contentHeight);
 
 public:
 	MainWindow(HINSTANCE hInstance, WNDPROC wndProc);

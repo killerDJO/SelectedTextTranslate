@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "HeaderWindow.h"
 
-HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) : ContentWindow(parentWindow, hInstance, x, y, 1000, 50) 
+HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) 
+: ContentWindow(parentWindow, hInstance, x, y, 2000, 50) 
 { 
 	this->InitializeAudioButton();
 	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)HeaderWindow::WndProc);
@@ -34,7 +35,6 @@ void HeaderWindow::PlayText()
 	TextPlayer::PlayText(this->translateResult.Sentence.Origin);
 }
 
-
 POINT HeaderWindow::RenderDC()
 {
 	ContentWindow::RenderDC();
@@ -45,19 +45,25 @@ POINT HeaderWindow::RenderDC()
 
 	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, COLOR_BLACK, PADDING, curY, &bottomRight);
 	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING + 17, curY + 20, &bottomRight);
-	curY += 13;
 
 	RECT rect;
-	rect.right = 0;
-	rect.left = 1000;
-	rect.top = curY + int(5 / 4.0*LINE_HEIGHT);
+	rect.left = 0;
+	rect.right = 2000;
+	rect.top = curY + 2 * LINE_HEIGHT;
 	rect.bottom = rect.top + 1;
-	Utilities::DrawRect(this->inMemoryHDC, rect, this->grayBrush, &bottomRight);
+	Utilities::DrawRect(this->inMemoryHDC, rect, this->grayBrush, &POINT());
+
+	bottomRight.x += PADDING * 3;
+	bottomRight.y = rect.bottom;
 
 	return bottomRight;
 }
 
+void HeaderWindow::ResetWindow(POINT bottomRight)
+{
+	MoveWindow(this->hWindow, this->initialX, this->initialY, 2000, bottomRight.y, FALSE);
+}
+
 HeaderWindow::~HeaderWindow()
 {	
-
 }

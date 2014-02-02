@@ -30,6 +30,7 @@ protected:
 	virtual void InitializeBrushes();
 	virtual void InitializeInMemoryDC();
 	virtual POINT RenderDC();
+	virtual void ResetWindow(POINT bottomRight);
 
 public:
 	ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
@@ -38,6 +39,6 @@ public:
 	virtual HWND GetHandle();
 	virtual HINSTANCE GetInstance();
 
-	virtual void RenderResult(TranslateResult translateResult);
+	virtual POINT RenderResult(TranslateResult translateResult);
 	virtual void Draw();
 };

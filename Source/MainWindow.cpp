@@ -76,20 +76,6 @@ void MainWindow::Minimize()
 }
 void MainWindow::Maximize()
 {
-	UINT horizontalChars = 0;
-	UINT verticalChars = 4;
-
-	for (size_t i = 0; i < this->translateResult.TranslateCategories.size(); ++i) {
-		for (size_t j = 0; j <this->translateResult.TranslateCategories[i].Entries.size(); ++j)
-			horizontalChars = max(horizontalChars, _tcslen(this->translateResult.TranslateCategories[i].Entries[j].Word));
-		verticalChars += this->translateResult.TranslateCategories[i].Entries.size() + 2;
-	}
-
-	horizontalChars += 4;
-	horizontalChars = max(horizontalChars, _tcslen(this->translateResult.Sentence.Origin) + 3);
-	horizontalChars = max(horizontalChars, _tcslen(this->translateResult.Sentence.Translation) + 3);
-
-	this->InitializeScrollbars(horizontalChars, verticalChars);
 	ShowWindow(this->hWindow, SW_SHOW);
 	SwitchToThisWindow(this->hWindow, TRUE);
 }
@@ -98,13 +84,15 @@ void MainWindow::SetTranslateResult(TranslateResult translateResult)
 {
 	this->translateResult.Free();
 	this->translateResult = translateResult;
-	this->Maximize();
+	
+	POINT headerBottomRight = this->headerWindow->RenderResult(this->translateResult);
+	POINT contentBottomRight = this->translateResultWindow->RenderResult(this->translateResult);
 
-	this->headerWindow->RenderResult(this->translateResult);
-	this->translateResultWindow->RenderResult(this->translateResult);
+	this->InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
+	this->Maximize();
 }
 
-void MainWindow::InitializeScrollbars(UINT horizontalChars, UINT verticalChars)
+void MainWindow::InitializeScrollbars(int contentWidth, int contentHeight)
 {
 	SCROLLINFO si;
 
@@ -112,7 +100,7 @@ void MainWindow::InitializeScrollbars(UINT horizontalChars, UINT verticalChars)
 	si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.nMin = 0;
 	si.nPos = 0;
-	si.nMax = verticalChars;
+	si.nMax = contentHeight / SCROLL_CHAR_Y;
 	si.nPage = (int)(WINDOW_HEIGHT / SCROLL_CHAR_Y);
 	SetScrollInfo(this->hWindow, SB_VERT, &si, TRUE);
 
@@ -120,7 +108,7 @@ void MainWindow::InitializeScrollbars(UINT horizontalChars, UINT verticalChars)
 	si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.nMin = 0;
 	si.nPos = 0;
-	si.nMax = horizontalChars;
+	si.nMax = contentWidth / SCROLL_CHAR_X;
 	si.nPage = (int)(WINDOW_WIDTH / SCROLL_CHAR_X);
 	SetScrollInfo(this->hWindow, SB_HORZ, &si, TRUE);
 }

@@ -2,15 +2,14 @@
 #include "TranslateResultWindow.h"
 #include "TranslateResult.h"
 
-TranslateResultWindow::TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) : ContentWindow(parentWindow, hInstance, x, y, 1000, 2000){ }
+TranslateResultWindow::TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) 
+: ContentWindow(parentWindow, hInstance, x, y, 2000, 3000){ }
 
 POINT TranslateResultWindow::RenderDC()
 {	
 	ContentWindow::RenderDC();
 
 	POINT bottomRight = { 0, 0 };
-
-	const int categoryMargin = 10;
 	int curY = 0;
 
 	for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i)
@@ -22,8 +21,8 @@ POINT TranslateResultWindow::RenderDC()
 
 		if (_tcslen(category.PartOfSpeech) != 0)
 		{
-			Utilities::PrintText(inMemoryHDC, L" - ", fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY, &bottomRight);
-			Utilities::PrintText(inMemoryHDC, category.PartOfSpeech, fontItalic, COLOR_GRAY, baseFormBottomRight.x + 17, curY, &bottomRight);
+			wstring text = L" - " + wstring(category.PartOfSpeech);
+			Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY, &bottomRight);
 		}
 
 		// Draw words
@@ -45,8 +44,12 @@ POINT TranslateResultWindow::RenderDC()
 			curY += LINE_HEIGHT;
 		}
 
-		curY += categoryMargin;
+		curY += LINE_HEIGHT/2;
 	}
+
+	bottomRight.y += LINE_HEIGHT * 3;
+	bottomRight.x += PADDING * 3;
+
 	return bottomRight;
 }
 

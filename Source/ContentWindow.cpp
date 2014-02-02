@@ -137,12 +137,18 @@ void ContentWindow::InitializeInMemoryDC()
 	SelectObject(this->inMemoryHDC, bitmap);
 }
 
-void ContentWindow::RenderResult(TranslateResult translateResult)
+POINT ContentWindow::RenderResult(TranslateResult translateResult)
 {
 	this->translateResult = translateResult;
-	RenderDC();
-	MoveWindow(this->hWindow, this->initialX, this->initialY, width, height, FALSE);
+	POINT bottomRight = RenderDC();
+	this->ResetWindow(bottomRight);
 	InvalidateRect(this->hWindow, NULL, FALSE);
+	return bottomRight;
+}
+
+void ContentWindow::ResetWindow(POINT bottomRight)
+{
+	MoveWindow(this->hWindow, this->initialX, this->initialY, bottomRight.x, bottomRight.y, FALSE);
 }
 
 POINT ContentWindow::RenderDC()
