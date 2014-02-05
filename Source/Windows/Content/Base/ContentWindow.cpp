@@ -11,10 +11,9 @@ ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DW
 	this->height = height;
 
 	const TCHAR* className = TEXT("STT_CONTENT");
-	WNDCLASSEX wnd;
+	WNDCLASSEX wnd = { 0 };
 	if (!GetClassInfoEx(hInstance, className, &wnd))
 	{
-		wnd = { 0 };
 		wnd.hInstance = hInstance;
 		wnd.lpszClassName = className;
 		wnd.lpfnWndProc = WndProc;
@@ -44,6 +43,9 @@ ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DW
 	this->InitializeFonts();
 	this->InitializeBrushes();
 	this->InitializeInMemoryDC();
+
+	COLOR_GRAY = RGB(119, 119, 119);
+	COLOR_BLACK = RGB(0, 0, 0);
 }
 
 HWND ContentWindow::GetHandle()
@@ -158,7 +160,7 @@ POINT ContentWindow::RenderDC()
 	rect.bottom = height;
 	rect.right = width;
 	FillRect(inMemoryHDC, &rect, CreateSolidBrush(RGB(255, 255, 255)));
-	return { 0 };
+	return POINT();
 }
 
 void ContentWindow::Draw()

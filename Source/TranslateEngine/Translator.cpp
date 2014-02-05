@@ -23,7 +23,7 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	bool parsingSuccessful = reader.parse(json, root );
 	if (!parsingSuccessful)
 	{
-		return result;;
+		return result;
 	}
 
 	Json::Value sentences = root.get("sentences","[]");

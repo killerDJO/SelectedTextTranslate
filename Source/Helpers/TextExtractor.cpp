@@ -36,9 +36,7 @@ string TextExtractor::GetSelectedText()
 
 		if(lpstr)
 		{
-			CHAR buffer[65535];
-			int len = WideCharToMultiByte(20866,0,lpstr,-1,buffer,65535,NULL,NULL);
-			result = string(buffer);
+			result = Utilities::GetString(lpstr);
 		}
 
 		GlobalUnlock(hglb);

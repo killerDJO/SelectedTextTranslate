@@ -68,7 +68,7 @@ LRESULT CALLBACK AudioButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 	tme.dwHoverTime = 10;
 
 	AudioButtonWindow* instance = (AudioButtonWindow*)dwRefData;
-	HBITMAP hBitmap;
+
 	switch (message)
 	{
 	case WM_MOUSEMOVE:

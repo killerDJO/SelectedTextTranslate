@@ -1,0 +1,21 @@
+﻿Build started 2/2/2014 7:04:38 PM.
+     1>Project "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\test_lib_json.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../../include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"../../build/vs71/debug/test_lib_json\\" /Fd"../../build/vs71/debug/test_lib_json\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\test_lib_json\jsontest.cpp ..\..\src\test_lib_json\main.cpp
+         main.cpp
+         jsontest.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"../../build/vs71/debug/test_lib_json\test_lib_json.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"../../build/vs71/debug/test_lib_json\test_lib_json.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../../build/vs71/debug/test_lib_json\test_lib_json.lib" /MACHINE:X86 /SAFESEH ../../build/vs71/debug/test_lib_json\jsontest.obj
+         ../../build/vs71/debug/test_lib_json\main.obj
+         "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\build\vs71\debug\lib_json\lib_json.lib"
+     1>jsontest.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+     1>main.obj : error LNK2019: unresolved external symbol "protected: void __thiscall Json::ValueIteratorBase::increment(void)" (?increment@ValueIteratorBase@Json@@IAEXXZ) referenced in function "public: class Json::ValueConstIterator & __thiscall Json::ValueConstIterator::operator++(void)" (??EValueConstIterator@Json@@QAEAAV01@XZ)
+     1>main.obj : error LNK2019: unresolved external symbol "protected: bool __thiscall Json::ValueIteratorBase::isEqual(class Json::ValueIteratorBase const &)const " (?isEqual@ValueIteratorBase@Json@@IBE_NABV12@@Z) referenced in function "public: bool __thiscall Json::ValueIteratorBase::operator!=(class Json::ValueIteratorBase const &)const " (??9ValueIteratorBase@Json@@QBE_NABV01@@Z)
+     1>main.obj : error LNK2001: unresolved external symbol "public: static int const Json::Value::maxInt" (?maxInt@Value@Json@@2HB)
+     1>../../build/vs71/debug/test_lib_json\test_lib_json.exe : fatal error LNK1120: 3 unresolved externals
+     1>Done Building Project "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\test_lib_json.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.83

@@ -8,23 +8,27 @@ string RequestHelper::GetResponse(string url)
 	curl = curl_easy_init();
 
 	string downloadedResponse;
+	
+	curl_slist *headers = NULL;
+	headers = curl_slist_append(headers, "User-Agent: Mozilla/5.0");
 
 	if (curl)
 	{
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
+		//curl_easy_setopt(curl, CURLOPT_PROXY, "127.0.0.1:8888");	
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Writer);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &downloadedResponse);
 		res = curl_easy_perform(curl);
 
+		curl_easy_cleanup(curl);
+		curl_slist_free_all(headers);
+
 		if (CURLE_OK == res)
 		{
-			char *ct;
-			res = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &ct);
-			if ((CURLE_OK == res) && ct)
-				return downloadedResponse;
-		}
-		curl_easy_cleanup(curl);
+			return downloadedResponse;
+		}			
 	}
 	return NULL;
 }

@@ -1,62 +1,135 @@
-﻿Build started 1/4/2014 9:08:25 PM.
-     1>Project "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\lib_json.vcxproj" on node 2 (Rebuild target(s)).
+﻿Build started 2/3/2014 11:24:35 AM.
+     1>Project "C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\lib_json.vcxproj" on node 2 (Rebuild target(s)).
+       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../../include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D JSON_DLL_BUILD /D NDEBUG /D _LIB /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Za /Zc:wchar_t /Zc:forScope- /GR /FAs /Fa"../../build/vs71/release/lib_json\\" /Fo"../../build/vs71/release/lib_json\\" /Fd"../../build/vs71/release/lib_json\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\lib_json\json_reader.cpp ..\..\src\lib_json\json_value.cpp ..\..\src\lib_json\json_writer.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I../../include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D JSON_DLL_BUILD /D NDEBUG /D _LIB /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Za /Zc:wchar_t /Zc:forScope- /GR /FAs /Fa"../../build/vs71/release/lib_json\\" /Fo"../../build/vs71/release/lib_json\\" /Fd"../../build/vs71/release/lib_json\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\lib_json\json_reader.cpp ..\..\src\lib_json\json_value.cpp ..\..\src\lib_json\json_writer.cpp
          json_reader.cpp
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(155): warning C4251: 'Json::Reader::nodes_' : class 'std::stack<Json::Value *,std::deque<_Ty,std::allocator<_Ty>>>' needs to have dll-interface to be used by clients of class 'Json::Reader'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(155): warning C4251: 'Json::Reader::nodes_' : class 'std::stack<_Ty>' needs to have dll-interface to be used by clients of class 'Json::Reader'
                  with
                  [
                      _Ty=Json::Value *
                  ]
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(156): warning C4251: 'Json::Reader::errors_' : class 'std::deque<Json::Reader::ErrorInfo,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Json::Reader'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(156): warning C4251: 'Json::Reader::errors_' : class 'std::deque<_Ty>' needs to have dll-interface to be used by clients of class 'Json::Reader'
                  with
                  [
                      _Ty=Json::Reader::ErrorInfo
                  ]
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(157): warning C4251: 'Json::Reader::document_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::Reader'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(163): warning C4251: 'Json::Reader::commentsBefore_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::Reader'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(157): warning C4251: 'Json::Reader::document_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::Reader'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/reader.h(163): warning C4251: 'Json::Reader::commentsBefore_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::Reader'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
          json_value.cpp
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(43): warning C4251: 'Json::FastWriter::document_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::FastWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(94): warning C4251: 'Json::StyledWriter::childValues_' : class 'std::vector<std::string,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(43): warning C4251: 'Json::FastWriter::document_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::FastWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(94): warning C4251: 'Json::StyledWriter::childValues_' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
                  with
                  [
                      _Ty=std::string
                  ]
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(95): warning C4251: 'Json::StyledWriter::document_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(96): warning C4251: 'Json::StyledWriter::indentString_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(152): warning C4251: 'Json::StyledStreamWriter::childValues_' : class 'std::vector<std::string,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(95): warning C4251: 'Json::StyledWriter::document_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(96): warning C4251: 'Json::StyledWriter::indentString_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(152): warning C4251: 'Json::StyledStreamWriter::childValues_' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
                  with
                  [
                      _Ty=std::string
                  ]
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(154): warning C4251: 'Json::StyledStreamWriter::indentString_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(156): warning C4251: 'Json::StyledStreamWriter::indentation_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(154): warning C4251: 'Json::StyledStreamWriter::indentString_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(156): warning C4251: 'Json::StyledStreamWriter::indentation_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
          json_writer.cpp
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(43): warning C4251: 'Json::FastWriter::document_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::FastWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(94): warning C4251: 'Json::StyledWriter::childValues_' : class 'std::vector<std::string,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(43): warning C4251: 'Json::FastWriter::document_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::FastWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(94): warning C4251: 'Json::StyledWriter::childValues_' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
                  with
                  [
                      _Ty=std::string
                  ]
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(95): warning C4251: 'Json::StyledWriter::document_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(96): warning C4251: 'Json::StyledWriter::indentString_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(152): warning C4251: 'Json::StyledStreamWriter::childValues_' : class 'std::vector<std::string,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(95): warning C4251: 'Json::StyledWriter::document_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(96): warning C4251: 'Json::StyledWriter::indentString_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(152): warning C4251: 'Json::StyledStreamWriter::childValues_' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
                  with
                  [
                      _Ty=std::string
                  ]
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(154): warning C4251: 'Json::StyledStreamWriter::indentString_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
-     1>C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(156): warning C4251: 'Json::StyledStreamWriter::indentation_' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(154): warning C4251: 'Json::StyledStreamWriter::indentString_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\include\json/writer.h(156): warning C4251: 'Json::StyledStreamWriter::indentation_' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'Json::StyledStreamWriter'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"../../build/vs71/release/lib_json\lib_json.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"../../build/vs71/release/lib_json\lib_json.pdb" /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../../build/vs71/release/lib_json\lib_json.lib" /MACHINE:X86 /SAFESEH /DLL ../../build/vs71/release/lib_json\json_reader.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"../../build/vs71/release/lib_json\lib_json.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"../../build/vs71/release/lib_json\lib_json.pdb" /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../../build/vs71/release/lib_json\lib_json.lib" /MACHINE:X86 /SAFESEH /DLL ../../build/vs71/release/lib_json\json_reader.obj
          ../../build/vs71/release/lib_json\json_value.obj
          ../../build/vs71/release/lib_json\json_writer.obj
             Creating library ../../build/vs71/release/lib_json\lib_json.lib and object ../../build/vs71/release/lib_json\lib_json.exp
          Generating code
          Finished generating code
-         lib_json.vcxproj -> C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\../../build/vs71/release/lib_json\lib_json.dll
-     1>Done Building Project "C:\Users\Евгений\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\lib_json.vcxproj" (Rebuild target(s)).
+         lib_json.vcxproj -> C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\../../build/vs71/release/lib_json\lib_json.dll
+     1>Done Building Project "C:\Users\ievgen.andrushchak\Dropbox\Projects\SelectedTextTranslate\SelectedTextTranslate\jsoncpp\makefiles\vs71\lib_json.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:04.36
+Time Elapsed 00:00:06.46

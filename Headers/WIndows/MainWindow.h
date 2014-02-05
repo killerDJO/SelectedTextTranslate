@@ -16,12 +16,12 @@
 class MainWindow
 {
 private:
-	const UINT		WINDOW_WIDTH	= 300;
-	const UINT		WINDOW_HEIGHT	= 400;
-	const UINT		WINDOW_PADDING  = 5;
+	static const UINT	WINDOW_WIDTH	= 300;
+	static const UINT	WINDOW_HEIGHT = 400;
+	static const UINT	WINDOW_PADDING = 5;
 
-	const double	SCROLL_CHAR_X = 8;
-	const double	SCROLL_CHAR_Y = 20;
+	static const int	SCROLL_CHAR_X = 8;
+	static const int	SCROLL_CHAR_Y = 20;
 
 	NOTIFYICONDATA	notifyIconData;
 	HWND			hWindow;

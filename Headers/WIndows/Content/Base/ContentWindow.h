@@ -6,8 +6,8 @@
 class ContentWindow
 {
 protected:
-	const int PADDING = 15;
-	const int LINE_HEIGHT = 20;
+	static const int PADDING = 15;
+	static const int LINE_HEIGHT = 20;
 
 	int initialX, initialY;
 	int width, height;
@@ -19,8 +19,8 @@ protected:
 
 	TranslateResult translateResult;
 	
-	COLORREF COLOR_GRAY = RGB(119, 119, 119);
-	COLORREF COLOR_BLACK = RGB(0, 0, 0);
+	COLORREF COLOR_GRAY;
+	COLORREF COLOR_BLACK;
 
 	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
 	HBRUSH grayBrush;
