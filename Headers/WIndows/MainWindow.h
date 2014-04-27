@@ -13,6 +13,8 @@
 #define ID_TRAY_APP_ICON	5000
 #define WM_TRAYICON ( WM_USER + 1 )
 
+class TranslateResultWindow;
+
 class MainWindow
 {
 private:
@@ -30,7 +32,7 @@ private:
 	HINSTANCE		hInstance;
 
 	HeaderWindow * headerWindow;
-	TranslateResultWindow  * translateResultWindow;
+	TranslateResultWindow * translateResultWindow;
 
 	TranslateResult translateResult;
 
@@ -49,6 +51,7 @@ public:
 	void Maximize();
 
 	void SetTranslateResult(TranslateResult translateResult, BOOL maximize);
+	void Render(TranslateResult translateResult, int vScroll = 0);
 	void PlayText();
 	
 	void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);

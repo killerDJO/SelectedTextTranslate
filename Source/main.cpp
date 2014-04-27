@@ -70,15 +70,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_mainWindow->Minimize();
 		return 0;
 	}
+
 	int zDelta;
 	switch (message)
 	{
-		case WM_CREATE:
-			g_menu = CreatePopupMenu();			
-			AppendMenu(g_menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM,  TEXT( "Translate from clipboard" ) );
+	case WM_CREATE:
+		{
+			g_menu = CreatePopupMenu();
+			AppendMenu(g_menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM, TEXT("Translate from clipboard"));
 			AppendMenu(g_menu, MF_SEPARATOR, NULL, NULL);
-			AppendMenu(g_menu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM,  TEXT( "Exit" ) );				
-			break;  
+			AppendMenu(g_menu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit"));
+
+			break;
+		}
 
 		case WM_SIZING:			
 			return g_mainWindow->ProcessSizing(wParam, lParam);

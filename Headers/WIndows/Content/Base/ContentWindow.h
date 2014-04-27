@@ -27,7 +27,6 @@ protected:
 	COLORREF COLOR_BLACK;
 
 	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
-	long lfHeight, lfHeightHeader, lfHeightSmall;
 	HBRUSH grayBrush;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -28,7 +28,7 @@
     <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp" />
     <ClCompile Include="Source\TranslateEngine\Translator.cpp" />
     <ClCompile Include="Source\Windows\Buttons\AudioButtonWindow.cpp" />
-    <ClCompile Include="Source\Windows\Buttons\HideButtonWindow.cpp" />
+    <ClCompile Include="Source\Windows\Buttons\ExpandButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\HeaderWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\TranslateResultWindow.cpp" />
@@ -46,7 +46,7 @@
     <ClInclude Include="Headers\TranslateEngine\TextPlayer.h" />
     <ClInclude Include="Headers\TranslateEngine\Translator.h" />
     <ClInclude Include="Headers\WIndows\Buttons\AudioButtonWindow.h" />
-    <ClInclude Include="Headers\WIndows\Buttons\HideButtonWindow.h" />
+    <ClInclude Include="Headers\WIndows\Buttons\ExpandButtonWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\Base\ContentWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h" />

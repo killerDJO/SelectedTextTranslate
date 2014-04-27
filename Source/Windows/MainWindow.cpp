@@ -43,7 +43,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 	this->InitNotifyIconData();
 
-	this->translateResultWindow = new TranslateResultWindow(this->hWindow, this->hInstance, 0, roundToInt(50 * kY - 2), 2000, 3000);
+	this->translateResultWindow = new TranslateResultWindow(this, 0, roundToInt(50 * kY - 2), 2000, 3000);
 	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
 
 	Minimize();
@@ -103,15 +103,28 @@ void MainWindow::PlayText()
 void MainWindow::SetTranslateResult(TranslateResult translateResult, BOOL maximize)
 {
 	this->translateResult.Free();
-	this->translateResult = translateResult;
 	
+	this->Render(translateResult);
+	
+	if (maximize)
+	{
+		this->Maximize();
+	}
+}
+
+void MainWindow::Render(TranslateResult translateResult, int vScroll)
+{
+	InvalidateRect(this->hWindow, NULL, TRUE);
+
+	this->translateResult = translateResult;
+
 	POINT headerBottomRight = this->headerWindow->RenderResult(this->translateResult);
 	POINT contentBottomRight = this->translateResultWindow->RenderResult(this->translateResult);
 
 	this->InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
-	if (maximize)
-	{
-		this->Maximize();
+
+	for (int i = 0; i < vScroll; ++i){
+		SendMessage(this->hWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
 	}
 }
 

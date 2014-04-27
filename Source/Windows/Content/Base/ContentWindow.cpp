@@ -79,25 +79,28 @@ HINSTANCE ContentWindow::GetInstance()
 LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	ContentWindow* instance = (ContentWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-	GESTUREINFO gi;
-	CREATESTRUCT* createstruct;
-	RECT rcWindow;
-	POINTS pos;
+
 	switch (message)
 	{
+	
 	case WM_NCCREATE:
 	case WM_CREATE:
-		createstruct = (CREATESTRUCT*)lParam;
+	{
+		CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
 		return TRUE;
+	}
 
 	case WM_MOVE:
-		pos = MAKEPOINTS(lParam);
+	{
+		RECT rcWindow;
+		POINTS pos = MAKEPOINTS(lParam);
 		GetWindowRect(hWnd, &rcWindow);
 		MoveWindow(hWnd, pos.x, pos.y, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, FALSE);
 		InvalidateRect(hWnd, NULL, FALSE);
 		return TRUE;
-	
+	}
+
 	case WM_NCPAINT:
 	case WM_PAINT:
 		instance->Draw();
@@ -111,15 +114,10 @@ LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	case WM_VSCROLL:
 		break;
 
-	case WM_GESTURE:	
-		ZeroMemory(&gi, sizeof(GESTUREINFO));
-		gi.cbSize = sizeof(GESTUREINFO);
-		GetGestureInfo((HGESTUREINFO)lParam, &gi);
-		break;
-
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+
 	return 0;
 }
 
@@ -127,9 +125,9 @@ void ContentWindow::InitializeFonts()
 {
 	HDC hdc = GetDC(hWindow);
 
-	this->lfHeight = -MulDiv(FONT_HEIGHT / 2, GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	this->lfHeightHeader = -MulDiv(int(FONT_HEIGHT * 3 / 5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	this->lfHeightSmall = -MulDiv(int(FONT_HEIGHT * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	long lfHeight = -MulDiv(FONT_HEIGHT / 2, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	long lfHeightHeader = -MulDiv(int(FONT_HEIGHT * 3 / 5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	long lfHeightSmall = -MulDiv(int(FONT_HEIGHT * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
 
 	this->fontNormal = CreateFont(lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 	this->fontHeader = CreateFont(lfHeightHeader, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));

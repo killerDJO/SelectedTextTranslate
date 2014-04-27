@@ -105,7 +105,7 @@
     <ClCompile Include="Source\Helpers\Utilities.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Buttons\HideButtonWindow.cpp">
+    <ClCompile Include="Source\Windows\Buttons\ExpandButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
   </ItemGroup>
@@ -169,7 +169,7 @@
     <ClInclude Include="Headers\WIndows\MainWindow.h">
       <Filter>Headers\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\WIndows\Buttons\HideButtonWindow.h">
+    <ClInclude Include="Headers\WIndows\Buttons\ExpandButtonWindow.h">
       <Filter>Headers\Windows\Buttons</Filter>
     </ClInclude>
   </ItemGroup>
