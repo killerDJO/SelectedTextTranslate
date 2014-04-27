@@ -6,8 +6,12 @@
 class ContentWindow
 {
 protected:
-	static const int PADDING = 15;
-	static const int LINE_HEIGHT = 20;
+	const	UINT	FONT_HEIGHT = 20;
+	UINT	PADDING_X;
+	UINT	PADDING_Y;
+	UINT	LINE_HEIGHT;
+	double	kX;
+	double	kY;
 
 	int initialX, initialY;
 	int width, height;
@@ -23,14 +27,17 @@ protected:
 	COLORREF COLOR_BLACK;
 
 	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
+	long lfHeight, lfHeightHeader, lfHeightSmall;
 	HBRUSH grayBrush;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	virtual void ComputeParameters();
 	virtual void InitializeFonts();
 	virtual void InitializeBrushes();
 	virtual void InitializeInMemoryDC();
 	virtual POINT RenderDC();
 	virtual void ResetWindow(POINT bottomRight);
+	virtual DWORD AdjustToResolution(double value, double k);
 
 public:
 	ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);

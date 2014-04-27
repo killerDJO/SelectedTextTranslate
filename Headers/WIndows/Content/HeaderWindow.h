@@ -15,7 +15,7 @@ class HeaderWindow : public ContentWindow
 	virtual void ResetWindow(POINT bottomRight);
 	
 public:
-	HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
+	HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
 	~HeaderWindow();
 
 	void PlayText();	

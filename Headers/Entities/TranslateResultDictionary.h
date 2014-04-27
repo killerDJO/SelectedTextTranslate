@@ -6,5 +6,6 @@ struct TranslateResultDictionary
 {
 	wchar_t* PartOfSpeech;
 	wchar_t* BaseForm;
+	bool IsExtendedList;
 	vector<TranslateResultDictionaryEntry> Entries;
 };

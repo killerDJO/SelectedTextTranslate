@@ -1,8 +1,8 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Content\HeaderWindow.h"
 
-HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y) 
-: ContentWindow(parentWindow, hInstance, x, y, 2000, 50) 
+HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height) 
+: ContentWindow(parentWindow, hInstance, x, y, width, height) 
 { 
 	this->InitializeAudioButton();
 	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)HeaderWindow::WndProc);
@@ -10,7 +10,15 @@ HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWOR
 
 void HeaderWindow::InitializeAudioButton()
 {
-	audioButton = new AudioButtonWindow(this->hWindow, this->hInstance, 15, 26);
+	DWORD imageSize = 15;
+	DWORD adjustedSize = AdjustToResolution(15, kY);
+	audioButton = new AudioButtonWindow(
+		this->hWindow, 
+		this->hInstance, 
+		PADDING_X,
+		PADDING_Y / 2 + AdjustToResolution(19, kY) + (adjustedSize - imageSize),
+		imageSize,
+		imageSize);
 }
 
 LRESULT CALLBACK HeaderWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -40,10 +48,10 @@ POINT HeaderWindow::RenderDC()
 
 	POINT bottomRight = { 0, 0 };
 
-	int curY = PADDING / 2;
+	int curY = PADDING_Y / 2;
 
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, COLOR_BLACK, PADDING, curY, &bottomRight);
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING + 17, curY + 20, &bottomRight);
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, COLOR_BLACK, PADDING_X, curY, &bottomRight);
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING_X + AdjustToResolution(16, kX), curY + AdjustToResolution(20, kY), &bottomRight);
 
 	RECT rect;
 	rect.left = 0;
@@ -52,7 +60,7 @@ POINT HeaderWindow::RenderDC()
 	rect.bottom = rect.top + 1;
 	Utilities::DrawRect(this->inMemoryHDC, rect, this->grayBrush, &POINT());
 
-	bottomRight.x += PADDING * 3;
+	bottomRight.x += PADDING_X * 3;
 	bottomRight.y = rect.bottom;
 
 	return bottomRight;

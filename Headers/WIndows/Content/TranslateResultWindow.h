@@ -9,6 +9,6 @@ private:
 	virtual POINT RenderDC();
 
 public:
-	TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
+	TranslateResultWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
 	~TranslateResultWindow();	
 };

@@ -16,7 +16,6 @@ string RequestHelper::GetResponse(string url)
 	{
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
-		//curl_easy_setopt(curl, CURLOPT_PROXY, "127.0.0.1:8888");	
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Writer);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &downloadedResponse);

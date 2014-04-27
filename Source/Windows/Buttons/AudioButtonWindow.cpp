@@ -1,7 +1,7 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Buttons\AudioButtonWindow.h"
 
-AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y)
+AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
 {
 	this->hInstance = hInstance;
 	this->hWindow = CreateWindowA(
@@ -10,8 +10,8 @@ AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWO
 		WS_CHILD | WS_VISIBLE | SS_REALSIZECONTROL | SS_BITMAP | SS_NOTIFY,
 		x,
 		y,
-		15,
-		15,
+		width,
+		height,
 		parentWindow,
 		NULL,
 		this->hInstance,
@@ -20,7 +20,7 @@ AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWO
 	SetWindowSubclass(this->hWindow, AudioButtonWindow::WndProc, 0, (DWORD)this);
 
 	this->InitializeBitmaps();
-	
+
 	SendMessage(this->hWindow, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)this->imageNormal);
 }
 
@@ -66,16 +66,16 @@ LRESULT CALLBACK AudioButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 	tme.cbSize = sizeof(TRACKMOUSEEVENT);
 	tme.hwndTrack = hWnd;
 	tme.dwHoverTime = 10;
-
+	
 	AudioButtonWindow* instance = (AudioButtonWindow*)dwRefData;
-
 	switch (message)
 	{
 	case WM_MOUSEMOVE:
-		SendMessage(hWnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)instance->GetHoverImage());
-
-		tme.dwFlags = TME_HOVER | TME_LEAVE;
-		TrackMouseEvent(&tme);
+		if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH) {
+			SendMessage(hWnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)instance->GetHoverImage());
+			tme.dwFlags = TME_HOVER | TME_LEAVE;
+			TrackMouseEvent(&tme);
+		}	
 		return TRUE;
 
 	case WM_MOUSEHOVER:
@@ -90,7 +90,6 @@ LRESULT CALLBACK AudioButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
 		SetCursor(LoadCursor(NULL, IDC_ARROW));	
 		return TRUE;
-
 
 	default:
 		break;

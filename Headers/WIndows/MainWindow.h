@@ -16,12 +16,14 @@
 class MainWindow
 {
 private:
-	static const UINT	WINDOW_WIDTH	= 300;
-	static const UINT	WINDOW_HEIGHT = 400;
-	static const UINT	WINDOW_PADDING = 5;
+	UINT	WINDOW_WIDTH;
+	UINT	WINDOW_HEIGHT;
+	UINT	WINDOW_PADDING;
+	double	kX;
+	double	kY;
 
-	static const int	SCROLL_CHAR_X = 8;
-	static const int	SCROLL_CHAR_Y = 20;
+	static const int	SCROLL_CHAR_X	= 8;
+	static const int	SCROLL_CHAR_Y	= 20;
 
 	NOTIFYICONDATA	notifyIconData;
 	HWND			hWindow;
@@ -32,6 +34,7 @@ private:
 
 	TranslateResult translateResult;
 
+	void ComputeWindowDimensions(RECT workarea);
 	void InitNotifyIconData();
 	void InitializeScrollbars(int contentWidth, int contentHeight);
 

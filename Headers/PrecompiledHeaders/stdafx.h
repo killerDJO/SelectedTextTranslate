@@ -3,6 +3,8 @@
 #define WIN32_LEAN_AND_MEAN 
 #define _SCL_SECURE_NO_WARNINGS
 
+#define roundToInt(x) int(round(x))
+
 #include <SDKDDKVer.h>
 
 #include <windows.h>

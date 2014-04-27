@@ -24,6 +24,9 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 	RECT workarea;
 	SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
+	
+	this->ComputeWindowDimensions(workarea);
+
 	this->hWindow = CreateWindowEx(
 		WS_EX_TOOLWINDOW,
 		className,
@@ -40,10 +43,22 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 	this->InitNotifyIconData();
 
-	this->translateResultWindow = new TranslateResultWindow(this->hWindow, this->hInstance, 0, 50);
-	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0);
+	this->translateResultWindow = new TranslateResultWindow(this->hWindow, this->hInstance, 0, roundToInt(50 * kY - 2), 2000, 3000);
+	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
 
 	Minimize();
+}
+
+void MainWindow::ComputeWindowDimensions(RECT workarea)
+{
+	UINT screenResolutionX = workarea.right - workarea.left;
+	UINT screenResolutionY = workarea.bottom - workarea.top;
+	this->kX = screenResolutionX / 1440.0;
+	this->kY = screenResolutionY / 860.0;
+
+	this->WINDOW_WIDTH = roundToInt(300 * this->kX);
+	this->WINDOW_HEIGHT = roundToInt(400 * this->kY);
+	this->WINDOW_PADDING = 5;
 }
 
 HWND MainWindow::GetHandle()

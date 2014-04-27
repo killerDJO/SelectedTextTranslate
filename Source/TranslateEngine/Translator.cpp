@@ -39,6 +39,7 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	for(size_t i = 0; i < dict.size(); ++i)
 	{
 		TranslateResultDictionary category;
+		category.IsExtendedList = false;
 		category.PartOfSpeech = Utilities::GetWideChar(dict[i].get("pos", "").asString());
 		category.BaseForm = Utilities::GetWideChar(dict[i].get("base_form", "").asString());
 		Json::Value entries =dict[i].get("entry", "[]");

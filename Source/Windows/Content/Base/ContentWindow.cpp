@@ -10,6 +10,8 @@ ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DW
 	this->width = width;
 	this->height = height;
 
+	this->ComputeParameters();
+
 	const TCHAR* className = TEXT("STT_CONTENT");
 	WNDCLASSEX wnd = { 0 };
 	if (!GetClassInfoEx(hInstance, className, &wnd))
@@ -48,6 +50,22 @@ ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DW
 	COLOR_BLACK = RGB(0, 0, 0);
 }
 
+void ContentWindow::ComputeParameters()
+{
+	RECT size;
+	GetWindowRect(this->parentWindow, &size);
+
+	UINT width = size.right - size.left;
+	UINT height = size.bottom - size.top;
+
+	this->kX = width / 300.0;
+	this->kY = height / 400.0;
+
+	this->LINE_HEIGHT = AdjustToResolution(20, kY);
+	this->PADDING_X = AdjustToResolution(15, kX);
+	this->PADDING_Y = AdjustToResolution(15, kY);
+}
+
 HWND ContentWindow::GetHandle()
 {
 	return this->hWindow;
@@ -61,11 +79,10 @@ HINSTANCE ContentWindow::GetInstance()
 LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	ContentWindow* instance = (ContentWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-	
+	GESTUREINFO gi;
 	CREATESTRUCT* createstruct;
 	RECT rcWindow;
 	POINTS pos;
-
 	switch (message)
 	{
 	case WM_NCCREATE:
@@ -93,6 +110,13 @@ LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	case WM_HSCROLL:
 	case WM_VSCROLL:
 		break;
+
+	case WM_GESTURE:	
+		ZeroMemory(&gi, sizeof(GESTUREINFO));
+		gi.cbSize = sizeof(GESTUREINFO);
+		GetGestureInfo((HGESTUREINFO)lParam, &gi);
+		break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -103,9 +127,9 @@ void ContentWindow::InitializeFonts()
 {
 	HDC hdc = GetDC(hWindow);
 
-	long lfHeight = -MulDiv(LINE_HEIGHT / 2, GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	long lfHeightHeader = -MulDiv(int(LINE_HEIGHT * 3 / 5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	long lfHeightSmall = -MulDiv(int(LINE_HEIGHT * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	this->lfHeight = -MulDiv(FONT_HEIGHT / 2, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	this->lfHeightHeader = -MulDiv(int(FONT_HEIGHT * 3 / 5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	this->lfHeightSmall = -MulDiv(int(FONT_HEIGHT * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
 
 	this->fontNormal = CreateFont(lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 	this->fontHeader = CreateFont(lfHeightHeader, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
@@ -171,6 +195,11 @@ void ContentWindow::Draw()
 	DWORD res = BitBlt(hdc, 0, 0, width, height, inMemoryHDC, 0, 0, SRCCOPY);
 
 	EndPaint(this->hWindow, &ps);
+}
+
+DWORD ContentWindow::AdjustToResolution(double value, double k)
+{
+	return int(round(value * k));
 }
 
 ContentWindow::~ContentWindow()

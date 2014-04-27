@@ -13,8 +13,17 @@ UINT WM_TASKBARCREATED;
 HMENU g_menu;
 MainWindow* g_mainWindow;
 
+void AttachConsole()
+{
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+	freopen("CON", "w", stdout);
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
 { 
+	//AttachConsole();
+
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 	{
