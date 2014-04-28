@@ -35,9 +35,37 @@ ExpandButtonWindow::ExpandButtonWindow(HWND parentWindow, HINSTANCE hInstance, D
 	else {
 		text = L"show less results";
 	}
+	DWORD adjustedWidth = GetTextWidth(text);
+
+	MoveWindow(this->hWindow, x, y, adjustedWidth, height, TRUE);
+	
 	SetWindowText(this->hWindow, text.c_str());
 }
 
+DWORD ExpandButtonWindow::GetTextWidth(wstring text)
+{
+	HDC fakeDC = CreateCompatibleDC(NULL);
+
+	BITMAPINFO i;
+	ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
+	i.bmiHeader.biWidth = 2000;
+	i.bmiHeader.biHeight = 50;
+	i.bmiHeader.biPlanes = 1;
+	i.bmiHeader.biBitCount = 24;
+	i.bmiHeader.biSizeImage = 0;
+	i.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	i.bmiHeader.biClrUsed = 0;
+	i.bmiHeader.biClrImportant = 0;
+	VOID *pvBits;
+	HBITMAP bitmap = CreateDIBSection(fakeDC, &i, DIB_RGB_COLORS, &pvBits, NULL, 0);
+
+	SelectObject(fakeDC, this->font);
+	SIZE textSize;
+	GetTextExtentPoint32(fakeDC, text.c_str(), wcslen(text.c_str()), &textSize);
+
+	return textSize.cx;
+
+}
 HWND ExpandButtonWindow::GetHandle()
 {
 	return this->hWindow;

@@ -12,6 +12,7 @@ private:
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 	void InitializeFonts();
+	DWORD GetTextWidth(wstring text);
 public:
 	ExpandButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD hiddenCount, bool expandState);
 	~ExpandButtonWindow();
