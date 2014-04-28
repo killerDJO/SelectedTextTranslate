@@ -60,6 +60,7 @@ POINT TranslateResultWindow::RenderDC()
 
 	POINT bottomRight = { 0, 0 };
 	int curY = LINE_HEIGHT / 4;
+	int dY = (kY - 1) * 10;
 
 	for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i)
 	{
@@ -71,7 +72,7 @@ POINT TranslateResultWindow::RenderDC()
 		if (_tcslen(category.PartOfSpeech) != 0)
 		{
 			wstring text = L" - " + wstring(category.PartOfSpeech);
-			Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY, &bottomRight);
+			Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY - dY, &bottomRight);
 		}
 		
 		vector<TranslateResultDictionaryEntry> showedEntries(0);
@@ -105,7 +106,7 @@ POINT TranslateResultWindow::RenderDC()
 					{
 						text += L", ";
 					}
-					wordBottomRight = Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY, &bottomRight);
+					wordBottomRight = Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY - dY, &bottomRight);
 				}
 			}			
 
@@ -114,7 +115,7 @@ POINT TranslateResultWindow::RenderDC()
 
 			RECT rect;
 			rect.right = PADDING_X + rateUnit * 3;
-			rect.top = curY + LINE_HEIGHT / 3;
+			rect.top = curY + LINE_HEIGHT / 3 - dY*2;
 			rect.bottom = rect.top + LINE_HEIGHT / 3;
 			rect.left = PADDING_X + k * rateUnit;
 			Utilities::DrawRect(inMemoryHDC, rect, this->grayBrush, &bottomRight);

@@ -16,7 +16,7 @@ void HeaderWindow::InitializeAudioButton()
 		this->hWindow, 
 		this->hInstance, 
 		PADDING_X,
-		PADDING_Y / 2 + AdjustToResolution(19, kY) + (adjustedSize - imageSize),
+		PADDING_Y / 2 + AdjustToResolution(19, kY) + (adjustedSize - imageSize)/2,
 		imageSize,
 		imageSize);
 }
@@ -51,7 +51,7 @@ POINT HeaderWindow::RenderDC()
 	int curY = PADDING_Y / 2;
 
 	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, COLOR_BLACK, PADDING_X, curY, &bottomRight);
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING_X + AdjustToResolution(16, kX), curY + AdjustToResolution(20, kY), &bottomRight);
+	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING_X + AdjustToResolution(16, kY) - (kY-1)*10, curY + AdjustToResolution(20, kY), &bottomRight);
 
 	RECT rect;
 	rect.left = 0;
