@@ -15,7 +15,7 @@ LRESULT CALLBACK TranslateResultWindow::WndProc(HWND hWnd, UINT message, WPARAM 
 	switch (message)
 	{
 	case WM_COMMAND:
-		if (LOWORD(wParam) == STN_DBLCLK || LOWORD(wParam) == STN_CLICKED)
+		if (LOWORD(wParam) == STN_DBLCLK || LOWORD(wParam) == STN_CLICKED || LOWORD(wParam) == STN_ENABLE)
 		{
 			int dictionaryIndex = GetWindowLong((HWND)lParam, GWL_ID);
 			instance->ExpandDictionary(dictionaryIndex);
