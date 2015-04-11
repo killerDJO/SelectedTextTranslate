@@ -10,7 +10,7 @@ string RequestHelper::GetResponse(string url)
 	string downloadedResponse;
 	
 	curl_slist *headers = NULL;
-	headers = curl_slist_append(headers, "User-Agent: Mozilla/5.0");
+	headers = curl_slist_append(headers, "User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36");	
 
 	if (curl)
 	{
@@ -47,7 +47,7 @@ string RequestHelper::EscapeText(string text)
 
 int RequestHelper::Writer(void *data, size_t size, size_t nmemb, string *buffer_in)
 {
-	size_t realsize = size * nmemb;
+	size_t realsize = size * nmemb;	
 	buffer_in->append((char*)data, realsize);
 	return realsize;
 }

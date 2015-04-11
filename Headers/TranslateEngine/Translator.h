@@ -12,4 +12,5 @@ public:
 	static TranslateResult TranslateSelectedText();
 private:
 	static TranslateResult ParseJSONResponse(string json);
+	static void ReplaceAll(string &str, const string &search, const string &replace);
 };
