@@ -110,7 +110,7 @@ POINT TranslateResultWindow::RenderDC()
 				}
 			}			
 
-			int k = entry.Score >= 0.05 ? 0 : (entry.Score >= 0.003 ? 1 : 2);
+			int k = entry.Score >= 0.05 ? 0 : (entry.Score >= 0.0025 ? 1 : 2);
 			int rateUnit = AdjustToResolution(8, kX);
 
 			RECT rect;
