@@ -10,6 +10,7 @@ class Translator
 public:
 	static TranslateResult TranslateSentence(string sentence);
 	static TranslateResult TranslateSelectedText();
+	static string GetHash(string sentence, int tkk);
 private:
 	static TranslateResult ParseJSONResponse(string json);
 	static void ReplaceAll(string &str, const string &search, const string &replace);

@@ -9,9 +9,43 @@ TranslateResult Translator::TranslateSelectedText()
 
 TranslateResult Translator::TranslateSentence(string sentence)
 {
-	string translateURL = "http://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&ie=UTF-8&oe=UTF-8&otf=2&srcrom=1&ssel=0&tsel=0&q=" + RequestHelper::EscapeText(sentence);
+	string hash = GetHash(sentence, 0);
+	string translateURL = "http://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + "&q=" + RequestHelper::EscapeText(sentence);
 	string translatorResponse = RequestHelper::GetResponse(translateURL);
 	return ParseJSONResponse(translatorResponse);
+}
+
+// Grabbed from google code
+string Translator::GetHash(string sentence, int tkk)
+{
+	const char* bytes = sentence.c_str();
+
+	long long a = tkk || 0;
+	long long pow32 = 4294967295;
+	long long pow31 = pow32 / 2;
+
+	for (unsigned i = 0; i < strlen(bytes); ++i) {
+		a = a + (unsigned char)bytes[i];
+
+		/* ------ */
+		a = a + (a << 10) & pow32;
+		a = a ^ (unsigned(a) >> 6);
+		/* ------ */
+	}
+
+	/* ------ */
+	a = a + (a << 3) & pow32;
+	a = a ^ (unsigned(a) >> 11);
+	a = a + (a << 15) & pow32;
+	/* ------ */
+
+	if (a < 0) {
+		a = a & pow31 + pow31 + 1;
+	}
+
+	a = a % 1000000;
+
+	return to_string(a) + "." + to_string(a ^ tkk);
 }
 
 // Relevant response has the following format
@@ -38,6 +72,12 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	Json::Value root;
 	Json::Reader reader;
 	TranslateResult result;
+
+	if (json.empty()){
+		result.Sentence.Translation = L"[Error]";
+		result.Sentence.Origin = L"[Error]";
+		return result;
+	}
 
 	// Normalize json response
 	Translator::ReplaceAll(json, ",,", ",null,");

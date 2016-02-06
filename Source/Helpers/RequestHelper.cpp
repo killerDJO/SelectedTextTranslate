@@ -21,15 +21,19 @@ string RequestHelper::GetResponse(string url)
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &downloadedResponse);
 		res = curl_easy_perform(curl);
 
+		long http_code = 0;
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+
 		curl_easy_cleanup(curl);
 		curl_slist_free_all(headers);
 
-		if (CURLE_OK == res)
+		if (CURLE_OK == res && http_code == 200)
 		{
 			return downloadedResponse;
 		}			
 	}
-	return NULL;
+
+	return string();
 }
 
 string RequestHelper::EscapeText(string text)
