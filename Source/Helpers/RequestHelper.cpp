@@ -19,6 +19,7 @@ string RequestHelper::GetResponse(string url)
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Writer);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &downloadedResponse);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
 		res = curl_easy_perform(curl);
 
 		long http_code = 0;
