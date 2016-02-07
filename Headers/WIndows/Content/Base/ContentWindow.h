@@ -20,8 +20,6 @@ protected:
 	HWND hWindow;
 	HINSTANCE hInstance;
 	HDC inMemoryHDC;
-
-	TranslateResult translateResult;
 	
 	COLORREF COLOR_GRAY;
 	COLORREF COLOR_BLACK;
@@ -45,6 +43,9 @@ public:
 	virtual HWND GetHandle();
 	virtual HINSTANCE GetInstance();
 
-	virtual POINT RenderResult(TranslateResult translateResult);
+	virtual POINT RenderResult();
 	virtual void Draw();
+
+	void Show();
+	void Hide();
 };

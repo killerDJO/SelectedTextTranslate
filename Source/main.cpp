@@ -2,10 +2,11 @@
 #include "TranslateEngine\Translator.h"
 #include "Windows\MainWindow.h"
 
-#define ID_TRAY_EXIT_CONTEXT_MENU_ITEM		3000
-#define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM 3002
-#define ID_TRANSLATE_HOTKEY					3003
-#define ID_PLAYTEXT_HOTKEY					3004
+#define ID_TRAY_EXIT_CONTEXT_MENU_ITEM			3000
+#define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM		3002
+#define ID_TRANSLATE_HOTKEY						3003
+#define ID_PLAYTEXT_HOTKEY						3004
+#define ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM	3005
 
 LRESULT CALLBACK  WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -56,6 +57,12 @@ void ShowTranslateWindow()
 	g_mainWindow->SetTranslateResult(translateResult, TRUE);
 }
 
+void ShowDictionaryWindow()
+{
+	vector<LogRecord> records = Logger::GetRecords();
+	g_mainWindow->RenderDictionary(records);
+}
+
 void PlayText()
 {
 	TranslateResult translateResult = Translator::TranslateSelectedText();
@@ -78,6 +85,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			g_menu = CreatePopupMenu();
 			AppendMenu(g_menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM, TEXT("Translate from clipboard"));
+			AppendMenu(g_menu, MF_STRING, ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM, TEXT("Dictionary"));
 			AppendMenu(g_menu, MF_SEPARATOR, NULL, NULL);
 			AppendMenu(g_menu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit"));
 
@@ -139,6 +147,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (clicked == ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM)
 				{
 					ShowTranslateWindow();
+				}
+				if (clicked == ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM)
+				{
+					ShowDictionaryWindow();
 				}
 			}		
 			break;

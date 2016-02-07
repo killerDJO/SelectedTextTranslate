@@ -108,6 +108,18 @@
     <ClCompile Include="Source\Windows\Buttons\ExpandButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
+    <ClCompile Include="Source\TranslateEngine\Logger.cpp">
+      <Filter>Source\TranslateEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Buttons\Base\IconButtonWindow.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -171,6 +183,21 @@
     </ClInclude>
     <ClInclude Include="Headers\WIndows\Buttons\ExpandButtonWindow.h">
       <Filter>Headers\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TranslateEngine\Logger.h">
+      <Filter>Headers\TranslateEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Entities\LogRecord.h">
+      <Filter>Headers\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

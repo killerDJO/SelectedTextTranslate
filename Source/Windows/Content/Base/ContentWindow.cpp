@@ -160,9 +160,8 @@ void ContentWindow::InitializeInMemoryDC()
 	SelectObject(this->inMemoryHDC, bitmap);
 }
 
-POINT ContentWindow::RenderResult(TranslateResult translateResult)
+POINT ContentWindow::RenderResult()
 {
-	this->translateResult = translateResult;
 	POINT bottomRight = RenderDC();
 	this->ResetWindow(bottomRight);
 	InvalidateRect(this->hWindow, NULL, FALSE);
@@ -193,6 +192,16 @@ void ContentWindow::Draw()
 	DWORD res = BitBlt(hdc, 0, 0, width, height, inMemoryHDC, 0, 0, SRCCOPY);
 
 	EndPaint(this->hWindow, &ps);
+}
+
+void ContentWindow::Show()
+{
+	ShowWindow(this->hWindow, SW_SHOW);
+}
+
+void ContentWindow::Hide()
+{
+	ShowWindow(this->hWindow, SW_HIDE);
 }
 
 DWORD ContentWindow::AdjustToResolution(double value, double k)

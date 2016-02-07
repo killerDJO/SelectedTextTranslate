@@ -1,8 +1,11 @@
 #pragma once
 #include "PrecompiledHeaders\stdafx.h"
 #include "Entities\TranslateResult.h"
+#include "Entities\LogRecord.h"
+#include "TranslateEngine\Logger.h"
 #include "Windows\Content\HeaderWindow.h"
 #include "Windows\Content\TranslateResultWindow.h"
+#include "Windows\Content\DictionaryWindow.h"
 
 #ifdef UNICODE
 	#define stringcopy wcscpy
@@ -33,6 +36,7 @@ private:
 
 	HeaderWindow * headerWindow;
 	TranslateResultWindow * translateResultWindow;
+	DictionaryWindow * dictionaryWindow;
 
 	TranslateResult translateResult;
 
@@ -52,6 +56,7 @@ public:
 
 	void SetTranslateResult(TranslateResult translateResult, BOOL maximize);
 	void Render(TranslateResult translateResult, int vScroll = 0);
+	void RenderDictionary(vector<LogRecord> records);
 	void PlayText();
 	
 	void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);

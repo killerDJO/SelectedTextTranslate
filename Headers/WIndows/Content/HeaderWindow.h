@@ -9,6 +9,8 @@ class HeaderWindow : public ContentWindow
 {
 	AudioButtonWindow* audioButton;
 
+	TranslateResult translateResult;
+
 	void InitializeAudioButton();
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	virtual POINT RenderDC();
@@ -17,6 +19,8 @@ class HeaderWindow : public ContentWindow
 public:
 	HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
 	~HeaderWindow();
+
+	POINT RenderResult(TranslateResult translateResult);
 
 	void PlayText();	
 };

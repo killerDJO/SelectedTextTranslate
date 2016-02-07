@@ -5,6 +5,8 @@
 
 #define roundToInt(x) int(round(x))
 
+#define MOUSEEVENTF_FROMTOUCH 0xFF515700
+
 #include <SDKDDKVer.h>
 
 #include <windows.h>
@@ -20,6 +22,7 @@
 #include <string>
 #include <map>
 #include <ostream>
+#include <algorithm>
 #include <stdio.h>
 #include <cstdio>
 #include <commctrl.h>

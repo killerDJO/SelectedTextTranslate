@@ -1,5 +1,6 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\Translator.h"
+#include "TranslateEngine\Logger.h"
 
 TranslateResult Translator::TranslateSelectedText()
 {
@@ -9,6 +10,8 @@ TranslateResult Translator::TranslateSelectedText()
 
 TranslateResult Translator::TranslateSentence(string sentence)
 {
+	Logger::AddRecord(sentence);
+
 	string hash = GetHash(sentence, 0);
 	string translateURL = "http://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + "&q=" + RequestHelper::EscapeText(sentence);
 	string translatorResponse = RequestHelper::GetResponse(translateURL);

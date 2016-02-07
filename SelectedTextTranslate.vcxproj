@@ -16,6 +16,9 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
+    <ClCompile Include="Source\Windows\Buttons\Base\IconButtonWindow.cpp" />
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
     <ClCompile Include="Source\Helpers\RequestHelper.cpp" />
     <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
@@ -25,6 +28,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\TranslateEngine\Logger.cpp" />
     <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp" />
     <ClCompile Include="Source\TranslateEngine\Translator.cpp" />
     <ClCompile Include="Source\Windows\Buttons\AudioButtonWindow.cpp" />
@@ -35,6 +39,8 @@
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h" />
+    <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h" />
     <ClInclude Include="Headers\Entities\TranslateResult.h" />
     <ClInclude Include="Headers\Entities\TranslateResultDictionary.h" />
     <ClInclude Include="Headers\Entities\TranslateResultDictionaryEntry.h" />
@@ -51,6 +57,9 @@
     <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h" />
     <ClInclude Include="Headers\WIndows\MainWindow.h" />
+    <ClInclude Include="Headers\TranslateEngine\Logger.h" />
+    <ClInclude Include="Headers\Entities\LogRecord.h" />
+    <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h" />
     <ClInclude Include="Resources\resource.h" />
   </ItemGroup>
   <ItemGroup>

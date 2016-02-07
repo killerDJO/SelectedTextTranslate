@@ -52,6 +52,12 @@ void TranslateResultWindow::ExpandDictionary(int index)
 	mainWindow->Render(translateResult, si.nPos);
 }
 
+POINT TranslateResultWindow::RenderResult(TranslateResult translateResult)
+{
+	this->translateResult = translateResult;
+	return ContentWindow::RenderResult();
+}
+
 POINT TranslateResultWindow::RenderDC()
 {	
 	ContentWindow::RenderDC();

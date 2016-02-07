@@ -82,3 +82,9 @@ void HeaderWindow::ResetWindow(POINT bottomRight)
 HeaderWindow::~HeaderWindow()
 {	
 }
+
+POINT HeaderWindow::RenderResult(TranslateResult translateResult)
+{
+	this->translateResult = translateResult;
+	return ContentWindow::RenderResult();
+}

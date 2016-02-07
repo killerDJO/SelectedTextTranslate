@@ -14,6 +14,8 @@ private:
 
 	virtual POINT RenderDC();
 
+	TranslateResult translateResult;
+
 	vector<ExpandButtonWindow*> expandButtons;
 	void DestroyButtons();
 	void ExpandDictionary(int index);
@@ -22,4 +24,6 @@ private:
 public:
 	TranslateResultWindow(MainWindow* mainWindow, DWORD x, DWORD y, DWORD width, DWORD height);
 	~TranslateResultWindow();	
+
+	POINT RenderResult(TranslateResult translateResult);
 };

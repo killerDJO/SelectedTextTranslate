@@ -43,6 +43,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 	this->InitNotifyIconData();
 
+	this->dictionaryWindow = new DictionaryWindow(this->hWindow, this->hInstance, 0, 0, 2000, 3000);
 	this->translateResultWindow = new TranslateResultWindow(this, 0, roundToInt(50 * kY - 2), 2000, 3000);
 	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
 
@@ -118,6 +119,10 @@ void MainWindow::Render(TranslateResult translateResult, int vScroll)
 
 	this->translateResult = translateResult;
 
+	this->headerWindow->Show();
+	this->translateResultWindow->Show();
+	this->dictionaryWindow->Hide();
+
 	POINT headerBottomRight = this->headerWindow->RenderResult(this->translateResult);
 	POINT contentBottomRight = this->translateResultWindow->RenderResult(this->translateResult);
 
@@ -126,6 +131,21 @@ void MainWindow::Render(TranslateResult translateResult, int vScroll)
 	for (int i = 0; i < vScroll; ++i){
 		SendMessage(this->hWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
 	}
+}
+
+void MainWindow::RenderDictionary(vector<LogRecord> records)
+{
+	InvalidateRect(this->hWindow, NULL, TRUE);
+
+	this->headerWindow->Hide();
+	this->translateResultWindow->Hide();
+	this->dictionaryWindow->Show();
+
+	POINT contentBottomRight = this->dictionaryWindow->RenderResult(records);
+
+	this->InitializeScrollbars(contentBottomRight.x, contentBottomRight.y);
+
+	this->Maximize();
 }
 
 void MainWindow::InitializeScrollbars(int contentWidth, int contentHeight)

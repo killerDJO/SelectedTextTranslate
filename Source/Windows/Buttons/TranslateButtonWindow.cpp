@@ -1,7 +1,7 @@
 #include "PrecompiledHeaders\stdafx.h"
-#include "Windows\Buttons\AudioButtonWindow.h"
+#include "Windows\Buttons\TranslateButtonWindow.h"
 
-AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
+TranslateButtonWindow::TranslateButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
 	: IconButtonWindow(parentWindow, hInstance, x, y, width, height)
 {
 	this->InitializeBitmaps();
@@ -9,12 +9,12 @@ AudioButtonWindow::AudioButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWO
 	SendMessage(this->hWindow, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)this->imageNormal);
 }
 
-void AudioButtonWindow::InitializeBitmaps()
+void TranslateButtonWindow::InitializeBitmaps()
 {
 	this->imageNormal = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO_INACTIVE));
 	this->imageHover = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO));
 }
 
-AudioButtonWindow::~AudioButtonWindow()
+TranslateButtonWindow::~TranslateButtonWindow()
 {
 }
