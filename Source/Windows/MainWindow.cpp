@@ -12,8 +12,8 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 	wnd.lpszClassName = className;
 	wnd.lpfnWndProc = wndProc;
 	wnd.cbSize = sizeof (WNDCLASSEX);
-	wnd.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SELECTEDTEXTTRANSLATE));
-	wnd.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SELECTEDTEXTTRANSLATE));
+	wnd.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
+	wnd.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
 	wnd.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wnd.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
 	
@@ -81,7 +81,7 @@ void MainWindow::InitNotifyIconData()
 	this->notifyIconData.uID = ID_TRAY_APP_ICON;
 	this->notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
 	this->notifyIconData.uCallbackMessage = WM_TRAYICON;
-	this->notifyIconData.hIcon = LoadIcon(this->hInstance, MAKEINTRESOURCE(IDI_SELECTEDTEXTTRANSLATE));
+	this->notifyIconData.hIcon = LoadIcon(this->hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
 	wcscpy_s(this->notifyIconData.szTip, TEXT("Selected text translate.."));
 }
 

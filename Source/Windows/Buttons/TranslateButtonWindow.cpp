@@ -11,8 +11,8 @@ TranslateButtonWindow::TranslateButtonWindow(HWND parentWindow, HINSTANCE hInsta
 
 void TranslateButtonWindow::InitializeBitmaps()
 {
-	this->imageNormal = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO_INACTIVE));
-	this->imageHover = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_AUDIO));
+	this->imageNormal = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_TRANSLATE_INACTIVE));
+	this->imageHover = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_TRANSLATE));
 }
 
 TranslateButtonWindow::~TranslateButtonWindow()

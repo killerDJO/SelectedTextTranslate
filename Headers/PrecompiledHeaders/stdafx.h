@@ -7,6 +7,8 @@
 
 #define MOUSEEVENTF_FROMTOUCH 0xFF515700
 
+#define WM_TRANLSATE_LOG_RECORD	300542
+
 #include <SDKDDKVer.h>
 
 #include <windows.h>

@@ -57,6 +57,14 @@ void ShowTranslateWindow()
 	g_mainWindow->SetTranslateResult(translateResult, TRUE);
 }
 
+void TranslateRecord(int idx)
+{
+	vector<LogRecord> records = Logger::GetRecords();
+	string word = records[idx].Word;
+	TranslateResult translateResult = Translator::TranslateSentence(word);
+	g_mainWindow->SetTranslateResult(translateResult, TRUE);
+}
+
 void ShowDictionaryWindow()
 {
 	vector<LogRecord> records = Logger::GetRecords();
@@ -78,10 +86,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 
+	HWND windowWithFocus, currentWindow;
+
 	int zDelta;
 	switch (message)
 	{
-	case WM_CREATE:
+	
+		case WM_NOTIFY:{
+			if (wParam == WM_TRANLSATE_LOG_RECORD) 
+			{
+				TranslateRecord(lParam);
+			}
+
+			break;
+		}
+		case WM_CREATE:
 		{
 			g_menu = CreatePopupMenu();
 			AppendMenu(g_menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM, TEXT("Translate from clipboard"));
@@ -167,7 +186,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_KILLFOCUS:
-			if (GetParent((HWND)wParam) != g_mainWindow->GetHandle())
+			windowWithFocus = GetParent((HWND)wParam);
+			currentWindow = g_mainWindow->GetHandle();
+			if (windowWithFocus != currentWindow)
 			{
 				g_mainWindow->Minimize();
 			}			

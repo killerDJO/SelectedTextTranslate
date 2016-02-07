@@ -11,11 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Audio.bmp" />
+    <Image Include="Audio_Inactive.bmp" />
     <Image Include="Resources\Audio.bmp" />
     <Image Include="Resources\Audio_Inactive.bmp" />
+    <Image Include="Resources\Resources\Audio.bmp" />
     <Image Include="Resources\SelectedTextTranslate.ico" />
+    <Image Include="Resources\translate.bmp" />
+    <Image Include="Resources\translate_hover.bmp" />
+    <Image Include="SelectedTextTranslate.ico" />
+    <Image Include="tranlate.bmp" />
+    <Image Include="tranlate_hover.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Windows\Buttons\RemoveButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\Base\IconButtonWindow.cpp" />
@@ -60,10 +69,11 @@
     <ClInclude Include="Headers\TranslateEngine\Logger.h" />
     <ClInclude Include="Headers\Entities\LogRecord.h" />
     <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h" />
+    <ClInclude Include="Headers\WIndows\Buttons\RemoveButtonWindow.h" />
     <ClInclude Include="Resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resources\SelectedTextTranslate.rc" />
+    <ResourceCompile Include="Resources\Resource.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}</ProjectGuid>

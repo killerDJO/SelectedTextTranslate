@@ -36,6 +36,14 @@ void Logger::RemoveRecord(string word)
 vector<LogRecord> Logger::GetRecords()
 {
 	Initialize();
+
+	sort(records.begin(), records.end(),
+		[](const LogRecord & a, const LogRecord & b) -> bool
+		{
+			return a.Count > b.Count;
+		}
+	);
+
 	return records;
 }
 

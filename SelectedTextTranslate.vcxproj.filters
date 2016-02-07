@@ -64,6 +64,12 @@
     <Filter Include="Headers\Windows\Buttons">
       <UniqueIdentifier>{f0bb7d86-ece3-4552-b0da-ddf1e05099fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\Windows\Buttons\Base">
+      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Buttons\Base">
+      <UniqueIdentifier>{dd9ac7ff-b1c1-4b30-98fd-0bd3048cd8b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -112,13 +118,16 @@
       <Filter>Source\TranslateEngine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\Base\IconButtonWindow.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\Windows\Buttons\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\Windows\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Buttons\RemoveButtonWindow.cpp">
+      <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,11 +140,32 @@
     <Image Include="Resources\Audio_Inactive.bmp">
       <Filter>Resources</Filter>
     </Image>
+    <Image Include="Resources\Resources\Audio.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Audio.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Audio_Inactive.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="SelectedTextTranslate.ico">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="tranlate.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="tranlate_hover.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\translate.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\translate_hover.bmp">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resources\resource.h">
-      <Filter>Headers\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Entities\TranslateResult.h">
       <Filter>Headers\Entities</Filter>
     </ClInclude>
@@ -191,17 +221,23 @@
       <Filter>Headers\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Windows\Buttons\Base</Filter>
     </ClInclude>
     <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Windows\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\WIndows\Buttons\RemoveButtonWindow.h">
+      <Filter>Headers\Windows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h">
+      <Filter>Headers\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\resource.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resources\SelectedTextTranslate.rc">
+    <ResourceCompile Include="Resources\Resource.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
   </ItemGroup>
