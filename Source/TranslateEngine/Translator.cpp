@@ -2,6 +2,10 @@
 #include "TranslateEngine\Translator.h"
 #include "TranslateEngine\Logger.h"
 
+time_t Translator::lastTkkRequestTime = -1;
+int Translator::tkk1 = 0;
+int Translator::tkk2 = 0;
+
 TranslateResult Translator::TranslateSelectedText()
 {
 	string selectedText = TextExtractor::GetSelectedText();
@@ -12,19 +16,100 @@ TranslateResult Translator::TranslateSelectedText()
 }
 
 TranslateResult Translator::TranslateSentence(string sentence)
-{
-	string hash = GetHash(sentence, 0);
-	string translateURL = "http://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + "&q=" + RequestHelper::EscapeText(sentence);
+{	
+	UpateTkkIfNeccessary();
+	string hash = GetHash(sentence, tkk1, tkk2);
+	string translateURL = "https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + "&q=" + RequestHelper::EscapeText(sentence);
 	string translatorResponse = RequestHelper::GetResponse(translateURL);
 	return ParseJSONResponse(translatorResponse);
 }
 
+void Translator::UpateTkkIfNeccessary()
+{
+	time_t  timev;
+	time(&timev);
+
+	if (Translator::lastTkkRequestTime == -1 || timev - Translator::lastTkkRequestTime > 60 * 60)
+	{
+		string translatePageURL = "https://translate.google.com";
+		string translatePageMarkup = RequestHelper::GetResponse(translatePageURL);
+
+		GumboOutput* output = gumbo_parse(translatePageMarkup.c_str());
+		string scriptContent = SearchScriptTag(output->root);
+
+		if (scriptContent == "")
+		{
+			return;
+		}
+
+		duk_context *ctx = duk_create_heap_default();
+		duk_push_c_function(ctx, ExtractTKK, DUK_VARARGS);
+		duk_put_global_string(ctx, "getTKK");
+
+		scriptContent += "; getTKK(TKK);";
+
+		duk_eval_string_noresult(ctx, scriptContent.c_str());
+
+		duk_destroy_heap(ctx);
+
+		Translator::lastTkkRequestTime = timev;
+	}
+}
+
+string Translator::SearchScriptTag(GumboNode* node) {
+
+	if (node->type != GUMBO_NODE_ELEMENT)
+	{
+		return "";
+	}
+
+	if (node->v.element.tag == GUMBO_TAG_SCRIPT)
+	{
+		string scriptContent = static_cast<GumboNode*>(node->v.element.children.data[0])->v.text.text;
+
+		if (scriptContent.find("TKK=") != std::string::npos)
+		{
+			return scriptContent;
+		}
+	}
+
+	GumboVector* children = &node->v.element.children;
+	for (unsigned int i = 0; i < children->length; ++i)
+	{
+		string result = SearchScriptTag(static_cast<GumboNode*>(children->data[i]));
+
+		if (result != "")
+		{
+			return result;
+		}
+	}
+
+	return "";
+}
+
+duk_ret_t Translator::ExtractTKK(duk_context *ctx)
+{
+	const char* res = duk_to_string(ctx, 0);
+
+	if (res == NULL)
+	{
+		return -1;
+	}
+
+	vector<string> parts = Split(res, '.');
+
+	Translator::tkk1 = atoi(parts[0].c_str());
+	Translator::tkk2 = atoi(parts[1].c_str());
+
+	return 0;
+}
+
 // Grabbed from google code
-string Translator::GetHash(string sentence, int tkk)
+string Translator::GetHash(string sentence, int tkk1, int tkk2)
 {
 	const char* bytes = sentence.c_str();
 
-	long long a = tkk || 0;
+	long long a = tkk1;
 	long long pow32 = 4294967295;
 	long long pow31 = pow32 / 2;
 
@@ -43,13 +128,15 @@ string Translator::GetHash(string sentence, int tkk)
 	a = a + (a << 15) & pow32;
 	/* ------ */
 
+	a = a ^ tkk2;
+
 	if (a < 0) {
 		a = a & pow31 + pow31 + 1;
 	}
 
 	a = a % 1000000;
 
-	return to_string(a) + "." + to_string(a ^ tkk);
+	return to_string(a) + "." + to_string(a ^ tkk1);
 }
 
 // Relevant response has the following format
@@ -137,4 +224,15 @@ void Translator::ReplaceAll(string &str, const string &search, const string &rep
 		str.erase(pos, search.length());
 		str.insert(pos, replace);
 	}
+}
+
+vector<string> Translator::Split(const string &s, char delim) {
+	vector<string> elems;
+
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim)) {
+		elems.push_back(item);
+	}
+	return elems;
 }

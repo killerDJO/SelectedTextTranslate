@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <cstdio>
 #include <commctrl.h>
+#include <regex>
+#include <sstream>
 
 #include "curl\curl.h"
 #include "json\json.h"

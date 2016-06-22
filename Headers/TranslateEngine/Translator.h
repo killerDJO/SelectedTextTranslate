@@ -4,14 +4,26 @@
 #include "Helpers\TextExtractor.h"
 #include "Helpers\RequestHelper.h"
 #include "Helpers\Utilities.h"
+#include "External\duk_config.h"
+#include "External\duktape.h"
+#include "gumbo.h"
 
 class Translator
 {
 public:
 	static TranslateResult TranslateSentence(string sentence);
 	static TranslateResult TranslateSelectedText();
-	static string GetHash(string sentence, int tkk);
+	static string GetHash(string sentence, int tkk1, int tkk2);
 private:
+	static int tkk1;
+	static int tkk2;
+	static time_t lastTkkRequestTime;
+
 	static TranslateResult ParseJSONResponse(string json);
 	static void ReplaceAll(string &str, const string &search, const string &replace);
+
+	static void UpateTkkIfNeccessary();
+	static duk_ret_t  ExtractTKK(duk_context *ctx);
+	static vector<string> Translator::Split(const string &s, char delim);
+	static string Translator::SearchScriptTag(GumboNode* node);
 };

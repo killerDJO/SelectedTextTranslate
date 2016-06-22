@@ -25,7 +25,7 @@ string TextPlayer::SaveToFile(string text)
 DWORD WINAPI TextPlayer::Play(LPVOID arg)
 {
 	string text = Utilities::GetString((wchar_t*)arg);
-	string responseQuery = "http://translate.google.com/translate_tts?tl=en&client=t&q=" + RequestHelper::EscapeText(text) + "&tk=" + Translator::GetHash(text, 0);
+	string responseQuery = "http://translate.google.com/translate_tts?tl=en&client=t&q=" + RequestHelper::EscapeText(text) + "&tk=" + Translator::GetHash(text, 0, 0);
 	string audio = RequestHelper::GetResponse(responseQuery);
 
 	string filePath = SaveToFile(audio);

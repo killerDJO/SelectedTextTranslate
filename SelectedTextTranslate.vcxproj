@@ -24,6 +24,9 @@
     <Image Include="tranlate_hover.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\External\duktape.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\RemoveButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
@@ -48,6 +51,8 @@
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\External\duktape.h" />
+    <ClInclude Include="Headers\External\duk_config.h" />
     <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h" />
     <ClInclude Include="Headers\Entities\TranslateResult.h" />
@@ -107,8 +112,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>.\jsoncpp\build\vs71\debug\lib_json;.\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
-    <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\jsoncpp\build\vs71\debug\lib_json;.\libcurl\lib\Release;.\gumbo-parser\visualc\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;.\gumbo-parser\src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
@@ -116,7 +121,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Debug;.\gumbo-parser\visualc\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -129,7 +134,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);curllib.lib;lib_json.lib;Winmm.lib;Comctl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);curllib.lib;lib_json.lib;Winmm.lib;Comctl32.lib;gumbo.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>

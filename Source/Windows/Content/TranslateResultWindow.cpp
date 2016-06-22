@@ -78,7 +78,7 @@ POINT TranslateResultWindow::RenderDC()
 		if (_tcslen(category.PartOfSpeech) != 0)
 		{
 			wstring text = L" - " + wstring(category.PartOfSpeech);
-			Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY - dY, &bottomRight);
+			Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY, &bottomRight);
 		}
 		
 		vector<TranslateResultDictionaryEntry> showedEntries(0);
@@ -112,7 +112,7 @@ POINT TranslateResultWindow::RenderDC()
 					{
 						text += L", ";
 					}
-					wordBottomRight = Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY - dY, &bottomRight);
+					wordBottomRight = Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY, &bottomRight);
 				}
 			}			
 

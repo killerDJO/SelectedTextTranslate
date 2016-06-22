@@ -70,6 +70,12 @@
     <Filter Include="Source\Windows\Buttons\Base">
       <UniqueIdentifier>{dd9ac7ff-b1c1-4b30-98fd-0bd3048cd8b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\External">
+      <UniqueIdentifier>{76f2d29f-a6a8-4cee-b82d-072501e8d867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\External">
+      <UniqueIdentifier>{26d8f828-511b-4eac-97ba-1e05060b9e10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -128,6 +134,9 @@
     </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\duktape.cpp">
+      <Filter>Source\External</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +243,12 @@
     </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\External\duk_config.h">
+      <Filter>Headers\External</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\External\duktape.h">
+      <Filter>Headers\External</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
