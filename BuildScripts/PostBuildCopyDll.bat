@@ -15,7 +15,7 @@ IF NOT EXIST "%ProjectDir%" GOTO PROJECT_INVALID
 
 XCOPY /y "%ProjectDir%libs\libcurl\lib\release\curllib.dll" %OutputDir%
 XCOPY /y "%ProjectDir%libs\jsoncpp\build\vs71\%Configuration%\lib_json\*.dll" %OutputDir%
-XCOPY /y "%ProjectDir%Bin\*.dll" %OutputDir%
+XCOPY /y "%ProjectDir%Libs\libcurl\*.dll" %OutputDir%
 
 GOTO END
 
