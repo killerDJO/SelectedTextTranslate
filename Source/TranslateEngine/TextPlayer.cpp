@@ -1,6 +1,7 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\TextPlayer.h"
 #include "TranslateEngine\Translator.h"
+#include "Loggers\Logger.h"
 
 wchar_t TextPlayer::buffer[1000];
 
@@ -25,7 +26,10 @@ string TextPlayer::SaveToFile(string text)
 DWORD WINAPI TextPlayer::Play(LPVOID arg)
 {
 	string text = Utilities::GetString((wchar_t*)arg);
-	string responseQuery = "http://translate.google.com/translate_tts?tl=en&client=t&q=" + RequestHelper::EscapeText(text) + "&tk=" + Translator::GetHash(text, 0, 0);
+
+	Logger::Log("Start playing sentence '" + text + "'.");
+
+	string responseQuery = "http://translate.google.com/translate_tts?tl=en&client=t&q=" + RequestHelper::EscapeText(text) + "&tk=" + Translator::GetHash(text);
 	string audio = RequestHelper::GetResponse(responseQuery);
 
 	string filePath = SaveToFile(audio);
@@ -38,6 +42,8 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 
 	string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
 	mciSendStringA(closeAudioCommand.c_str(), NULL, 0, 0);
+
+	Logger::Log("End playing sentence.");
 
 	return 0;
 }

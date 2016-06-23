@@ -1,27 +1,33 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\Translator.h"
-#include "TranslateEngine\Logger.h"
+#include "Loggers\DictionaryLogger.h"
+#include "Loggers\Logger.h"
 
 time_t Translator::lastTkkRequestTime = -1;
-int Translator::tkk1 = 0;
-int Translator::tkk2 = 0;
+long long Translator::tkk1 = 0;
+long long Translator::tkk2 = 0;
 
 TranslateResult Translator::TranslateSelectedText()
 {
 	string selectedText = TextExtractor::GetSelectedText();
 	
-	Logger::AddRecord(selectedText);
+	DictionaryLogger::AddRecord(selectedText);
 
 	return TranslateSentence(selectedText);
 }
 
 TranslateResult Translator::TranslateSentence(string sentence)
 {	
-	UpateTkkIfNeccessary();
-	string hash = GetHash(sentence, tkk1, tkk2);
+	Logger::Log("Start translating sentence '" + sentence + "'.");
+
+	string hash = GetHash(sentence);
 	string translateURL = "https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + "&q=" + RequestHelper::EscapeText(sentence);
 	string translatorResponse = RequestHelper::GetResponse(translateURL);
-	return ParseJSONResponse(translatorResponse);
+	TranslateResult result = ParseJSONResponse(translatorResponse);
+
+	Logger::Log("End translating sentence.");
+
+	return result;
 }
 
 void Translator::UpateTkkIfNeccessary()
@@ -31,6 +37,8 @@ void Translator::UpateTkkIfNeccessary()
 
 	if (Translator::lastTkkRequestTime == -1 || timev - Translator::lastTkkRequestTime > 60 * 60)
 	{
+		Logger::Log("Start requesting TKK.");
+
 		string translatePageURL = "https://translate.google.com";
 		string translatePageMarkup = RequestHelper::GetResponse(translatePageURL);
 
@@ -39,6 +47,7 @@ void Translator::UpateTkkIfNeccessary()
 
 		if (scriptContent == "")
 		{
+			Logger::Log("Error. Unable to find script with TKK eval.");
 			return;
 		}
 
@@ -53,6 +62,8 @@ void Translator::UpateTkkIfNeccessary()
 		duk_destroy_heap(ctx);
 
 		Translator::lastTkkRequestTime = timev;
+
+		Logger::Log("End requesting TKK.");
 	}
 }
 
@@ -98,15 +109,19 @@ duk_ret_t Translator::ExtractTKK(duk_context *ctx)
 
 	vector<string> parts = Split(res, '.');
 
-	Translator::tkk1 = atoi(parts[0].c_str());
-	Translator::tkk2 = atoi(parts[1].c_str());
+	Translator::tkk1 = atoll(parts[0].c_str());
+	Translator::tkk2 = atoll(parts[1].c_str());
+
+	Logger::Log("TKK has been extracted. New values: Tkk1 = " + to_string(Translator::tkk1) + ", Tkk2 = " + to_string(Translator::tkk2) + ".");
 
 	return 0;
 }
 
 // Grabbed from google code
-string Translator::GetHash(string sentence, int tkk1, int tkk2)
+string Translator::GetHash(string sentence)
 {
+	UpateTkkIfNeccessary();
+
 	const char* bytes = sentence.c_str();
 
 	long long a = tkk1;
@@ -165,8 +180,11 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	TranslateResult result;
 
 	if (json.empty()){
-		result.Sentence.Translation = L"[Error]";
-		result.Sentence.Origin = L"[Error]";
+		result.Sentence.Translation = Utilities::GetWideChar("[Error]");
+		result.Sentence.Origin = Utilities::GetWideChar("[Error]");
+
+		Logger::Log("Error. Unable to parse JSON. JSON value is empty.");
+
 		return result;
 	}
 
@@ -177,6 +195,10 @@ TranslateResult Translator::ParseJSONResponse(string json)
 	bool parsingSuccessful = reader.parse(json, root);
 	if (!parsingSuccessful)
 	{
+		Logger::Log("Error. Unable to parse JSON. Json value = '" + json + "'.");
+		result.Sentence.Translation = Utilities::GetWideChar("[Error]");
+		result.Sentence.Origin = Utilities::GetWideChar("[Error]");
+
 		return result;
 	}
 
@@ -231,7 +253,8 @@ vector<string> Translator::Split(const string &s, char delim) {
 
 	stringstream ss(s);
 	string item;
-	while (getline(ss, item, delim)) {
+	while (getline(ss, item, delim))
+	{
 		elems.push_back(item);
 	}
 	return elems;

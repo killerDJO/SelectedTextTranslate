@@ -1,6 +1,7 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\Translator.h"
 #include "Windows\MainWindow.h"
+#include "Loggers\Logger.h"
 
 #define ID_TRAY_EXIT_CONTEXT_MENU_ITEM			3000
 #define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM		3002
@@ -25,6 +26,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 { 
 	//AttachConsole();
 
+	Logger::Log("Application start.");
+
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 	{
@@ -36,6 +39,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 	
 	RegisterHotKey(g_mainWindow->GetHandle(), ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
 	RegisterHotKey(g_mainWindow->GetHandle(), ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
+
+	CreateDirectory(L".\\logs", NULL);
 	
 	MSG msg;
 	while (GetMessage (&msg, NULL, 0, 0))
@@ -43,6 +48,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	Logger::Log("Application end.");
 
 	ReleaseMutex(mutex);
 	CloseHandle(mutex);
@@ -59,7 +66,7 @@ void ShowTranslateWindow()
 
 void TranslateRecord(int idx)
 {
-	vector<LogRecord> records = Logger::GetRecords();
+	vector<LogRecord> records = DictionaryLogger::GetRecords();
 	string word = records[idx].Word;
 	TranslateResult translateResult = Translator::TranslateSentence(word);
 	g_mainWindow->SetTranslateResult(translateResult, TRUE);
@@ -67,7 +74,7 @@ void TranslateRecord(int idx)
 
 void ShowDictionaryWindow()
 {
-	vector<LogRecord> records = Logger::GetRecords();
+	vector<LogRecord> records = DictionaryLogger::GetRecords();
 	g_mainWindow->RenderDictionary(records);
 }
 

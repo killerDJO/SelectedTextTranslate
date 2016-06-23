@@ -12,6 +12,7 @@ void TranslateResult::Free()
 	delete[] Sentence.Origin;
 	delete[] Sentence.Translation;
 	delete[] Sentence.Translit;
+
 	for (size_t i = 0; i < TranslateCategories.size(); ++i)
 	{
 		auto category = TranslateCategories[i];

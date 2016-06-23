@@ -1,5 +1,6 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\RequestHelper.h"
+#include "Loggers\Logger.h"
 
 string RequestHelper::GetResponse(string url)
 {
@@ -33,7 +34,11 @@ string RequestHelper::GetResponse(string url)
 		if (CURLE_OK == res && http_code == 200)
 		{
 			return downloadedResponse;
-		}			
+		}		
+		else 
+		{
+			Logger::Log("Error requesting URL '" + url + "'. CURL result: " + to_string(res) + ". HTTP code: " + to_string(http_code) + ".");
+		}
 	}
 
 	return string();

@@ -26,7 +26,10 @@
   <ItemGroup>
     <ClCompile Include="Source\External\duktape.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Loggers\DictionaryLogger.cpp" />
+    <ClCompile Include="Source\Loggers\Logger.cpp" />
     <ClCompile Include="Source\Windows\Buttons\RemoveButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
@@ -40,7 +43,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\Logger.cpp" />
     <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp" />
     <ClCompile Include="Source\TranslateEngine\Translator.cpp" />
     <ClCompile Include="Source\Windows\Buttons\AudioButtonWindow.cpp" />
@@ -53,6 +55,8 @@
   <ItemGroup>
     <ClInclude Include="Headers\External\duktape.h" />
     <ClInclude Include="Headers\External\duk_config.h" />
+    <ClInclude Include="Headers\Loggers\DictionaryLogger.h" />
+    <ClInclude Include="Headers\Loggers\Logger.h" />
     <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h" />
     <ClInclude Include="Headers\Entities\TranslateResult.h" />
@@ -71,7 +75,6 @@
     <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h" />
     <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h" />
     <ClInclude Include="Headers\WIndows\MainWindow.h" />
-    <ClInclude Include="Headers\TranslateEngine\Logger.h" />
     <ClInclude Include="Headers\Entities\LogRecord.h" />
     <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h" />
     <ClInclude Include="Headers\WIndows\Buttons\RemoveButtonWindow.h" />
@@ -120,8 +123,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Debug;.\gumbo-parser\visualc\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\Headers;.\jsoncpp\include;.\libcurl\include;.\gumbo-parser\src;$(IncludePath)</IncludePath>
+    <LibraryPath>.\gumbo-parser\visualc\Release;.\jsoncpp\build\vs71\release\lib_json;.\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -157,7 +160,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>curllib.lib;lib_json.lib;%(AdditionalDependencies);Winmm.lib;Comctl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>curllib.lib;lib_json.lib;%(AdditionalDependencies);Winmm.lib;Comctl32.lib;gumbo.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>

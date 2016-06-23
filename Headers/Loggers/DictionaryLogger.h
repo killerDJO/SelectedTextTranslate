@@ -2,7 +2,7 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Entities\LogRecord.h"
 
-class Logger 
+class DictionaryLogger 
 {
 public:
 	static void AddRecord(string word);

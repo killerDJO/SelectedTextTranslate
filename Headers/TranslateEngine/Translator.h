@@ -13,10 +13,10 @@ class Translator
 public:
 	static TranslateResult TranslateSentence(string sentence);
 	static TranslateResult TranslateSelectedText();
-	static string GetHash(string sentence, int tkk1, int tkk2);
+	static string GetHash(string sentence);
 private:
-	static int tkk1;
-	static int tkk2;
+	static long long tkk1;
+	static long long tkk2;
 	static time_t lastTkkRequestTime;
 
 	static TranslateResult ParseJSONResponse(string json);

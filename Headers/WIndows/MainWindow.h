@@ -2,7 +2,7 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Entities\TranslateResult.h"
 #include "Entities\LogRecord.h"
-#include "TranslateEngine\Logger.h"
+#include "Loggers\DictionaryLogger.h"
 #include "Windows\Content\HeaderWindow.h"
 #include "Windows\Content\TranslateResultWindow.h"
 #include "Windows\Content\DictionaryWindow.h"

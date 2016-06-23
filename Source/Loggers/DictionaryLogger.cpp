@@ -1,11 +1,11 @@
 #include "PrecompiledHeaders\stdafx.h"
-#include "TranslateEngine\Logger.h"
+#include "Loggers\DictionaryLogger.h"
 
-vector<LogRecord> Logger::records;
-const wchar_t* Logger::logFileName = L"log.json";
-bool Logger::isInitialized = false;
+vector<LogRecord> DictionaryLogger::records;
+const wchar_t* DictionaryLogger::logFileName = L".\\logs\\dictionary_log.json";
+bool DictionaryLogger::isInitialized = false;
 
-void Logger::AddRecord(string word)
+void DictionaryLogger::AddRecord(string word)
 {
 	Initialize();
 
@@ -29,11 +29,11 @@ void Logger::AddRecord(string word)
 	Flush();
 }
 
-void Logger::RemoveRecord(string word)
+void DictionaryLogger::RemoveRecord(string word)
 {
 }
 
-vector<LogRecord> Logger::GetRecords()
+vector<LogRecord> DictionaryLogger::GetRecords()
 {
 	Initialize();
 
@@ -47,12 +47,12 @@ vector<LogRecord> Logger::GetRecords()
 	return records;
 }
 
-void Logger::Flush()
+void DictionaryLogger::Flush()
 {
 	WriteRecords();
 }
 
-void Logger::Initialize()
+void DictionaryLogger::Initialize()
 {
 	if (isInitialized) 
 	{
@@ -62,10 +62,10 @@ void Logger::Initialize()
 	ReadRecords();
 }
 
-void Logger::ReadRecords()
+void DictionaryLogger::ReadRecords()
 {
 	HANDLE hFile = CreateFile(logFileName, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
+	DWORD error = GetLastError();
 	if (hFile == INVALID_HANDLE_VALUE) 
 	{
 		return;
@@ -110,15 +110,15 @@ void Logger::ReadRecords()
 	}
 }
 
-void Logger::WriteRecords()
+void DictionaryLogger::WriteRecords()
 {
 	Json::Value root;
 
-	for (size_t i = 0; i < Logger::records.size(); ++i)
+	for (size_t i = 0; i < DictionaryLogger::records.size(); ++i)
 	{
 		Json::Value record;
-		record["word"] = Logger::records[i].Word;
-		record["count"] = Logger::records[i].Count;
+		record["word"] = DictionaryLogger::records[i].Word;
+		record["count"] = DictionaryLogger::records[i].Count;
 
 		root.append(record);
 	}

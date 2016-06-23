@@ -19,9 +19,6 @@
     <Filter Include="Headers\Helpers">
       <UniqueIdentifier>{3974d202-4013-43ee-b10e-900c7cc3fd4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Resources">
-      <UniqueIdentifier>{204865db-bbef-4e27-8efe-b4875f8e4b9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Helpers">
       <UniqueIdentifier>{d57738c5-794c-477f-a525-226210be81d4}</UniqueIdentifier>
     </Filter>
@@ -76,6 +73,12 @@
     <Filter Include="Source\External">
       <UniqueIdentifier>{26d8f828-511b-4eac-97ba-1e05060b9e10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\Loggers">
+      <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Loggers">
+      <UniqueIdentifier>{1f13bcd9-830e-4567-b482-4f19e423f3d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -120,9 +123,6 @@
     <ClCompile Include="Source\Windows\Buttons\ExpandButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\Logger.cpp">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\Base\IconButtonWindow.cpp">
       <Filter>Source\Windows\Buttons\Base</Filter>
     </ClCompile>
@@ -137,6 +137,12 @@
     </ClCompile>
     <ClCompile Include="Source\External\duktape.cpp">
       <Filter>Source\External</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Loggers\DictionaryLogger.cpp">
+      <Filter>Source\Loggers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Loggers\Logger.cpp">
+      <Filter>Source\Loggers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,9 +229,6 @@
     <ClInclude Include="Headers\WIndows\Buttons\ExpandButtonWindow.h">
       <Filter>Headers\Windows\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\TranslateEngine\Logger.h">
-      <Filter>Headers\TranslateEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Entities\LogRecord.h">
       <Filter>Headers\Entities</Filter>
     </ClInclude>
@@ -249,6 +252,12 @@
     </ClInclude>
     <ClInclude Include="Headers\External\duktape.h">
       <Filter>Headers\External</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Loggers\DictionaryLogger.h">
+      <Filter>Headers\Loggers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Loggers\Logger.h">
+      <Filter>Headers\Loggers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
