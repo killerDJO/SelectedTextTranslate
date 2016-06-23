@@ -56,7 +56,14 @@ POINT DictionaryWindow::RenderDC()
 
 	int curY = PADDING_Y / 2;
 
-	for (size_t i = 0; i < this->records.size(); ++i) 
+	size_t countToShow = min(200, records.size());
+
+	string title = "Showing " + to_string(countToShow) + " out of " + to_string(records.size());
+	POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, Utilities::GetWideChar(title), fontItalic, COLOR_GRAY, PADDING_X, curY, &bottomRight);
+	
+	curY = lineBottomRight.y + PADDING_Y / 2;
+	
+	for (size_t i = 0; i < countToShow; ++i)
 	{
 		LogRecord record = records[i];
 		POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, Utilities::GetWideChar(record.Word), fontNormal, COLOR_BLACK, PADDING_X * 2 + 4, curY, &bottomRight);

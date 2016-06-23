@@ -19,12 +19,13 @@ void AttachConsole()
 {
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
-	freopen("CON", "w", stdout);
+	FILE* file;
+	freopen_s(&file, "CON", "w", stdout);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
 { 
-	//AttachConsole();
+	// AttachConsole();
 
 	Logger::Log("Application start.");
 

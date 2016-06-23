@@ -43,7 +43,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 
 	this->InitNotifyIconData();
 
-	this->dictionaryWindow = new DictionaryWindow(this->hWindow, this->hInstance, 0, 0, 2000, 3000);
+	this->dictionaryWindow = new DictionaryWindow(this->hWindow, this->hInstance, 0, 0, 1000, 5000);
 	this->translateResultWindow = new TranslateResultWindow(this, 0, roundToInt(50 * kY - 2), 2000, 3000);
 	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
 

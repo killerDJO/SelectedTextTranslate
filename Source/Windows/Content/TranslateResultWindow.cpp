@@ -66,7 +66,7 @@ POINT TranslateResultWindow::RenderDC()
 
 	POINT bottomRight = { 0, 0 };
 	int curY = LINE_HEIGHT / 4;
-	int dY = (kY - 1) * 10;
+	int dY = int((kY - 1) * 10);
 
 	for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i)
 	{
@@ -86,7 +86,7 @@ POINT TranslateResultWindow::RenderDC()
 			showedEntries = category.Entries;
 		}
 		else {
-			for (int i = 0; i < category.Entries.size(); ++i){
+			for (size_t i = 0; i < category.Entries.size(); ++i){
 				if (category.Entries[i].Score < 0.003 && i >= 7){
 					continue;
 				}
@@ -158,7 +158,7 @@ POINT TranslateResultWindow::RenderDC()
 
 void TranslateResultWindow::DestroyButtons()
 {
-	for (int i = 0; i < expandButtons.size(); ++i){
+	for (size_t i = 0; i < expandButtons.size(); ++i){
 		expandButtons[i]->Destroy();
 	}
 	expandButtons.clear();

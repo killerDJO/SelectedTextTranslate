@@ -13,8 +13,8 @@ REM Validate project folder
 IF "%ProjectDir%"=="" GOTO NO_PROJECT_SPECIFIED
 IF NOT EXIST "%ProjectDir%" GOTO PROJECT_INVALID
 
-XCOPY /y "%ProjectDir%libcurl\lib\release\curllib.dll" %OutputDir%
-XCOPY /y "%ProjectDir%jsoncpp\build\vs71\%Configuration%\lib_json\*.dll" %OutputDir%
+XCOPY /y "%ProjectDir%libs\libcurl\lib\release\curllib.dll" %OutputDir%
+XCOPY /y "%ProjectDir%libs\jsoncpp\build\vs71\%Configuration%\lib_json\*.dll" %OutputDir%
 XCOPY /y "%ProjectDir%Bin\*.dll" %OutputDir%
 
 GOTO END

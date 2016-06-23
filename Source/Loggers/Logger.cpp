@@ -33,7 +33,10 @@ string Logger::GetCurrentDateTime()
 		chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()) -
 		chrono::duration_cast<chrono::seconds>(now.time_since_epoch());
 
-	strftime(buffer, 30, "%d-%m-%Y %I:%M:%S", localtime(&time));
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &time);
+
+	strftime(buffer, 30, "%d-%m-%Y %I:%M:%S", &timeinfo);
 
 	stringstream ss;
 	ss << setw(3) << setfill('0') << ms.count();
