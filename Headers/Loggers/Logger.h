@@ -7,6 +7,8 @@ public:
 	static void Log(string record);
 
 private:
-	static const wchar_t* logFileName;
 	static string GetCurrentDateTime();
+	static string GetCurrentDate();
+	static wstring GetLocalComputerName();
+	static wstring GetLogFileName();
 };

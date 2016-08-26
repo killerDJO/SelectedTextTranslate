@@ -3,12 +3,10 @@
 #include <chrono>
 #include <iomanip>
 
-const wchar_t* Logger::logFileName = L"logs\\trace_log.txt";
-
 void Logger::Log(string record)
 {
-	HANDLE hFile = CreateFile(logFileName, FILE_APPEND_DATA, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	DWORD error = GetLastError();
+	HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		return;
@@ -23,20 +21,60 @@ void Logger::Log(string record)
 	CloseHandle(hFile);
 }
 
-string Logger::GetCurrentDateTime()
+wstring Logger::GetLogFileName()
 {
-	char buffer[30];
+	string currentDate = GetCurrentDate();
+	wstring computerName = GetLocalComputerName();
 
+	wstring fullFileName = L"logs\\" + wstring(currentDate.begin(), currentDate.end()) + L"_" + computerName + L"_trace.txt";
+
+	return fullFileName;
+}
+
+wstring Logger::GetLocalComputerName()
+{
+	wchar_t buffer[MAX_COMPUTERNAME_LENGTH + 1];
+	DWORD bufCharCount = MAX_COMPUTERNAME_LENGTH + 1;
+
+	GetComputerName(buffer, &bufCharCount);
+
+	return wstring(buffer);
+}
+
+tm GetTimeInfo() 
+{
 	auto now = chrono::system_clock::now();
 	time_t time = chrono::system_clock::to_time_t(now);
+
+	tm timeinfo;
+	localtime_s(&timeinfo, &time);
+
+	return timeinfo;
+}
+
+string Logger::GetCurrentDate()
+{
+	tm timeinfo = GetTimeInfo();
+
+	char buffer[30];
+	strftime(buffer, 30, "%d-%m-%Y", &timeinfo);
+
+	string date = string(buffer);
+
+	return date;
+}
+
+string Logger::GetCurrentDateTime()
+{
+	tm timeinfo = GetTimeInfo();
+
+	char buffer[30];
+	strftime(buffer, 30, "%d-%m-%Y %I:%M:%S", &timeinfo);
+
+	auto now = chrono::system_clock::now();
 	auto ms =
 		chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()) -
 		chrono::duration_cast<chrono::seconds>(now.time_since_epoch());
-
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-
-	strftime(buffer, 30, "%d-%m-%Y %I:%M:%S", &timeinfo);
 
 	stringstream ss;
 	ss << setw(3) << setfill('0') << ms.count();
