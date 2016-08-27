@@ -2,6 +2,7 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Entities\LogRecord.h"
 #include "Helpers\Utilities.h"
+#include "Logger.h"
 
 class DictionaryLogger 
 {

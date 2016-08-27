@@ -5,10 +5,6 @@
 
 using namespace web;
 
-time_t Translator::lastTkkRequestTime = -1;
-long long Translator::tkk1 = 0;
-long long Translator::tkk2 = 0;
-
 TranslateResult Translator::TranslateSelectedText()
 {
 	wstring selectedText = TextExtractor::GetSelectedText();
@@ -25,107 +21,31 @@ TranslateResult Translator::TranslateSentence(wstring sentence)
 	wstring hash = GetHash(sentence);
 	wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + L"&q=" + RequestHelper::EscapeText(sentence);
 	wstring translatorResponse = RequestHelper::GetStringResponse(translateURL);
-	TranslateResult result = ParseJSONResponse(translatorResponse);
+
+	TranslateResult result;
+
+	try 
+	{
+		result = ParseJSONResponse(translatorResponse);
+	}
+	catch (json::json_exception exception)
+	{
+		Logger::Log(L"Error parsing json response. Exception: " + Utilities::GetUtf16String(exception.what()) + L".");
+	}
 
 	Logger::Log(L"End translating sentence.");
 
 	return result;
 }
 
-void Translator::UpateTkkIfNeccessary()
-{
-	time_t  timev;
-	time(&timev);
-
-	if (Translator::lastTkkRequestTime == -1 || timev - Translator::lastTkkRequestTime > 60 * 60)
-	{
-		Logger::Log(L"Start requesting TKK.");
-
-		wstring translatePageURL = L"https://translate.google.com";
-		wstring translatePageMarkup = RequestHelper::GetStringResponse(translatePageURL);
-
-		GumboOutput* output = gumbo_parse(Utilities::GetUtf8String(translatePageMarkup).c_str());
-		string scriptContent = SearchScriptTag(output->root);
-
-		if (scriptContent == "")
-		{
-			Logger::Log(L"Error. Unable to find script with TKK eval.");
-			return;
-		}
-
-		duk_context *ctx = duk_create_heap_default();
-		duk_push_c_function(ctx, ExtractTKK, DUK_VARARGS);
-		duk_put_global_string(ctx, "getTKK");
-
-		scriptContent += "; getTKK(TKK);";
-
-		duk_eval_string_noresult(ctx, scriptContent.c_str());
-
-		duk_destroy_heap(ctx);
-
-		Translator::lastTkkRequestTime = timev;
-
-		Logger::Log(L"End requesting TKK.");
-	}
-}
-
-string Translator::SearchScriptTag(GumboNode* node) {
-
-	if (node->type != GUMBO_NODE_ELEMENT)
-	{
-		return "";
-	}
-
-	if (node->v.element.tag == GUMBO_TAG_SCRIPT)
-	{
-		string scriptContent = static_cast<GumboNode*>(node->v.element.children.data[0])->v.text.text;
-
-		if (scriptContent.find("TKK=") != std::string::npos)
-		{
-			return scriptContent;
-		}
-	}
-
-	GumboVector* children = &node->v.element.children;
-	for (unsigned int i = 0; i < children->length; ++i)
-	{
-		string result = SearchScriptTag(static_cast<GumboNode*>(children->data[i]));
-
-		if (result != "")
-		{
-			return result;
-		}
-	}
-
-	return "";
-}
-
-duk_ret_t Translator::ExtractTKK(duk_context *ctx)
-{
-	const char* res = duk_to_string(ctx, 0);
-
-	if (res == NULL)
-	{
-		return -1;
-	}
-
-	vector<string> parts = Split(res, '.');
-
-	Translator::tkk1 = atoll(parts[0].c_str());
-	Translator::tkk2 = atoll(parts[1].c_str());
-
-	Logger::Log(L"TKK has been extracted. New values: Tkk1 = " + to_wstring(Translator::tkk1) + L", Tkk2 = " + to_wstring(Translator::tkk2) + L".");
-
-	return 0;
-}
-
 // Grabbed from google minified js code
 wstring Translator::GetHash(wstring sentence)
 {
-	UpateTkkIfNeccessary();
-
 	string utf8Sentence = Utilities::GetUtf8String(sentence);
 	const char* bytes = utf8Sentence.c_str();
+
+	long long tkk1 = PageParser::GetTkk1();
+	long long tkk2 = PageParser::GetTkk2();
 
 	long long a = tkk1;
 	long long pow32 = 4294967295;
@@ -269,16 +189,4 @@ void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &
 		str.erase(pos, search.length());
 		str.insert(pos, replace);
 	}
-}
-
-vector<string> Translator::Split(const string &s, char delim) {
-	vector<string> elems;
-
-	stringstream ss(s);
-	string item;
-	while (getline(ss, item, delim))
-	{
-		elems.push_back(item);
-	}
-	return elems;
 }

@@ -22,6 +22,7 @@
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
     <ClCompile Include="Source\Loggers\DictionaryLogger.cpp" />
     <ClCompile Include="Source\Loggers\Logger.cpp" />
+    <ClCompile Include="Source\TranslateEngine\PageParser.cpp" />
     <ClCompile Include="Source\Windows\Buttons\RemoveButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
@@ -44,30 +45,31 @@
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Loggers\DictionaryLogger.h" />
-    <ClInclude Include="Headers\Loggers\Logger.h" />
-    <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h" />
-    <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h" />
-    <ClInclude Include="Headers\Entities\TranslateResult.h" />
-    <ClInclude Include="Headers\Entities\TranslateResultDictionary.h" />
-    <ClInclude Include="Headers\Entities\TranslateResultDictionaryEntry.h" />
-    <ClInclude Include="Headers\Entities\TranslateResultSentence.h" />
-    <ClInclude Include="Headers\Helpers\RequestHelper.h" />
-    <ClInclude Include="Headers\Helpers\TextExtractor.h" />
-    <ClInclude Include="Headers\Helpers\Utilities.h" />
-    <ClInclude Include="Headers\PrecompiledHeaders\stdafx.h" />
-    <ClInclude Include="Headers\TranslateEngine\TextPlayer.h" />
-    <ClInclude Include="Headers\TranslateEngine\Translator.h" />
-    <ClInclude Include="Headers\WIndows\Buttons\AudioButtonWindow.h" />
-    <ClInclude Include="Headers\WIndows\Buttons\ExpandButtonWindow.h" />
-    <ClInclude Include="Headers\WIndows\Content\Base\ContentWindow.h" />
-    <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h" />
-    <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h" />
-    <ClInclude Include="Headers\WIndows\MainWindow.h" />
-    <ClInclude Include="Headers\Entities\LogRecord.h" />
-    <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h" />
-    <ClInclude Include="Headers\WIndows\Buttons\RemoveButtonWindow.h" />
     <ClInclude Include="Resources\resource.h" />
+    <ClInclude Include="Source\Entities\LogRecord.h" />
+    <ClInclude Include="Source\Entities\TranslateResult.h" />
+    <ClInclude Include="Source\Entities\TranslateResultDictionary.h" />
+    <ClInclude Include="Source\Entities\TranslateResultDictionaryEntry.h" />
+    <ClInclude Include="Source\Entities\TranslateResultSentence.h" />
+    <ClInclude Include="Source\Helpers\RequestHelper.h" />
+    <ClInclude Include="Source\Helpers\TextExtractor.h" />
+    <ClInclude Include="Source\Helpers\Utilities.h" />
+    <ClInclude Include="Source\Loggers\DictionaryLogger.h" />
+    <ClInclude Include="Source\Loggers\Logger.h" />
+    <ClInclude Include="Source\PrecompiledHeaders\stdafx.h" />
+    <ClInclude Include="Source\TranslateEngine\PageParser.h" />
+    <ClInclude Include="Source\TranslateEngine\TextPlayer.h" />
+    <ClInclude Include="Source\TranslateEngine\Translator.h" />
+    <ClInclude Include="Source\Windows\Buttons\AudioButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Buttons\Base\IconButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Buttons\ExpandButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Buttons\RemoveButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Buttons\TranslateButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h" />
+    <ClInclude Include="Source\Windows\Content\DictionaryWindow.h" />
+    <ClInclude Include="Source\Windows\Content\HeaderWindow.h" />
+    <ClInclude Include="Source\Windows\Content\TranslateResultWindow.h" />
+    <ClInclude Include="Source\Windows\MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

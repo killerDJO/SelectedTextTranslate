@@ -94,7 +94,18 @@ void DictionaryLogger::ReadRecords()
 		return;
 	}
 
-	json::value root = json::value::parse(json);
+	json::value root;
+
+	try 
+	{
+		root = json::value::parse(json);
+	}
+	catch (json::json_exception exception)
+	{
+		Logger::Log(L"Error loading dictionary. Dictionary content will be cleared. Exception: " + Utilities::GetUtf16String(exception.what()) + L".");
+		return;
+	}
+
 	if (root.is_null())
 	{	
 		return;

@@ -20,7 +20,7 @@ vector<unsigned char> RequestHelper::GetResponse(wstring url)
 		http_client client(newUri);
 
 		http_request request(methods::GET);
-		request.headers().add(L"User-Agent", L"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36");
+		request.headers().add(L"User-Agent", L"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36");
 
 		return client
 			.request(request)
@@ -47,7 +47,7 @@ vector<unsigned char> RequestHelper::GetResponse(wstring url)
 			})
 			.get();
 	}
-	catch (const std::system_error& e)
+	catch (const std::exception& e)
 	{
 		LogRequestException(url, e);
 		return vector<unsigned char>();
@@ -62,10 +62,10 @@ wstring RequestHelper::EscapeText(wstring text)
 
 void RequestHelper::LogRequestException(wstring url, exception exception)
 {
-	LogRequestError(url, L"Exception: " + Utilities::GetUtf16String(exception.what()) + L".");
+	LogRequestError(url, L"Exception: " + Utilities::GetUtf16String(exception.what()));
 }
 
 void RequestHelper::LogRequestError(wstring url, wstring message)
 {
-	Logger::Log(L"Error requesting URL '" + url + L"'. " + message + L".");
+	Logger::Log(L"Error requesting URL '" + url + L"'. " + message);
 }

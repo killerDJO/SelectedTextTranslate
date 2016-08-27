@@ -135,6 +135,9 @@
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <Filter>Source\PrecompiledSource</Filter>
     </ClCompile>
+    <ClCompile Include="Source\TranslateEngine\PageParser.cpp">
+      <Filter>Source\TranslateEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -160,74 +163,77 @@
     <ClInclude Include="Resources\resource.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Entities\TranslateResult.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Entities\TranslateResultDictionary.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Entities\TranslateResultDictionaryEntry.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Entities\TranslateResultSentence.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Entities\LogRecord.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Helpers\Utilities.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Helpers\TextExtractor.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Helpers\RequestHelper.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Loggers\Logger.h">
-      <Filter>Source\Loggers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Loggers\DictionaryLogger.h">
-      <Filter>Source\Loggers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\PrecompiledHeaders\stdafx.h">
-      <Filter>Source\PrecompiledSource</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TranslateEngine\TextPlayer.h">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\TranslateEngine\Translator.h">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\MainWindow.h">
-      <Filter>Source\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h">
+    <ClInclude Include="Source\Windows\Buttons\AudioButtonWindow.h">
       <Filter>Source\Windows\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\WIndows\Buttons\RemoveButtonWindow.h">
-      <Filter>Source\Windows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Buttons\ExpandButtonWindow.h">
-      <Filter>Source\Windows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Buttons\AudioButtonWindow.h">
-      <Filter>Source\Windows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Buttons\Base\IconButtonWindow.h">
-      <Filter>Source\Windows\Buttons\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Content\HeaderWindow.h">
-      <Filter>Source\Windows\Content</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Content\DictionaryWindow.h">
-      <Filter>Source\Windows\Content</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WIndows\Content\Base\ContentWindow.h">
+    <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h">
       <Filter>Source\Windows\Content\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\WIndows\Content\TranslateResultWindow.h">
+    <ClInclude Include="Source\Windows\Content\DictionaryWindow.h">
       <Filter>Source\Windows\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Content\HeaderWindow.h">
+      <Filter>Source\Windows\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Buttons\Base\IconButtonWindow.h">
+      <Filter>Source\Windows\Buttons\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entities\LogRecord.h">
+      <Filter>Source\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entities\TranslateResult.h">
+      <Filter>Source\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entities\TranslateResultDictionary.h">
+      <Filter>Source\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entities\TranslateResultDictionaryEntry.h">
+      <Filter>Source\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entities\TranslateResultSentence.h">
+      <Filter>Source\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Loggers\Logger.h">
+      <Filter>Source\Loggers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Loggers\DictionaryLogger.h">
+      <Filter>Source\Loggers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PrecompiledHeaders\stdafx.h">
+      <Filter>Source\PrecompiledSource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TranslateEngine\TextPlayer.h">
+      <Filter>Source\TranslateEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TranslateEngine\Translator.h">
+      <Filter>Source\TranslateEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\TextExtractor.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\RequestHelper.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\Utilities.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Buttons\ExpandButtonWindow.h">
+      <Filter>Source\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Buttons\RemoveButtonWindow.h">
+      <Filter>Source\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Buttons\TranslateButtonWindow.h">
+      <Filter>Source\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\MainWindow.h">
+      <Filter>Source\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Content\TranslateResultWindow.h">
+      <Filter>Source\Windows\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TranslateEngine\PageParser.h">
+      <Filter>Source\TranslateEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

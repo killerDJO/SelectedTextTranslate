@@ -4,9 +4,7 @@
 #include "Helpers\TextExtractor.h"
 #include "Helpers\RequestHelper.h"
 #include "Helpers\Utilities.h"
-#include "duk_config.h"
-#include "duktape.h"
-#include "gumbo.h"
+#include "TranslateEngine\PageParser.h"
 
 class Translator
 {
@@ -15,15 +13,6 @@ public:
 	static TranslateResult TranslateSelectedText();
 	static wstring GetHash(wstring sentence);
 private:
-	static long long tkk1;
-	static long long tkk2;
-	static time_t lastTkkRequestTime;
-
 	static TranslateResult ParseJSONResponse(wstring json);
 	static void ReplaceAll(wstring &str, const wstring &search, const wstring &replace);
-
-	static void UpateTkkIfNeccessary();
-	static duk_ret_t  ExtractTKK(duk_context *ctx);
-	static vector<string> Translator::Split(const string &s, char delim);
-	static string Translator::SearchScriptTag(GumboNode* node);
 };
