@@ -4,8 +4,8 @@
 #include "Helpers\TextExtractor.h"
 #include "Helpers\RequestHelper.h"
 #include "Helpers\Utilities.h"
-#include "External\duk_config.h"
-#include "External\duktape.h"
+#include "duk_config.h"
+#include "duktape.h"
 #include "gumbo.h"
 
 class Translator

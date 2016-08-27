@@ -9,26 +9,43 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{196B6A2D-2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gumbo", "Libs\gumbo-parser\visualc\gumbo.vcxproj", "{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "duktape", "Libs\duktape\visualc\duktape\duktape.vcxproj", "{3EC3A4E3-52E2-47F5-828D-F1B969442854}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Debug|Win32.Build.0 = Debug|Win32
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Debug|Win32.Deploy.0 = Debug|Win32
+		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Debug|x64.ActiveCfg = Debug|Win32
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Release|Win32.ActiveCfg = Release|Win32
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Release|Win32.Build.0 = Release|Win32
+		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Release|x64.ActiveCfg = Release|Win32
 		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Debug|Win32.Build.0 = Debug|Win32
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Debug|x64.ActiveCfg = Debug|Win32
 		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Release|Win32.ActiveCfg = Release|Win32
 		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Release|Win32.Build.0 = Release|Win32
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Release|x64.ActiveCfg = Release|Win32
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Debug|Win32.Build.0 = Debug|Win32
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Debug|x64.ActiveCfg = Debug|x64
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Debug|x64.Build.0 = Debug|x64
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|Win32.ActiveCfg = Release|Win32
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|Win32.Build.0 = Release|Win32
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|x64.ActiveCfg = Release|x64
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC} = {196B6A2D-2A51-41A7-8A9F-3AB16D708A92}
+		{3EC3A4E3-52E2-47F5-828D-F1B969442854} = {196B6A2D-2A51-41A7-8A9F-3AB16D708A92}
 	EndGlobalSection
 EndGlobal

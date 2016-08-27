@@ -20,10 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
-    <ClCompile Include="Source\External\duktape.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Source\Loggers\DictionaryLogger.cpp" />
     <ClCompile Include="Source\Loggers\Logger.cpp" />
     <ClCompile Include="Source\Windows\Buttons\RemoveButtonWindow.cpp" />
@@ -48,8 +44,6 @@
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\External\duktape.h" />
-    <ClInclude Include="Headers\External\duk_config.h" />
     <ClInclude Include="Headers\Loggers\DictionaryLogger.h" />
     <ClInclude Include="Headers\Loggers\Logger.h" />
     <ClInclude Include="Headers\WIndows\Buttons\TranslateButtonWindow.h" />
@@ -82,6 +76,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Libs\duktape\visualc\duktape\duktape.vcxproj">
+      <Project>{3ec3a4e3-52e2-47f5-828d-f1b969442854}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Libs\gumbo-parser\visualc\gumbo.vcxproj">
       <Project>{2661fa5e-acc3-4d27-8fd2-9dbb0414eedc}</Project>
     </ProjectReference>
@@ -138,7 +135,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,7 +160,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
