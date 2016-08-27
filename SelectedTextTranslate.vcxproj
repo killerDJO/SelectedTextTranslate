@@ -102,7 +102,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -120,14 +120,16 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>;.\libs\gumbo-parser\visualc\Debug;.$(LibraryPath)</LibraryPath>
     <IncludePath>.\Headers;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>Build\$(Configuration)\</OutDir>
+    <IntDir>Intermidiate\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\Headers;.\libs\jsoncpp\include;.\libs\libcurl\include;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
-    <LibraryPath>.\libs\gumbo-parser\visualc\Release;.\libs\jsoncpp\build\vs71\release\lib_json;.\libs\libcurl\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\Headers;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
+    <LibraryPath>.\libs\gumbo-parser\visualc\Release;$(LibraryPath)</LibraryPath>
+    <OutDir>Build\$(Configuration)\</OutDir>
+    <IntDir>Intermidiate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,7 +147,8 @@
       <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>
+      <Command>
+      </Command>
       <Message>Copy DLLs to output directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -165,10 +168,11 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>curllib.lib;lib_json.lib;%(AdditionalDependencies);Winmm.lib;Comctl32.lib;gumbo.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);Winmm.lib;Comctl32.lib;gumbo.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>call BuildScripts\PostBuildCopyDll.bat $(OutDir) $(ProjectDir) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>

@@ -2,7 +2,6 @@
 #include "TranslateEngine\Translator.h"
 #include "Loggers\DictionaryLogger.h"
 #include "Loggers\Logger.h"
-#include <cpprest\json.h>
 
 using namespace web;
 

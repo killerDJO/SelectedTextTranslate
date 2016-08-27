@@ -1,7 +1,6 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\RequestHelper.h"
 #include "Loggers\Logger.h"
-#include <cpprest/http_client.h>
 
 using namespace web;
 using namespace web::http;

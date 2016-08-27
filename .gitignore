@@ -1,4 +1,4 @@
-/Debug/*
-/Release/*
+/Build/*
+/Intermediate/*
 /Thumbs.db
 /My Inspector XE Results*
