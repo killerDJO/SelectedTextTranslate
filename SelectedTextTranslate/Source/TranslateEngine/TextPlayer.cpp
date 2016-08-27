@@ -1,7 +1,5 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\TextPlayer.h"
-#include "TranslateEngine\Translator.h"
-#include "Loggers\Logger.h"
 
 wchar_t TextPlayer::buffer[1000];
 

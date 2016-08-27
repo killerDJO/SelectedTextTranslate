@@ -1,6 +1,5 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\DictionaryLogger.h"
-#include <cpprest\json.h>
 
 using namespace web;
 

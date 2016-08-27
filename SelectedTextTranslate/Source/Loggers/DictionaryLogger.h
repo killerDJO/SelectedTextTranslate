@@ -3,6 +3,7 @@
 #include "Entities\LogRecord.h"
 #include "Helpers\Utilities.h"
 #include "Logger.h"
+#include <cpprest\json.h>
 
 class DictionaryLogger 
 {

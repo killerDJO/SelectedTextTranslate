@@ -5,6 +5,8 @@
 #include "Helpers\RequestHelper.h"
 #include "Helpers\Utilities.h"
 #include "TranslateEngine\PageParser.h"
+#include "Loggers\DictionaryLogger.h"
+#include "Loggers\Logger.h"
 
 class Translator
 {

@@ -2,6 +2,8 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\RequestHelper.h"
 #include "Helpers\Utilities.h"
+#include "TranslateEngine\Translator.h"
+#include "Loggers\Logger.h"
 
 #define AUDIO_FILE_NAME "STT_audio"
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "PrecompiledHeaders\stdafx.h"
+#include <chrono>
+#include <iomanip>
 
 class Logger 
 {

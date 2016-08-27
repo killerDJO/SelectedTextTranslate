@@ -1,6 +1,8 @@
 #pragma once
 #include "Windows\Content\Base\ContentWindow.h"
 #include "Entities\LogRecord.h"
+#include "Windows\Buttons\TranslateButtonWindow.h"
+#include "Windows\Buttons\RemoveButtonWindow.h"
 
 class DictionaryWindow : public ContentWindow
 {

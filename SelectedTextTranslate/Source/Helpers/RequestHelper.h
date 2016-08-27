@@ -1,6 +1,7 @@
 #pragma once
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\Utilities.h"
+#include "Loggers\Logger.h"
 
 class RequestHelper
 {

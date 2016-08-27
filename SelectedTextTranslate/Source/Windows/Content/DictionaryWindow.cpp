@@ -1,7 +1,5 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Content\DictionaryWindow.h"
-#include "Windows\Buttons\TranslateButtonWindow.h"
-#include "Windows\Buttons\RemoveButtonWindow.h"
 
 #define GWL_TYPE_TRANSLATE 42002
 #define GWL_TYPE_REMOVE 42003

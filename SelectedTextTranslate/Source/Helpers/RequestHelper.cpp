@@ -1,6 +1,5 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\RequestHelper.h"
-#include "Loggers\Logger.h"
 
 using namespace web;
 using namespace web::http;

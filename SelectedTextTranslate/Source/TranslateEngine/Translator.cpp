@@ -1,7 +1,5 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\Translator.h"
-#include "Loggers\DictionaryLogger.h"
-#include "Loggers\Logger.h"
 
 using namespace web;
 

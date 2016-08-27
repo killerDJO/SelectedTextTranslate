@@ -1,7 +1,5 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\Logger.h"
-#include <chrono>
-#include <iomanip>
 
 void Logger::Log(wstring record)
 {
