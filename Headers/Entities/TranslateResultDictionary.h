@@ -4,8 +4,8 @@
 
 struct TranslateResultDictionary
 {
-	wchar_t* PartOfSpeech;
-	wchar_t* BaseForm;
+	const wchar_t* PartOfSpeech;
+	const wchar_t* BaseForm;
 	bool IsExtendedList;
 	vector<TranslateResultDictionaryEntry> Entries;
 };

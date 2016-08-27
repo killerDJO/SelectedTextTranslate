@@ -3,7 +3,7 @@
 #include <chrono>
 #include <iomanip>
 
-void Logger::Log(string record)
+void Logger::Log(wstring record)
 {
 	HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -12,18 +12,18 @@ void Logger::Log(string record)
 		return;
 	}
 
-	record = GetCurrentDateTime() + " " + record + "\r\n";
+	record = GetCurrentDateTime() + L" " + record + L"\r\n";
 
 	DWORD nWritten;
-	const char* buffer = record.c_str();
-	WriteFile(hFile, buffer, strlen(buffer), &nWritten, NULL);
+	const wchar_t* buffer = record.c_str();
+	WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
 
 	CloseHandle(hFile);
 }
 
 wstring Logger::GetLogFileName()
 {
-	string currentDate = GetCurrentDate();
+	wstring currentDate = GetCurrentDate();
 	wstring computerName = GetLocalComputerName();
 
 	wstring fullFileName = L"logs\\" + wstring(currentDate.begin(), currentDate.end()) + L"_" + computerName + L"_trace.txt";
@@ -52,34 +52,34 @@ tm GetTimeInfo()
 	return timeinfo;
 }
 
-string Logger::GetCurrentDate()
+wstring Logger::GetCurrentDate()
 {
 	tm timeinfo = GetTimeInfo();
 
-	char buffer[30];
-	strftime(buffer, 30, "%d-%m-%Y", &timeinfo);
+	wchar_t buffer[30];
+	wcsftime(buffer, 30, L"%d-%m-%Y", &timeinfo);
 
-	string date = string(buffer);
+	wstring date = wstring(buffer);
 
 	return date;
 }
 
-string Logger::GetCurrentDateTime()
+wstring Logger::GetCurrentDateTime()
 {
 	tm timeinfo = GetTimeInfo();
 
-	char buffer[30];
-	strftime(buffer, 30, "%d-%m-%Y %I:%M:%S", &timeinfo);
+	wchar_t buffer[30];
+	wcsftime(buffer, 30, L"%d-%m-%Y %I:%M:%S", &timeinfo);
 
 	auto now = chrono::system_clock::now();
 	auto ms =
 		chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()) -
 		chrono::duration_cast<chrono::seconds>(now.time_since_epoch());
 
-	stringstream ss;
-	ss << setw(3) << setfill('0') << ms.count();
+	wstringstream ss;
+	ss << setw(3) << setfill(L'0') << ms.count();
 
-	string dateTime = string(buffer) + "." + ss.str();
+	wstring dateTime = wstring(buffer) + L"." + ss.str();
 
 	return dateTime;
 }

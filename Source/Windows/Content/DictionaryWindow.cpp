@@ -58,16 +58,16 @@ POINT DictionaryWindow::RenderDC()
 
 	size_t countToShow = min(200, records.size());
 
-	string title = "Showing " + to_string(countToShow) + " out of " + to_string(records.size());
-	POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, Utilities::GetWideChar(title), fontItalic, COLOR_GRAY, PADDING_X, curY, &bottomRight);
+	wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
+	POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, title.c_str(), fontItalic, COLOR_GRAY, PADDING_X, curY, &bottomRight);
 	
 	curY = lineBottomRight.y + PADDING_Y / 2;
 	
 	for (size_t i = 0; i < countToShow; ++i)
 	{
 		LogRecord record = records[i];
-		POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, Utilities::GetWideChar(record.Word), fontNormal, COLOR_BLACK, PADDING_X * 2 + 4, curY, &bottomRight);
-		Utilities::PrintText(inMemoryHDC, Utilities::GetWideChar(" (" + to_string(record.Count) + ")"), fontNormal, COLOR_GRAY, lineBottomRight.x + 1, curY, &bottomRight);
+		POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, record.Word.c_str(), fontNormal, COLOR_BLACK, PADDING_X * 2 + 4, curY, &bottomRight);
+		Utilities::PrintText(inMemoryHDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, COLOR_GRAY, lineBottomRight.x + 1, curY, &bottomRight);
 		
 		TranslateButtonWindow* translateButton = new TranslateButtonWindow(
 			this->hWindow,

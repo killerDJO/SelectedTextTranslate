@@ -1,65 +1,72 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\RequestHelper.h"
 #include "Loggers\Logger.h"
+#include <cpprest/http_client.h>
 
-string RequestHelper::GetResponse(string url)
+using namespace web;
+using namespace web::http;
+using namespace web::http::client;
+
+wstring RequestHelper::GetStringResponse(wstring url)
 {
-	CURL *curl;
-	CURLcode res;
-	curl = curl_easy_init();
+	vector<unsigned char> response = GetResponse(url);
+	return Utilities::GetUtf16String(string(response.begin(), response.end()));
+}
 
-	string downloadedResponse;
-	
-	curl_slist *headers = NULL;
-	headers = curl_slist_append(headers, "User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36");	
-
-	if (curl)
+vector<unsigned char> RequestHelper::GetResponse(wstring url)
+{
+	try
 	{
-		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Writer);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &downloadedResponse);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
-		res = curl_easy_perform(curl);
+		uri newUri(url);
+		http_client client(newUri);
 
-		long http_code = 0;
-		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+		http_request request(methods::GET);
+		request.headers().add(L"User-Agent", L"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36");
 
-		curl_easy_cleanup(curl);
-		curl_slist_free_all(headers);
+		return client
+			.request(request)
+			.then([&](http_response response)
+			{
+				try 
+				{
+					status_code statusCode = response.status_code();
+					if (statusCode == status_codes::OK)
+					{
+						return response.extract_vector().get();
+					}
+					else 
+					{
+						LogRequestError(url, L"Invalid status code: " + to_wstring(statusCode));
+					}
+				}
+				catch (const http_exception& e)
+				{
+					LogRequestException(url, e);
+				}
 
-		if (CURLE_OK == res && http_code == 200)
-		{
-			return downloadedResponse;
-		}		
-		else 
-		{
-			Logger::Log("Error requesting URL '" + url + "'. CURL result: " + to_string(res) + ". HTTP code: " + to_string(http_code) + ".");
-		}
+				return vector<unsigned char>();
+			})
+			.get();
 	}
-
-	return string();
+	catch (const std::system_error& e)
+	{
+		LogRequestException(url, e);
+		return vector<unsigned char>();
+	}
 }
 
-string RequestHelper::EscapeText(string text)
+wstring RequestHelper::EscapeText(wstring text)
 {
-	CURL *curl = curl_easy_init();
-
-	char* escapedParameters = curl_easy_escape(curl, text.c_str(), 0);
-	string result = string(escapedParameters);
-	
-	curl_free(escapedParameters);
-	curl_easy_cleanup(curl);
-
-	return result;
+	wstring encodedString = uri::encode_data_string(text);
+	return encodedString;
 }
 
-int RequestHelper::Writer(void *data, size_t size, size_t nmemb, string *buffer_in)
+void RequestHelper::LogRequestException(wstring url, exception exception)
 {
-	size_t realsize = size * nmemb;	
-	buffer_in->append((char*)data, realsize);
-	return realsize;
+	LogRequestError(url, L"Exception: " + Utilities::GetUtf16String(exception.what()) + L".");
+}
+
+void RequestHelper::LogRequestError(wstring url, wstring message)
+{
+	Logger::Log(L"Error requesting URL '" + url + L"'. " + message + L".");
 }

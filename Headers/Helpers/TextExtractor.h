@@ -5,5 +5,5 @@
 class TextExtractor
 {
 public:
-	static string GetSelectedText();
+	static wstring GetSelectedText();
 };

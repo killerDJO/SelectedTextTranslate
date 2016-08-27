@@ -5,8 +5,10 @@
 class RequestHelper
 {
 public:
-	static string GetResponse(string url);
-	static string EscapeText(string text);
+	static wstring GetStringResponse(wstring url);
+	static vector<unsigned char> GetResponse(wstring url);
+	static wstring EscapeText(wstring text);
 private:
-	static int Writer(void *data, size_t size, size_t nmemb, string *buffer_in);
+	static void LogRequestException(wstring url, exception exception);
+	static void LogRequestError(wstring url, wstring message);
 };

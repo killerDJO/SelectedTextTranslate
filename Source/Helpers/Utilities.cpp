@@ -1,25 +1,45 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\Utilities.h"
 
-wchar_t* Utilities::GetWideChar(string text)
+wstring Utilities::GetUtf16String(string text)
 {
-	static wchar_t buffer[65536];
+	int requiredLen = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
 
-	int len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, buffer, 65535);
-	wchar_t* result = new wchar_t[len];
-	std::copy(buffer, buffer + len, result);
+	wchar_t* buffer = new wchar_t[requiredLen + 1];
+
+	MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, buffer, requiredLen);
+
+	wstring result(buffer);
+
+	delete[] buffer;
+
 	return result;
 }
 
-string Utilities::GetString(wchar_t* text)
+string Utilities::GetUtf8String(wstring text)
 {
-	static char buffer[65536];
+	int requiredLen = WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, NULL, 0, NULL, NULL);
 
-	int len = WideCharToMultiByte(CP_UTF8, 0, text, -1, buffer, 65535, NULL, NULL);
-	return string(buffer);
+	char* buffer = new char[requiredLen + 1];
+
+	WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, buffer, requiredLen, NULL, NULL);
+
+	string result(buffer);
+
+	delete[] buffer;
+
+	return result;
 }
 
-POINT Utilities::PrintText(HDC hdc, wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight)
+wchar_t* Utilities::CopyWideChar(wstring text)
+{
+	int len = wcslen(text.c_str());
+	wchar_t* result = new wchar_t[len + 1];
+	wcscpy_s(result, len + 1, text.c_str());
+	return result;
+}
+
+POINT Utilities::PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight)
 {
 	SelectObject(hdc, font);
 	SetTextColor(hdc, color);

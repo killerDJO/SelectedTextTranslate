@@ -3,7 +3,7 @@
 
 struct TranslateResultDictionaryEntry
 {
-	wchar_t* Word;
-	vector<wchar_t*> ReverseTranslation;
+	const wchar_t* Word;
+	vector<const wchar_t*> ReverseTranslation;
 	double Score;
 };

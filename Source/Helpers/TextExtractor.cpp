@@ -1,9 +1,9 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\TextExtractor.h"
 
-string TextExtractor::GetSelectedText()
+wstring TextExtractor::GetSelectedText()
 {
-	string result = "";
+	wstring result = L"";
 
 	int key_count = 4;
 	INPUT* input = new INPUT[key_count];
@@ -36,7 +36,7 @@ string TextExtractor::GetSelectedText()
 
 		if(lpstr)
 		{
-			result = Utilities::GetString(lpstr);
+			result = wstring(lpstr);
 		}
 
 		GlobalUnlock(hglb);

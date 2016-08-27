@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 { 
 	// AttachConsole();
 
-	Logger::Log("Application start.");
+	Logger::Log(L"Application start.");
 
 	HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 		DispatchMessage(&msg);
 	}
 
-	Logger::Log("Application end.");
+	Logger::Log(L"Application end.");
 
 	ReleaseMutex(mutex);
 	CloseHandle(mutex);
@@ -68,7 +68,7 @@ void ShowTranslateWindow()
 void TranslateRecord(int idx)
 {
 	vector<LogRecord> records = DictionaryLogger::GetRecords();
-	string word = records[idx].Word;
+	wstring word = records[idx].Word;
 	TranslateResult translateResult = Translator::TranslateSentence(word);
 	g_mainWindow->SetTranslateResult(translateResult, TRUE);
 }

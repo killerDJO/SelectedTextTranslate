@@ -1,12 +1,13 @@
 #pragma once
 #include "PrecompiledHeaders\stdafx.h"
 #include "Entities\LogRecord.h"
+#include "Helpers\Utilities.h"
 
 class DictionaryLogger 
 {
 public:
-	static void AddRecord(string word);
-	static void RemoveRecord(string word);
+	static void AddRecord(wstring word);
+	static void RemoveRecord(wstring word);
 	static vector<LogRecord> GetRecords();
 	static void Flush();
 

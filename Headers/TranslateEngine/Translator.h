@@ -11,16 +11,16 @@
 class Translator
 {
 public:
-	static TranslateResult TranslateSentence(string sentence);
+	static TranslateResult TranslateSentence(wstring sentence);
 	static TranslateResult TranslateSelectedText();
-	static string GetHash(string sentence);
+	static wstring GetHash(wstring sentence);
 private:
 	static long long tkk1;
 	static long long tkk2;
 	static time_t lastTkkRequestTime;
 
-	static TranslateResult ParseJSONResponse(string json);
-	static void ReplaceAll(string &str, const string &search, const string &replace);
+	static TranslateResult ParseJSONResponse(wstring json);
+	static void ReplaceAll(wstring &str, const wstring &search, const wstring &replace);
 
 	static void UpateTkkIfNeccessary();
 	static duk_ret_t  ExtractTKK(duk_context *ctx);

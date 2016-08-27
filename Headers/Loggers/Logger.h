@@ -4,11 +4,11 @@
 class Logger 
 {
 public:
-	static void Log(string record);
+	static void Log(wstring record);
 
 private:
-	static string GetCurrentDateTime();
-	static string GetCurrentDate();
+	static wstring GetCurrentDateTime();
+	static wstring GetCurrentDate();
 	static wstring GetLocalComputerName();
 	static wstring GetLogFileName();
 };

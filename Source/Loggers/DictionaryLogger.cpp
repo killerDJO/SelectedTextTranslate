@@ -1,11 +1,14 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\DictionaryLogger.h"
+#include <cpprest\json.h>
+
+using namespace web;
 
 vector<LogRecord> DictionaryLogger::records;
 const wchar_t* DictionaryLogger::logFileName = L".\\logs\\dictionary_log.json";
 bool DictionaryLogger::isInitialized = false;
 
-void DictionaryLogger::AddRecord(string word)
+void DictionaryLogger::AddRecord(wstring word)
 {
 	Initialize();
 
@@ -29,7 +32,7 @@ void DictionaryLogger::AddRecord(string word)
 	Flush();
 }
 
-void DictionaryLogger::RemoveRecord(string word)
+void DictionaryLogger::RemoveRecord(wstring word)
 {
 }
 
@@ -73,20 +76,17 @@ void DictionaryLogger::ReadRecords()
 
 	const int bufferSize = 65536;
 	static char buffer[bufferSize];
-	string json = "";
+	wstring json = L"";
 
 	DWORD nWritten;
 	do 
 	{
 		ReadFile(hFile, buffer, bufferSize, &nWritten, NULL);
-		json += string(buffer);
+		json += wstring((wchar_t*)buffer);
 	} 
 	while (nWritten == bufferSize);
 	
 	CloseHandle(hFile);
-
-	Json::Value root;
-	Json::Reader reader;
 
 	records.resize(0);
 
@@ -94,8 +94,8 @@ void DictionaryLogger::ReadRecords()
 		return;
 	}
 
-	bool parsingSuccessful = reader.parse(json, root);
-	if (!parsingSuccessful)
+	json::value root = json::value::parse(json);
+	if (root.is_null())
 	{	
 		return;
 	}
@@ -103,8 +103,8 @@ void DictionaryLogger::ReadRecords()
 	for (size_t i = 0; i < root.size(); ++i)
 	{
 		LogRecord record;
-		record.Word = root[i].get("word", "").asString();
-		record.Count = root[i].get("count", "").asInt();
+		record.Word = Utilities::CopyWideChar(root[i].at(L"word").as_string());
+		record.Count = root[i].at(L"count").as_integer();
 
 		records.push_back(record);
 	}
@@ -112,18 +112,18 @@ void DictionaryLogger::ReadRecords()
 
 void DictionaryLogger::WriteRecords()
 {
-	Json::Value root;
+	json::value root;
 
 	for (size_t i = 0; i < DictionaryLogger::records.size(); ++i)
 	{
-		Json::Value record;
-		record["word"] = DictionaryLogger::records[i].Word;
-		record["count"] = DictionaryLogger::records[i].Count;
+		json::value record;
+		record[L"word"] = json::value(Utilities::CopyWideChar(DictionaryLogger::records[i].Word));
+		record[L"count"] = json::value(DictionaryLogger::records[i].Count);
 
-		root.append(record);
+		root[i] = record;
 	}
 
-	string json = root.toStyledString();
+	wstring json = root.serialize().c_str();
 
 	HANDLE hFile = CreateFile(logFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -133,8 +133,8 @@ void DictionaryLogger::WriteRecords()
 	}
 
 	DWORD nWritten;
-	const char* buffer = json.c_str();
-	WriteFile(hFile, buffer, strlen(buffer), &nWritten, NULL);
+	const wchar_t* buffer = json.c_str();
+	WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
 
 	CloseHandle(hFile);
 }

@@ -4,8 +4,10 @@
 class Utilities
 {
 public:
-	static wchar_t* GetWideChar(string text);
-	static string GetString(wchar_t* text);
-	static POINT PrintText(HDC hdc, wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight);
+	static wstring GetUtf16String(string text);
+	static string GetUtf8String(wstring text);
+	static wchar_t*  CopyWideChar(wstring text);
+
+	static POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight);
 	static void DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight);
 };

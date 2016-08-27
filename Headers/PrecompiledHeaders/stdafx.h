@@ -31,8 +31,8 @@
 #include <regex>
 #include <sstream>
 
-#include "curl\curl.h"
-#include "json\json.h"
+#include <cpprest\json.h>
+#include <cpprest/http_client.h>
 
 #include "..\Resources\resource.h"
 

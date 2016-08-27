@@ -2,6 +2,9 @@
 #include "TranslateEngine\Translator.h"
 #include "Loggers\DictionaryLogger.h"
 #include "Loggers\Logger.h"
+#include <cpprest\json.h>
+
+using namespace web;
 
 time_t Translator::lastTkkRequestTime = -1;
 long long Translator::tkk1 = 0;
@@ -9,23 +12,23 @@ long long Translator::tkk2 = 0;
 
 TranslateResult Translator::TranslateSelectedText()
 {
-	string selectedText = TextExtractor::GetSelectedText();
+	wstring selectedText = TextExtractor::GetSelectedText();
 	
 	DictionaryLogger::AddRecord(selectedText);
 
 	return TranslateSentence(selectedText);
 }
 
-TranslateResult Translator::TranslateSentence(string sentence)
+TranslateResult Translator::TranslateSentence(wstring sentence)
 {	
-	Logger::Log("Start translating sentence '" + sentence + "'.");
+	Logger::Log(L"Start translating sentence '" + sentence + L"'.");
 
-	string hash = GetHash(sentence);
-	string translateURL = "https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + "&q=" + RequestHelper::EscapeText(sentence);
-	string translatorResponse = RequestHelper::GetResponse(translateURL);
+	wstring hash = GetHash(sentence);
+	wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + L"&q=" + RequestHelper::EscapeText(sentence);
+	wstring translatorResponse = RequestHelper::GetStringResponse(translateURL);
 	TranslateResult result = ParseJSONResponse(translatorResponse);
 
-	Logger::Log("End translating sentence.");
+	Logger::Log(L"End translating sentence.");
 
 	return result;
 }
@@ -37,17 +40,17 @@ void Translator::UpateTkkIfNeccessary()
 
 	if (Translator::lastTkkRequestTime == -1 || timev - Translator::lastTkkRequestTime > 60 * 60)
 	{
-		Logger::Log("Start requesting TKK.");
+		Logger::Log(L"Start requesting TKK.");
 
-		string translatePageURL = "https://translate.google.com";
-		string translatePageMarkup = RequestHelper::GetResponse(translatePageURL);
+		wstring translatePageURL = L"https://translate.google.com";
+		wstring translatePageMarkup = RequestHelper::GetStringResponse(translatePageURL);
 
-		GumboOutput* output = gumbo_parse(translatePageMarkup.c_str());
+		GumboOutput* output = gumbo_parse(Utilities::GetUtf8String(translatePageMarkup).c_str());
 		string scriptContent = SearchScriptTag(output->root);
 
 		if (scriptContent == "")
 		{
-			Logger::Log("Error. Unable to find script with TKK eval.");
+			Logger::Log(L"Error. Unable to find script with TKK eval.");
 			return;
 		}
 
@@ -63,7 +66,7 @@ void Translator::UpateTkkIfNeccessary()
 
 		Translator::lastTkkRequestTime = timev;
 
-		Logger::Log("End requesting TKK.");
+		Logger::Log(L"End requesting TKK.");
 	}
 }
 
@@ -112,17 +115,18 @@ duk_ret_t Translator::ExtractTKK(duk_context *ctx)
 	Translator::tkk1 = atoll(parts[0].c_str());
 	Translator::tkk2 = atoll(parts[1].c_str());
 
-	Logger::Log("TKK has been extracted. New values: Tkk1 = " + to_string(Translator::tkk1) + ", Tkk2 = " + to_string(Translator::tkk2) + ".");
+	Logger::Log(L"TKK has been extracted. New values: Tkk1 = " + to_wstring(Translator::tkk1) + L", Tkk2 = " + to_wstring(Translator::tkk2) + L".");
 
 	return 0;
 }
 
-// Grabbed from google code
-string Translator::GetHash(string sentence)
+// Grabbed from google minified js code
+wstring Translator::GetHash(wstring sentence)
 {
 	UpateTkkIfNeccessary();
 
-	const char* bytes = sentence.c_str();
+	string utf8Sentence = Utilities::GetUtf8String(sentence);
+	const char* bytes = utf8Sentence.c_str();
 
 	long long a = tkk1;
 	long long pow32 = 4294967295;
@@ -151,7 +155,7 @@ string Translator::GetHash(string sentence)
 
 	a = a % 1000000;
 
-	return to_string(a) + "." + to_string(a ^ tkk1);
+	return to_wstring(a) + L"." + to_wstring(a ^ tkk1);
 }
 
 // Relevant response has the following format
@@ -173,70 +177,90 @@ string Translator::GetHash(string sentence)
 //		],		
 //	]
 //]
-TranslateResult Translator::ParseJSONResponse(string json)
+TranslateResult Translator::ParseJSONResponse(wstring json)
 {
-	Json::Value root;
-	Json::Reader reader;
 	TranslateResult result;
 
 	if (json.empty()){
-		result.Sentence.Translation = Utilities::GetWideChar("[Error]");
-		result.Sentence.Origin = Utilities::GetWideChar("[Error]");
+		result.Sentence.Translation = Utilities::CopyWideChar(L"[Error]");
+		result.Sentence.Origin = Utilities::CopyWideChar(L"[Error]");
 
-		Logger::Log("Error. Unable to parse JSON. JSON value is empty.");
+		Logger::Log(L"Error. Unable to parse JSON. JSON value is empty.");
 
 		return result;
 	}
 
 	// Normalize json response
-	Translator::ReplaceAll(json, ",,", ",null,");
-	Translator::ReplaceAll(json, "[,", "[null,");
+	Translator::ReplaceAll(json, L",,", L",null,");
+	Translator::ReplaceAll(json, L"[,", L"[null,");
 
-	bool parsingSuccessful = reader.parse(json, root);
-	if (!parsingSuccessful)
+	json::value root = json::value::parse(json);
+
+	if (root.is_null())
 	{
-		Logger::Log("Error. Unable to parse JSON. Json value = '" + json + "'.");
-		result.Sentence.Translation = Utilities::GetWideChar("[Error]");
-		result.Sentence.Origin = Utilities::GetWideChar("[Error]");
+		Logger::Log(L"Error. Unable to parse JSON. Json value = '" + json + L"'.");
+		result.Sentence.Translation = Utilities::CopyWideChar(L"[Error]");
+		result.Sentence.Origin = Utilities::CopyWideChar(L"[Error]");
 
 		return result;
 	}
 
-	Json::Value sentences = root[0u].get(0u,"[]");
+	json::array sentences = root[0][0].as_array();
 	if (sentences.size() > 0)
 	{
-		result.Sentence.Translation = Utilities::GetWideChar(sentences.get(0u, "").asString());
-		result.Sentence.Origin = Utilities::GetWideChar(sentences.get(1u, "").asString());
+		result.Sentence.Translation = Utilities::CopyWideChar(sentences[0].as_string());
+		result.Sentence.Origin = Utilities::CopyWideChar(sentences[1].as_string());
 	}
 
-	Json::Value dict = root.get(1u, "[]");
+	if (!root[1].is_array()) {
+		return result;
+	}
+
+	json::array dict = root[1].as_array();
+
 	for (size_t i = 0; i < dict.size(); ++i)
 	{
 		TranslateResultDictionary category;
+
 		category.IsExtendedList = false;
-		category.PartOfSpeech = Utilities::GetWideChar(dict[i].get(0u, "").asString());
-		category.BaseForm = Utilities::GetWideChar(dict[i].get(3u, "").asString());
-		Json::Value entries = dict[i].get(2u, "[]");
+		category.PartOfSpeech = Utilities::CopyWideChar(dict[i][0].as_string());
+		category.BaseForm = Utilities::CopyWideChar(dict[i][3].as_string());
+
+		if (!dict[i][2].is_array()) 
+		{
+			continue;
+		}
+
+		json::array entries = dict[i][2].as_array();
 		for (size_t j = 0; j < entries.size(); ++j)
 		{
 			TranslateResultDictionaryEntry entry;
-			entry.Word = Utilities::GetWideChar(entries[j].get(0u, "").asString());
-			entry.Score = entries[j].get(3u, 0.0).asDouble();
+			entry.Word = Utilities::CopyWideChar(entries[j][0].as_string());
 
-			auto reverseTranslations = entries[j].get(1u, "[]");
+			entry.Score = entries[j][3].is_double()
+				? entries[j][3].as_double()
+				: 0;
+
+			if (!entries[j][1].is_array())
+			{
+				continue;
+			}
+
+			json::array reverseTranslations = entries[j][1].as_array();
 			for (size_t k = 0; k < reverseTranslations.size(); ++k)
 			{
-				entry.ReverseTranslation.push_back(Utilities::GetWideChar(reverseTranslations[k].asString()));
+				entry.ReverseTranslation.push_back(Utilities::CopyWideChar(reverseTranslations[k].as_string()));
 			}
 
 			category.Entries.push_back(entry);
 		}
 		result.TranslateCategories.push_back(category);
 	}
+
 	return result;
 }
 
-void Translator::ReplaceAll(string &str, const string &search, const string &replace)
+void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &replace)
 {
 	for (size_t pos = 0;; pos += replace.length() - 1)
 	{
