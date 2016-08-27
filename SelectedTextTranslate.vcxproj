@@ -24,6 +24,7 @@
     <Image Include="tranlate_hover.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Entities\TranslateResult.cpp" />
     <ClCompile Include="Source\External\duktape.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -34,7 +35,6 @@
     <ClCompile Include="Source\Windows\Buttons\TranslateButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\Base\IconButtonWindow.cpp" />
-    <ClCompile Include="Source\Entities\TranslateResult.cpp" />
     <ClCompile Include="Source\Helpers\RequestHelper.cpp" />
     <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
     <ClCompile Include="Source\Helpers\Utilities.cpp" />
@@ -119,17 +119,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>;.\libs\gumbo-parser\visualc\Debug;.$(LibraryPath)</LibraryPath>
-    <IncludePath>.\Headers;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
+    <IncludePath>.\Source;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
     <OutDir>Build\$(Configuration)\</OutDir>
-    <IntDir>Intermidiate\$(Configuration)\</IntDir>
+    <IntDir>Intermediate\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\Headers;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
+    <IncludePath>.\Source;.\libs\gumbo-parser\src;$(IncludePath)</IncludePath>
     <LibraryPath>.\libs\gumbo-parser\visualc\Release;$(LibraryPath)</LibraryPath>
     <OutDir>Build\$(Configuration)\</OutDir>
-    <IntDir>Intermidiate\$(Configuration)\</IntDir>
+    <IntDir>Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
