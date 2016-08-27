@@ -1,7 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SelectedTextTranslate", "SelectedTextTranslate\SelectedTextTranslate.vcxproj", "{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{196B6A2D-2A51-41A7-8A9F-3AB16D708A92}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gumbo", "Libs\gumbo-parser\visualc\gumbo.vcxproj", "{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,8 +20,15 @@ Global
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Debug|Win32.Deploy.0 = Debug|Win32
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Release|Win32.ActiveCfg = Release|Win32
 		{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}.Release|Win32.Build.0 = Release|Win32
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Debug|Win32.Build.0 = Debug|Win32
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Release|Win32.ActiveCfg = Release|Win32
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC} = {196B6A2D-2A51-41A7-8A9F-3AB16D708A92}
 	EndGlobalSection
 EndGlobal
