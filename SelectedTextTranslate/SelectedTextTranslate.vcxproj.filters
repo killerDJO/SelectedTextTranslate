@@ -155,21 +155,6 @@
     <Image Include="Resources\Resources\Audio.bmp">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="Audio.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Audio_Inactive.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="SelectedTextTranslate.ico">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="tranlate.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="tranlate_hover.bmp">
-      <Filter>Resources</Filter>
-    </Image>
     <Image Include="Resources\translate.bmp">
       <Filter>Resources</Filter>
     </Image>

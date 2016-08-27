@@ -11,17 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Audio.bmp" />
-    <Image Include="Audio_Inactive.bmp" />
     <Image Include="Resources\Audio.bmp" />
     <Image Include="Resources\Audio_Inactive.bmp" />
     <Image Include="Resources\Resources\Audio.bmp" />
     <Image Include="Resources\SelectedTextTranslate.ico" />
     <Image Include="Resources\translate.bmp" />
     <Image Include="Resources\translate_hover.bmp" />
-    <Image Include="SelectedTextTranslate.ico" />
-    <Image Include="tranlate.bmp" />
-    <Image Include="tranlate_hover.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
