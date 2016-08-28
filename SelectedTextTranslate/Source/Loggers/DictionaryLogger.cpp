@@ -85,8 +85,7 @@ void DictionaryLogger::ReadRecords()
 	do 
 	{
 		ReadFile(hFile, buffer, bufferSize, &nWritten, NULL);
-		wstring readString = wstring((wchar_t*)buffer, nWritten / sizeof(wchar_t));
-		json += readString;
+		json += wstring((wchar_t*)buffer, nWritten / sizeof(wchar_t));
 	} 
 	while (nWritten == bufferSize);
 	
