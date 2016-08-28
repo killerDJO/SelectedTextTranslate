@@ -64,9 +64,6 @@
     <Filter Include="Source\Windows\Buttons\Base">
       <UniqueIdentifier>{dd9ac7ff-b1c1-4b30-98fd-0bd3048cd8b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\External">
-      <UniqueIdentifier>{26d8f828-511b-4eac-97ba-1e05060b9e10}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Loggers">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
     </Filter>

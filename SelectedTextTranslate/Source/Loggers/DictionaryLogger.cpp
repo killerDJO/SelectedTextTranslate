@@ -62,6 +62,10 @@ void DictionaryLogger::Initialize()
 	}
 
 	ReadRecords();
+
+	isInitialized = true;
+
+	Logger::Log(L"Dictionary has been initialized");
 }
 
 void DictionaryLogger::ReadRecords()
@@ -81,7 +85,8 @@ void DictionaryLogger::ReadRecords()
 	do 
 	{
 		ReadFile(hFile, buffer, bufferSize, &nWritten, NULL);
-		json += wstring((wchar_t*)buffer);
+		wstring readString = wstring((wchar_t*)buffer, nWritten / sizeof(wchar_t));
+		json += readString;
 	} 
 	while (nWritten == bufferSize);
 	

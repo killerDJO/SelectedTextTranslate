@@ -67,7 +67,7 @@ wstring Logger::GetCurrentDateTime()
 	tm timeinfo = GetTimeInfo();
 
 	wchar_t buffer[30];
-	wcsftime(buffer, 30, L"%d-%m-%Y %I:%M:%S", &timeinfo);
+	wcsftime(buffer, 30, L"%d-%m-%Y %H:%M:%S", &timeinfo);
 
 	auto now = chrono::system_clock::now();
 	auto ms =
