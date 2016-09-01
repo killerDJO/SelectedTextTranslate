@@ -2,50 +2,8 @@
 #include "Windows\Content\Base\ContentWindow.h"
 
 ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-{
-	this->parentWindow = parentWindow;
-	this->hInstance = hInstance;
-	this->initialX = x;
-	this->initialY = y;
-	this->width = width;
-	this->height = height;
-
-	this->ComputeParameters();
-
-	const TCHAR* className = TEXT("STT_CONTENT");
-	WNDCLASSEX wnd = { 0 };
-	if (!GetClassInfoEx(hInstance, className, &wnd))
-	{
-		wnd.hInstance = hInstance;
-		wnd.lpszClassName = className;
-		wnd.lpfnWndProc = WndProc;
-		wnd.cbSize = sizeof (WNDCLASSEX);
-		wnd.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wnd.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-
-		if (!RegisterClassEx(&wnd))
-		{
-			FatalAppExit(0, TEXT("Couldn't register window class!"));
-		}
-	}
-
-	this->hWindow = CreateWindowA(
-		"STT_CONTENT",
-		NULL,
-		WS_CHILD | WS_VISIBLE,
-		x,
-		y,
-		width,
-		height,
-		this->parentWindow,
-		NULL,
-		this->hInstance,
-		this);
-
-	this->InitializeFonts();
-	this->InitializeBrushes();
-	this->InitializeInMemoryDC();
-
+	: WindowBase(parentWindow, hInstance, x, y, width, height)
+{	
 	COLOR_GRAY = RGB(119, 119, 119);
 	COLOR_BLACK = RGB(0, 0, 0);
 }
@@ -64,61 +22,6 @@ void ContentWindow::ComputeParameters()
 	this->LINE_HEIGHT = AdjustToResolution(20, kY);
 	this->PADDING_X = AdjustToResolution(15, kX);
 	this->PADDING_Y = AdjustToResolution(15, kY);
-}
-
-HWND ContentWindow::GetHandle()
-{
-	return this->hWindow;
-}
-
-HINSTANCE ContentWindow::GetInstance()
-{
-	return this->hInstance;
-}
-
-LRESULT CALLBACK ContentWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	ContentWindow* instance = (ContentWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-
-	switch (message)
-	{
-	
-	case WM_NCCREATE:
-	case WM_CREATE:
-	{
-		CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
-		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
-		return TRUE;
-	}
-
-	case WM_MOVE:
-	{
-		RECT rcWindow;
-		POINTS pos = MAKEPOINTS(lParam);
-		GetWindowRect(hWnd, &rcWindow);
-		MoveWindow(hWnd, pos.x, pos.y, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, FALSE);
-		InvalidateRect(hWnd, NULL, FALSE);
-		return TRUE;
-	}
-
-	case WM_NCPAINT:
-	case WM_PAINT:
-		instance->Draw();
-		break;
-
-	case WM_SHOWWINDOW:
-		instance->Draw();
-		break;
-
-	case WM_HSCROLL:
-	case WM_VSCROLL:
-		break;
-
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-
-	return 0;
 }
 
 void ContentWindow::InitializeFonts()
@@ -140,73 +43,12 @@ void ContentWindow::InitializeBrushes()
 	this->grayBrush = CreateSolidBrush(RGB(170, 170, 170));
 }
 
-void ContentWindow::InitializeInMemoryDC()
-{
-	this->inMemoryHDC = CreateCompatibleDC(NULL);
-
-	BITMAPINFO i;
-	ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
-	i.bmiHeader.biWidth = width;
-	i.bmiHeader.biHeight = height;
-	i.bmiHeader.biPlanes = 1;
-	i.bmiHeader.biBitCount = 24;
-	i.bmiHeader.biSizeImage = 0;
-	i.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	i.bmiHeader.biClrUsed = 0;
-	i.bmiHeader.biClrImportant = 0;
-	VOID *pvBits;
-	HBITMAP bitmap = CreateDIBSection(this->inMemoryHDC, &i, DIB_RGB_COLORS, &pvBits, NULL, 0);
-
-	SelectObject(this->inMemoryHDC, bitmap);
-}
-
 POINT ContentWindow::RenderResult()
 {
 	POINT bottomRight = RenderDC();
 	this->ResetWindow(bottomRight);
 	InvalidateRect(this->hWindow, NULL, FALSE);
 	return bottomRight;
-}
-
-void ContentWindow::ResetWindow(POINT bottomRight)
-{
-	MoveWindow(this->hWindow, this->initialX, this->initialY, bottomRight.x, bottomRight.y, FALSE);
-}
-
-POINT ContentWindow::RenderDC()
-{
-	RECT rect;
-	rect.top = 0;
-	rect.left = 0;
-	rect.bottom = height;
-	rect.right = width;
-	FillRect(inMemoryHDC, &rect, CreateSolidBrush(RGB(255, 255, 255)));
-	return POINT();
-}
-
-void ContentWindow::Draw()
-{
-	PAINTSTRUCT ps;
-	HDC hdc = BeginPaint(this->hWindow, &ps);
-	
-	DWORD res = BitBlt(hdc, 0, 0, width, height, inMemoryHDC, 0, 0, SRCCOPY);
-
-	EndPaint(this->hWindow, &ps);
-}
-
-void ContentWindow::Show()
-{
-	ShowWindow(this->hWindow, SW_SHOW);
-}
-
-void ContentWindow::Hide()
-{
-	ShowWindow(this->hWindow, SW_HIDE);
-}
-
-DWORD ContentWindow::AdjustToResolution(double value, double k)
-{
-	return int(round(value * k));
 }
 
 ContentWindow::~ContentWindow()
@@ -216,6 +58,4 @@ ContentWindow::~ContentWindow()
 	DeleteObject(this->fontItalic);
 	DeleteObject(this->fontSmall);
 	DeleteObject(this->grayBrush);
-
-	DeleteDC(this->inMemoryHDC);
 }

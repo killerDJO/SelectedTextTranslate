@@ -1,20 +1,20 @@
 #pragma once
 #include "Entities\TranslateResult.h"
 #include "Windows\Content\Base\ContentWindow.h"
-#include "Windows\Buttons\AudioButtonWindow.h"
+#include "Windows\Buttons\HoverIconButtonWindow.h"
+#include "Windows\Buttons\HoverTextButtonWindow.h"
 #include "Helpers\Utilities.h"
 #include "TranslateEngine\TextPlayer.h"
 
 class HeaderWindow : public ContentWindow
 {
-	AudioButtonWindow* audioButton;
-
+protected:
+	POINT RenderDC() override;
+	void InitializeFonts() override;
+	
+private:
 	TranslateResult translateResult;
-
-	void InitializeAudioButton();
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	virtual POINT RenderDC();
-	virtual void ResetWindow(POINT bottomRight);
+	HFONT fontSmallUnderscored;
 	
 public:
 	HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
@@ -22,5 +22,5 @@ public:
 
 	POINT RenderResult(TranslateResult translateResult);
 
-	void PlayText();	
+	void PlayText();
 };

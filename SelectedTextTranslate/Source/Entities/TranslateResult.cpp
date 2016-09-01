@@ -6,12 +6,34 @@ TranslateResult::TranslateResult()
 	Sentence.Origin = new wchar_t[0];
 	Sentence.Translation = new wchar_t[0];
 	Sentence.Translit = new wchar_t[0];
+	Sentence.Input = new wchar_t[0];
+	ErrorMessage = new wchar_t[0];
+	isErrorResult = false;
 }
+
+bool TranslateResult::IsInputCorrected()
+{
+	int compareResult = wcscmp(Sentence.Origin, Sentence.Input);
+	return !isErrorResult && compareResult != 0;
+}
+
+bool TranslateResult::IsErrorResult()
+{
+	return isErrorResult;
+}
+
+void TranslateResult::SetError(wstring errorMessage)
+{
+	ErrorMessage = Utilities::CopyWideChar(errorMessage);
+}
+
 void TranslateResult::Free()
 {
 	delete[] Sentence.Origin;
 	delete[] Sentence.Translation;
 	delete[] Sentence.Translit;
+	delete[] Sentence.Input;
+	delete[] ErrorMessage;
 
 	for (size_t i = 0; i < TranslateCategories.size(); ++i)
 	{

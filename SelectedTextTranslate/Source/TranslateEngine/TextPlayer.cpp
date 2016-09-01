@@ -32,6 +32,8 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 
 	string filePath = SaveToFile(audio);
 
+	audio.clear();
+
 	string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
 	mciSendStringA(openFileCommand.c_str(), NULL, 0, 0);
 

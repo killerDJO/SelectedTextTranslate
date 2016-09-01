@@ -39,6 +39,16 @@ wchar_t* Utilities::CopyWideChar(wstring text)
 	return result;
 }
 
+SIZE Utilities::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
+{
+	SelectObject(hdc, font);
+
+	SIZE textSize;
+	GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+
+	return textSize;
+}
+
 POINT Utilities::PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight)
 {
 	SelectObject(hdc, font);

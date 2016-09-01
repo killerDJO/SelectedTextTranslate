@@ -3,38 +3,23 @@
 
 HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height) 
 : ContentWindow(parentWindow, hInstance, x, y, width, height) 
-{ 
-	this->InitializeAudioButton();
-	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)HeaderWindow::WndProc);
+{
 }
 
-void HeaderWindow::InitializeAudioButton()
+void HeaderWindow::InitializeFonts()
 {
-	DWORD imageSize = 15;
-	DWORD adjustedSize = AdjustToResolution(15, kY);
-	audioButton = new AudioButtonWindow(
-		this->hWindow, 
-		this->hInstance, 
-		PADDING_X,
-		PADDING_Y / 2 + AdjustToResolution(19, kY) + (adjustedSize - imageSize)/2,
-		imageSize,
-		imageSize);
+	ContentWindow::InitializeFonts();
+
+	HDC hdc = GetDC(hWindow);
+
+	long lfHeightSmall = -MulDiv(int(FONT_HEIGHT * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	this->fontSmallUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
-LRESULT CALLBACK HeaderWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+POINT HeaderWindow::RenderResult(TranslateResult translateResult)
 {
-	HeaderWindow* instance = (HeaderWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-
-	switch (message)
-	{
-		case WM_COMMAND:
-			if (LOWORD(wParam) == BN_CLICKED)
-			{
-				instance->PlayText();
-			}
-			break;
-	}
-	return ContentWindow::WndProc(hWnd, message, wParam, lParam);
+	this->translateResult = translateResult;
+	return ContentWindow::RenderResult();
 }
 
 void HeaderWindow::PlayText()
@@ -46,12 +31,87 @@ POINT HeaderWindow::RenderDC()
 {
 	ContentWindow::RenderDC();
 
+	DWORD imageSize = 15;
+	DWORD adjustedSize = AdjustToResolution(15, kY);
+
+	HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
+		this->hWindow,
+		this->hInstance,
+		PADDING_X,
+		PADDING_Y / 2 + AdjustToResolution(19, kY) + (adjustedSize - imageSize) / 2,
+		imageSize,
+		imageSize,
+		IDB_AUDIO_INACTIVE,
+		IDB_AUDIO,
+		bind(&HeaderWindow::PlayText, this));
+
+	audioButton->Initialize();
+	this->childWindows.push_back(audioButton);
+
 	POINT bottomRight = { 0, 0 };
 
 	int curY = PADDING_Y / 2;
 
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Translation, fontHeader, COLOR_BLACK, PADDING_X, curY, &bottomRight);
-	Utilities::PrintText(this->inMemoryHDC, translateResult.Sentence.Origin, fontSmall, COLOR_GRAY, PADDING_X + AdjustToResolution(16, kY) - int((kY-1)*10), curY + AdjustToResolution(20, kY), &bottomRight);
+	const wchar_t* headerText;
+	const wchar_t* subHeaderText;
+
+	if (translateResult.IsErrorResult()) 
+	{
+		headerText = L"[Error translating sentence]";
+		subHeaderText = translateResult.ErrorMessage;
+	}
+	else 
+	{
+		headerText = translateResult.Sentence.Translation;
+		subHeaderText = translateResult.Sentence.Origin;
+	}
+
+	Utilities::PrintText(this->inMemoryHDC, headerText, fontHeader, COLOR_BLACK, PADDING_X, curY, &bottomRight);
+
+	int originLineY = curY + AdjustToResolution(20, kY);
+	POINT originLintBottomRight = Utilities::PrintText(
+		this->inMemoryHDC,
+		subHeaderText,
+		fontSmall,
+		COLOR_GRAY,
+		PADDING_X + AdjustToResolution(16, kY) - int((kY-1)*10),
+		originLineY,
+		&bottomRight);
+
+	if (translateResult.IsInputCorrected()) 
+	{
+		Utilities::PrintText(
+			this->inMemoryHDC, 
+			L" (corrected from ",
+			fontSmall,
+			COLOR_GRAY,
+			originLintBottomRight.x,
+			originLineY,
+			&originLintBottomRight);
+
+		HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
+			this->hWindow,
+			this->hInstance,
+			originLintBottomRight.x,
+			originLineY,
+			fontSmallUnderscored,
+			COLOR_GRAY,
+			COLOR_BLACK,
+			translateResult.Sentence.Input,
+			bind(&HeaderWindow::PlayText, this));
+
+		forceTranslationButton->Initialize();
+		this->childWindows.push_back(forceTranslationButton);
+
+		Utilities::PrintText(
+			this->inMemoryHDC,
+			L")",
+			fontSmall,
+			COLOR_GRAY,
+			originLintBottomRight.x + forceTranslationButton->GetWidth(),
+			originLineY,
+			&bottomRight);
+	}
 
 	RECT rect;
 	rect.left = 0;
@@ -66,25 +126,7 @@ POINT HeaderWindow::RenderDC()
 	return bottomRight;
 }
 
-void HeaderWindow::ResetWindow(POINT bottomRight)
-{
-	if (wcslen(this->translateResult.Sentence.Origin) != 0)
-	{
-		this->audioButton->Show();
-	}
-	else 
-	{
-		this->audioButton->Hide();
-	}
-	MoveWindow(this->hWindow, this->initialX, this->initialY, 2000, bottomRight.y, FALSE);
-}
-
 HeaderWindow::~HeaderWindow()
 {	
-}
-
-POINT HeaderWindow::RenderResult(TranslateResult translateResult)
-{
-	this->translateResult = translateResult;
-	return ContentWindow::RenderResult();
+	DeleteObject(this->fontSmallUnderscored);
 }

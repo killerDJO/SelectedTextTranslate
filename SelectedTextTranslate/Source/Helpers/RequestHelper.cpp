@@ -8,7 +8,12 @@ using namespace web::http::client;
 wstring RequestHelper::GetStringResponse(wstring url)
 {
 	vector<unsigned char> response = GetResponse(url);
-	return Utilities::GetUtf16String(string(response.begin(), response.end()));
+	
+	wstring result = Utilities::GetUtf16String(string(response.begin(), response.end()));
+
+	response.clear();
+
+	return result;
 }
 
 vector<unsigned char> RequestHelper::GetResponse(wstring url)

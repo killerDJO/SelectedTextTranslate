@@ -3,41 +3,17 @@
 
 TranslateResultWindow::TranslateResultWindow(MainWindow* mainWindow, DWORD x, DWORD y, DWORD width, DWORD height)
 : ContentWindow(mainWindow->GetHandle(), mainWindow->GetInstance(), x, y, width, height)
-{ 
+{
 	this->mainWindow = mainWindow;
-	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)TranslateResultWindow::WndProc);
 }
 
-LRESULT CALLBACK TranslateResultWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void TranslateResultWindow::InitializeFonts()
 {
-	TranslateResultWindow* instance = (TranslateResultWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-	HBRUSH hbrBkgnd = CreateSolidBrush(RGB(255, 255, 255));
-	switch (message)
-	{
-	case WM_COMMAND:
-		if (LOWORD(wParam) == STN_DBLCLK || LOWORD(wParam) == STN_CLICKED || LOWORD(wParam) == STN_ENABLE)
-		{
-			int dictionaryIndex = GetWindowLong((HWND)lParam, GWL_ID);
-			instance->ExpandDictionary(dictionaryIndex);
-			return TRUE;
-		}
-		case WM_CTLCOLORSTATIC:
-		{
-			HDC hdcStatic = (HDC)wParam;
-			long hovered = GetWindowLong((HWND)lParam, GWL_USERDATA);
-			if (hovered){
-				SetTextColor(hdcStatic, RGB(0, 0, 0));
-			}
-			else {
-				SetTextColor(hdcStatic, RGB(119, 119, 119));
-			}
+	ContentWindow::InitializeFonts();
 
-			SetBkColor(hdcStatic, RGB(255, 255, 255));
-			return (INT_PTR)hbrBkgnd;
-		}
-		break;
-	}
-	return ContentWindow::WndProc(hWnd, message, wParam, lParam);
+	HDC hdc = GetDC(hWindow);
+	long lfHeightSmall = -MulDiv(int(FONT_HEIGHT * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	this->fontUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
 void TranslateResultWindow::ExpandDictionary(int index)
@@ -61,8 +37,6 @@ POINT TranslateResultWindow::RenderResult(TranslateResult translateResult)
 POINT TranslateResultWindow::RenderDC()
 {	
 	ContentWindow::RenderDC();
-
-	this->DestroyButtons();
 
 	POINT bottomRight = { 0, 0 };
 	int curY = LINE_HEIGHT / 4;
@@ -128,20 +102,34 @@ POINT TranslateResultWindow::RenderDC()
 			curY += LINE_HEIGHT;
 		}
 
-		DWORD hiddentCount = category.Entries.size() - showedEntries.size();
-		if (category.IsExtendedList || hiddentCount > 0){
-			ExpandButtonWindow* expandButton = new ExpandButtonWindow(
+		DWORD hiddenCount = category.Entries.size() - showedEntries.size();
+		if (category.IsExtendedList || hiddenCount > 0){
+				wstring text = L"";
+				if (!category.IsExtendedList){
+					if (hiddenCount == 1){
+						text = L"show " + to_wstring(hiddenCount) + L" more result";
+					}
+					else {
+						text = L"show " + to_wstring(hiddenCount) + L" more results";
+					}
+				}
+				else {
+					text = L"show less results";
+				}
+
+			HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
 				this->hWindow,
 				this->hInstance,
 				PADDING_X * 3,
 				curY,
-				2000,
-				LINE_HEIGHT,
-				hiddentCount,
-				category.IsExtendedList);
+				this->fontUnderscored,
+				RGB(119, 119, 119),
+				RGB(0, 0, 0),
+				text,
+				bind(&TranslateResultWindow::ExpandDictionary, this, i));
 			
-			SetWindowLong(expandButton->GetHandle(), GWL_ID, i);
-			expandButtons.push_back(expandButton);
+			expandButton->Initialize();
+			childWindows.push_back(expandButton);
 
 			bottomRight.y += LINE_HEIGHT / 2;
 			curY += LINE_HEIGHT / 2;
@@ -156,14 +144,7 @@ POINT TranslateResultWindow::RenderDC()
 	return bottomRight;
 }
 
-void TranslateResultWindow::DestroyButtons()
-{
-	for (size_t i = 0; i < expandButtons.size(); ++i){
-		expandButtons[i]->Destroy();
-	}
-	expandButtons.clear();
-	expandButtons.resize(0);
-}
 TranslateResultWindow::~TranslateResultWindow()
-{	
+{
+	DeleteObject(this->fontUnderscored);
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           

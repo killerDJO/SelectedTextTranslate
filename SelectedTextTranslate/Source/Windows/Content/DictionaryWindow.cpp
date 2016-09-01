@@ -7,37 +7,11 @@
 DictionaryWindow::DictionaryWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
 	: ContentWindow(parentWindow, hInstance, x, y, width, height)
 {
-	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)DictionaryWindow::WndProc);
 }
 
-LRESULT CALLBACK DictionaryWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void DictionaryWindow::ShowFullTranslation(int dictionaryIndex)
 {
-	DictionaryWindow* instance = (DictionaryWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-
-	switch (message)
-	{
-	case WM_COMMAND:
-		if (HIWORD(wParam) == STN_DBLCLK || HIWORD(wParam) == STN_CLICKED)
-		{
-			int dictionaryIndex = GetWindowLong((HWND)lParam, GWL_ID);
-			int type = GetWindowLong((HWND)lParam, GWL_USERDATA);
-
-			if (type == GWL_TYPE_REMOVE) 
-			{
-				//MessageBox(instance->parentWindow, L"Are you sure you want to delete the item?", L"Confirm", MB_OKCANCEL | MB_DEFBUTTON1 | MB_TASKMODAL);
-				//SendMessage(instance->parentWindow, WM_NOTIFY, WM_TRANLSATE_LOG_RECORD, dictionaryIndex);
-			}
-			else if (type == GWL_TYPE_TRANSLATE)
-			{
-				SendMessage(instance->parentWindow, WM_NOTIFY, WM_TRANLSATE_LOG_RECORD, dictionaryIndex);
-			}
-			
-			return TRUE;
-		}
-		break;
-	}
-
-	return ContentWindow::WndProc(hWnd, message, wParam, lParam);
+	SendMessage(this->parentWindow, WM_NOTIFY, WM_TRANLSATE_LOG_RECORD, dictionaryIndex);
 }
 
 POINT DictionaryWindow::RenderResult(vector<LogRecord> records)
@@ -67,15 +41,19 @@ POINT DictionaryWindow::RenderDC()
 		POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, record.Word.c_str(), fontNormal, COLOR_BLACK, PADDING_X * 2 + 4, curY, &bottomRight);
 		Utilities::PrintText(inMemoryHDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, COLOR_GRAY, lineBottomRight.x + 1, curY, &bottomRight);
 		
-		TranslateButtonWindow* translateButton = new TranslateButtonWindow(
+		HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
 			this->hWindow,
 			this->hInstance,
 			PADDING_X,
 			curY + 2,
 			13,
-			13);
-		SetWindowLong(translateButton->GetHandle(), GWL_ID, i);
-		SetWindowLong(translateButton->GetHandle(), GWL_USERDATA, GWL_TYPE_TRANSLATE);
+			13,
+			IDB_TRANSLATE_INACTIVE,
+			IDB_TRANSLATE,
+			bind(&DictionaryWindow::ShowFullTranslation, this, i));
+
+		translateButton->Initialize();
+		childWindows.push_back(translateButton);
 
 		curY += LINE_HEIGHT;
 	}

@@ -1,15 +1,17 @@
 #pragma once
 #include "Windows\Content\Base\ContentWindow.h"
 #include "Entities\LogRecord.h"
-#include "Windows\Buttons\TranslateButtonWindow.h"
-#include "Windows\Buttons\RemoveButtonWindow.h"
+#include "Windows\Buttons\HoverIconButtonWindow.h"
 
 class DictionaryWindow : public ContentWindow
 {
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	virtual POINT RenderDC();
+protected:
+	POINT RenderDC() override;
 
+private:
 	vector<LogRecord> records;
+
+	void ShowFullTranslation(int dictionaryIndex);
 
 public:
 	DictionaryWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);

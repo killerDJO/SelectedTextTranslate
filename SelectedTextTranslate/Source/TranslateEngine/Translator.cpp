@@ -21,14 +21,18 @@ TranslateResult Translator::TranslateSentence(wstring sentence)
 	wstring translatorResponse = RequestHelper::GetStringResponse(translateURL);
 
 	TranslateResult result;
-
+	
 	try 
 	{
 		result = ParseJSONResponse(translatorResponse);
+		result.Sentence.Input = Utilities::CopyWideChar(sentence);
 	}
 	catch (json::json_exception exception)
 	{
-		Logger::Log(L"Error parsing json response. Exception: " + Utilities::GetUtf16String(exception.what()) + L".");
+		wstring errorMessage = L"Error parsing json response. Exception: " + Utilities::GetUtf16String(exception.what()) + L".";
+		
+		Logger::Log(errorMessage);	
+		result.SetError(errorMessage);
 	}
 
 	Logger::Log(L"End translating sentence.");
@@ -99,11 +103,11 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 	TranslateResult result;
 
 	if (json.empty()){
-		result.Sentence.Translation = Utilities::CopyWideChar(L"[Error]");
-		result.Sentence.Origin = Utilities::CopyWideChar(L"[Error]");
-
-		Logger::Log(L"Error. Unable to parse JSON. JSON value is empty.");
-
+		wstring errorMessage = L"Error. Unable to parse JSON. JSON value is empty.";
+		
+		Logger::Log(errorMessage);
+		result.SetError(errorMessage);
+		
 		return result;
 	}
 
@@ -115,9 +119,10 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 
 	if (root.is_null())
 	{
-		Logger::Log(L"Error. Unable to parse JSON. Json value = '" + json + L"'.");
-		result.Sentence.Translation = Utilities::CopyWideChar(L"[Error]");
-		result.Sentence.Origin = Utilities::CopyWideChar(L"[Error]");
+		wstring errorMessage = L"Error. Unable to parse JSON. Json value = '" + json + L"'.";
+
+		Logger::Log(errorMessage);
+		result.SetError(errorMessage);
 
 		return result;
 	}

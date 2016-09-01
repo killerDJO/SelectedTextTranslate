@@ -10,4 +10,5 @@ public:
 
 	static POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight);
 	static void DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight);
+	static SIZE GetTextSize(HDC hdc, const wchar_t* text, HFONT font);
 };
