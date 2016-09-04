@@ -310,7 +310,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         return DefWindowProc(hWnd, message, wParam, lParam);
 
     case WM_TRAYICON:
-        
+
         if (lParam == WM_LBUTTONUP)
         {
             instance->appModel->TranslateSelectedText();
@@ -371,6 +371,8 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
 MainWindow::~MainWindow()
 {
+    Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
+
     delete headerWindow;
     delete translateResultWindow;
     delete dictionaryWindow;
