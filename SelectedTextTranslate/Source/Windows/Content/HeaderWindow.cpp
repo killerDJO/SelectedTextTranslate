@@ -41,7 +41,7 @@ POINT HeaderWindow::RenderDC()
         bind(&HeaderWindow::PlayText, this));
 
     audioButton->Initialize();
-    childWindows.push_back(audioButton);
+    AddChildWindow(audioButton);
 
     POINT bottomRight = { 0, 0 };
 
@@ -114,7 +114,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         bind(&HeaderWindow::PlayText, this));
 
     forceTranslationButton->Initialize();
-    childWindows.push_back(forceTranslationButton);
+    AddChildWindow(forceTranslationButton);
 
     PrintText(
         inMemoryHDC,

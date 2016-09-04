@@ -4,15 +4,17 @@
 class ChildWindow : public Window
 {
 private:
+    vector<ChildWindow*> activeChildWindows;
+    vector<ChildWindow*> childWindowsToDestory;
+
     void InitializeInMemoryDC();
-    void DestroyChildWindows();
+    void DestroyChildWindows(vector<ChildWindow*>* childWindows);
     void Draw();
     void ClearHDC(HDC hdc);
 
 protected:
     HWND parentWindow;
     HDC inMemoryHDC;
-    vector<ChildWindow*> childWindows;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
 
@@ -23,6 +25,7 @@ protected:
 
     HDC CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight);
     void ResizeHDC(HDC &hdc, DWORD width, DWORD height);
+    void AddChildWindow(ChildWindow* childWindow);
 
     DWORD AdjustToResolution(double value, double k);
     POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight);

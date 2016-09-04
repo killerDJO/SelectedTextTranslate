@@ -10,10 +10,10 @@ HoverButtonWindow::HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWO
 void HoverButtonWindow::Initialize()
 {
     ChildWindow::Initialize();
-    SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
-    
-    this->RenderStatesHDC();
-    this->RenderDC();
+    SetWindowLongPtr(hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
+
+    RenderStatesHDC();
+    RenderDC();
 }
 
 LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -70,13 +70,13 @@ POINT HoverButtonWindow::RenderDC()
 {
     POINT bottomRight = ChildWindow::RenderDC();
 
-    HDC sourceHDC = this->isHovered
-        ? this->hoverStateHDC
-        : this->normalStateHDC;
+    HDC sourceHDC = isHovered
+        ? hoverStateHDC
+        : normalStateHDC;
 
-    DWORD res = BitBlt(this->inMemoryHDC, 0, 0, width, height, sourceHDC, 0, 0, SRCCOPY);
+    DWORD res = BitBlt(inMemoryHDC, 0, 0, width, height, sourceHDC, 0, 0, SRCCOPY);
 
-    MoveWindow(this->hWindow, this->x, this->y, width, height, FALSE);
+    MoveWindow(hWindow, x, y, width, height, FALSE);
 
     bottomRight.x = width;
     bottomRight.y = height;
@@ -86,6 +86,6 @@ POINT HoverButtonWindow::RenderDC()
 
 HoverButtonWindow::~HoverButtonWindow()
 {
-    DeleteDC(this->normalStateHDC);
-    DeleteDC(this->hoverStateHDC);
+    DeleteDC(normalStateHDC);
+    DeleteDC(hoverStateHDC);
 }

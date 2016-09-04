@@ -45,7 +45,7 @@ POINT DictionaryWindow::RenderDC()
             bind(&DictionaryWindow::ShowFullTranslation, this, i));
 
         translateButton->Initialize();
-        childWindows.push_back(translateButton);
+        AddChildWindow(translateButton);
 
         curY += lineHeight;
     }

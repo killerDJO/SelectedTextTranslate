@@ -13,7 +13,7 @@ void AttachConsole()
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
-{ 
+{
     // AttachConsole();
 
     HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));

@@ -48,7 +48,8 @@ void ContentWindow::InitializeBrushes()
 POINT ContentWindow::RenderResult()
 {
     POINT bottomRight = RenderDC();
-    MoveWindow(hWindow, x, y, bottomRight.x, bottomRight.y, TRUE);
+    InvalidateRect(hWindow, NULL, FALSE);
+    MoveWindow(hWindow, x, y, bottomRight.x, bottomRight.y, FALSE);
     return bottomRight;
 }
 

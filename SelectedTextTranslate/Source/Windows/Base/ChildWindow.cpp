@@ -10,6 +10,9 @@ ChildWindow::ChildWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD 
     this->height = height;
 
     this->className = L"STT_CONTENT";
+
+    this->activeChildWindows = vector<ChildWindow*>();
+    this->childWindowsToDestory = vector<ChildWindow*>();
 }
 
 void ChildWindow::Initialize()
@@ -21,7 +24,7 @@ void ChildWindow::Initialize()
     hWindow = CreateWindow(
         className,
         NULL,
-        WS_CHILD | WS_VISIBLE,
+        WS_CHILD,
         x,
         y,
         width,
@@ -120,7 +123,6 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
     case WM_NCPAINT:
     case WM_PAINT:
-    case WM_SHOWWINDOW:
         instance->Draw();
         break;
 
@@ -137,7 +139,8 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
 POINT ChildWindow::RenderDC()
 {
-    DestroyChildWindows();
+    childWindowsToDestory = activeChildWindows;
+    activeChildWindows = vector<ChildWindow*>();
 
     ClearHDC(inMemoryHDC);
 
@@ -163,9 +166,11 @@ void ChildWindow::Draw()
 
     EndPaint(hWindow, &ps);
 
-    for (size_t i = 0; i < childWindows.size(); ++i) 
+    DestroyChildWindows(&childWindowsToDestory);
+
+    for (size_t i = 0; i < activeChildWindows.size(); ++i) 
     {
-        childWindows[i]->Show();
+        activeChildWindows[i]->Show();
     }
 }
 
@@ -174,15 +179,20 @@ DWORD ChildWindow::AdjustToResolution(double value, double k)
     return roundToInt(value * k);
 }
 
-void ChildWindow::DestroyChildWindows()
+void ChildWindow::AddChildWindow(ChildWindow* childWindow)
 {
-    for (size_t i = 0; i < childWindows.size(); ++i)
+    activeChildWindows.push_back(childWindow);
+}
+
+void ChildWindow::DestroyChildWindows(vector<ChildWindow*>* childWindows)
+{
+    for (size_t i = 0; i < childWindows->size(); ++i)
     {
-        delete childWindows[i];
+        delete (*childWindows)[i];
     }
 
-    childWindows.clear();
-    childWindows.resize(0);
+    childWindows->clear();
+    childWindows->resize(0);
 }
 
 SIZE ChildWindow::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
@@ -226,5 +236,7 @@ ChildWindow::~ChildWindow()
 {
     DestroyWindow(hWindow);
     DeleteDC(inMemoryHDC);
-    DestroyChildWindows();
+
+    DestroyChildWindows(&activeChildWindows);
+    DestroyChildWindows(&childWindowsToDestory);
 }

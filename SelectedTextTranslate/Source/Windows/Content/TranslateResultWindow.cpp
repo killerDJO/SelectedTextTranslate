@@ -140,7 +140,7 @@ int TranslateResultWindow::CreateExpandButton(
             bind(&TranslateResultWindow::ExpandDictionary, this, categoryIndex));
 
         expandButton->Initialize();
-        childWindows.push_back(expandButton);
+        AddChildWindow(expandButton);
 
         bottomRight->y += lineHeight / 2;
         curY += lineHeight / 2;

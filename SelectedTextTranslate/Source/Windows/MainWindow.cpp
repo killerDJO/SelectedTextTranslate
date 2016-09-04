@@ -111,8 +111,6 @@ void MainWindow::ShowTranslateResultView(bool preserveScroll)
         vScroll = si.nPos;
     }
 
-    InvalidateRect(hWindow, NULL, TRUE);
-
     headerWindow->Show();
     translateResultWindow->Show();
     dictionaryWindow->Hide();
@@ -130,8 +128,6 @@ void MainWindow::ShowTranslateResultView(bool preserveScroll)
 
 void MainWindow::ShowDictionaryView()
 {
-    InvalidateRect(hWindow, NULL, TRUE);
-
     headerWindow->Hide();
     translateResultWindow->Hide();
     dictionaryWindow->Show();
