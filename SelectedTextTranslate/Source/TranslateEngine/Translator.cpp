@@ -10,8 +10,8 @@ Translator::Translator(Logger* logger, RequestProvider* requestProvider, Transla
 }
 
 TranslateResult Translator::TranslateSentence(wstring sentence)
-{	
-    this->logger->Log(L"Start translating sentence '" + sentence + L"'.");
+{
+    logger->Log(L"Start translating sentence '" + sentence + L"'.");
 
     wstring hash = GetHash(sentence);
     wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" 
@@ -31,11 +31,11 @@ TranslateResult Translator::TranslateSentence(wstring sentence)
     {
         wstring errorMessage = L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".";
         
-        this->logger->Log(errorMessage);
+        logger->Log(errorMessage);
         result.SetError(errorMessage);
     }
 
-    this->logger->Log(L"End translating sentence.");
+    logger->Log(L"End translating sentence.");
 
     return result;
 }
@@ -105,9 +105,9 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
     if (json.empty()){
         wstring errorMessage = L"Error. Unable to parse JSON. JSON value is empty.";
         
-        this->logger->Log(errorMessage);
+        logger->Log(errorMessage);
         result.SetError(errorMessage);
-        
+
         return result;
     }
 
@@ -121,7 +121,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
     {
         wstring errorMessage = L"Error. Unable to parse JSON. Json value = '" + json + L"'.";
 
-        this->logger->Log(errorMessage);
+        logger->Log(errorMessage);
         result.SetError(errorMessage);
 
         return result;

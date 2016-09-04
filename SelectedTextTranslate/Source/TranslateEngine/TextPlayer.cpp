@@ -9,7 +9,7 @@ TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* 
 
 void TextPlayer::PlayText(const wchar_t* text)
 {
-    this->currentTextToPlay = text;
+    currentTextToPlay = text;
     DWORD threadId;
     HANDLE hThread = CreateThread(NULL, 0, TextPlayer::Play, this, 0, &threadId);
     CloseHandle(hThread);

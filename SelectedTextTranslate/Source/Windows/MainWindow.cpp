@@ -17,9 +17,9 @@ void MainWindow::Initialize()
     RECT workarea;
     SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
 
-    this->ComputeWindowDimensions(workarea);
+    ComputeWindowDimensions(workarea);
 
-    this->hWindow = CreateWindowEx(
+    hWindow = CreateWindowEx(
         WS_EX_TOOLWINDOW,
         className,
         NULL,
@@ -33,15 +33,15 @@ void MainWindow::Initialize()
         hInstance,
         this);
 
-    this->InitNotifyIconData();
+    InitNotifyIconData();
 
-    this->dictionaryWindow = new DictionaryWindow(appModel, this->hWindow, this->hInstance, 0, 0, 1000, 5000);
-    this->translateResultWindow = new TranslateResultWindow(appModel, this->hWindow, this->hInstance, 0, roundToInt(50 * kY - 2), 2000, 3000);
-    this->headerWindow = new HeaderWindow(appModel, this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
+    dictionaryWindow = new DictionaryWindow(appModel, hWindow, hInstance, 0, 0, 1000, 5000);
+    translateResultWindow = new TranslateResultWindow(appModel, hWindow, hInstance, 0, roundToInt(50 * kY - 2), 2000, 3000);
+    headerWindow = new HeaderWindow(appModel, hWindow, hInstance, 0, 0, 2000, roundToInt(50 * kY));
 
-    this->dictionaryWindow->Initialize();
-    this->translateResultWindow->Initialize();
-    this->headerWindow->Initialize();
+    dictionaryWindow->Initialize();
+    translateResultWindow->Initialize();
+    headerWindow->Initialize();
 
     RegisterHotKey(hWindow, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
     RegisterHotKey(hWindow, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
@@ -57,45 +57,45 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
-    windowClass->hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
+    windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 }
 
 void MainWindow::ComputeWindowDimensions(RECT workarea)
 {
     UINT screenResolutionX = workarea.right - workarea.left;
     UINT screenResolutionY = workarea.bottom - workarea.top;
-    this->kX = screenResolutionX / 1440.0;
-    this->kY = screenResolutionY / 860.0;
+    kX = screenResolutionX / 1440.0;
+    kY = screenResolutionY / 860.0;
 
-    this->width = roundToInt(300 * this->kX);
-    this->height = roundToInt(400 * this->kY);
-    this->padding = 5;
+    width = roundToInt(300 * this->kX);
+    height = roundToInt(400 * this->kY);
+    padding = 5;
 }
 
 void MainWindow::InitNotifyIconData()
 {
-    memset(&this->notifyIconData, 0, sizeof(NOTIFYICONDATA));
+    memset(&notifyIconData, 0, sizeof(NOTIFYICONDATA));
 
-    this->notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
+    notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
 
-    this->notifyIconData.hWnd = this->hWindow;
-    this->notifyIconData.uID = ID_TRAY_APP_ICON;
-    this->notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-    this->notifyIconData.uCallbackMessage = WM_TRAYICON;
-    this->notifyIconData.hIcon = LoadIcon(this->hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
-    wcscpy_s(this->notifyIconData.szTip, TEXT("Selected text translate.."));
+    notifyIconData.hWnd = hWindow;
+    notifyIconData.uID = ID_TRAY_APP_ICON;
+    notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    notifyIconData.uCallbackMessage = WM_TRAYICON;
+    notifyIconData.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
+    wcscpy_s(notifyIconData.szTip, TEXT("Selected text translate.."));
 }
 
 void MainWindow::Minimize()
 {
-    Shell_NotifyIcon(NIM_ADD, &this->notifyIconData);
+    Shell_NotifyIcon(NIM_ADD, &notifyIconData);
     Hide();
 }
 
 void MainWindow::Maximize()
 {
     Show();
-    SwitchToThisWindow(this->hWindow, TRUE);
+    SwitchToThisWindow(hWindow, TRUE);
 }
 
 void MainWindow::ShowTranslateResultView(bool preserveScroll)
@@ -107,40 +107,40 @@ void MainWindow::ShowTranslateResultView(bool preserveScroll)
         SCROLLINFO si;
         si.cbSize = sizeof (si);
         si.fMask = SIF_POS;
-        GetScrollInfo(this->hWindow, SB_VERT, &si);
+        GetScrollInfo(hWindow, SB_VERT, &si);
         vScroll = si.nPos;
     }
 
-    InvalidateRect(this->hWindow, NULL, TRUE);
+    InvalidateRect(hWindow, NULL, TRUE);
 
-    this->headerWindow->Show();
-    this->translateResultWindow->Show();
-    this->dictionaryWindow->Hide();
+    headerWindow->Show();
+    translateResultWindow->Show();
+    dictionaryWindow->Hide();
 
-    POINT headerBottomRight = this->headerWindow->RenderResult();
-    POINT contentBottomRight = this->translateResultWindow->RenderResult();
+    POINT headerBottomRight = headerWindow->RenderResult();
+    POINT contentBottomRight = translateResultWindow->RenderResult();
 
-    this->InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
+    InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
 
     for (int i = 0; i < vScroll; ++i)
     {
-        SendMessage(this->hWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
+        SendMessage(hWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
     }
 }
 
 void MainWindow::ShowDictionaryView()
 {
-    InvalidateRect(this->hWindow, NULL, TRUE);
+    InvalidateRect(hWindow, NULL, TRUE);
 
-    this->headerWindow->Hide();
-    this->translateResultWindow->Hide();
-    this->dictionaryWindow->Show();
+    headerWindow->Hide();
+    translateResultWindow->Hide();
+    dictionaryWindow->Show();
 
-    POINT contentBottomRight = this->dictionaryWindow->RenderResult();
+    POINT contentBottomRight = dictionaryWindow->RenderResult();
 
-    this->InitializeScrollbars(contentBottomRight.x, contentBottomRight.y);
+    InitializeScrollbars(contentBottomRight.x, contentBottomRight.y);
 
-    this->Maximize();
+    Maximize();
 }
 
 void MainWindow::InitializeScrollbars(int contentWidth, int contentHeight)
@@ -178,7 +178,7 @@ void MainWindow::ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int
     si.cbSize = sizeof(si);
     si.fMask = SIF_ALL;
 
-    GetScrollInfo(this->hWindow, nBar, &si);
+    GetScrollInfo(hWindow, nBar, &si);
     int scrollOffset = si.nPos;
 
     switch (LOWORD(wParam))
@@ -216,8 +216,8 @@ void MainWindow::ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int
     }
 
     si.fMask = SIF_POS;
-    SetScrollInfo(this->hWindow, nBar, &si, TRUE);
-    GetScrollInfo(this->hWindow, nBar, &si);
+    SetScrollInfo(hWindow, nBar, &si, TRUE);
+    GetScrollInfo(hWindow, nBar, &si);
 
     if (si.nPos != scrollOffset)
     {
@@ -235,7 +235,7 @@ void MainWindow::ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int
         }
 
         ScrollWindowEx(
-            this->hWindow,
+            hWindow,
             scrollAmountHorizontal,
             scrollAmountVertical,
             NULL,
@@ -370,7 +370,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
 MainWindow::~MainWindow()
 {
-    delete this->headerWindow;
-    delete this->translateResultWindow;
-    delete this->dictionaryWindow;
+    delete headerWindow;
+    delete translateResultWindow;
+    delete dictionaryWindow;
 }

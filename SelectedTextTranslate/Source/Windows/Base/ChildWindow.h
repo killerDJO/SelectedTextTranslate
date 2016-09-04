@@ -7,6 +7,7 @@ private:
     void InitializeInMemoryDC();
     void DestroyChildWindows();
     void Draw();
+    void ClearHDC(HDC hdc);
 
 protected:
     HWND parentWindow;
@@ -21,7 +22,6 @@ protected:
     virtual POINT RenderDC();
 
     HDC CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight);
-    void ClearHDC(HDC hdc);
     void ResizeHDC(HDC &hdc, DWORD width, DWORD height);
 
     DWORD AdjustToResolution(double value, double k);

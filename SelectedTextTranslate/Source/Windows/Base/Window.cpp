@@ -2,56 +2,56 @@
 
 Window::Window(HINSTANCE hInstance)
 {
-	this->hInstance = hInstance;
+    this->hInstance = hInstance;
 }
 
 void Window::Initialize()
 {
-	WNDCLASSEX windowClass = { 0 };
+    WNDCLASSEX windowClass = { 0 };
 
-	if (!GetClassInfoEx(hInstance, className, &windowClass))
-	{
-		windowClass.hInstance = hInstance;
-		windowClass.lpszClassName = className;
-		windowClass.cbSize = sizeof(WNDCLASSEX);
+    if (!GetClassInfoEx(hInstance, className, &windowClass))
+    {
+        windowClass.hInstance = hInstance;
+        windowClass.lpszClassName = className;
+        windowClass.cbSize = sizeof(WNDCLASSEX);
 
-		SpecifyWindowClass(&windowClass);
+        SpecifyWindowClass(&windowClass);
 
-		if (!RegisterClassEx(&windowClass))
-		{
-			FatalAppExit(0, TEXT("Couldn't register window class!"));
-		}
-	}
+        if (!RegisterClassEx(&windowClass))
+        {
+            FatalAppExit(0, TEXT("Couldn't register window class!"));
+        }
+    }
 }
 
 HWND Window::GetHandle()
 {
-	return hWindow;
+    return hWindow;
 }
 
 HINSTANCE Window::GetInstance()
 {
-	return hInstance;
+    return hInstance;
 }
 
 DWORD Window::GetWidth()
 {
-	return width;
+    return width;
 }
 
 DWORD Window::GetHeight()
 {
-	return height;
+    return height;
 }
 
 void Window::Show()
 {
-	ShowWindow(this->hWindow, SW_SHOW);
+    ShowWindow(hWindow, SW_SHOW);
 }
 
 void Window::Hide()
 {
-	ShowWindow(this->hWindow, SW_HIDE);
+    ShowWindow(hWindow, SW_HIDE);
 }
 
 Window::~Window()

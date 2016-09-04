@@ -5,6 +5,7 @@ ContentWindow::ContentWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hI
 {
     colorGray = RGB(119, 119, 119);
     colorBlack = RGB(0, 0, 0);
+    colorLightGray = RGB(170, 170, 170);
 
     this->appModel = appModel;
 }
@@ -12,7 +13,7 @@ ContentWindow::ContentWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hI
 void ContentWindow::ComputeParameters()
 {
     RECT size;
-    GetWindowRect(this->parentWindow, &size);
+    GetWindowRect(parentWindow, &size);
 
     UINT width = size.right - size.left;
     UINT height = size.bottom - size.top;
@@ -33,30 +34,29 @@ void ContentWindow::InitializeFonts()
     long lfHeightHeader = -MulDiv(int(fontHeight * 3 / 5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
     long lfHeightSmall = -MulDiv(int(fontHeight * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
 
-    this->fontNormal = CreateFont(lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-    this->fontHeader = CreateFont(lfHeightHeader, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-    this->fontItalic = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-    this->fontSmall = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontNormal = CreateFont(lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontHeader = CreateFont(lfHeightHeader, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontItalic = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontSmall = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
 void ContentWindow::InitializeBrushes()
 {
-    this->grayBrush = CreateSolidBrush(RGB(170, 170, 170));
+    grayBrush = CreateSolidBrush(colorLightGray);
 }
 
 POINT ContentWindow::RenderResult()
 {
     POINT bottomRight = RenderDC();
-    MoveWindow(this->hWindow, this->x, this->y, bottomRight.x, bottomRight.y, TRUE);
-    //InvalidateRect(this->hWindow, NULL, FALSE);
+    MoveWindow(hWindow, x, y, bottomRight.x, bottomRight.y, TRUE);
     return bottomRight;
 }
 
 ContentWindow::~ContentWindow()
 {
-    DeleteObject(this->fontNormal);
-    DeleteObject(this->fontHeader);
-    DeleteObject(this->fontItalic);
-    DeleteObject(this->fontSmall);
-    DeleteObject(this->grayBrush);
+    DeleteObject(fontNormal);
+    DeleteObject(fontHeader);
+    DeleteObject(fontItalic);
+    DeleteObject(fontSmall);
+    DeleteObject(grayBrush);
 }

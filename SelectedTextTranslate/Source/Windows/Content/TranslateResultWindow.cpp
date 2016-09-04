@@ -11,19 +11,19 @@ void TranslateResultWindow::InitializeFonts()
 
     HDC hdc = GetDC(hWindow);
     long lfHeightSmall = -MulDiv(int(fontHeight * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-    this->fontUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
 void TranslateResultWindow::ExpandDictionary(int index)
 {
-    this->appModel->ToggleTranslateResultDictionary(index);
+    appModel->ToggleTranslateResultDictionary(index);
 }
 
 POINT TranslateResultWindow::RenderDC()
 {
     ContentWindow::RenderDC();
 
-    TranslateResult translateResult = this->appModel->GetCurrentTranslateResult();
+    TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
     POINT bottomRight = { 0, 0 };
     int curY = lineHeight / 4;
@@ -39,18 +39,23 @@ POINT TranslateResultWindow::RenderDC()
         if (_tcslen(category.PartOfSpeech) != 0)
         {
             wstring text = L" - " + wstring(category.PartOfSpeech);
-            PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
+            PrintText(inMemoryHDC, text.c_str(), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
         }
         
         vector<TranslateResultDictionaryEntry> showedEntries(0);
-        if (category.IsExtendedList) {
+        if (category.IsExtendedList) 
+        {
             showedEntries = category.Entries;
         }
-        else {
-            for (size_t i = 0; i < category.Entries.size(); ++i){
-                if (category.Entries[i].Score < 0.003 && i >= 7){
+        else 
+        {
+            for (size_t i = 0; i < category.Entries.size(); ++i)
+            {
+                if (category.Entries[i].Score < 0.003 && i >= 7)
+                {
                     continue;
                 }
+
                 showedEntries.push_back(category.Entries[i]);
             }
         }
@@ -85,43 +90,11 @@ POINT TranslateResultWindow::RenderDC()
             rect.top = curY + lineHeight / 3 - dY*2;
             rect.bottom = rect.top + lineHeight / 3;
             rect.left = paddingX + k * rateUnit;
-            DrawRect(inMemoryHDC, rect, this->grayBrush, &bottomRight);
+            DrawRect(inMemoryHDC, rect, grayBrush, &bottomRight);
             curY += lineHeight;
         }
 
-        DWORD hiddenCount = category.Entries.size() - showedEntries.size();
-        if (category.IsExtendedList || hiddenCount > 0){
-                wstring text = L"";
-                if (!category.IsExtendedList){
-                    if (hiddenCount == 1){
-                        text = L"show " + to_wstring(hiddenCount) + L" more result";
-                    }
-                    else {
-                        text = L"show " + to_wstring(hiddenCount) + L" more results";
-                    }
-                }
-                else {
-                    text = L"show less results";
-                }
-
-            HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
-                this->hWindow,
-                this->hInstance,
-                paddingX * 3,
-                curY,
-                this->fontUnderscored,
-                RGB(119, 119, 119),
-                RGB(0, 0, 0),
-                text,
-                bind(&TranslateResultWindow::ExpandDictionary, this, i));
-            
-            expandButton->Initialize();
-            childWindows.push_back(expandButton);
-
-            bottomRight.y += lineHeight / 2;
-            curY += lineHeight / 2;
-        }
-
+        curY = TranslateResultWindow::CreateExpandButton(category, i, showedEntries.size(), curY, &bottomRight);
         curY += lineHeight / 2;
     }
 
@@ -129,6 +102,51 @@ POINT TranslateResultWindow::RenderDC()
     bottomRight.x += paddingX * 3;
 
     return bottomRight;
+}
+
+int TranslateResultWindow::CreateExpandButton(
+    TranslateResultDictionary category,
+    int categoryIndex,
+    int showedCount,
+    int curY,
+    POINT* bottomRight)
+{
+    DWORD hiddenCount = category.Entries.size() - showedCount;
+
+    if (category.IsExtendedList || hiddenCount > 0) {
+        wstring text = L"";
+
+        if (!category.IsExtendedList) {
+            if (hiddenCount == 1) {
+                text = L"show " + to_wstring(hiddenCount) + L" more result";
+            }
+            else {
+                text = L"show " + to_wstring(hiddenCount) + L" more results";
+            }
+        }
+        else {
+            text = L"show less results";
+        }
+
+        HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
+            hWindow,
+            hInstance,
+            paddingX * 3,
+            curY,
+            fontUnderscored,
+            colorGray,
+            colorBlack,
+            text,
+            bind(&TranslateResultWindow::ExpandDictionary, this, categoryIndex));
+
+        expandButton->Initialize();
+        childWindows.push_back(expandButton);
+
+        bottomRight->y += lineHeight / 2;
+        curY += lineHeight / 2;
+    }
+
+    return curY;
 }
 
 TranslateResultWindow::~TranslateResultWindow()

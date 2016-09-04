@@ -16,24 +16,24 @@ void ChildWindow::Initialize()
 {
     Window::Initialize();
 
-    this->InitializeInMemoryDC();
+    InitializeInMemoryDC();
 
-    this->hWindow = CreateWindow(
+    hWindow = CreateWindow(
         className,
         NULL,
         WS_CHILD | WS_VISIBLE,
-        this->x,
-        this->y,
-        this->width,
-        this->height,
-        this->parentWindow,
+        x,
+        y,
+        width,
+        height,
+        parentWindow,
         NULL,
-        this->hInstance,
+        hInstance,
         this);
 
-    this->ComputeParameters();
-    this->InitializeFonts();
-    this->InitializeBrushes();
+    ComputeParameters();
+    InitializeFonts();
+    InitializeBrushes();
 }
 
 void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -46,8 +46,8 @@ void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 void ChildWindow::InitializeInMemoryDC()
 {
-    this->inMemoryHDC = CreateInMemoryHDC(this->width, this->height);
-    ClearHDC(this->inMemoryHDC);
+    inMemoryHDC = CreateInMemoryHDC(width, height);
+    ClearHDC(inMemoryHDC);
 }
 
 void ChildWindow::ComputeParameters()
@@ -139,7 +139,7 @@ POINT ChildWindow::RenderDC()
 {
     DestroyChildWindows();
 
-    ClearHDC(this->inMemoryHDC);
+    ClearHDC(inMemoryHDC);
 
     return POINT();
 }
@@ -151,17 +151,17 @@ void ChildWindow::ClearHDC(HDC hdc)
     rect.left = 0;
     rect.bottom = height;
     rect.right = width;
-    FillRect(hdc, &rect, CreateSolidBrush(RGB(255, 255, 255)));
+    FillRect(hdc, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
 }
 
 void ChildWindow::Draw()
 {
     PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(this->hWindow, &ps);
+    HDC hdc = BeginPaint(hWindow, &ps);
 
-    DWORD res = BitBlt(hdc, 0, 0, width, height, this->inMemoryHDC, 0, 0, SRCCOPY);
+    DWORD res = BitBlt(hdc, 0, 0, width, height, inMemoryHDC, 0, 0, SRCCOPY);
 
-    EndPaint(this->hWindow, &ps);
+    EndPaint(hWindow, &ps);
 
     for (size_t i = 0; i < childWindows.size(); ++i) 
     {
@@ -224,7 +224,7 @@ void ChildWindow::DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight)
 
 ChildWindow::~ChildWindow()
 {
-    DestroyWindow(this->hWindow);
-    DeleteDC(this->inMemoryHDC);
+    DestroyWindow(hWindow);
+    DeleteDC(inMemoryHDC);
     DestroyChildWindows();
 }

@@ -15,6 +15,7 @@ protected:
 
     COLORREF colorGray;
     COLORREF colorBlack;
+    COLORREF colorLightGray;
 
     HFONT fontNormal, fontHeader, fontItalic, fontSmall;
     HBRUSH grayBrush;
