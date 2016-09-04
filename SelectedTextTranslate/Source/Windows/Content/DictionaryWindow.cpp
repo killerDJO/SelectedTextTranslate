@@ -23,15 +23,15 @@ POINT DictionaryWindow::RenderDC()
     size_t countToShow = min(200, records.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
-    POINT lineBottomRight = PrintText(inMemoryHDC, title.c_str(), fontItalic, colorGray, paddingX, curY, &bottomRight);
+    POINT lineBottomRight = PrintText(inMemoryDC, title.c_str(), fontItalic, colorGray, paddingX, curY, &bottomRight);
     
     curY = lineBottomRight.y + paddingY / 2;
     
     for (size_t i = 0; i < countToShow; ++i)
     {
         LogRecord record = records[i];
-        POINT lineBottomRight = PrintText(inMemoryHDC, record.Word.c_str(), fontNormal, colorBlack, paddingX * 2 + 4, curY, &bottomRight);
-        PrintText(inMemoryHDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, colorGray, lineBottomRight.x + 1, curY, &bottomRight);
+        POINT lineBottomRight = PrintText(inMemoryDC, record.Word.c_str(), fontNormal, colorBlack, paddingX * 2 + 4, curY, &bottomRight);
+        PrintText(inMemoryDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, colorGray, lineBottomRight.x + 1, curY, &bottomRight);
         
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
             hWindow,
@@ -44,7 +44,6 @@ POINT DictionaryWindow::RenderDC()
             IDB_TRANSLATE,
             bind(&DictionaryWindow::ShowFullTranslation, this, i));
 
-        translateButton->Initialize();
         AddChildWindow(translateButton);
 
         curY += lineHeight;

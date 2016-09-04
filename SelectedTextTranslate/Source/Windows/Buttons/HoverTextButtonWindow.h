@@ -4,7 +4,7 @@
 class HoverTextButtonWindow : public HoverButtonWindow
 {
 protected:
-    void RenderStatesHDC() override;
+    void RenderStatesDC() override;
 
 private:
     HFONT font;
@@ -12,7 +12,7 @@ private:
     COLORREF hoverColor;
     wstring text;
 
-    void RenderStateHDC(HDC hdc, COLORREF color);
+    void RenderStateDC(HDC hdc, COLORREF color);
 
 public:
     HoverTextButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, COLORREF normalColor, COLORREF hoverColor, wstring text, function<void()> clickCallback);

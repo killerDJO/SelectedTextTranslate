@@ -8,6 +8,9 @@ MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel)
 {
     this->appModel = appModel;
     this->className = L"STT_MAIN";
+
+    this->scrollCharX = 8;
+    this->scrollCharY = 20;
 }
 
 void MainWindow::Initialize()
@@ -239,6 +242,8 @@ void MainWindow::ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int
             NULL,
             NULL,
             SW_SCROLLCHILDREN);
+
+        //Sleep(100);
     }
 }
 

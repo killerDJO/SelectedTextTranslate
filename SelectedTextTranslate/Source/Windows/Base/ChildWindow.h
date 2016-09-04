@@ -10,21 +10,27 @@ private:
     void InitializeInMemoryDC();
     void DestroyChildWindows(vector<ChildWindow*>* childWindows);
     void Draw();
-    void ClearHDC(HDC hdc);
+    void RedrawChildWindows();
+    void ForceRedraw();
+    void ClearDC(HDC hdc);
 
 protected:
     HWND parentWindow;
-    HDC inMemoryHDC;
+    HDC inMemoryDC;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
 
     virtual void ComputeParameters();
     virtual void InitializeFonts();
     virtual void InitializeBrushes();
+
+    
     virtual POINT RenderDC();
 
-    HDC CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight);
-    void ResizeHDC(HDC &hdc, DWORD width, DWORD height);
+    HDC CreateInMemoryDC(DWORD hdcWidth, DWORD hdcHeight);
+    void ResizeDC(HDC &hdc, DWORD width, DWORD height);
+    DWORD CopyDC(HDC source, HDC target);
+
     void AddChildWindow(ChildWindow* childWindow);
 
     DWORD AdjustToResolution(double value, double k);

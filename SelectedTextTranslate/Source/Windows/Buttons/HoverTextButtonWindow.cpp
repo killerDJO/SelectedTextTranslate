@@ -9,25 +9,25 @@ HoverTextButtonWindow::HoverTextButtonWindow(HWND parentWindow, HINSTANCE hInsta
     this->text = text;
 }
 
-void HoverTextButtonWindow::RenderStatesHDC()
+void HoverTextButtonWindow::RenderStatesDC()
 {
-    SIZE textSize = GetTextSize(this->inMemoryHDC, this->text.c_str(), this->font);
+    SIZE textSize = GetTextSize(inMemoryDC, text.c_str(), font);
 
-    this->width = max(this->width, (DWORD)textSize.cx);
-    this->height = max(this->height, (DWORD)textSize.cy);
+    width = max(width, (DWORD)textSize.cx);
+    height = max(height, (DWORD)textSize.cy);
 
-    ResizeHDC(this->normalStateHDC, this->width, this->height);
-    ResizeHDC(this->hoverStateHDC, this->width, this->height);
-    ResizeHDC(this->inMemoryHDC, this->width, this->height);
+    ResizeDC(normalStateDC, width, height);
+    ResizeDC(hoverStateDC, width, height);
+    ResizeDC(inMemoryDC, width, height);
 
-    RenderStateHDC(this->normalStateHDC, this->normalColor);
-    RenderStateHDC(this->hoverStateHDC, this->hoverColor);
+    RenderStateDC(this->normalStateDC, this->normalColor);
+    RenderStateDC(this->hoverStateDC, this->hoverColor);
 }
 
-void HoverTextButtonWindow::RenderStateHDC(HDC hdc, COLORREF color)
+void HoverTextButtonWindow::RenderStateDC(HDC hdc, COLORREF color)
 {
     POINT bottomRight;
-    PrintText(hdc, this->text.c_str(), this->font, color, 0, 0, &bottomRight);
+    PrintText(hdc, text.c_str(), font, color, 0, 0, &bottomRight);
 }
 
 HoverTextButtonWindow::~HoverTextButtonWindow()

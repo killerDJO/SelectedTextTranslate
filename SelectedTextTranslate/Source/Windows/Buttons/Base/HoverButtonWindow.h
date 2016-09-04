@@ -11,11 +11,11 @@ private:
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
-    HDC hoverStateHDC;
-    HDC normalStateHDC;
+    HDC hoverStateDC;
+    HDC normalStateDC;
 
     POINT RenderDC() override;
-    virtual void RenderStatesHDC() = 0;
+    virtual void RenderStatesDC() = 0;
 
 public:
     HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);

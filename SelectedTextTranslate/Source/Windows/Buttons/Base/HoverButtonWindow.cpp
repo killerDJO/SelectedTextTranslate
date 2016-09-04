@@ -12,7 +12,7 @@ void HoverButtonWindow::Initialize()
     ChildWindow::Initialize();
     SetWindowLongPtr(hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
 
-    RenderStatesHDC();
+    RenderStatesDC();
     RenderDC();
 }
 
@@ -70,11 +70,11 @@ POINT HoverButtonWindow::RenderDC()
 {
     POINT bottomRight = ChildWindow::RenderDC();
 
-    HDC sourceHDC = isHovered
-        ? hoverStateHDC
-        : normalStateHDC;
+    HDC sourceDC = isHovered
+        ? hoverStateDC
+        : normalStateDC;
 
-    DWORD res = BitBlt(inMemoryHDC, 0, 0, width, height, sourceHDC, 0, 0, SRCCOPY);
+    DWORD res = CopyDC(sourceDC, inMemoryDC);
 
     MoveWindow(hWindow, x, y, width, height, FALSE);
 
@@ -86,6 +86,6 @@ POINT HoverButtonWindow::RenderDC()
 
 HoverButtonWindow::~HoverButtonWindow()
 {
-    DeleteDC(normalStateHDC);
-    DeleteDC(hoverStateHDC);
+    DeleteDC(normalStateDC);
+    DeleteDC(hoverStateDC);
 }

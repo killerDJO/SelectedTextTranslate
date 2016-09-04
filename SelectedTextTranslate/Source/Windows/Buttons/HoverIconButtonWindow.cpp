@@ -7,16 +7,16 @@ HoverIconButtonWindow::HoverIconButtonWindow(HWND parentWindow, HINSTANCE hInsta
     this->hoverIconResource = hoverIconResource;
 }
 
-void HoverIconButtonWindow::RenderStatesHDC()
+void HoverIconButtonWindow::RenderStatesDC()
 {
-    this->normalStateHDC = CreateInMemoryHDC(this->width, this->height);
-    this->hoverStateHDC = CreateInMemoryHDC(this->width, this->height);
+    normalStateDC = CreateInMemoryDC(width, height);
+    hoverStateDC = CreateInMemoryDC(width, height);
 
-    RenderStateHDC(this->normalStateHDC, this->normalIconResource);
-    RenderStateHDC(this->hoverStateHDC, this->hoverIconResource);
+    RenderStateDC(normalStateDC, normalIconResource);
+    RenderStateDC(hoverStateDC, hoverIconResource);
 }
 
-void HoverIconButtonWindow::RenderStateHDC(HDC hdc, DWORD iconResource)
+void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
 {
     HBITMAP icon = LoadBitmap(hInstance, MAKEINTRESOURCE(iconResource));
     SelectObject(hdc, icon);

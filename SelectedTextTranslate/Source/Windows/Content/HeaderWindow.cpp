@@ -24,7 +24,7 @@ POINT HeaderWindow::RenderDC()
 {
     ContentWindow::RenderDC();
 
-    TranslateResult translateResult = this->appModel->GetCurrentTranslateResult();
+    TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
     DWORD imageSize = 15;
     DWORD adjustedSize = AdjustToResolution(15, kY);
@@ -40,7 +40,6 @@ POINT HeaderWindow::RenderDC()
         IDB_AUDIO,
         bind(&HeaderWindow::PlayText, this));
 
-    audioButton->Initialize();
     AddChildWindow(audioButton);
 
     POINT bottomRight = { 0, 0 };
@@ -61,11 +60,11 @@ POINT HeaderWindow::RenderDC()
         subHeaderText = translateResult.Sentence.Origin;
     }
 
-    PrintText(inMemoryHDC, headerText, fontHeader, colorBlack, paddingX, curY, &bottomRight);
+    PrintText(inMemoryDC, headerText, fontHeader, colorBlack, paddingX, curY, &bottomRight);
 
     int originLineY = curY + AdjustToResolution(20, kY);
     POINT originLintBottomRight = PrintText(
-        this->inMemoryHDC,
+        this->inMemoryDC,
         subHeaderText,
         fontSmall,
         colorGray,
@@ -75,7 +74,7 @@ POINT HeaderWindow::RenderDC()
 
     if (translateResult.IsInputCorrected())
     {
-        PrintInputCorrectionWarning(translateResult.Sentence.Input, originLineY, &originLintBottomRight);
+        PrintInputCorrectionWarning(translateResult.Sentence.Input, originLineY, originLintBottomRight, &bottomRight);
     }
 
     RECT rect;
@@ -83,7 +82,7 @@ POINT HeaderWindow::RenderDC()
     rect.right = 2000;
     rect.top = curY + 2 * lineHeight;
     rect.bottom = rect.top + 1;
-    DrawRect(inMemoryHDC, rect, this->grayBrush, &POINT());
+    DrawRect(inMemoryDC, rect, this->grayBrush, &POINT());
 
     bottomRight.x += paddingX * 3;
     bottomRight.y = rect.bottom;
@@ -91,21 +90,21 @@ POINT HeaderWindow::RenderDC()
     return bottomRight;
 }
 
-void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT* bottomRight)
+void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLintBottomRight, POINT* bottomRight)
 {
-    PrintText(
-        inMemoryHDC,
+    originLintBottomRight = PrintText(
+        inMemoryDC,
         L" (corrected from ",
         fontSmall,
-        colorBlack,
-        bottomRight->x,
+        colorGray,
+        originLintBottomRight.x,
         curY,
         bottomRight);
 
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
         hWindow,
         hInstance,
-        bottomRight->x,
+        originLintBottomRight.x,
         curY,
         fontSmallUnderscored,
         colorGray,
@@ -113,15 +112,14 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         originalInput,
         bind(&HeaderWindow::PlayText, this));
 
-    forceTranslationButton->Initialize();
     AddChildWindow(forceTranslationButton);
 
-    PrintText(
-        inMemoryHDC,
+    originLintBottomRight = PrintText(
+        inMemoryDC,
         L")",
         fontSmall,
         colorGray,
-        bottomRight->x + forceTranslationButton->GetWidth(),
+        originLintBottomRight.x + forceTranslationButton->GetWidth(),
         curY,
         bottomRight);
 }

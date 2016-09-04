@@ -24,7 +24,7 @@ void ChildWindow::Initialize()
     hWindow = CreateWindow(
         className,
         NULL,
-        WS_CHILD,
+        WS_CHILD | WS_CLIPCHILDREN,
         x,
         y,
         width,
@@ -41,7 +41,6 @@ void ChildWindow::Initialize()
 
 void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
-    windowClass->style = RDW_ALLCHILDREN;
     windowClass->lpfnWndProc = WndProc;
     windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -49,8 +48,8 @@ void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 void ChildWindow::InitializeInMemoryDC()
 {
-    inMemoryHDC = CreateInMemoryHDC(width, height);
-    ClearHDC(inMemoryHDC);
+    inMemoryDC = CreateInMemoryDC(width, height);
+    ClearDC(inMemoryDC);
 }
 
 void ChildWindow::ComputeParameters()
@@ -65,7 +64,7 @@ void ChildWindow::InitializeBrushes()
 {
 }
 
-HDC ChildWindow::CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight)
+HDC ChildWindow::CreateInMemoryDC(DWORD hdcWidth, DWORD hdcHeight)
 {
     HDC hdc = CreateCompatibleDC(NULL);
 
@@ -87,10 +86,10 @@ HDC ChildWindow::CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight)
     return hdc;
 }
 
-void ChildWindow::ResizeHDC(HDC &hdc, DWORD width, DWORD height)
+void ChildWindow::ResizeDC(HDC &hdc, DWORD width, DWORD height)
 {
     DeleteDC(hdc);
-    hdc = CreateInMemoryHDC(width, height);
+    hdc = CreateInMemoryDC(width, height);
 }
 
 LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -142,12 +141,12 @@ POINT ChildWindow::RenderDC()
     childWindowsToDestory = activeChildWindows;
     activeChildWindows = vector<ChildWindow*>();
 
-    ClearHDC(inMemoryHDC);
+    ClearDC(inMemoryDC);
 
     return POINT();
 }
 
-void ChildWindow::ClearHDC(HDC hdc)
+void ChildWindow::ClearDC(HDC hdc)
 {
     RECT rect;
     rect.top = 0;
@@ -157,21 +156,39 @@ void ChildWindow::ClearHDC(HDC hdc)
     FillRect(hdc, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
 }
 
+DWORD ChildWindow::CopyDC(HDC source, HDC target)
+{
+    return BitBlt(target, 0, 0, width, height, source, 0, 0, SRCCOPY);
+}
+
 void ChildWindow::Draw()
 {
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hWindow, &ps);
 
-    DWORD res = BitBlt(hdc, 0, 0, width, height, inMemoryHDC, 0, 0, SRCCOPY);
+    DWORD res = CopyDC(inMemoryDC, hdc);
 
     EndPaint(hWindow, &ps);
 
     DestroyChildWindows(&childWindowsToDestory);
+    RedrawChildWindows();
+}
 
-    for (size_t i = 0; i < activeChildWindows.size(); ++i) 
+void ChildWindow::RedrawChildWindows()
+{
+    for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
-        activeChildWindows[i]->Show();
+        ChildWindow* childWindow = activeChildWindows[i];
+        childWindow->ForceRedraw();
+        childWindow->RedrawChildWindows();
     }
+}
+
+void ChildWindow::ForceRedraw()
+{
+    HDC hdc = GetDC(hWindow);
+    DWORD res = CopyDC(inMemoryDC, hdc);
+    DeleteDC(hdc);
 }
 
 DWORD ChildWindow::AdjustToResolution(double value, double k)
@@ -181,6 +198,8 @@ DWORD ChildWindow::AdjustToResolution(double value, double k)
 
 void ChildWindow::AddChildWindow(ChildWindow* childWindow)
 {
+    childWindow->Initialize();
+    childWindow->Show();
     activeChildWindows.push_back(childWindow);
 }
 
@@ -235,7 +254,7 @@ void ChildWindow::DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight)
 ChildWindow::~ChildWindow()
 {
     DestroyWindow(hWindow);
-    DeleteDC(inMemoryHDC);
+    DeleteDC(inMemoryDC);
 
     DestroyChildWindows(&activeChildWindows);
     DestroyChildWindows(&childWindowsToDestory);

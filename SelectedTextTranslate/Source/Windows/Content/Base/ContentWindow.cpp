@@ -49,7 +49,7 @@ POINT ContentWindow::RenderResult()
 {
     POINT bottomRight = RenderDC();
     InvalidateRect(hWindow, NULL, FALSE);
-    MoveWindow(hWindow, x, y, bottomRight.x, bottomRight.y, FALSE);
+    MoveWindow(hWindow, x, y, width, height, FALSE);
     return bottomRight;
 }
 

@@ -20,8 +20,8 @@ private:
     double kX;
     double kY;
 
-    const int scrollCharX = 8;
-    const int scrollCharY = 20;
+    int scrollCharX;
+    int scrollCharY;
 
     static UINT WM_TASKBARCREATED;
     

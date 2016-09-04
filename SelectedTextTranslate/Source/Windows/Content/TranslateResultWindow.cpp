@@ -34,14 +34,14 @@ POINT TranslateResultWindow::RenderDC()
         TranslateResultDictionary category = translateResult.TranslateCategories[i];
 
         // Draw category header
-        POINT baseFormBottomRight = PrintText(inMemoryHDC, category.BaseForm, fontNormal, colorBlack, paddingX, curY, &bottomRight);
+        POINT baseFormBottomRight = PrintText(inMemoryDC, category.BaseForm, fontNormal, colorBlack, paddingX, curY, &bottomRight);
 
         if (_tcslen(category.PartOfSpeech) != 0)
         {
             wstring text = L" - " + wstring(category.PartOfSpeech);
-            PrintText(inMemoryHDC, text.c_str(), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
+            PrintText(inMemoryDC, text.c_str(), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
         }
-        
+
         vector<TranslateResultDictionaryEntry> showedEntries(0);
         if (category.IsExtendedList) 
         {
@@ -65,12 +65,12 @@ POINT TranslateResultWindow::RenderDC()
         for (size_t j = 0; j < showedEntries.size(); ++j)
         {
             TranslateResultDictionaryEntry entry = category.Entries[j];
-            POINT wordBottomRight = PrintText(inMemoryHDC, entry.Word, fontNormal, colorBlack, paddingX * 3, curY, &bottomRight);
+            POINT wordBottomRight = PrintText(inMemoryDC, entry.Word, fontNormal, colorBlack, paddingX * 3, curY, &bottomRight);
 
             // Draw reverse translation
             if (entry.ReverseTranslation.size() != 0)
             {
-                wordBottomRight = PrintText(inMemoryHDC, L" - ", fontNormal, colorGray, wordBottomRight.x + 2, curY, &bottomRight);
+                wordBottomRight = PrintText(inMemoryDC, L" - ", fontNormal, colorGray, wordBottomRight.x + 2, curY, &bottomRight);
                 for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
                 {
                     wstring text = wstring(entry.ReverseTranslation[k]);
@@ -78,7 +78,7 @@ POINT TranslateResultWindow::RenderDC()
                     {
                         text += L", ";
                     }
-                    wordBottomRight = PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, colorGray, wordBottomRight.x, curY, &bottomRight);
+                    wordBottomRight = PrintText(inMemoryDC, const_cast<wchar_t*>(text.c_str()), fontItalic, colorGray, wordBottomRight.x, curY, &bottomRight);
                 }
             }
 
@@ -90,7 +90,7 @@ POINT TranslateResultWindow::RenderDC()
             rect.top = curY + lineHeight / 3 - dY*2;
             rect.bottom = rect.top + lineHeight / 3;
             rect.left = paddingX + k * rateUnit;
-            DrawRect(inMemoryHDC, rect, grayBrush, &bottomRight);
+            DrawRect(inMemoryDC, rect, grayBrush, &bottomRight);
             curY += lineHeight;
         }
 
@@ -139,7 +139,6 @@ int TranslateResultWindow::CreateExpandButton(
             text,
             bind(&TranslateResultWindow::ExpandDictionary, this, categoryIndex));
 
-        expandButton->Initialize();
         AddChildWindow(expandButton);
 
         bottomRight->y += lineHeight / 2;
