@@ -6,22 +6,22 @@
 class DictionaryLogger 
 {
 private:
-	Logger* logger;
+    Logger* logger;
 
-	vector<LogRecord> records;
-	const wchar_t* logFileName;
-	bool isInitialized;
+    vector<LogRecord> records;
+    const wchar_t* logFileName;
+    bool isInitialized;
 
-	void Initialize();
-	void ReadRecords();
-	void WriteRecords();
+    void Initialize();
+    void ReadRecords();
+    void WriteRecords();
 
 public:
-	DictionaryLogger(Logger* logger);
-	~DictionaryLogger();
+    DictionaryLogger(Logger* logger);
+    ~DictionaryLogger();
 
-	void AddRecord(wstring word);
-	void RemoveRecord(wstring word);
-	vector<LogRecord> GetRecords();
-	void Flush();
+    void AddRecord(wstring word);
+    void RemoveRecord(wstring word);
+    vector<LogRecord> GetRecords();
+    void Flush();
 };

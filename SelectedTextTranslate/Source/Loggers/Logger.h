@@ -3,17 +3,17 @@
 #include <chrono>
 #include <iomanip>
 
-class Logger 
+class Logger
 {
 private:
-	wstring GetCurrentDateTime();
-	wstring GetCurrentDate();
-	wstring GetLocalComputerName();
-	wstring GetLogFileName();
+    wstring GetCurrentDateTime();
+    wstring GetCurrentDate();
+    wstring GetLocalComputerName();
+    wstring GetLogFileName();
 
 public:
-	Logger();
-	~Logger();
+    Logger();
+    ~Logger();
 
-	void Log(wstring record);
+    void Log(wstring record);
 };

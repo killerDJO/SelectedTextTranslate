@@ -3,8 +3,8 @@
 class TextExtractor
 {
 public:
-	TextExtractor();
-	~TextExtractor();
+    TextExtractor();
+    ~TextExtractor();
 
-	wstring GetSelectedText();
+    wstring GetSelectedText();
 };

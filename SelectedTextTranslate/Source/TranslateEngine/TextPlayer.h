@@ -8,19 +8,19 @@
 class TextPlayer
 {
 private:
-	const wchar_t* currentTextToPlay;
-	Translator* translator;
-	RequestProvider* requestProvider;
-	Logger* logger;
+    const wchar_t* currentTextToPlay;
+    Translator* translator;
+    RequestProvider* requestProvider;
+    Logger* logger;
 
-	string GetAudioFilePath(string extension);
-	string SaveToFile(vector<unsigned char> content);
+    string GetAudioFilePath(string extension);
+    string SaveToFile(vector<unsigned char> content);
 
-	static DWORD WINAPI Play(LPVOID arg);
+    static DWORD WINAPI Play(LPVOID arg);
 
 public:
-	TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider);
-	~TextPlayer();
+    TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider);
+    ~TextPlayer();
 
-	void PlayText(const wchar_t* text);
+    void PlayText(const wchar_t* text);
 };

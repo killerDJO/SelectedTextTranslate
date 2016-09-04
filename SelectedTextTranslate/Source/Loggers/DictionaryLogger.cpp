@@ -5,35 +5,35 @@ using namespace web;
 
 DictionaryLogger::DictionaryLogger(Logger* logger)
 {
-	this->logger = logger;
+    this->logger = logger;
 
-	records = vector<LogRecord>();
-	logFileName = L".\\logs\\dictionary_log.json";
-	isInitialized = false;
+    records = vector<LogRecord>();
+    logFileName = L".\\logs\\dictionary_log.json";
+    isInitialized = false;
 }
 
 void DictionaryLogger::AddRecord(wstring word)
 {
-	Initialize();
+    Initialize();
 
-	transform(word.begin(), word.end(), word.begin(), ::tolower);
+    transform(word.begin(), word.end(), word.begin(), ::tolower);
 
-	for (size_t i = 0; i < records.size(); ++i) 
-	{
-		if (records[i].Word == word) 
-		{
-			records[i].Count++;
-			Flush();
-			return;
-		}
-	}
+    for (size_t i = 0; i < records.size(); ++i) 
+    {
+        if (records[i].Word == word) 
+        {
+            records[i].Count++;
+            Flush();
+            return;
+        }
+    }
 
-	LogRecord newRecord;
-	newRecord.Word = word;
-	newRecord.Count = 1;
-	records.push_back(newRecord);
+    LogRecord newRecord;
+    newRecord.Word = word;
+    newRecord.Count = 1;
+    records.push_back(newRecord);
 
-	Flush();
+    Flush();
 }
 
 void DictionaryLogger::RemoveRecord(wstring word)
@@ -42,120 +42,120 @@ void DictionaryLogger::RemoveRecord(wstring word)
 
 vector<LogRecord> DictionaryLogger::GetRecords()
 {
-	Initialize();
+    Initialize();
 
-	sort(records.begin(), records.end(),
-		[](const LogRecord & a, const LogRecord & b) -> bool
-		{
-			return a.Count > b.Count;
-		}
-	);
+    sort(records.begin(), records.end(),
+        [](const LogRecord & a, const LogRecord & b) -> bool
+        {
+            return a.Count > b.Count;
+        }
+    );
 
-	return records;
+    return records;
 }
 
 void DictionaryLogger::Flush()
 {
-	WriteRecords();
+    WriteRecords();
 }
 
 void DictionaryLogger::Initialize()
 {
-	if (isInitialized) 
-	{
-		return;
-	}
+    if (isInitialized) 
+    {
+        return;
+    }
 
-	ReadRecords();
+    ReadRecords();
 
-	isInitialized = true;
+    isInitialized = true;
 
-	logger->Log(L"Dictionary has been initialized");
+    logger->Log(L"Dictionary has been initialized");
 }
 
 void DictionaryLogger::ReadRecords()
 {
-	HANDLE hFile = CreateFile(logFileName, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	DWORD error = GetLastError();
-	if (hFile == INVALID_HANDLE_VALUE) 
-	{
-		return;
-	}
+    HANDLE hFile = CreateFile(logFileName, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    DWORD error = GetLastError();
+    if (hFile == INVALID_HANDLE_VALUE) 
+    {
+        return;
+    }
 
-	const int bufferSize = 65536;
-	static char buffer[bufferSize];
-	wstring json = L"";
+    const int bufferSize = 65536;
+    static char buffer[bufferSize];
+    wstring json = L"";
 
-	DWORD nWritten;
-	do 
-	{
-		ReadFile(hFile, buffer, bufferSize, &nWritten, NULL);
-		json += wstring((wchar_t*)buffer, nWritten / sizeof(wchar_t));
-	} 
-	while (nWritten == bufferSize);
-	
-	CloseHandle(hFile);
+    DWORD nWritten;
+    do 
+    {
+        ReadFile(hFile, buffer, bufferSize, &nWritten, NULL);
+        json += wstring((wchar_t*)buffer, nWritten / sizeof(wchar_t));
+    } 
+    while (nWritten == bufferSize);
+    
+    CloseHandle(hFile);
 
-	records.resize(0);
+    records.resize(0);
 
-	if (json.empty()) {
-		return;
-	}
+    if (json.empty()) {
+        return;
+    }
 
-	json::value root;
+    json::value root;
 
-	try 
-	{
-		root = json::value::parse(json);
-	}
-	catch (json::json_exception exception)
-	{
-		logger->Log(L"Error loading dictionary. Dictionary content will be cleared. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".");
-		return;
-	}
+    try 
+    {
+        root = json::value::parse(json);
+    }
+    catch (json::json_exception exception)
+    {
+        logger->Log(L"Error loading dictionary. Dictionary content will be cleared. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".");
+        return;
+    }
 
-	if (root.is_null())
-	{	
-		return;
-	}
+    if (root.is_null())
+    {	
+        return;
+    }
 
-	for (size_t i = 0; i < root.size(); ++i)
-	{
-		LogRecord record;
-		record.Word = StringUtilities::CopyWideChar(root[i].at(L"word").as_string());
-		record.Count = root[i].at(L"count").as_integer();
+    for (size_t i = 0; i < root.size(); ++i)
+    {
+        LogRecord record;
+        record.Word = StringUtilities::CopyWideChar(root[i].at(L"word").as_string());
+        record.Count = root[i].at(L"count").as_integer();
 
-		records.push_back(record);
-	}
+        records.push_back(record);
+    }
 }
 
 void DictionaryLogger::WriteRecords()
 {
-	json::value root;
+    json::value root;
 
-	for (size_t i = 0; i < DictionaryLogger::records.size(); ++i)
-	{
-		json::value record;
-		record[L"word"] = json::value(StringUtilities::CopyWideChar(DictionaryLogger::records[i].Word));
-		record[L"count"] = json::value(DictionaryLogger::records[i].Count);
+    for (size_t i = 0; i < DictionaryLogger::records.size(); ++i)
+    {
+        json::value record;
+        record[L"word"] = json::value(StringUtilities::CopyWideChar(DictionaryLogger::records[i].Word));
+        record[L"count"] = json::value(DictionaryLogger::records[i].Count);
 
-		root[i] = record;
-	}
+        root[i] = record;
+    }
 
-	wstring json = root.serialize().c_str();
+    wstring json = root.serialize().c_str();
 
-	HANDLE hFile = CreateFile(logFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HANDLE hFile = CreateFile(logFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		return;
-	}
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        return;
+    }
 
-	DWORD nWritten;
-	const wchar_t* buffer = json.c_str();
-	WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
+    DWORD nWritten;
+    const wchar_t* buffer = json.c_str();
+    WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
 
-	CloseHandle(hFile);
+    CloseHandle(hFile);
 }
 
 DictionaryLogger::~DictionaryLogger()

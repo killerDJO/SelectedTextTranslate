@@ -5,16 +5,16 @@
 class RequestProvider
 {
 private:
-	Logger* logger;
+    Logger* logger;
 
-	void LogRequestException(wstring url, exception exception);
-	void LogRequestError(wstring url, wstring message);
+    void LogRequestException(wstring url, exception exception);
+    void LogRequestError(wstring url, wstring message);
 
 public:
-	RequestProvider(Logger* logger);
-	~RequestProvider();
+    RequestProvider(Logger* logger);
+    ~RequestProvider();
 
-	wstring GetStringResponse(wstring url);
-	vector<unsigned char> GetResponse(wstring url);
-	wstring EscapeText(wstring text);
+    wstring GetStringResponse(wstring url);
+    vector<unsigned char> GetResponse(wstring url);
+    wstring EscapeText(wstring text);
 };

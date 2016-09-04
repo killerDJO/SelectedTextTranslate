@@ -4,15 +4,15 @@
 class HoverIconButtonWindow : public HoverButtonWindow
 {
 protected:
-	void RenderStatesHDC() override;
+    void RenderStatesHDC() override;
 
 private:
-	DWORD normalIconResource;
-	DWORD hoverIconResource;
+    DWORD normalIconResource;
+    DWORD hoverIconResource;
 
-	void RenderStateHDC(HDC hdc, DWORD iconResource);
+    void RenderStateHDC(HDC hdc, DWORD iconResource);
 
 public:
-	HoverIconButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback);
-	~HoverIconButtonWindow();
+    HoverIconButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback);
+    ~HoverIconButtonWindow();
 };

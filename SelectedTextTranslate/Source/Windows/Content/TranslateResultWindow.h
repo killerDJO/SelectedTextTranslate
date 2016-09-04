@@ -6,15 +6,15 @@
 class TranslateResultWindow : public ContentWindow
 {
 protected:
-	POINT RenderDC() override;
-	void InitializeFonts() override;
+    POINT RenderDC() override;
+    void InitializeFonts() override;
 
 private:
-	HFONT fontUnderscored;
+    HFONT fontUnderscored;
 
-	void ExpandDictionary(int index);
+    void ExpandDictionary(int index);
 
 public:
-	TranslateResultWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
-	~TranslateResultWindow();
+    TranslateResultWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    ~TranslateResultWindow();
 };

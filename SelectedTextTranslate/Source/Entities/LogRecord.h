@@ -3,6 +3,6 @@
 class LogRecord
 {
 public:
-	wstring Word;
-	int Count;
+    wstring Word;
+    int Count;
 };

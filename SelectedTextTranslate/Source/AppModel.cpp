@@ -3,74 +3,74 @@
 
 AppModel::AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, DictionaryLogger* dictionaryLogger)
 {
-	this->mainWindow = mainWindow;
-	this->textPlayer = textPlayer;
-	this->translator = translator;
-	this->textExtractor = textExtractor;
-	this->dictionaryLogger = dictionaryLogger;
+    this->mainWindow = mainWindow;
+    this->textPlayer = textPlayer;
+    this->translator = translator;
+    this->textExtractor = textExtractor;
+    this->dictionaryLogger = dictionaryLogger;
 }
 
 void AppModel::SetMainWindow(MainWindow* mainWindow)
 {
-	this->mainWindow = mainWindow;
+    this->mainWindow = mainWindow;
 }
 
 vector<LogRecord> AppModel::GetDictionaryRecords()
 {
-	return dictionaryLogger->GetRecords();
+    return dictionaryLogger->GetRecords();
 }
 
 TranslateResult AppModel::GetCurrentTranslateResult()
 {
-	return translateResult;
+    return translateResult;
 }
 
 void AppModel::TranslateSelectedText()
 {
-	wstring selectedText = this->textExtractor->GetSelectedText();
+    wstring selectedText = this->textExtractor->GetSelectedText();
 
-	dictionaryLogger->AddRecord(selectedText);
+    dictionaryLogger->AddRecord(selectedText);
 
-	translateResult = translator->TranslateSentence(selectedText);
-	mainWindow->ShowTranslateResultView();
-	mainWindow->Maximize();
+    translateResult = translator->TranslateSentence(selectedText);
+    mainWindow->ShowTranslateResultView();
+    mainWindow->Maximize();
 }
 
 void AppModel::ToggleTranslateResultDictionary(int translateResultDictionaryIndex)
 {
-	translateResult.TranslateCategories[translateResultDictionaryIndex].IsExtendedList ^= true;
-	mainWindow->ShowTranslateResultView(true);
+    translateResult.TranslateCategories[translateResultDictionaryIndex].IsExtendedList ^= true;
+    mainWindow->ShowTranslateResultView(true);
 }
 
 void AppModel::PlaySelectedText()
 {
-	wstring selectedText = textExtractor->GetSelectedText();
-	translateResult = translator->TranslateSentence(selectedText);
-	textPlayer->PlayText(translateResult.Sentence.Origin);
+    wstring selectedText = textExtractor->GetSelectedText();
+    translateResult = translator->TranslateSentence(selectedText);
+    textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
 void AppModel::PlayCurrentText()
 {
-	textPlayer->PlayText(translateResult.Sentence.Origin);
+    textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
 void AppModel::ShowDictionary()
 {
-	mainWindow->ShowDictionaryView();
+    mainWindow->ShowDictionaryView();
 }
 
 void AppModel::TranslateWordFromDictionary(int wordInDictionaryIndex)
 {
-	vector<LogRecord> logRecords = dictionaryLogger->GetRecords();
-	LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
+    vector<LogRecord> logRecords = dictionaryLogger->GetRecords();
+    LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
 
-	translateResult = translator->TranslateSentence(logRecordToTranslate.Word);
-	mainWindow->ShowTranslateResultView();
+    translateResult = translator->TranslateSentence(logRecordToTranslate.Word);
+    mainWindow->ShowTranslateResultView();
 }
 
 void AppModel::Exit()
 {
-	PostQuitMessage(0);
+    PostQuitMessage(0);
 }
 
 AppModel::~AppModel()

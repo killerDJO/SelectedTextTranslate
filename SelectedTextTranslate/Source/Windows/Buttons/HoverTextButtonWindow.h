@@ -4,17 +4,17 @@
 class HoverTextButtonWindow : public HoverButtonWindow
 {
 protected:
-	void RenderStatesHDC() override;
+    void RenderStatesHDC() override;
 
 private:
-	HFONT font;
-	COLORREF normalColor;
-	COLORREF hoverColor;
-	wstring text;
+    HFONT font;
+    COLORREF normalColor;
+    COLORREF hoverColor;
+    wstring text;
 
-	void RenderStateHDC(HDC hdc, COLORREF color);
+    void RenderStateHDC(HDC hdc, COLORREF color);
 
 public:
-	HoverTextButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, COLORREF normalColor, COLORREF hoverColor, wstring text, function<void()> clickCallback);
-	~HoverTextButtonWindow();
+    HoverTextButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, COLORREF normalColor, COLORREF hoverColor, wstring text, function<void()> clickCallback);
+    ~HoverTextButtonWindow();
 };

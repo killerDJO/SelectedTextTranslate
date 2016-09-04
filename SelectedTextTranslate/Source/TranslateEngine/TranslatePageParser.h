@@ -6,21 +6,21 @@
 class TranslatePageParser
 {
 private:
-	RequestProvider* requestProvider;
-	Logger* logger;
+    RequestProvider* requestProvider;
+    Logger* logger;
 
-	long long tkk1;
-	long long tkk2;
-	time_t lastTkkRequestTime;
+    long long tkk1;
+    long long tkk2;
+    time_t lastTkkRequestTime;
 
-	void UpateTkkIfNeccessary();	
-	vector<string> Split(const string &s, char delim);
-	string SearchScriptTag(GumboNode* node);
+    void UpateTkkIfNeccessary();	
+    vector<string> Split(const string &s, char delim);
+    string SearchScriptTag(GumboNode* node);
 
 public:
-	TranslatePageParser(Logger* logger, RequestProvider* requestProvider);
-	~TranslatePageParser();
+    TranslatePageParser(Logger* logger, RequestProvider* requestProvider);
+    ~TranslatePageParser();
 
-	long long GetTkk1();
-	long long GetTkk2();
+    long long GetTkk1();
+    long long GetTkk2();
 };

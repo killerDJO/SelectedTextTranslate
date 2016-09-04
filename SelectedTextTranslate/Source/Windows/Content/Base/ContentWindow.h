@@ -5,28 +5,29 @@
 class ContentWindow : public ChildWindow
 {
 protected:
-	const	UINT	FONT_HEIGHT = 20;
-	UINT	PADDING_X;
-	UINT	PADDING_Y;
-	UINT	LINE_HEIGHT;
-	double	kX;
-	double	kY;
-	
-	COLORREF COLOR_GRAY;
-	COLORREF COLOR_BLACK;
+    const UINT fontHeight = 20;
 
-	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
-	HBRUSH grayBrush;
+    UINT paddingX;
+    UINT paddingY;
+    UINT lineHeight;
+    double kX;
+    double kY;
 
-	AppModel* appModel;
+    COLORREF colorGray;
+    COLORREF colorBlack;
 
-	void ComputeParameters() override;
-	void InitializeFonts() override;
-	void InitializeBrushes() override;
+    HFONT fontNormal, fontHeader, fontItalic, fontSmall;
+    HBRUSH grayBrush;
+
+    AppModel* appModel;
+
+    void ComputeParameters() override;
+    void InitializeFonts() override;
+    void InitializeBrushes() override;
 
 public:
-	ContentWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
-	virtual ~ContentWindow();
+    ContentWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    virtual ~ContentWindow();
 
-	virtual POINT RenderResult();
+    virtual POINT RenderResult();
 };

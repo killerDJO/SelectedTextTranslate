@@ -1,62 +1,61 @@
 #pragma once
+#include "Windows\Base\Window.h"
 #include "Windows\Content\HeaderWindow.h"
 #include "Windows\Content\DictionaryWindow.h"
 #include "Windows\Content\TranslateResultWindow.h"
 
-#define ID_TRAY_APP_ICON	5000
+#define ID_TRAY_APP_ICON    5000
 #define WM_TRAYICON ( WM_USER + 1 )
 
-#define ID_TRAY_EXIT_CONTEXT_MENU_ITEM			3000
-#define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM		3002
-#define ID_TRANSLATE_HOTKEY						3003
-#define ID_PLAYTEXT_HOTKEY						3004
-#define ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM	3005
+#define ID_TRAY_EXIT_CONTEXT_MENU_ITEM          3000
+#define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM     3002
+#define ID_TRANSLATE_HOTKEY                     3003
+#define ID_PLAYTEXT_HOTKEY                      3004
+#define ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM    3005
 
-class MainWindow
+class MainWindow : public Window
 {
 private:
-	UINT	WINDOW_WIDTH;
-	UINT	WINDOW_HEIGHT;
-	UINT	WINDOW_PADDING;
-	double	kX;
-	double	kY;
+    UINT padding;
+    double kX;
+    double kY;
 
-	static const int	SCROLL_CHAR_X	= 8;
-	static const int	SCROLL_CHAR_Y	= 20;
+    const int scrollCharX = 8;
+    const int scrollCharY = 20;
 
-	static UINT WM_TASKBARCREATED;
-	HMENU menu;
+    static UINT WM_TASKBARCREATED;
+    
+    HMENU menu;
+    NOTIFYICONDATA notifyIconData;
 
-	NOTIFYICONDATA	notifyIconData;
-	HWND			hWindow;
-	HINSTANCE		hInstance;
+    HeaderWindow* headerWindow;
+    TranslateResultWindow* translateResultWindow;
+    DictionaryWindow* dictionaryWindow;
+    AppModel* appModel;
 
-	HeaderWindow* headerWindow;
-	TranslateResultWindow* translateResultWindow;
-	DictionaryWindow* dictionaryWindow;
+    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
 
-	AppModel* appModel;
+    void ComputeWindowDimensions(RECT workarea);
+    void InitNotifyIconData();
 
-	void ComputeWindowDimensions(RECT workarea);
-	void InitNotifyIconData();
-	void InitializeScrollbars(int contentWidth, int contentHeight);
+    void InitializeScrollbars(int contentWidth, int contentHeight);
+    void InitializeScrollbar(int windowDimension, int contentDimension, int scrollChar, int nBar);
 
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);
-	void ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam);
-	UINT ProcessSizing(WPARAM wParam, LPARAM lParam);
+    void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);
+    void ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam);
+    void ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int nBar);
 
 public:
-	MainWindow(HINSTANCE hInstance, AppModel* appModel);
-	~MainWindow();
+    MainWindow(HINSTANCE hInstance, AppModel* appModel);
+    ~MainWindow();
 
-	void Minimize();
-	void Maximize();
+    void Initialize() override;
 
-	void ShowTranslateResultView(bool preserveScroll = false);
-	void ShowDictionaryView();
+    void Minimize();
+    void Maximize();
 
-	HWND GetHandle();
-	HINSTANCE GetInstance();
+    void ShowTranslateResultView(bool preserveScroll = false);
+    void ShowDictionaryView();
 };

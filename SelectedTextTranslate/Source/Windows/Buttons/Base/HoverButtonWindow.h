@@ -3,23 +3,23 @@
 
 class HoverButtonWindow : public ChildWindow
 {
-protected:
-	HDC hoverStateHDC;
-	HDC normalStateHDC;
-
-	POINT RenderDC() override;
-	virtual void RenderStatesHDC() = 0;
-
 private:
-	function<void()> clickCallback;
+    function<void()> clickCallback;
 
-	bool isHovered;
+    bool isHovered;
 
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+protected:
+    HDC hoverStateHDC;
+    HDC normalStateHDC;
+
+    POINT RenderDC() override;
+    virtual void RenderStatesHDC() = 0;
 
 public:
-	HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);
-	virtual ~HoverButtonWindow();
+    HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);
+    virtual ~HoverButtonWindow();
 
-	void Initialize() override;
+    void Initialize() override;
 };
