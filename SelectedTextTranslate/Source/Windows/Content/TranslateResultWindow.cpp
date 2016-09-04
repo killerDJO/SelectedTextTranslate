@@ -1,10 +1,8 @@
-﻿#include "PrecompiledHeaders\stdafx.h"
-#include "Windows\Content\TranslateResultWindow.h"
+﻿#include "Windows\Content\TranslateResultWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(MainWindow* mainWindow, DWORD x, DWORD y, DWORD width, DWORD height)
-: ContentWindow(mainWindow->GetHandle(), mainWindow->GetInstance(), x, y, width, height)
+TranslateResultWindow::TranslateResultWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
+: ContentWindow(appModel, parentWindow, hInstance, x, y, width, height)
 {
-	this->mainWindow = mainWindow;
 }
 
 void TranslateResultWindow::InitializeFonts()
@@ -18,25 +16,14 @@ void TranslateResultWindow::InitializeFonts()
 
 void TranslateResultWindow::ExpandDictionary(int index)
 {
-	translateResult.TranslateCategories[index].IsExtendedList ^= true;
-	
-	SCROLLINFO si;
-	si.cbSize = sizeof (si);
-	si.fMask = SIF_POS;
-	GetScrollInfo(this->parentWindow, SB_VERT, &si);
-
-	mainWindow->Render(translateResult, si.nPos);
-}
-
-POINT TranslateResultWindow::RenderResult(TranslateResult translateResult)
-{
-	this->translateResult = translateResult;
-	return ContentWindow::RenderResult();
+	this->appModel->ToggleTranslateResultDictionary(index);
 }
 
 POINT TranslateResultWindow::RenderDC()
 {	
 	ContentWindow::RenderDC();
+
+	TranslateResult translateResult = this->appModel->GetCurrentTranslateResult();
 
 	POINT bottomRight = { 0, 0 };
 	int curY = LINE_HEIGHT / 4;
@@ -47,12 +34,12 @@ POINT TranslateResultWindow::RenderDC()
 		TranslateResultDictionary category = translateResult.TranslateCategories[i];
 
 		// Draw category header
-		POINT baseFormBottomRight = Utilities::PrintText(inMemoryHDC, category.BaseForm, fontNormal, COLOR_BLACK, PADDING_X, curY, &bottomRight);
+		POINT baseFormBottomRight = PrintText(inMemoryHDC, category.BaseForm, fontNormal, COLOR_BLACK, PADDING_X, curY, &bottomRight);
 
 		if (_tcslen(category.PartOfSpeech) != 0)
 		{
 			wstring text = L" - " + wstring(category.PartOfSpeech);
-			Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY, &bottomRight);
+			PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, baseFormBottomRight.x + 2, curY, &bottomRight);
 		}
 		
 		vector<TranslateResultDictionaryEntry> showedEntries(0);
@@ -73,12 +60,12 @@ POINT TranslateResultWindow::RenderDC()
 		for (size_t j = 0; j < showedEntries.size(); ++j)
 		{
 			TranslateResultDictionaryEntry entry = category.Entries[j];
-			POINT wordBottomRight = Utilities::PrintText(inMemoryHDC, entry.Word, fontNormal, COLOR_BLACK, PADDING_X * 3, curY, &bottomRight);
+			POINT wordBottomRight = PrintText(inMemoryHDC, entry.Word, fontNormal, COLOR_BLACK, PADDING_X * 3, curY, &bottomRight);
 
 			// Draw reverse translation
 			if (entry.ReverseTranslation.size() != 0)
 			{
-				wordBottomRight = Utilities::PrintText(inMemoryHDC, L" - ", fontNormal, COLOR_GRAY, wordBottomRight.x + 2, curY, &bottomRight);
+				wordBottomRight = PrintText(inMemoryHDC, L" - ", fontNormal, COLOR_GRAY, wordBottomRight.x + 2, curY, &bottomRight);
 				for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
 				{
 					wstring text = wstring(entry.ReverseTranslation[k]);
@@ -86,7 +73,7 @@ POINT TranslateResultWindow::RenderDC()
 					{
 						text += L", ";
 					}
-					wordBottomRight = Utilities::PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY, &bottomRight);
+					wordBottomRight = PrintText(inMemoryHDC, const_cast<wchar_t*>(text.c_str()), fontItalic, COLOR_GRAY, wordBottomRight.x, curY, &bottomRight);
 				}
 			}			
 
@@ -98,7 +85,7 @@ POINT TranslateResultWindow::RenderDC()
 			rect.top = curY + LINE_HEIGHT / 3 - dY*2;
 			rect.bottom = rect.top + LINE_HEIGHT / 3;
 			rect.left = PADDING_X + k * rateUnit;
-			Utilities::DrawRect(inMemoryHDC, rect, this->grayBrush, &bottomRight);
+			DrawRect(inMemoryHDC, rect, this->grayBrush, &bottomRight);
 			curY += LINE_HEIGHT;
 		}
 

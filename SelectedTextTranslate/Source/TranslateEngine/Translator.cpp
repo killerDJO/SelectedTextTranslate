@@ -1,41 +1,41 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\Translator.h"
 
 using namespace web;
 
-TranslateResult Translator::TranslateSelectedText()
+Translator::Translator(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser)
 {
-	wstring selectedText = TextExtractor::GetSelectedText();
-	
-	DictionaryLogger::AddRecord(selectedText);
-
-	return TranslateSentence(selectedText);
+	this->requestProvider = requestProvider;
+	this->translatePageParser = translatePageParser;
+	this->logger = logger;
 }
 
 TranslateResult Translator::TranslateSentence(wstring sentence)
 {	
-	Logger::Log(L"Start translating sentence '" + sentence + L"'.");
+	this->logger->Log(L"Start translating sentence '" + sentence + L"'.");
 
 	wstring hash = GetHash(sentence);
-	wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" + hash + L"&q=" + RequestHelper::EscapeText(sentence);
-	wstring translatorResponse = RequestHelper::GetStringResponse(translateURL);
+	wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" 
+		+ hash 
+		+ L"&q=" + requestProvider->EscapeText(sentence);
+
+	wstring translatorResponse = requestProvider->GetStringResponse(translateURL);
 
 	TranslateResult result;
 	
 	try 
 	{
 		result = ParseJSONResponse(translatorResponse);
-		result.Sentence.Input = Utilities::CopyWideChar(sentence);
+		result.Sentence.Input = StringUtilities::CopyWideChar(sentence);
 	}
 	catch (json::json_exception exception)
 	{
-		wstring errorMessage = L"Error parsing json response. Exception: " + Utilities::GetUtf16String(exception.what()) + L".";
+		wstring errorMessage = L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".";
 		
-		Logger::Log(errorMessage);	
+		this->logger->Log(errorMessage);
 		result.SetError(errorMessage);
 	}
 
-	Logger::Log(L"End translating sentence.");
+	this->logger->Log(L"End translating sentence.");
 
 	return result;
 }
@@ -43,11 +43,11 @@ TranslateResult Translator::TranslateSentence(wstring sentence)
 // Grabbed from google minified js code
 wstring Translator::GetHash(wstring sentence)
 {
-	string utf8Sentence = Utilities::GetUtf8String(sentence);
+	string utf8Sentence = StringUtilities::GetUtf8String(sentence);
 	const char* bytes = utf8Sentence.c_str();
 
-	long long tkk1 = PageParser::GetTkk1();
-	long long tkk2 = PageParser::GetTkk2();
+	long long tkk1 = translatePageParser->GetTkk1();
+	long long tkk2 = translatePageParser->GetTkk2();
 
 	long long a = tkk1;
 	long long pow32 = 4294967295;
@@ -105,7 +105,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 	if (json.empty()){
 		wstring errorMessage = L"Error. Unable to parse JSON. JSON value is empty.";
 		
-		Logger::Log(errorMessage);
+		this->logger->Log(errorMessage);
 		result.SetError(errorMessage);
 		
 		return result;
@@ -121,7 +121,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 	{
 		wstring errorMessage = L"Error. Unable to parse JSON. Json value = '" + json + L"'.";
 
-		Logger::Log(errorMessage);
+		this->logger->Log(errorMessage);
 		result.SetError(errorMessage);
 
 		return result;
@@ -130,8 +130,8 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 	json::array sentences = root[0][0].as_array();
 	if (sentences.size() > 0)
 	{
-		result.Sentence.Translation = Utilities::CopyWideChar(sentences[0].as_string());
-		result.Sentence.Origin = Utilities::CopyWideChar(sentences[1].as_string());
+		result.Sentence.Translation = StringUtilities::CopyWideChar(sentences[0].as_string());
+		result.Sentence.Origin = StringUtilities::CopyWideChar(sentences[1].as_string());
 	}
 
 	if (!root[1].is_array()) {
@@ -145,8 +145,8 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 		TranslateResultDictionary category;
 
 		category.IsExtendedList = false;
-		category.PartOfSpeech = Utilities::CopyWideChar(dict[i][0].as_string());
-		category.BaseForm = Utilities::CopyWideChar(dict[i][3].as_string());
+		category.PartOfSpeech = StringUtilities::CopyWideChar(dict[i][0].as_string());
+		category.BaseForm = StringUtilities::CopyWideChar(dict[i][3].as_string());
 
 		if (!dict[i][2].is_array()) 
 		{
@@ -157,7 +157,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 		for (size_t j = 0; j < entries.size(); ++j)
 		{
 			TranslateResultDictionaryEntry entry;
-			entry.Word = Utilities::CopyWideChar(entries[j][0].as_string());
+			entry.Word = StringUtilities::CopyWideChar(entries[j][0].as_string());
 
 			entry.Score = entries[j][3].is_double()
 				? entries[j][3].as_double()
@@ -171,7 +171,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
 			json::array reverseTranslations = entries[j][1].as_array();
 			for (size_t k = 0; k < reverseTranslations.size(); ++k)
 			{
-				entry.ReverseTranslation.push_back(Utilities::CopyWideChar(reverseTranslations[k].as_string()));
+				entry.ReverseTranslation.push_back(StringUtilities::CopyWideChar(reverseTranslations[k].as_string()));
 			}
 
 			category.Entries.push_back(entry);
@@ -192,4 +192,8 @@ void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &
 		str.erase(pos, search.length());
 		str.insert(pos, replace);
 	}
+}
+
+Translator::~Translator()
+{
 }

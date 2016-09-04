@@ -1,4 +1,3 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Entities\TranslateResult.h"
 
 TranslateResult::TranslateResult()
@@ -24,7 +23,7 @@ bool TranslateResult::IsErrorResult()
 
 void TranslateResult::SetError(wstring errorMessage)
 {
-	ErrorMessage = Utilities::CopyWideChar(errorMessage);
+	ErrorMessage = StringUtilities::CopyWideChar(errorMessage);
 }
 
 void TranslateResult::Free()

@@ -1,9 +1,13 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Content\HeaderWindow.h"
 
-HeaderWindow::HeaderWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height) 
-: ContentWindow(parentWindow, hInstance, x, y, width, height) 
+HeaderWindow::HeaderWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
+: ContentWindow(appModel, parentWindow, hInstance, x, y, width, height) 
 {
+}
+
+void HeaderWindow::PlayText()
+{
+	this->appModel->PlayCurrentText();
 }
 
 void HeaderWindow::InitializeFonts()
@@ -16,20 +20,11 @@ void HeaderWindow::InitializeFonts()
 	this->fontSmallUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
 }
 
-POINT HeaderWindow::RenderResult(TranslateResult translateResult)
-{
-	this->translateResult = translateResult;
-	return ContentWindow::RenderResult();
-}
-
-void HeaderWindow::PlayText()
-{
-	TextPlayer::PlayText(this->translateResult.Sentence.Origin);
-}
-
 POINT HeaderWindow::RenderDC()
 {
 	ContentWindow::RenderDC();
+
+	TranslateResult translateResult = this->appModel->GetCurrentTranslateResult();
 
 	DWORD imageSize = 15;
 	DWORD adjustedSize = AdjustToResolution(15, kY);
@@ -66,10 +61,10 @@ POINT HeaderWindow::RenderDC()
 		subHeaderText = translateResult.Sentence.Origin;
 	}
 
-	Utilities::PrintText(this->inMemoryHDC, headerText, fontHeader, COLOR_BLACK, PADDING_X, curY, &bottomRight);
+	PrintText(this->inMemoryHDC, headerText, fontHeader, COLOR_BLACK, PADDING_X, curY, &bottomRight);
 
 	int originLineY = curY + AdjustToResolution(20, kY);
-	POINT originLintBottomRight = Utilities::PrintText(
+	POINT originLintBottomRight = PrintText(
 		this->inMemoryHDC,
 		subHeaderText,
 		fontSmall,
@@ -80,7 +75,7 @@ POINT HeaderWindow::RenderDC()
 
 	if (translateResult.IsInputCorrected()) 
 	{
-		Utilities::PrintText(
+		PrintText(
 			this->inMemoryHDC, 
 			L" (corrected from ",
 			fontSmall,
@@ -103,7 +98,7 @@ POINT HeaderWindow::RenderDC()
 		forceTranslationButton->Initialize();
 		this->childWindows.push_back(forceTranslationButton);
 
-		Utilities::PrintText(
+		PrintText(
 			this->inMemoryHDC,
 			L")",
 			fontSmall,
@@ -118,7 +113,7 @@ POINT HeaderWindow::RenderDC()
 	rect.right = 2000;
 	rect.top = curY + 2 * LINE_HEIGHT;
 	rect.bottom = rect.top + 1;
-	Utilities::DrawRect(this->inMemoryHDC, rect, this->grayBrush, &POINT());
+	DrawRect(this->inMemoryHDC, rect, this->grayBrush, &POINT());
 
 	bottomRight.x += PADDING_X * 3;
 	bottomRight.y = rect.bottom;

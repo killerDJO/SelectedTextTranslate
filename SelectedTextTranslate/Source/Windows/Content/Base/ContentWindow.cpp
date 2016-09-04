@@ -1,11 +1,12 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Content\Base\ContentWindow.h"
 
-ContentWindow::ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-	: WindowBase(parentWindow, hInstance, x, y, width, height)
+ContentWindow::ContentWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
+	: ChildWindow(parentWindow, hInstance, x, y, width, height)
 {	
 	COLOR_GRAY = RGB(119, 119, 119);
 	COLOR_BLACK = RGB(0, 0, 0);
+
+	this->appModel = appModel;
 }
 
 void ContentWindow::ComputeParameters()

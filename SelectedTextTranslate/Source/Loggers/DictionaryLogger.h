@@ -1,24 +1,27 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
 #include "Entities\LogRecord.h"
-#include "Helpers\Utilities.h"
-#include "Logger.h"
-#include <cpprest\json.h>
+#include "Helpers\StringUtilities.h"
+#include "Loggers\Logger.h"
 
 class DictionaryLogger 
 {
-public:
-	static void AddRecord(wstring word);
-	static void RemoveRecord(wstring word);
-	static vector<LogRecord> GetRecords();
-	static void Flush();
-
 private:
-	static vector<LogRecord> records;
-	static const wchar_t* logFileName;
-	static bool isInitialized;
-	
-	static void Initialize();
-	static void ReadRecords();
-	static void WriteRecords();
+	Logger* logger;
+
+	vector<LogRecord> records;
+	const wchar_t* logFileName;
+	bool isInitialized;
+
+	void Initialize();
+	void ReadRecords();
+	void WriteRecords();
+
+public:
+	DictionaryLogger(Logger* logger);
+	~DictionaryLogger();
+
+	void AddRecord(wstring word);
+	void RemoveRecord(wstring word);
+	vector<LogRecord> GetRecords();
+	void Flush();
 };

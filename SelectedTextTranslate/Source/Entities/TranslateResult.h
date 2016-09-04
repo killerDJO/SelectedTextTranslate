@@ -1,8 +1,7 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
 #include "Entities\TranslateResultDictionary.h"
 #include "Entities\TranslateResultSentence.h"
-#include "Helpers\Utilities.h"
+#include "Helpers\StringUtilities.h"
 
 class TranslateResult
 {

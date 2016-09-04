@@ -1,8 +1,6 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
-#include "Helpers\Utilities.h"
 
-class WindowBase
+class ChildWindow
 {
 private:	
 	void InitializeInMemoryDC();
@@ -16,7 +14,8 @@ protected:
 	HWND hWindow;
 	HINSTANCE hInstance;
 	HDC inMemoryHDC;
-	vector<WindowBase*> childWindows;
+
+	vector<ChildWindow*> childWindows;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	
@@ -33,9 +32,13 @@ protected:
 	void ClearHDC(HDC hdc);
 	void ResizeHDC(HDC &hdc, DWORD width, DWORD height);
 
+	POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight);
+	void DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight);
+	SIZE GetTextSize(HDC hdc, const wchar_t* text, HFONT font);
+
 public:
-	WindowBase(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
-	~WindowBase();
+	ChildWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+	virtual ~ChildWindow();
 
 	HWND GetHandle();
 	HINSTANCE GetInstance();
@@ -45,5 +48,4 @@ public:
 	virtual void Initialize();
 	void Show();
 	void Hide();
-	void Destroy();
 };

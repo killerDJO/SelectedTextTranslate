@@ -1,9 +1,10 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
-#include "Helpers\Utilities.h"
 
 class TextExtractor
 {
 public:
-	static wstring GetSelectedText();
+	TextExtractor();
+	~TextExtractor();
+
+	wstring GetSelectedText();
 };

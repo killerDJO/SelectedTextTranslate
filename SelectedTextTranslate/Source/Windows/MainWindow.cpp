@@ -1,16 +1,19 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Windows\MainWindow.h"
+#include "Windows\Content\TranslateResultWindow.h"
 
-MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
+UINT MainWindow::WM_TASKBARCREATED;
+
+MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel)
 {
 	this->hInstance = hInstance;
+	this->appModel = appModel;
 
 	const TCHAR* className = TEXT("STT_MAIN");
 
 	WNDCLASSEX wnd = { 0 };
 	wnd.hInstance = hInstance;
 	wnd.lpszClassName = className;
-	wnd.lpfnWndProc = wndProc;
+	wnd.lpfnWndProc = WndProc;
 	wnd.cbSize = sizeof (WNDCLASSEX);
 	wnd.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
 	wnd.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
@@ -39,17 +42,22 @@ MainWindow::MainWindow(HINSTANCE hInstance, WNDPROC wndProc)
 		NULL,
 		NULL,
 		hInstance,
-		NULL);
+		this);
 
 	this->InitNotifyIconData();
 
-	this->dictionaryWindow = new DictionaryWindow(this->hWindow, this->hInstance, 0, 0, 1000, 5000);
-	this->translateResultWindow = new TranslateResultWindow(this, 0, roundToInt(50 * kY - 2), 2000, 3000);
-	this->headerWindow = new HeaderWindow(this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
+	this->dictionaryWindow = new DictionaryWindow(appModel, this->hWindow, this->hInstance, 0, 0, 1000, 5000);
+	this->translateResultWindow = new TranslateResultWindow(appModel, this->hWindow, this->hInstance, 0, roundToInt(50 * kY - 2), 2000, 3000);
+	this->headerWindow = new HeaderWindow(appModel, this->hWindow, this->hInstance, 0, 0, 2000, roundToInt(50 * kY));
 
 	this->dictionaryWindow->Initialize();
 	this->translateResultWindow->Initialize();
 	this->headerWindow->Initialize();
+
+	RegisterHotKey(hWindow, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
+	RegisterHotKey(hWindow, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
+
+	MainWindow::WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
 
 	Minimize();
 }
@@ -70,6 +78,7 @@ HWND MainWindow::GetHandle()
 {
 	return this->hWindow;
 }
+
 HINSTANCE MainWindow::GetInstance()
 {
 	return this->hInstance;
@@ -94,50 +103,44 @@ void MainWindow::Minimize()
 	Shell_NotifyIcon(NIM_ADD, &this->notifyIconData);
 	ShowWindow(this->hWindow, SW_HIDE);
 }
+
 void MainWindow::Maximize()
 {
 	ShowWindow(this->hWindow, SW_SHOW);
 	SwitchToThisWindow(this->hWindow, TRUE);
 }
 
-void MainWindow::PlayText()
+void MainWindow::ShowTranslateResultView(bool preserveScroll)
 {
-	this->headerWindow->PlayText();
-}
+	int vScroll = 0;
 
-void MainWindow::SetTranslateResult(TranslateResult translateResult, BOOL maximize)
-{
-	this->translateResult.Free();
-	
-	this->Render(translateResult);
-	
-	if (maximize)
+	if (preserveScroll)
 	{
-		this->Maximize();
+		SCROLLINFO si;
+		si.cbSize = sizeof (si);
+		si.fMask = SIF_POS;
+		GetScrollInfo(this->hWindow, SB_VERT, &si);
+		vScroll = si.nPos;
 	}
-}
 
-void MainWindow::Render(TranslateResult translateResult, int vScroll)
-{
 	InvalidateRect(this->hWindow, NULL, TRUE);
-
-	this->translateResult = translateResult;
 
 	this->headerWindow->Show();
 	this->translateResultWindow->Show();
 	this->dictionaryWindow->Hide();
 
-	POINT headerBottomRight = this->headerWindow->RenderResult(this->translateResult);
-	POINT contentBottomRight = this->translateResultWindow->RenderResult(this->translateResult);
+	POINT headerBottomRight = this->headerWindow->RenderResult();
+	POINT contentBottomRight = this->translateResultWindow->RenderResult();
 
 	this->InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
 
-	for (int i = 0; i < vScroll; ++i){
+	for (int i = 0; i < vScroll; ++i)
+	{
 		SendMessage(this->hWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
 	}
 }
 
-void MainWindow::RenderDictionary(vector<LogRecord> records)
+void MainWindow::ShowDictionaryView()
 {
 	InvalidateRect(this->hWindow, NULL, TRUE);
 
@@ -145,7 +148,7 @@ void MainWindow::RenderDictionary(vector<LogRecord> records)
 	this->translateResultWindow->Hide();
 	this->dictionaryWindow->Show();
 
-	POINT contentBottomRight = this->dictionaryWindow->RenderResult(records);
+	POINT contentBottomRight = this->dictionaryWindow->RenderResult();
 
 	this->InitializeScrollbars(contentBottomRight.x, contentBottomRight.y);
 
@@ -172,6 +175,7 @@ void MainWindow::InitializeScrollbars(int contentWidth, int contentHeight)
 	si.nPage = (int)(WINDOW_WIDTH / SCROLL_CHAR_X);
 	SetScrollInfo(this->hWindow, SB_HORZ, &si, TRUE);
 }
+
 void MainWindow::ProcessVerticalScroll(WPARAM wParam, LPARAM lParam)
 {
 	SCROLLINFO si;
@@ -232,6 +236,7 @@ void MainWindow::ProcessVerticalScroll(WPARAM wParam, LPARAM lParam)
 			SW_SCROLLCHILDREN);
 	}
 }
+
 void MainWindow::ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam)
 {
 	SCROLLINFO si;
@@ -285,6 +290,7 @@ void MainWindow::ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam)
 			SW_SCROLLCHILDREN);
 	}
 }
+
 UINT MainWindow::ProcessSizing(WPARAM wParam, LPARAM lParam)
 {
 	RECT* sizingBox;
@@ -298,6 +304,134 @@ UINT MainWindow::ProcessSizing(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
+LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	MainWindow* instance = (MainWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+	if (message == MainWindow::WM_TASKBARCREATED && !IsWindowVisible(instance->hWindow))
+	{
+		instance->Minimize();
+		return 0;
+	}
+
+	HWND windowWithFocus, currentWindow;
+
+	int zDelta;
+	switch (message)
+	{
+
+	case WM_CREATE:
+	{
+		CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
+		instance = (MainWindow*)createstruct->lpCreateParams;
+		instance->hWindow = hWnd;
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
+
+		instance->menu = CreatePopupMenu();
+		AppendMenu(instance->menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM, TEXT("Translate from clipboard"));
+		AppendMenu(instance->menu, MF_STRING, ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM, TEXT("Dictionary"));
+		AppendMenu(instance->menu, MF_SEPARATOR, NULL, NULL);
+		AppendMenu(instance->menu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit"));
+
+		break;
+	}
+
+	case WM_SIZING:
+		return instance->ProcessSizing(wParam, lParam);
+
+	case WM_SETCURSOR:
+		SetCursor(LoadCursor(NULL, IDC_ARROW));
+		return TRUE;
+
+	case WM_HSCROLL:
+		instance->ProcessHorizontalScroll(wParam, lParam);
+		break;
+
+	case WM_VSCROLL:
+		instance->ProcessVerticalScroll(wParam, lParam);
+		break;
+
+	case WM_MOUSEWHEEL:
+		zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+		if (zDelta < 0)
+			SendMessage(instance->GetHandle(), WM_VSCROLL, SB_LINEDOWN, NULL);
+		else
+			SendMessage(instance->GetHandle(), WM_VSCROLL, SB_LINEUP, NULL);
+
+	case WM_SYSCOMMAND:
+		switch (wParam & 0xfff0)
+		{
+			case SC_MINIMIZE:
+			case SC_CLOSE:
+				instance->Minimize();
+				return 0;
+		}
+
+		return DefWindowProc(hWnd, message, wParam, lParam);
+
+	case WM_TRAYICON:
+		
+		if (lParam == WM_LBUTTONUP)
+		{
+			instance->appModel->TranslateSelectedText();
+		}
+
+		if (lParam == WM_RBUTTONUP)
+		{
+			POINT curPoint;
+			GetCursorPos(&curPoint);
+			SetForegroundWindow(hWnd);
+			UINT clicked = TrackPopupMenu(instance->menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, hWnd, NULL);
+			if (clicked == ID_TRAY_EXIT_CONTEXT_MENU_ITEM)
+			{
+				instance->appModel->Exit();
+			}
+			if (clicked == ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM)
+			{
+				instance->appModel->TranslateSelectedText();
+			}
+			if (clicked == ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM)
+			{
+				instance->appModel->ShowDictionary();
+			}
+		}
+		break;
+
+	case WM_HOTKEY:
+		if (wParam == ID_TRANSLATE_HOTKEY)
+		{
+			instance->appModel->TranslateSelectedText();
+		}
+		if (wParam == ID_PLAYTEXT_HOTKEY)
+		{
+			instance->appModel->PlaySelectedText();
+		}
+		break;
+
+	case WM_KILLFOCUS:
+		windowWithFocus = GetParent((HWND)wParam);
+		currentWindow = instance->GetHandle();
+		if (windowWithFocus != currentWindow)
+		{
+			instance->Minimize();
+		}
+		break;
+
+	case WM_DESTROY:
+	case WM_CLOSE:
+		instance->appModel->Exit();
+		break;
+
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+
+	return 0;
+}
+
 MainWindow::~MainWindow()
 {	
+	delete this->headerWindow;
+	delete this->translateResultWindow;
+	delete this->dictionaryWindow;
 }

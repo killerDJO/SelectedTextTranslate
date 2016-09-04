@@ -1,7 +1,5 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
-#include "Helpers\RequestHelper.h"
-#include "Helpers\Utilities.h"
+#include "Helpers\RequestProvider.h"
 #include "TranslateEngine\Translator.h"
 #include "Loggers\Logger.h"
 
@@ -10,10 +8,19 @@
 class TextPlayer
 {
 private:
-	static string GetAudioFilePath(string extension);
-	static string SaveToFile(vector<unsigned char> content);
+	const wchar_t* currentTextToPlay;
+	Translator* translator;
+	RequestProvider* requestProvider;
+	Logger* logger;
+
+	string GetAudioFilePath(string extension);
+	string SaveToFile(vector<unsigned char> content);
+
 	static DWORD WINAPI Play(LPVOID arg);
-	static wchar_t buffer[1000];
+
 public:
-	static void PlayText(const wchar_t* text);
+	TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider);
+	~TextPlayer();
+
+	void PlayText(const wchar_t* text);
 };

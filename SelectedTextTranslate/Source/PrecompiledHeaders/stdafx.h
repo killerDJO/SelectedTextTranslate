@@ -32,7 +32,12 @@
 #include <sstream>
 
 #include <cpprest\json.h>
-#include <cpprest/http_client.h>
+#include <cpprest\http_client.h>
+
+#include "duk_config.h"
+#include "duktape.h"
+
+#include "gumbo.h"
 
 #include "..\Resources\resource.h"
 

@@ -1,10 +1,8 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
-#include "Entities\TranslateResult.h"
-#include "Helpers\Utilities.h"
-#include "Windows\Base\WindowBase.h"
+#include "Windows\Base\ChildWindow.h"
+#include "AppModel.h"
 
-class ContentWindow : public WindowBase
+class ContentWindow : public ChildWindow
 {
 protected:
 	const	UINT	FONT_HEIGHT = 20;
@@ -20,13 +18,15 @@ protected:
 	HFONT fontNormal, fontHeader, fontItalic, fontSmall;
 	HBRUSH grayBrush;
 
+	AppModel* appModel;
+
 	void ComputeParameters() override;
 	void InitializeFonts() override;
 	void InitializeBrushes() override;
 
 public:
-	ContentWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
-	~ContentWindow();
+	ContentWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+	virtual ~ContentWindow();
 
 	virtual POINT RenderResult();
 };

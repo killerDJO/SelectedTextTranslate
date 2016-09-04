@@ -19,18 +19,19 @@
     <Image Include="Resources\translate_hover.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AppModel.cpp" />
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
     <ClCompile Include="Source\Loggers\DictionaryLogger.cpp" />
     <ClCompile Include="Source\Loggers\Logger.cpp" />
-    <ClCompile Include="Source\TranslateEngine\PageParser.cpp" />
-    <ClCompile Include="Source\Windows\Base\WindowBase.cpp" />
+    <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp" />
+    <ClCompile Include="Source\Windows\Base\ChildWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\Base\HoverButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\HoverIconButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Buttons\HoverTextButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
-    <ClCompile Include="Source\Helpers\RequestHelper.cpp" />
+    <ClCompile Include="Source\Helpers\RequestProvider.cpp" />
     <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
-    <ClCompile Include="Source\Helpers\Utilities.cpp" />
+    <ClCompile Include="Source\Helpers\StringUtilities.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -44,22 +45,23 @@
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AppModel.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Source\Entities\LogRecord.h" />
     <ClInclude Include="Source\Entities\TranslateResult.h" />
     <ClInclude Include="Source\Entities\TranslateResultDictionary.h" />
     <ClInclude Include="Source\Entities\TranslateResultDictionaryEntry.h" />
     <ClInclude Include="Source\Entities\TranslateResultSentence.h" />
-    <ClInclude Include="Source\Helpers\RequestHelper.h" />
+    <ClInclude Include="Source\Helpers\RequestProvider.h" />
     <ClInclude Include="Source\Helpers\TextExtractor.h" />
-    <ClInclude Include="Source\Helpers\Utilities.h" />
+    <ClInclude Include="Source\Helpers\StringUtilities.h" />
     <ClInclude Include="Source\Loggers\DictionaryLogger.h" />
     <ClInclude Include="Source\Loggers\Logger.h" />
     <ClInclude Include="Source\PrecompiledHeaders\stdafx.h" />
-    <ClInclude Include="Source\TranslateEngine\PageParser.h" />
+    <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h" />
     <ClInclude Include="Source\TranslateEngine\TextPlayer.h" />
     <ClInclude Include="Source\TranslateEngine\Translator.h" />
-    <ClInclude Include="Source\Windows\Base\WindowBase.h" />
+    <ClInclude Include="Source\Windows\Base\ChildWindow.h" />
     <ClInclude Include="Source\Windows\Buttons\Base\HoverButtonWindow.h" />
     <ClInclude Include="Source\Windows\Buttons\HoverIconButtonWindow.h" />
     <ClInclude Include="Source\Windows\Buttons\HoverTextButtonWindow.h" />
@@ -136,6 +138,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +164,7 @@
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
       <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

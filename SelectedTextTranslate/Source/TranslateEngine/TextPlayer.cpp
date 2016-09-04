@@ -1,36 +1,33 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "TranslateEngine\TextPlayer.h"
 
-wchar_t TextPlayer::buffer[1000];
-
-string TextPlayer::GetAudioFilePath(string extension)
+TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider)
 {
-	char buffer[MAX_PATH];
-	DWORD pathLength = GetTempPathA(MAX_PATH, buffer);
-	buffer[pathLength] = 0;
-	return string(buffer) + string(AUDIO_FILE_NAME) + extension;
+	this->translator = translator;
+	this->requestProvider = requestProvider;
+	this->logger = logger;
 }
 
-string TextPlayer::SaveToFile(vector<unsigned char> content)
+void TextPlayer::PlayText(const wchar_t* text)
 {
-	string path = TextPlayer::GetAudioFilePath(".mp3");
-	HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	DWORD dwWritten;
-	WriteFile(hFile, &content[0], sizeof(unsigned char) * content.size(), &dwWritten, 0);
-	CloseHandle(hFile);
-	return path;
+	this->currentTextToPlay = text;
+	DWORD threadId;
+	HANDLE hThread = CreateThread(NULL, 0, TextPlayer::Play, this, 0, &threadId);
+	CloseHandle(hThread);
 }
 
 DWORD WINAPI TextPlayer::Play(LPVOID arg)
 {
-	wstring text = wstring((wchar_t*)arg);
+	TextPlayer* textPlayer = (TextPlayer*)arg;
+	wstring text = wstring(textPlayer->currentTextToPlay);
 
-	Logger::Log(L"Start playing sentence '" + text + L"'.");
+	textPlayer->logger->Log(L"Start playing sentence '" + text + L"'.");
 
-	wstring responseQuery = L"http://translate.google.com/translate_tts?tl=en&client=t&q=" + RequestHelper::EscapeText(text) + L"&tk=" + Translator::GetHash(text);
-	vector<unsigned char> audio = RequestHelper::GetResponse(responseQuery);
+	wstring responseQuery = L"http://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
+		+ L"&tk=" + textPlayer->translator->GetHash(text);
 
-	string filePath = SaveToFile(audio);
+	vector<unsigned char> audio = textPlayer->requestProvider->GetResponse(responseQuery);
+
+	string filePath = textPlayer->SaveToFile(audio);
 
 	audio.clear();
 
@@ -43,15 +40,29 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 	string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
 	mciSendStringA(closeAudioCommand.c_str(), NULL, 0, 0);
 
-	Logger::Log(L"End playing sentence.");
+	textPlayer->logger->Log(L"End playing sentence.");
 
 	return 0;
 }
 
-void TextPlayer::PlayText(const wchar_t* text)
+string TextPlayer::SaveToFile(vector<unsigned char> content)
 {
-	wcscpy_s(TextPlayer::buffer, text);
-	DWORD threadId;
-	HANDLE hThread = CreateThread(NULL, 0, TextPlayer::Play, TextPlayer::buffer, 0, &threadId);
-	CloseHandle(hThread);
+	string path = TextPlayer::GetAudioFilePath(".mp3");
+	HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	DWORD dwWritten;
+	WriteFile(hFile, &content[0], sizeof(unsigned char) * content.size(), &dwWritten, 0);
+	CloseHandle(hFile);
+	return path;
+}
+
+string TextPlayer::GetAudioFilePath(string extension)
+{
+	char buffer[MAX_PATH];
+	DWORD pathLength = GetTempPathA(MAX_PATH, buffer);
+	buffer[pathLength] = 0;
+	return string(buffer) + string(AUDIO_FILE_NAME) + extension;
+}
+
+TextPlayer::~TextPlayer()
+{
 }

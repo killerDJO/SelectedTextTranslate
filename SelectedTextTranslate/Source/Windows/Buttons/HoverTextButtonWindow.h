@@ -1,5 +1,4 @@
 #pragma once
-#include "Helpers\Utilities.h"
 #include "Windows\Buttons\Base\HoverButtonWindow.h"
 
 class HoverTextButtonWindow : public HoverButtonWindow

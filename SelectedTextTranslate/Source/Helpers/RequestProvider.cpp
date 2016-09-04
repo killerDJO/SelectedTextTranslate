@@ -1,22 +1,26 @@
-#include "PrecompiledHeaders\stdafx.h"
-#include "Helpers\RequestHelper.h"
+#include "Helpers\RequestProvider.h"
 
 using namespace web;
 using namespace web::http;
 using namespace web::http::client;
 
-wstring RequestHelper::GetStringResponse(wstring url)
+RequestProvider::RequestProvider(Logger* logger)
+{
+	this->logger = logger;
+}
+
+wstring RequestProvider::GetStringResponse(wstring url)
 {
 	vector<unsigned char> response = GetResponse(url);
 	
-	wstring result = Utilities::GetUtf16String(string(response.begin(), response.end()));
+	wstring result = StringUtilities::GetUtf16String(string(response.begin(), response.end()));
 
 	response.clear();
 
 	return result;
 }
 
-vector<unsigned char> RequestHelper::GetResponse(wstring url)
+vector<unsigned char> RequestProvider::GetResponse(wstring url)
 {
 	try
 	{
@@ -58,18 +62,22 @@ vector<unsigned char> RequestHelper::GetResponse(wstring url)
 	}
 }
 
-wstring RequestHelper::EscapeText(wstring text)
+wstring RequestProvider::EscapeText(wstring text)
 {
 	wstring encodedString = uri::encode_data_string(text);
 	return encodedString;
 }
 
-void RequestHelper::LogRequestException(wstring url, exception exception)
+void RequestProvider::LogRequestException(wstring url, exception exception)
 {
-	LogRequestError(url, L"Exception: " + Utilities::GetUtf16String(exception.what()));
+	LogRequestError(url, L"Exception: " + StringUtilities::GetUtf16String(exception.what()));
 }
 
-void RequestHelper::LogRequestError(wstring url, wstring message)
+void RequestProvider::LogRequestError(wstring url, wstring message)
 {
-	Logger::Log(L"Error requesting URL '" + url + L"'. " + message);
+	logger->Log(L"Error requesting URL '" + url + L"'. " + message);
+}
+
+RequestProvider::~RequestProvider()
+{
 }

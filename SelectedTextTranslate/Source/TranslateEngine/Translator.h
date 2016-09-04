@@ -1,20 +1,24 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
 #include "Entities\TranslateResult.h"
-#include "Helpers\TextExtractor.h"
-#include "Helpers\RequestHelper.h"
-#include "Helpers\Utilities.h"
-#include "TranslateEngine\PageParser.h"
-#include "Loggers\DictionaryLogger.h"
+#include "Helpers\RequestProvider.h"
+#include "Helpers\StringUtilities.h"
+#include "TranslateEngine\TranslatePageParser.h"
 #include "Loggers\Logger.h"
 
 class Translator
 {
-public:
-	static TranslateResult TranslateSentence(wstring sentence);
-	static TranslateResult TranslateSelectedText();
-	static wstring GetHash(wstring sentence);
 private:
-	static TranslateResult ParseJSONResponse(wstring json);
-	static void ReplaceAll(wstring &str, const wstring &search, const wstring &replace);
+	RequestProvider* requestProvider;
+	TranslatePageParser* translatePageParser;
+	Logger* logger;
+
+	TranslateResult ParseJSONResponse(wstring json);
+	void ReplaceAll(wstring &str, const wstring &search, const wstring &replace);
+
+public:
+	Translator(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser);
+	~Translator();
+
+	TranslateResult TranslateSentence(wstring sentence);	
+	wstring GetHash(wstring sentence);
 };

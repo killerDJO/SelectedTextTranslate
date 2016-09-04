@@ -5,12 +5,15 @@
 
 class Logger 
 {
-public:
-	static void Log(wstring record);
-
 private:
-	static wstring GetCurrentDateTime();
-	static wstring GetCurrentDate();
-	static wstring GetLocalComputerName();
-	static wstring GetLogFileName();
+	wstring GetCurrentDateTime();
+	wstring GetCurrentDate();
+	wstring GetLocalComputerName();
+	wstring GetLogFileName();
+
+public:
+	Logger();
+	~Logger();
+
+	void Log(wstring record);
 };

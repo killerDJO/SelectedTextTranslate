@@ -9,14 +9,10 @@ protected:
 	POINT RenderDC() override;
 
 private:
-	vector<LogRecord> records;
-
 	void ShowFullTranslation(int dictionaryIndex);
 
 public:
-	DictionaryWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+	DictionaryWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
 	~DictionaryWindow();
-
-	POINT RenderResult(vector<LogRecord> records);
 };
 

@@ -1,4 +1,3 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Buttons\HoverIconButtonWindow.h"
 
 HoverIconButtonWindow::HoverIconButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)

@@ -3,9 +3,14 @@
 
 using namespace web;
 
-vector<LogRecord> DictionaryLogger::records;
-const wchar_t* DictionaryLogger::logFileName = L".\\logs\\dictionary_log.json";
-bool DictionaryLogger::isInitialized = false;
+DictionaryLogger::DictionaryLogger(Logger* logger)
+{
+	this->logger = logger;
+
+	records = vector<LogRecord>();
+	logFileName = L".\\logs\\dictionary_log.json";
+	isInitialized = false;
+}
 
 void DictionaryLogger::AddRecord(wstring word)
 {
@@ -65,7 +70,7 @@ void DictionaryLogger::Initialize()
 
 	isInitialized = true;
 
-	Logger::Log(L"Dictionary has been initialized");
+	logger->Log(L"Dictionary has been initialized");
 }
 
 void DictionaryLogger::ReadRecords()
@@ -105,7 +110,7 @@ void DictionaryLogger::ReadRecords()
 	}
 	catch (json::json_exception exception)
 	{
-		Logger::Log(L"Error loading dictionary. Dictionary content will be cleared. Exception: " + Utilities::GetUtf16String(exception.what()) + L".");
+		logger->Log(L"Error loading dictionary. Dictionary content will be cleared. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".");
 		return;
 	}
 
@@ -117,7 +122,7 @@ void DictionaryLogger::ReadRecords()
 	for (size_t i = 0; i < root.size(); ++i)
 	{
 		LogRecord record;
-		record.Word = Utilities::CopyWideChar(root[i].at(L"word").as_string());
+		record.Word = StringUtilities::CopyWideChar(root[i].at(L"word").as_string());
 		record.Count = root[i].at(L"count").as_integer();
 
 		records.push_back(record);
@@ -131,7 +136,7 @@ void DictionaryLogger::WriteRecords()
 	for (size_t i = 0; i < DictionaryLogger::records.size(); ++i)
 	{
 		json::value record;
-		record[L"word"] = json::value(Utilities::CopyWideChar(DictionaryLogger::records[i].Word));
+		record[L"word"] = json::value(StringUtilities::CopyWideChar(DictionaryLogger::records[i].Word));
 		record[L"count"] = json::value(DictionaryLogger::records[i].Count);
 
 		root[i] = record;
@@ -151,4 +156,8 @@ void DictionaryLogger::WriteRecords()
 	WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
 
 	CloseHandle(hFile);
+}
+
+DictionaryLogger::~DictionaryLogger()
+{
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "PrecompiledHeaders\stdafx.h"
 #include "Entities\TranslateResultDictionaryEntry.h"
 
 struct TranslateResultDictionary

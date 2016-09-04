@@ -1,5 +1,8 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Helpers\TextExtractor.h"
+
+TextExtractor::TextExtractor()
+{
+}
 
 wstring TextExtractor::GetSelectedText()
 {
@@ -44,4 +47,8 @@ wstring TextExtractor::GetSelectedText()
 	}
 
 	return result;
+}
+
+TextExtractor::~TextExtractor()
+{
 }

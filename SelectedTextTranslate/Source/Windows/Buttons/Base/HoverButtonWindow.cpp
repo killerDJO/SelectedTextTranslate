@@ -1,8 +1,7 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Buttons\Base\HoverButtonWindow.h"
 
 HoverButtonWindow::HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback)
-	: WindowBase(parentWindow, hInstance, x, y, width, height)
+	: ChildWindow(parentWindow, hInstance, x, y, width, height)
 {
 	this->clickCallback = clickCallback;
 	this->isHovered = false;
@@ -10,7 +9,7 @@ HoverButtonWindow::HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWO
 
 void HoverButtonWindow::Initialize()
 {
-	WindowBase::Initialize();
+	ChildWindow::Initialize();
 	SetWindowLongPtr(this->hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
 	
 	this->RenderStatesHDC();
@@ -64,12 +63,13 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 		break;
 	}
 
-	return WindowBase::WndProc(hWnd, message, wParam, lParam);
+	return ChildWindow::WndProc(hWnd, message, wParam, lParam);
 }
 
 POINT HoverButtonWindow::RenderDC()
 {
-	POINT bottomRight = WindowBase::RenderDC();
+	POINT bottomRight = ChildWindow::RenderDC();
+
 	HDC sourceHDC = this->isHovered
 		? this->hoverStateHDC
 		: this->normalStateHDC;

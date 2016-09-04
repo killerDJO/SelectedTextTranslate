@@ -1,28 +1,20 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Windows\Content\DictionaryWindow.h"
 
-#define GWL_TYPE_TRANSLATE 42002
-#define GWL_TYPE_REMOVE 42003
-
-DictionaryWindow::DictionaryWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-	: ContentWindow(parentWindow, hInstance, x, y, width, height)
+DictionaryWindow::DictionaryWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
+	: ContentWindow(appModel, parentWindow, hInstance, x, y, width, height)
 {
 }
 
 void DictionaryWindow::ShowFullTranslation(int dictionaryIndex)
 {
-	SendMessage(this->parentWindow, WM_NOTIFY, WM_TRANLSATE_LOG_RECORD, dictionaryIndex);
-}
-
-POINT DictionaryWindow::RenderResult(vector<LogRecord> records)
-{
-	this->records = records;
-	return ContentWindow::RenderResult();
+	this->appModel->TranslateWordFromDictionary(dictionaryIndex);
 }
 
 POINT DictionaryWindow::RenderDC()
 {
 	ContentWindow::RenderDC();
+
+	vector<LogRecord> records = this->appModel->GetDictionaryRecords();
 
 	POINT bottomRight = { 0, 0 };
 
@@ -31,15 +23,15 @@ POINT DictionaryWindow::RenderDC()
 	size_t countToShow = min(200, records.size());
 
 	wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
-	POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, title.c_str(), fontItalic, COLOR_GRAY, PADDING_X, curY, &bottomRight);
+	POINT lineBottomRight = PrintText(this->inMemoryHDC, title.c_str(), fontItalic, COLOR_GRAY, PADDING_X, curY, &bottomRight);
 	
 	curY = lineBottomRight.y + PADDING_Y / 2;
 	
 	for (size_t i = 0; i < countToShow; ++i)
 	{
 		LogRecord record = records[i];
-		POINT lineBottomRight = Utilities::PrintText(this->inMemoryHDC, record.Word.c_str(), fontNormal, COLOR_BLACK, PADDING_X * 2 + 4, curY, &bottomRight);
-		Utilities::PrintText(inMemoryHDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, COLOR_GRAY, lineBottomRight.x + 1, curY, &bottomRight);
+		POINT lineBottomRight = PrintText(this->inMemoryHDC, record.Word.c_str(), fontNormal, COLOR_BLACK, PADDING_X * 2 + 4, curY, &bottomRight);
+		PrintText(inMemoryHDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, COLOR_GRAY, lineBottomRight.x + 1, curY, &bottomRight);
 		
 		HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
 			this->hWindow,

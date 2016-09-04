@@ -1,7 +1,6 @@
-#include "PrecompiledHeaders\stdafx.h"
-#include "Windows\Base\WindowBase.h"
+#include "Windows\Base\ChildWindow.h"
 
-WindowBase::WindowBase(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
+ChildWindow::ChildWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
 {
 	this->parentWindow = parentWindow;
 	this->hInstance = hInstance;
@@ -11,7 +10,7 @@ WindowBase::WindowBase(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y,
 	this->height = height;	
 }
 
-void WindowBase::Initialize()
+void ChildWindow::Initialize()
 {
 	const TCHAR* className = TEXT("STT_CONTENT");
 	WNDCLASSEX wnd = { 0 };
@@ -52,25 +51,25 @@ void WindowBase::Initialize()
 	this->InitializeBrushes();
 }
 
-void WindowBase::InitializeInMemoryDC()
+void ChildWindow::InitializeInMemoryDC()
 {
 	this->inMemoryHDC = CreateInMemoryHDC(this->width, this->height);
 	ClearHDC(this->inMemoryHDC);
 }
 
-void WindowBase::ComputeParameters()
+void ChildWindow::ComputeParameters()
 {
 }
 
-void WindowBase::InitializeFonts()
+void ChildWindow::InitializeFonts()
 {
 }
 
-void WindowBase::InitializeBrushes()
+void ChildWindow::InitializeBrushes()
 {
 }
 
-HDC WindowBase::CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight)
+HDC ChildWindow::CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight)
 {
 	HDC hdc = CreateCompatibleDC(NULL);
 
@@ -92,35 +91,35 @@ HDC WindowBase::CreateInMemoryHDC(DWORD hdcWidth, DWORD hdcHeight)
 	return hdc;
 }
 
-void WindowBase::ResizeHDC(HDC &hdc, DWORD width, DWORD height)
+void ChildWindow::ResizeHDC(HDC &hdc, DWORD width, DWORD height)
 {
 	DeleteDC(hdc);
 	hdc = CreateInMemoryHDC(width, height);
 }
 
-HWND WindowBase::GetHandle()
+HWND ChildWindow::GetHandle()
 {
 	return this->hWindow;
 }
 
-HINSTANCE WindowBase::GetInstance()
+HINSTANCE ChildWindow::GetInstance()
 {
 	return this->hInstance;
 }
 
-DWORD WindowBase::GetWidth()
+DWORD ChildWindow::GetWidth()
 {
 	return this->width;
 }
 
-DWORD WindowBase::GetHeight()
+DWORD ChildWindow::GetHeight()
 {
 	return this->height;
 }
 
-LRESULT CALLBACK WindowBase::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	WindowBase* instance = (WindowBase*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+	ChildWindow* instance = (ChildWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
 	switch (message)
 	{
@@ -129,7 +128,7 @@ LRESULT CALLBACK WindowBase::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_CREATE:
 	{
 		CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
-		instance = (WindowBase*)createstruct->lpCreateParams;
+		instance = (ChildWindow*)createstruct->lpCreateParams;
 		instance->hWindow = hWnd;
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
 
@@ -163,12 +162,12 @@ LRESULT CALLBACK WindowBase::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return 0;
 }
 
-void WindowBase::ResetWindow(POINT bottomRight)
+void ChildWindow::ResetWindow(POINT bottomRight)
 {
 	MoveWindow(this->hWindow, this->initialX, this->initialY, bottomRight.x, bottomRight.y, FALSE);
 }
 
-POINT WindowBase::RenderDC()
+POINT ChildWindow::RenderDC()
 {
 	DestroyChildWindows();
 
@@ -177,7 +176,7 @@ POINT WindowBase::RenderDC()
 	return POINT();
 }
 
-void WindowBase::ClearHDC(HDC hdc)
+void ChildWindow::ClearHDC(HDC hdc)
 {
 	RECT rect;
 	rect.top = 0;
@@ -187,7 +186,7 @@ void WindowBase::ClearHDC(HDC hdc)
 	FillRect(hdc, &rect, CreateSolidBrush(RGB(255, 255, 255)));
 }
 
-void WindowBase::Draw()
+void ChildWindow::Draw()
 {
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(this->hWindow, &ps);
@@ -196,46 +195,79 @@ void WindowBase::Draw()
 
 	EndPaint(this->hWindow, &ps);
 
-	for (int i = 0; i < childWindows.size(); ++i) 
+	for (size_t i = 0; i < childWindows.size(); ++i) 
 	{
 		childWindows[i]->Show();
 	}
 }
 
-void WindowBase::Show()
+void ChildWindow::Show()
 {
 	ShowWindow(this->hWindow, SW_SHOW);
 }
 
-void WindowBase::Hide()
+void ChildWindow::Hide()
 {
 	ShowWindow(this->hWindow, SW_HIDE);
 }
 
-void WindowBase::Destroy()
-{
-	DestroyWindow(this->hWindow);
-}
-
-DWORD WindowBase::AdjustToResolution(double value, double k)
+DWORD ChildWindow::AdjustToResolution(double value, double k)
 {
 	return int(round(value * k));
 }
 
-void WindowBase::DestroyChildWindows()
+void ChildWindow::DestroyChildWindows()
 {
-	for (int i = 0; i < childWindows.size(); ++i)
+	for (size_t i = 0; i < childWindows.size(); ++i)
 	{
-		childWindows[i]->Destroy();
+		delete childWindows[i];
 	}
 
 	childWindows.clear();
 	childWindows.resize(0);
 }
 
-WindowBase::~WindowBase()
+SIZE ChildWindow::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
 {
-	Destroy();
+	SelectObject(hdc, font);
+
+	SIZE textSize;
+	GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+
+	return textSize;
+}
+
+POINT ChildWindow::PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight)
+{
+	SelectObject(hdc, font);
+	SetTextColor(hdc, color);
+
+	SIZE textSize;
+	GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+
+	TextOut(hdc, x, y, text, _tcslen(text));
+
+	bottomRight->x = max(bottomRight->x, x + textSize.cx);
+	bottomRight->y = max(bottomRight->y, y + textSize.cy);
+
+	POINT result;
+	result.x = x + textSize.cx;
+	result.y = y + textSize.cy;
+	return result;
+}
+
+
+void ChildWindow::DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight)
+{
+	FillRect(hdc, &rect, brush);
+
+	bottomRight->x = max(bottomRight->x, rect.right);
+	bottomRight->y = max(bottomRight->y, rect.bottom);
+}
+
+ChildWindow::~ChildWindow()
+{
+	DestroyWindow(this->hWindow);
 	DeleteDC(this->inMemoryHDC);
 	DestroyChildWindows();
 }

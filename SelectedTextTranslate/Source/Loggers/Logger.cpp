@@ -1,6 +1,11 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\Logger.h"
 
+Logger::Logger()
+{
+	CreateDirectory(L".\\logs", NULL);
+}
+
 void Logger::Log(wstring record)
 {
 	HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -80,4 +85,8 @@ wstring Logger::GetCurrentDateTime()
 	wstring dateTime = wstring(buffer) + L"." + ss.str();
 
 	return dateTime;
+}
+
+Logger::~Logger()
+{
 }

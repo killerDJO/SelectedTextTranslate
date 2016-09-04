@@ -1,8 +1,7 @@
 #pragma once
-#include "Helpers\Utilities.h"
-#include "Windows\Base\WindowBase.h"
+#include "Windows\Base\ChildWindow.h"
 
-class HoverButtonWindow : public WindowBase
+class HoverButtonWindow : public ChildWindow
 {
 protected:
 	HDC hoverStateHDC;
@@ -20,7 +19,7 @@ private:
 
 public:
 	HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);
-	~HoverButtonWindow();
+	virtual ~HoverButtonWindow();
 
 	void Initialize() override;
 };

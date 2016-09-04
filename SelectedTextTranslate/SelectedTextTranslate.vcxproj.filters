@@ -87,9 +87,6 @@
     <ClCompile Include="Source\Windows\MainWindow.cpp">
       <Filter>Source\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Helpers\RequestHelper.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Helpers\TextExtractor.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
@@ -101,9 +98,6 @@
     </ClCompile>
     <ClCompile Include="Source\TranslateEngine\Translator.cpp">
       <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Helpers\Utilities.cpp">
-      <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp">
       <Filter>Source\Windows\Content</Filter>
@@ -120,20 +114,29 @@
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <Filter>Source\PrecompiledSource</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\PageParser.cpp">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\Base\HoverButtonWindow.cpp">
       <Filter>Source\Windows\Buttons\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Base\WindowBase.cpp">
-      <Filter>Source\Windows\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\HoverTextButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\Buttons\HoverIconButtonWindow.cpp">
       <Filter>Source\Windows\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Base\ChildWindow.cpp">
+      <Filter>Source\Windows\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AppModel.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Helpers\StringUtilities.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Helpers\RequestProvider.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp">
+      <Filter>Source\TranslateEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,9 +160,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resources\resource.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h">
       <Filter>Source\Windows\Content\Base</Filter>
     </ClInclude>
@@ -202,32 +202,38 @@
     <ClInclude Include="Source\Helpers\TextExtractor.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Helpers\RequestHelper.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Helpers\Utilities.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Windows\MainWindow.h">
       <Filter>Source\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows\Content\TranslateResultWindow.h">
       <Filter>Source\Windows\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Source\TranslateEngine\PageParser.h">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Windows\Buttons\Base\HoverButtonWindow.h">
       <Filter>Source\Windows\Buttons\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Base\WindowBase.h">
-      <Filter>Source\Windows\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows\Buttons\HoverTextButtonWindow.h">
       <Filter>Source\Windows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows\Buttons\HoverIconButtonWindow.h">
       <Filter>Source\Windows\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Base\ChildWindow.h">
+      <Filter>Source\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AppModel.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\StringUtilities.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\RequestProvider.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h">
+      <Filter>Source\TranslateEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
