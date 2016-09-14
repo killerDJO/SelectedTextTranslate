@@ -1,7 +1,7 @@
 #include "Windows\Buttons\HoverTextButtonWindow.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, COLORREF normalColor, COLORREF hoverColor, wstring text, function<void()> clickCallback)
-    : HoverButtonWindow(parentWindow, hInstance, x, y, 1, 1, clickCallback)
+HoverTextButtonWindow::HoverTextButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, COLORREF normalColor, COLORREF hoverColor, wstring text, function<void()> clickCallback)
+    : HoverButtonWindow(renderer, parentWindow, hInstance, x, y, 0, 0, clickCallback)
 {
     this->font = font;
     this->normalColor = normalColor;
@@ -9,25 +9,29 @@ HoverTextButtonWindow::HoverTextButtonWindow(HWND parentWindow, HINSTANCE hInsta
     this->text = text;
 }
 
-void HoverTextButtonWindow::RenderStatesDC()
+void HoverTextButtonWindow::InitializeInMemoryDC()
 {
-    SIZE textSize = GetTextSize(inMemoryDC, text.c_str(), font);
+    inMemoryDC = renderer->CreateInMemoryDC(width, height);
+    SIZE textSize = renderer->GetTextSize(inMemoryDC, text.c_str(), font);
 
     width = max(width, (DWORD)textSize.cx);
     height = max(height, (DWORD)textSize.cy);
 
-    ResizeDC(normalStateDC, width, height);
-    ResizeDC(hoverStateDC, width, height);
-    ResizeDC(inMemoryDC, width, height);
+    normalStateDC = renderer->CreateInMemoryDC(width, height);
+    hoverStateDC = renderer->CreateInMemoryDC(width, height);
+    renderer->ResizeDC(inMemoryDC, width, height);
+}
 
-    RenderStateDC(this->normalStateDC, this->normalColor);
-    RenderStateDC(this->hoverStateDC, this->hoverColor);
+void HoverTextButtonWindow::RenderStatesDC()
+{
+    RenderStateDC(normalStateDC, normalColor);
+    RenderStateDC(hoverStateDC, hoverColor);
 }
 
 void HoverTextButtonWindow::RenderStateDC(HDC hdc, COLORREF color)
 {
     POINT bottomRight;
-    PrintText(hdc, text.c_str(), font, color, 0, 0, &bottomRight);
+    renderer->PrintText(hdc, text.c_str(), font, color, 0, 0, &bottomRight);
 }
 
 HoverTextButtonWindow::~HoverTextButtonWindow()

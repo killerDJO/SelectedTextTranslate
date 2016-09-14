@@ -12,6 +12,6 @@ private:
     void ShowFullTranslation(int dictionaryIndex);
 
 public:
-    DictionaryWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    DictionaryWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
     ~DictionaryWindow();
 };

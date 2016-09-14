@@ -12,9 +12,9 @@ void AttachConsole()
     freopen_s(&file, "CON", "w", stdout);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow )
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow)
 {
-    // AttachConsole();
+    //AttachConsole();
 
     HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
     if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -29,13 +29,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     TranslatePageParser* translatePageParser = new TranslatePageParser(logger, requestProvider);
     Translator* translator = new Translator(logger, requestProvider, translatePageParser);
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
+    Renderer* renderer = new Renderer();
 
     AppModel * appModel = new AppModel(translator, textPlayer, textExtractor, dictionaryLogger);
-    MainWindow* mainWindow = new MainWindow(hInstance, appModel);
+    MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderer);
     appModel->SetMainWindow(mainWindow);
 
     mainWindow->Initialize();
-    
+
     logger->Log(L"Application start.");
 
     MSG msg;

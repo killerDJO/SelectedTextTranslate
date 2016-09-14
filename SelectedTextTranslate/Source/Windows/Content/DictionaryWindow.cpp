@@ -1,7 +1,7 @@
 #include "Windows\Content\DictionaryWindow.h"
 
-DictionaryWindow::DictionaryWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-    : ContentWindow(appModel, parentWindow, hInstance, x, y, width, height)
+DictionaryWindow::DictionaryWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y)
+    : ContentWindow(renderer, appModel, parentWindow, hInstance, x, y, 0, 0)
 {
 }
 
@@ -23,17 +23,18 @@ POINT DictionaryWindow::RenderDC()
     size_t countToShow = min(200, records.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
-    POINT lineBottomRight = PrintText(inMemoryDC, title.c_str(), fontItalic, colorGray, paddingX, curY, &bottomRight);
+    POINT lineBottomRight = renderer->PrintText(inMemoryDC, title.c_str(), fontItalic, colorGray, paddingX, curY, &bottomRight);
     
     curY = lineBottomRight.y + paddingY / 2;
     
     for (size_t i = 0; i < countToShow; ++i)
     {
         LogRecord record = records[i];
-        POINT lineBottomRight = PrintText(inMemoryDC, record.Word.c_str(), fontNormal, colorBlack, paddingX * 2 + 4, curY, &bottomRight);
-        PrintText(inMemoryDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, colorGray, lineBottomRight.x + 1, curY, &bottomRight);
+        POINT lineBottomRight = renderer->PrintText(inMemoryDC, record.Word.c_str(), fontNormal, colorBlack, paddingX * 2 + 4, curY, &bottomRight);
+        renderer->PrintText(inMemoryDC, wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, colorGray, lineBottomRight.x + 1, curY, &bottomRight);
         
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
+            renderer,
             hWindow,
             hInstance,
             paddingX,

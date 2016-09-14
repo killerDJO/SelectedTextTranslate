@@ -16,6 +16,6 @@ private:
     int CreateExpandButton(TranslateResultDictionary category, int categoryIndex, int showedCount, int curY, POINT* bottomRight);
 
 public:
-    TranslateResultWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    TranslateResultWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
     ~TranslateResultWindow();
 };

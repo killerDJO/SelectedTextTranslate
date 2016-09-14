@@ -19,6 +19,7 @@
     <Image Include="Resources\translate_hover.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Windows\Base\Renderer.cpp" />
     <ClCompile Include="Source\AppModel.cpp" />
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
     <ClCompile Include="Source\Loggers\DictionaryLogger.cpp" />
@@ -46,6 +47,7 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Windows\Base\Renderer.h" />
     <ClInclude Include="Source\AppModel.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Source\Entities\LogRecord.h" />

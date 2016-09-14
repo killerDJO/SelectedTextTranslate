@@ -1,7 +1,7 @@
 ﻿#include "Windows\Content\TranslateResultWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-: ContentWindow(appModel, parentWindow, hInstance, x, y, width, height)
+TranslateResultWindow::TranslateResultWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y)
+: ContentWindow(renderer, appModel, parentWindow, hInstance, x, y, 0, 0)
 {
 }
 
@@ -21,25 +21,24 @@ void TranslateResultWindow::ExpandDictionary(int index)
 
 POINT TranslateResultWindow::RenderDC()
 {
-    ContentWindow::RenderDC();
+    POINT bottomRight = ContentWindow::RenderDC();
 
     TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
-    POINT bottomRight = { 0, 0 };
     int curY = lineHeight / 4;
-    int dY = int((kY - 1) * 10);
+    int dY = roundToInt((renderer->kY - 1) * 10);
 
     for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i)
     {
         TranslateResultDictionary category = translateResult.TranslateCategories[i];
 
         // Draw category header
-        POINT baseFormBottomRight = PrintText(inMemoryDC, category.BaseForm, fontNormal, colorBlack, paddingX, curY, &bottomRight);
+        POINT baseFormBottomRight = renderer->PrintText(inMemoryDC, category.BaseForm, fontNormal, colorBlack, paddingX, curY, &bottomRight);
 
         if (_tcslen(category.PartOfSpeech) != 0)
         {
             wstring text = L" - " + wstring(category.PartOfSpeech);
-            PrintText(inMemoryDC, text.c_str(), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
+            renderer->PrintText(inMemoryDC, text.c_str(), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
         }
 
         vector<TranslateResultDictionaryEntry> showedEntries(0);
@@ -65,12 +64,12 @@ POINT TranslateResultWindow::RenderDC()
         for (size_t j = 0; j < showedEntries.size(); ++j)
         {
             TranslateResultDictionaryEntry entry = category.Entries[j];
-            POINT wordBottomRight = PrintText(inMemoryDC, entry.Word, fontNormal, colorBlack, paddingX * 3, curY, &bottomRight);
+            POINT wordBottomRight = renderer->PrintText(inMemoryDC, entry.Word, fontNormal, colorBlack, paddingX * 3, curY, &bottomRight);
 
             // Draw reverse translation
             if (entry.ReverseTranslation.size() != 0)
             {
-                wordBottomRight = PrintText(inMemoryDC, L" - ", fontNormal, colorGray, wordBottomRight.x + 2, curY, &bottomRight);
+                wordBottomRight = renderer->PrintText(inMemoryDC, L" - ", fontNormal, colorGray, wordBottomRight.x + 2, curY, &bottomRight);
                 for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
                 {
                     wstring text = wstring(entry.ReverseTranslation[k]);
@@ -78,19 +77,19 @@ POINT TranslateResultWindow::RenderDC()
                     {
                         text += L", ";
                     }
-                    wordBottomRight = PrintText(inMemoryDC, const_cast<wchar_t*>(text.c_str()), fontItalic, colorGray, wordBottomRight.x, curY, &bottomRight);
+                    wordBottomRight = renderer->PrintText(inMemoryDC, text.c_str(), fontItalic, colorGray, wordBottomRight.x, curY, &bottomRight);
                 }
             }
 
             int k = entry.Score >= 0.05 ? 0 : (entry.Score >= 0.0025 ? 1 : 2);
-            int rateUnit = AdjustToResolution(8, kX);
+            int rateUnit = renderer->AdjustToXResolution(8);
 
             RECT rect;
             rect.right = paddingX + rateUnit * 3;
             rect.top = curY + lineHeight / 3 - dY*2;
             rect.bottom = rect.top + lineHeight / 3;
             rect.left = paddingX + k * rateUnit;
-            DrawRect(inMemoryDC, rect, grayBrush, &bottomRight);
+            renderer->DrawRect(inMemoryDC, rect, grayBrush, &bottomRight);
             curY += lineHeight;
         }
 
@@ -100,6 +99,13 @@ POINT TranslateResultWindow::RenderDC()
 
     bottomRight.y += lineHeight * 3;
     bottomRight.x += paddingX * 3;
+
+    RECT rect;
+    rect.left = 0;
+    rect.right = bottomRight.x;
+    rect.top = 0;
+    rect.bottom = 1;
+    renderer->DrawRect(inMemoryDC, rect, grayBrush, &POINT());
 
     return bottomRight;
 }
@@ -129,6 +135,7 @@ int TranslateResultWindow::CreateExpandButton(
         }
 
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
+            renderer,
             hWindow,
             hInstance,
             paddingX * 3,

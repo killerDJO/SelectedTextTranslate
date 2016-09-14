@@ -9,14 +9,14 @@ class HeaderWindow : public ContentWindow
 protected:
     POINT RenderDC() override;
     void InitializeFonts() override;
-    
+
 private:
     HFONT fontSmallUnderscored;
-    
+
     void PlayText();
     void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLineBottomRight, POINT* bottomRight);
 
 public:
-    HeaderWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    HeaderWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD height);
     ~HeaderWindow();
 };

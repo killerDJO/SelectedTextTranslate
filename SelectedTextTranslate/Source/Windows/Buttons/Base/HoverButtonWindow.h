@@ -18,7 +18,7 @@ protected:
     virtual void RenderStatesDC() = 0;
 
 public:
-    HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);
+    HoverButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);
     virtual ~HoverButtonWindow();
 
     void Initialize() override;

@@ -1,7 +1,7 @@
 #include "Windows\Buttons\Base\HoverButtonWindow.h"
 
-HoverButtonWindow::HoverButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback)
-    : ChildWindow(parentWindow, hInstance, x, y, width, height)
+HoverButtonWindow::HoverButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback)
+    : ChildWindow(renderer, parentWindow, hInstance, x, y, width, height)
 {
     this->clickCallback = clickCallback;
     this->isHovered = false;
@@ -74,7 +74,7 @@ POINT HoverButtonWindow::RenderDC()
         ? hoverStateDC
         : normalStateDC;
 
-    DWORD res = CopyDC(sourceDC, inMemoryDC);
+    DWORD res = renderer->CopyDC(sourceDC, inMemoryDC, width, height);
 
     MoveWindow(hWindow, x, y, width, height, FALSE);
 

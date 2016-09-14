@@ -3,9 +3,10 @@
 
 UINT MainWindow::WM_TASKBARCREATED;
 
-MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel)
-    : Window(hInstance)
+MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel, Renderer* renderer)
+    : Window(hInstance, renderer)
 {
+    this->renderer = renderer;
     this->appModel = appModel;
     this->className = L"STT_MAIN";
 
@@ -26,7 +27,7 @@ void MainWindow::Initialize()
         WS_EX_TOOLWINDOW,
         className,
         NULL,
-        WS_SIZEBOX | WS_POPUP | WS_HSCROLL | WS_VSCROLL,
+        WS_SIZEBOX | WS_POPUP | WS_HSCROLL | WS_VSCROLL | WS_CLIPCHILDREN,
         workarea.right - width - padding,
         workarea.bottom - height - padding,
         width,
@@ -38,9 +39,10 @@ void MainWindow::Initialize()
 
     InitNotifyIconData();
 
-    dictionaryWindow = new DictionaryWindow(appModel, hWindow, hInstance, 0, 0, 1000, 5000);
-    translateResultWindow = new TranslateResultWindow(appModel, hWindow, hInstance, 0, roundToInt(50 * kY - 2), 2000, 3000);
-    headerWindow = new HeaderWindow(appModel, hWindow, hInstance, 0, 0, 2000, roundToInt(50 * kY));
+    int headerHeight = renderer->AdjustToYResolution(50);
+    dictionaryWindow = new DictionaryWindow(renderer, appModel, hWindow, hInstance, 0, 0);
+    translateResultWindow = new TranslateResultWindow(renderer, appModel, hWindow, hInstance, 0, headerHeight - 1);
+    headerWindow = new HeaderWindow(renderer, appModel, hWindow, hInstance, 0, 0, headerHeight);
 
     dictionaryWindow->Initialize();
     translateResultWindow->Initialize();
@@ -65,13 +67,8 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 void MainWindow::ComputeWindowDimensions(RECT workarea)
 {
-    UINT screenResolutionX = workarea.right - workarea.left;
-    UINT screenResolutionY = workarea.bottom - workarea.top;
-    kX = screenResolutionX / 1440.0;
-    kY = screenResolutionY / 860.0;
-
-    width = roundToInt(300 * this->kX);
-    height = roundToInt(400 * this->kY);
+    width = renderer->AdjustToXResolution(300);
+    height = renderer->AdjustToXResolution(400);
     padding = 5;
 }
 
@@ -103,15 +100,12 @@ void MainWindow::Maximize()
 
 void MainWindow::ShowTranslateResultView(bool preserveScroll)
 {
-    int vScroll = 0;
+    DWORD verticalScroll = 0;
 
     if (preserveScroll)
     {
-        SCROLLINFO si;
-        si.cbSize = sizeof (si);
-        si.fMask = SIF_POS;
-        GetScrollInfo(hWindow, SB_VERT, &si);
-        vScroll = si.nPos;
+        SCROLLINFO scrollInfo = GetScrollBarInfo(SB_VERT);
+        verticalScroll = scrollInfo.nPos;
     }
 
     headerWindow->Show();
@@ -123,9 +117,14 @@ void MainWindow::ShowTranslateResultView(bool preserveScroll)
 
     InitializeScrollbars(max(headerBottomRight.x, contentBottomRight.x), headerBottomRight.y + contentBottomRight.y);
 
-    for (int i = 0; i < vScroll; ++i)
+    if (preserveScroll)
     {
-        SendMessage(hWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
+        SCROLLINFO scrollInfo = GetScrollBarInfo(SB_VERT);
+        int scrollOffset = scrollInfo.nPos;
+
+        scrollInfo.nPos = min(scrollInfo.nMax - scrollInfo.nPage + 1, verticalScroll);
+
+        SetScrollPosition(scrollInfo, SB_VERT, scrollOffset, scrollCharY);
     }
 }
 
@@ -156,9 +155,9 @@ void MainWindow::InitializeScrollbar(int windowDimension, int contentDimension, 
     si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
     si.nMin = 0;
     si.nPos = 0;
-    si.nMax = int(contentDimension / scrollChar);
-    si.nPage = (int)(windowDimension / scrollChar);
-    SetScrollInfo(this->hWindow, nBar, &si, TRUE);
+    si.nMax = roundToInt(contentDimension / scrollChar);
+    si.nPage = roundToInt(windowDimension / scrollChar);
+    SetScrollInfo(hWindow, nBar, &si, TRUE);
 }
 
 void MainWindow::ProcessVerticalScroll(WPARAM wParam, LPARAM lParam)
@@ -173,62 +172,63 @@ void MainWindow::ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam)
 
 void MainWindow::ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int nBar)
 {
-    SCROLLINFO si;
-    si.cbSize = sizeof(si);
-    si.fMask = SIF_ALL;
-
-    GetScrollInfo(hWindow, nBar, &si);
-    int scrollOffset = si.nPos;
+    SCROLLINFO scrollInfo = GetScrollBarInfo(nBar);
+    int scrollOffset = scrollInfo.nPos;
 
     switch (LOWORD(wParam))
     {
     case SB_TOP:
-        si.nPos = si.nMin;
+        scrollInfo.nPos = scrollInfo.nMin;
         break;
 
     case SB_BOTTOM:
-        si.nPos = si.nMax;
+        scrollInfo.nPos = scrollInfo.nMax;
         break;
 
     case SB_LINEUP:
-        si.nPos -= 1;
+        scrollInfo.nPos -= 1;
         break;
 
     case SB_LINEDOWN:
-        si.nPos += 1;
+        scrollInfo.nPos += 1;
         break;
 
     case SB_PAGEUP:
-        si.nPos -= si.nPage;
+        scrollInfo.nPos -= scrollInfo.nPage;
         break;
 
     case SB_PAGEDOWN:
-        si.nPos += si.nPage;
+        scrollInfo.nPos += scrollInfo.nPage;
         break;
 
     case SB_THUMBTRACK:
-        si.nPos = si.nTrackPos;
+        scrollInfo.nPos = scrollInfo.nTrackPos;
         break;
 
     default:
         break;
     }
 
-    si.fMask = SIF_POS;
-    SetScrollInfo(hWindow, nBar, &si, TRUE);
-    GetScrollInfo(hWindow, nBar, &si);
+    SetScrollPosition(scrollInfo, nBar, scrollOffset, scrollChar);
+}
 
-    if (si.nPos != scrollOffset)
+void MainWindow::SetScrollPosition(SCROLLINFO scrollInfo, int nBar, int scrollOffset, int scrollChar)
+{
+    scrollInfo.fMask = SIF_POS;
+    SetScrollInfo(hWindow, nBar, &scrollInfo, TRUE);
+    GetScrollInfo(hWindow, nBar, &scrollInfo);
+
+    if (scrollInfo.nPos != scrollOffset)
     {
-        int scrollAmount = int(scrollChar * (scrollOffset - si.nPos));
+        int scrollAmount = roundToInt(scrollChar * (scrollOffset - scrollInfo.nPos));
         int scrollAmountHorizontal = 0;
         int scrollAmountVertical = 0;
 
-        if (nBar == SB_VERT) 
+        if (nBar == SB_VERT)
         {
             scrollAmountVertical = scrollAmount;
         }
-        else 
+        else
         {
             scrollAmountHorizontal = scrollAmount;
         }
@@ -243,8 +243,20 @@ void MainWindow::ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int
             NULL,
             SW_SCROLLCHILDREN);
 
-        //Sleep(100);
+        HDC hdc = GetDC(hWindow);
+        renderer->ClearDC(hdc, width, height);
+        DeleteDC(hdc);
     }
+}
+
+SCROLLINFO MainWindow::GetScrollBarInfo(int nBar)
+{
+    SCROLLINFO scrollInfo;
+    scrollInfo.cbSize = sizeof(scrollInfo);
+    scrollInfo.fMask = SIF_ALL;
+    GetScrollInfo(hWindow, nBar, &scrollInfo);
+
+    return scrollInfo;
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

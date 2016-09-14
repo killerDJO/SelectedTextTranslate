@@ -141,6 +141,9 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp">
       <Filter>Source\Windows\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Windows\Base\Renderer.cpp">
+      <Filter>Source\Windows\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -239,6 +242,9 @@
       <Filter>Source\TranslateEngine</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows\Base\Window.h">
+      <Filter>Source\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Base\Renderer.h">
       <Filter>Source\Windows\Base</Filter>
     </ClInclude>
   </ItemGroup>

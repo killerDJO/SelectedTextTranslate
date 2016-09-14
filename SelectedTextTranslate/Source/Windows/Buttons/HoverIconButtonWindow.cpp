@@ -1,7 +1,7 @@
 #include "Windows\Buttons\HoverIconButtonWindow.h"
 
-HoverIconButtonWindow::HoverIconButtonWindow(HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
-    : HoverButtonWindow(parentWindow, hInstance, x, y, width, height, clickCallback)
+HoverIconButtonWindow::HoverIconButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
+    : HoverButtonWindow(renderer, parentWindow, hInstance, x, y, width, height, clickCallback)
 {
     this->normalIconResource = normalIconResource;
     this->hoverIconResource = hoverIconResource;
@@ -9,8 +9,8 @@ HoverIconButtonWindow::HoverIconButtonWindow(HWND parentWindow, HINSTANCE hInsta
 
 void HoverIconButtonWindow::RenderStatesDC()
 {
-    normalStateDC = CreateInMemoryDC(width, height);
-    hoverStateDC = CreateInMemoryDC(width, height);
+    normalStateDC = renderer->CreateInMemoryDC(width, height);
+    hoverStateDC = renderer->CreateInMemoryDC(width, height);
 
     RenderStateDC(normalStateDC, normalIconResource);
     RenderStateDC(hoverStateDC, hoverIconResource);

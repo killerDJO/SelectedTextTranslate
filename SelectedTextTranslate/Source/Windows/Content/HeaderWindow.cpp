@@ -1,7 +1,7 @@
 #include "Windows\Content\HeaderWindow.h"
 
-HeaderWindow::HeaderWindow(AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-: ContentWindow(appModel, parentWindow, hInstance, x, y, width, height) 
+HeaderWindow::HeaderWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD height)
+: ContentWindow(renderer, appModel, parentWindow, hInstance, x, y, 0, height)
 {
 }
 
@@ -27,13 +27,14 @@ POINT HeaderWindow::RenderDC()
     TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
     DWORD imageSize = 15;
-    DWORD adjustedSize = AdjustToResolution(15, kY);
+    DWORD adjustedSize = renderer->AdjustToYResolution(15);
 
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
+        renderer,
         hWindow,
         hInstance,
         paddingX,
-        paddingY / 2 + AdjustToResolution(19, kY) + (adjustedSize - imageSize) / 2,
+        paddingY / 2 + renderer->AdjustToYResolution(19) + (adjustedSize - imageSize) / 2,
         imageSize,
         imageSize,
         IDB_AUDIO_INACTIVE,
@@ -60,15 +61,15 @@ POINT HeaderWindow::RenderDC()
         subHeaderText = translateResult.Sentence.Origin;
     }
 
-    PrintText(inMemoryDC, headerText, fontHeader, colorBlack, paddingX, curY, &bottomRight);
+    renderer->PrintText(inMemoryDC, headerText, fontHeader, colorBlack, paddingX, curY, &bottomRight);
 
-    int originLineY = curY + AdjustToResolution(20, kY);
-    POINT originLintBottomRight = PrintText(
-        this->inMemoryDC,
+    int originLineY = curY + renderer->AdjustToYResolution(20);
+    POINT originLintBottomRight = renderer->PrintText(
+        inMemoryDC,
         subHeaderText,
         fontSmall,
         colorGray,
-        paddingX + AdjustToResolution(16, kY) - int((kY-1)*10),
+        paddingX + renderer->AdjustToYResolution(16) - roundToInt((renderer->kY-1)*10),
         originLineY,
         &bottomRight);
 
@@ -77,22 +78,22 @@ POINT HeaderWindow::RenderDC()
         PrintInputCorrectionWarning(translateResult.Sentence.Input, originLineY, originLintBottomRight, &bottomRight);
     }
 
+    bottomRight.y = height;
+    bottomRight.x += paddingX * 3;
+
     RECT rect;
     rect.left = 0;
-    rect.right = 2000;
-    rect.top = curY + 2 * lineHeight;
-    rect.bottom = rect.top + 1;
-    DrawRect(inMemoryDC, rect, this->grayBrush, &POINT());
-
-    bottomRight.x += paddingX * 3;
-    bottomRight.y = rect.bottom;
+    rect.right = bottomRight.x;
+    rect.top = height - 1;
+    rect.bottom = height;
+    renderer->DrawRect(inMemoryDC, rect, grayBrush, &POINT());
 
     return bottomRight;
 }
 
 void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLintBottomRight, POINT* bottomRight)
 {
-    originLintBottomRight = PrintText(
+    originLintBottomRight = renderer->PrintText(
         inMemoryDC,
         L" (corrected from ",
         fontSmall,
@@ -102,6 +103,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         bottomRight);
 
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
+        renderer,
         hWindow,
         hInstance,
         originLintBottomRight.x,
@@ -114,7 +116,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
 
     AddChildWindow(forceTranslationButton);
 
-    originLintBottomRight = PrintText(
+    originLintBottomRight = renderer->PrintText(
         inMemoryDC,
         L")",
         fontSmall,

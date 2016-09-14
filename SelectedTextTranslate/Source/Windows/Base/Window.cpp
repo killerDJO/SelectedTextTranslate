@@ -1,8 +1,9 @@
 #include "Windows\Base\Window.h"
 
-Window::Window(HINSTANCE hInstance)
+Window::Window(HINSTANCE hInstance, Renderer* renderer)
 {
     this->hInstance = hInstance;
+    this->renderer = renderer;
 }
 
 void Window::Initialize()

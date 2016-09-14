@@ -1,5 +1,6 @@
 #pragma once
 #include "Windows\Base\Window.h"
+#include "Windows\Base\renderer.h"
 #include "Windows\Content\HeaderWindow.h"
 #include "Windows\Content\DictionaryWindow.h"
 #include "Windows\Content\TranslateResultWindow.h"
@@ -17,8 +18,6 @@ class MainWindow : public Window
 {
 private:
     UINT padding;
-    double kX;
-    double kY;
 
     int scrollCharX;
     int scrollCharY;
@@ -32,23 +31,25 @@ private:
     TranslateResultWindow* translateResultWindow;
     DictionaryWindow* dictionaryWindow;
     AppModel* appModel;
+    Renderer* renderer;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
 
     void ComputeWindowDimensions(RECT workarea);
     void InitNotifyIconData();
 
-    void InitializeScrollbars(int contentWidth, int contentHeight);
-    void InitializeScrollbar(int windowDimension, int contentDimension, int scrollChar, int nBar);
-
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+    void InitializeScrollbars(int contentWidth, int contentHeight);
+    void InitializeScrollbar(int windowDimension, int contentDimension, int scrollChar, int nBar);
     void ProcessVerticalScroll(WPARAM wParam, LPARAM lParam);
     void ProcessHorizontalScroll(WPARAM wParam, LPARAM lParam);
     void ProcessScroll(WPARAM wParam, LPARAM lParam, int scrollChar, int nBar);
+    void SetScrollPosition(SCROLLINFO scrollInfo, int nBar, int scrollOffset, int scrollChar);
+    SCROLLINFO GetScrollBarInfo(int nBar);
 
 public:
-    MainWindow(HINSTANCE hInstance, AppModel* appModel);
+    MainWindow(HINSTANCE hInstance, AppModel* appModel, Renderer* renderer);
     ~MainWindow();
 
     void Initialize() override;
