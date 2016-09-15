@@ -1,6 +1,6 @@
 #include "Windows\Buttons\HoverTextButtonWindow.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, COLORREF normalColor, COLORREF hoverColor, wstring text, function<void()> clickCallback)
+HoverTextButtonWindow::HoverTextButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback)
     : HoverButtonWindow(renderer, parentWindow, hInstance, x, y, 0, 0, clickCallback)
 {
     this->font = font;
@@ -28,7 +28,7 @@ void HoverTextButtonWindow::RenderStatesDC()
     RenderStateDC(hoverStateDC, hoverColor);
 }
 
-void HoverTextButtonWindow::RenderStateDC(HDC hdc, COLORREF color)
+void HoverTextButtonWindow::RenderStateDC(HDC hdc, Colors color)
 {
     POINT bottomRight;
     renderer->PrintText(hdc, text.c_str(), font, color, 0, 0, &bottomRight);

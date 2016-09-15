@@ -8,7 +8,6 @@ class HeaderWindow : public ContentWindow
 {
 protected:
     POINT RenderDC() override;
-    void InitializeFonts() override;
 
 private:
     HFONT fontSmallUnderscored;
@@ -19,4 +18,6 @@ private:
 public:
     HeaderWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD height);
     ~HeaderWindow();
+
+    void Initialize() override;
 };

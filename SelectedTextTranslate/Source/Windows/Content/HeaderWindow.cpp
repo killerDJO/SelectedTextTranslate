@@ -10,14 +10,11 @@ void HeaderWindow::PlayText()
     appModel->PlayCurrentText();
 }
 
-void HeaderWindow::InitializeFonts()
+void HeaderWindow::Initialize()
 {
-    ContentWindow::InitializeFonts();
+    ContentWindow::Initialize();
 
-    HDC hdc = GetDC(hWindow);
-
-    long lfHeightSmall = -MulDiv(int(fontHeight * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-    fontSmallUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontSmallUnderscored = renderer->CreateCustomFont(hWindow, FontSizes::Small, false, true);
 }
 
 POINT HeaderWindow::RenderDC()
@@ -61,14 +58,14 @@ POINT HeaderWindow::RenderDC()
         subHeaderText = translateResult.Sentence.Origin;
     }
 
-    renderer->PrintText(inMemoryDC, headerText, fontHeader, colorBlack, paddingX, curY, &bottomRight);
+    renderer->PrintText(inMemoryDC, headerText, fontHeader, Colors::Black, paddingX, curY, &bottomRight);
 
     int originLineY = curY + renderer->AdjustToYResolution(20);
     POINT originLintBottomRight = renderer->PrintText(
         inMemoryDC,
         subHeaderText,
         fontSmall,
-        colorGray,
+        Colors::Gray,
         paddingX + renderer->AdjustToYResolution(16) - roundToInt((renderer->kY-1)*10),
         originLineY,
         &bottomRight);
@@ -97,7 +94,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         inMemoryDC,
         L" (corrected from ",
         fontSmall,
-        colorGray,
+        Colors::Gray,
         originLintBottomRight.x,
         curY,
         bottomRight);
@@ -109,8 +106,8 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         originLintBottomRight.x,
         curY,
         fontSmallUnderscored,
-        colorGray,
-        colorBlack,
+        Colors::Gray,
+        Colors::Black,
         originalInput,
         bind(&HeaderWindow::PlayText, this));
 
@@ -120,7 +117,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         inMemoryDC,
         L")",
         fontSmall,
-        colorGray,
+        Colors::Gray,
         originLintBottomRight.x + forceTranslationButton->GetWidth(),
         curY,
         bottomRight);

@@ -48,6 +48,8 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Windows\Framework\Colors.h" />
+    <ClInclude Include="Source\Windows\Framework\FontSizes.h" />
     <ClInclude Include="Source\Windows\Framework\ScrollProvider.h" />
     <ClInclude Include="Source\Windows\Framework\Renderer.h" />
     <ClInclude Include="Source\AppModel.h" />

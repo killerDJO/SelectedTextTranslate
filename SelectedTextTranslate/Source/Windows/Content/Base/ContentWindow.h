@@ -11,10 +11,6 @@ protected:
     UINT paddingY;
     UINT lineHeight;
 
-    COLORREF colorGray;
-    COLORREF colorBlack;
-    COLORREF colorLightGray;
-
     HFONT fontNormal, fontHeader, fontItalic, fontSmall;
     HBRUSH grayBrush;
 
@@ -24,13 +20,12 @@ protected:
     AppModel* appModel;
 
     void InitializeInMemoryDC() override;
-    void InitializeFonts() override;
-    void InitializeBrushes() override;
     POINT RenderDC() override;
 
 public:
     ContentWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
     virtual ~ContentWindow();
 
+    void Initialize() override;
     virtual POINT RenderResult();
 };

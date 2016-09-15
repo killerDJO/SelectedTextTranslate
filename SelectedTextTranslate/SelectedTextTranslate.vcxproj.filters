@@ -256,6 +256,12 @@
     <ClInclude Include="Source\Windows\Framework\ScrollProvider.h">
       <Filter>Source\Windows\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Colors.h">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\FontSizes.h">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc">

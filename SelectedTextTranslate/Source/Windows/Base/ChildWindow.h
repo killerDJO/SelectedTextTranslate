@@ -20,8 +20,6 @@ protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
 
     virtual void InitializeInMemoryDC();
-    virtual void InitializeFonts();
-    virtual void InitializeBrushes();
     virtual POINT RenderDC();
 
     void AddChildWindow(ChildWindow* childWindow);

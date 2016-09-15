@@ -33,9 +33,6 @@ void ChildWindow::Initialize()
         NULL,
         hInstance,
         this);
-
-    InitializeFonts();
-    InitializeBrushes();
 }
 
 void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -48,14 +45,6 @@ void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 void ChildWindow::InitializeInMemoryDC()
 {
     inMemoryDC = renderer->CreateInMemoryDC(width, height);
-}
-
-void ChildWindow::InitializeFonts()
-{
-}
-
-void ChildWindow::InitializeBrushes()
-{
 }
 
 LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

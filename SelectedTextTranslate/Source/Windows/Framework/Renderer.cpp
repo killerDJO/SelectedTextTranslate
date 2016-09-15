@@ -26,6 +26,42 @@ DWORD Renderer::AdjustToYResolution(double value)
     return roundToInt(value * kY);
 }
 
+HFONT Renderer::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic, bool isUnderscored)
+{
+    HDC hdc = GetDC(hWindow);
+
+    int fontSizeInPixels = 10;
+
+    switch (fontSize)
+    {
+    case FontSizes::Normal:
+        fontSizeInPixels = 10;
+        break;
+    case FontSizes::Large:
+        fontSizeInPixels = 12;
+        break;
+    case FontSizes::Small:
+        fontSizeInPixels = 8;
+        break;
+    }
+
+    long logicalFontSize = -MulDiv(fontSizeInPixels, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+
+    int italicValue = isItalic ? 1 : 0;
+    int underscoredValue = isUnderscored ? 1 : 0;
+
+    HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, isItalic, isUnderscored, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+
+    DeleteDC(hdc);
+
+    return font;
+}
+
+HBRUSH Renderer::CreateCustomBrush(Colors color)
+{
+    return CreateSolidBrush((COLORREF)color);
+}
+
 SIZE Renderer::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
 {
     SelectObject(hdc, font);
@@ -36,10 +72,10 @@ SIZE Renderer::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
     return textSize;
 }
 
-POINT Renderer::PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight)
+POINT Renderer::PrintText(HDC hdc, const wchar_t* text, HFONT font, Colors color, int x, int y, PPOINT bottomRight)
 {
     SelectObject(hdc, font);
-    SetTextColor(hdc, color);
+    SetTextColor(hdc, (COLORREF)color);
 
     SIZE textSize;
     GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);

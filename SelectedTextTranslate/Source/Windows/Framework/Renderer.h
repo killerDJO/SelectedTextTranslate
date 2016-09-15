@@ -1,4 +1,6 @@
 #pragma once
+#include "Windows\Framework\FontSizes.h"
+#include "Windows\Framework\Colors.h"
 
 class Renderer
 {
@@ -15,8 +17,11 @@ public:
     DWORD AdjustToXResolution(double value);
     DWORD AdjustToYResolution(double value);
 
+    HFONT CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false);
+    HBRUSH CreateCustomBrush(Colors color);
+
     SIZE GetTextSize(HDC hdc, const wchar_t* text, HFONT font);
-    POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, COLORREF color, int x, int y, PPOINT bottomRight);
+    POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, Colors color, int x, int y, PPOINT bottomRight);
     void DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight);
 
     HDC CreateInMemoryDC(DWORD width, DWORD height);

@@ -5,13 +5,11 @@ TranslateResultWindow::TranslateResultWindow(Renderer* renderer, AppModel* appMo
 {
 }
 
-void TranslateResultWindow::InitializeFonts()
+void TranslateResultWindow::Initialize()
 {
-    ContentWindow::InitializeFonts();
+    ContentWindow::Initialize();
 
-    HDC hdc = GetDC(hWindow);
-    long lfHeightSmall = -MulDiv(int(fontHeight * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-    fontUnderscored = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    fontUnderscored = renderer->CreateCustomFont(hWindow, FontSizes::Small, false, true);
 }
 
 void TranslateResultWindow::ExpandDictionary(int index)
@@ -33,12 +31,12 @@ POINT TranslateResultWindow::RenderDC()
         TranslateResultDictionary category = translateResult.TranslateCategories[i];
 
         // Draw category header
-        POINT baseFormBottomRight = renderer->PrintText(inMemoryDC, category.BaseForm, fontNormal, colorBlack, paddingX, curY, &bottomRight);
+        POINT baseFormBottomRight = renderer->PrintText(inMemoryDC, category.BaseForm, fontNormal, Colors::Black, paddingX, curY, &bottomRight);
 
         if (_tcslen(category.PartOfSpeech) != 0)
         {
             wstring text = L" - " + wstring(category.PartOfSpeech);
-            renderer->PrintText(inMemoryDC, text.c_str(), fontItalic, colorGray, baseFormBottomRight.x + 2, curY, &bottomRight);
+            renderer->PrintText(inMemoryDC, text.c_str(), fontItalic, Colors::Gray, baseFormBottomRight.x + 2, curY, &bottomRight);
         }
 
         vector<TranslateResultDictionaryEntry> showedEntries(0);
@@ -64,12 +62,12 @@ POINT TranslateResultWindow::RenderDC()
         for (size_t j = 0; j < showedEntries.size(); ++j)
         {
             TranslateResultDictionaryEntry entry = category.Entries[j];
-            POINT wordBottomRight = renderer->PrintText(inMemoryDC, entry.Word, fontNormal, colorBlack, paddingX * 3, curY, &bottomRight);
+            POINT wordBottomRight = renderer->PrintText(inMemoryDC, entry.Word, fontNormal, Colors::Black, paddingX * 3, curY, &bottomRight);
 
             // Draw reverse translation
             if (entry.ReverseTranslation.size() != 0)
             {
-                wordBottomRight = renderer->PrintText(inMemoryDC, L" - ", fontNormal, colorGray, wordBottomRight.x + 2, curY, &bottomRight);
+                wordBottomRight = renderer->PrintText(inMemoryDC, L" - ", fontNormal, Colors::Gray, wordBottomRight.x + 2, curY, &bottomRight);
                 for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
                 {
                     wstring text = wstring(entry.ReverseTranslation[k]);
@@ -77,7 +75,7 @@ POINT TranslateResultWindow::RenderDC()
                     {
                         text += L", ";
                     }
-                    wordBottomRight = renderer->PrintText(inMemoryDC, text.c_str(), fontItalic, colorGray, wordBottomRight.x, curY, &bottomRight);
+                    wordBottomRight = renderer->PrintText(inMemoryDC, text.c_str(), fontItalic, Colors::Gray, wordBottomRight.x, curY, &bottomRight);
                 }
             }
 
@@ -141,8 +139,8 @@ int TranslateResultWindow::CreateExpandButton(
             paddingX * 3,
             curY,
             fontUnderscored,
-            colorGray,
-            colorBlack,
+            Colors::Gray,
+            Colors::Black,
             text,
             bind(&TranslateResultWindow::ExpandDictionary, this, categoryIndex));
 

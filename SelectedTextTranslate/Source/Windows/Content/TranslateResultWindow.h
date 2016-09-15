@@ -7,7 +7,6 @@ class TranslateResultWindow : public ContentWindow
 {
 protected:
     POINT RenderDC() override;
-    void InitializeFonts() override;
 
 private:
     HFONT fontUnderscored;
@@ -18,4 +17,6 @@ private:
 public:
     TranslateResultWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
     ~TranslateResultWindow();
+
+    void Initialize() override;
 };

@@ -8,37 +8,26 @@ ContentWindow::ContentWindow(Renderer* renderer, AppModel* appModel, HWND parent
     this->dcHeight = 0;
     this->dcWidth = 0;
 
-    colorGray = RGB(119, 119, 119);
-    colorBlack = RGB(0, 0, 0);
-    colorLightGray = RGB(170, 170, 170);
-
     lineHeight = renderer->AdjustToYResolution(20);
     paddingX = renderer->AdjustToXResolution(15);
     paddingY = renderer->AdjustToYResolution(15);
 }
 
+void ContentWindow::Initialize()
+{
+    ChildWindow::Initialize();
+
+    grayBrush = renderer->CreateCustomBrush(Colors::LightGray);
+
+    fontNormal = renderer->CreateCustomFont(hWindow, FontSizes::Normal);
+    fontHeader = renderer->CreateCustomFont(hWindow, FontSizes::Large);
+    fontItalic = renderer->CreateCustomFont(hWindow, FontSizes::Normal, true);
+    fontSmall = renderer->CreateCustomFont(hWindow, FontSizes::Small);
+}
+
 void ContentWindow::InitializeInMemoryDC()
 {
     inMemoryDC = renderer->CreateInMemoryDC(dcWidth, dcHeight);
-}
-
-void ContentWindow::InitializeFonts()
-{
-    HDC hdc = GetDC(hWindow);
-
-    long lfHeight = -MulDiv(fontHeight / 2, GetDeviceCaps(hdc, LOGPIXELSY), 72);
-    long lfHeightHeader = -MulDiv(roundToInt(fontHeight * 3 / 5.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-    long lfHeightSmall = -MulDiv(roundToInt(fontHeight * 3 / 7.0), GetDeviceCaps(hdc, LOGPIXELSY), 72);
-
-    fontNormal = CreateFont(lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-    fontHeader = CreateFont(lfHeightHeader, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-    fontItalic = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-    fontSmall = CreateFont(lfHeightSmall, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-}
-
-void ContentWindow::InitializeBrushes()
-{
-    grayBrush = CreateSolidBrush(colorLightGray);
 }
 
 POINT ContentWindow::RenderResult()
