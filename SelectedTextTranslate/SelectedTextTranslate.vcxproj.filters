@@ -73,6 +73,9 @@
     <Filter Include="Source\Windows\Base">
       <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Windows\Framework">
+      <UniqueIdentifier>{95360e94-4027-4e06-b00c-0daa879080ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -141,8 +144,11 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp">
       <Filter>Source\Windows\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Base\Renderer.cpp">
-      <Filter>Source\Windows\Base</Filter>
+    <ClCompile Include="Source\Windows\Framework\Renderer.cpp">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\ScrollProvider.cpp">
+      <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,8 +250,11 @@
     <ClInclude Include="Source\Windows\Base\Window.h">
       <Filter>Source\Windows\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Base\Renderer.h">
-      <Filter>Source\Windows\Base</Filter>
+    <ClInclude Include="Source\Windows\Framework\Renderer.h">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\ScrollProvider.h">
+      <Filter>Source\Windows\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

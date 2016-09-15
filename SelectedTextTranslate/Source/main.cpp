@@ -29,10 +29,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     TranslatePageParser* translatePageParser = new TranslatePageParser(logger, requestProvider);
     Translator* translator = new Translator(logger, requestProvider, translatePageParser);
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
+
     Renderer* renderer = new Renderer();
+    ScrollProvider* scrollProvider = new ScrollProvider(renderer);
 
     AppModel * appModel = new AppModel(translator, textPlayer, textExtractor, dictionaryLogger);
-    MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderer);
+    MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderer, scrollProvider);
     appModel->SetMainWindow(mainWindow);
 
     mainWindow->Initialize();
@@ -60,6 +62,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     delete appModel;
     delete textPlayer;
     delete mainWindow;
+    delete renderer;
+    delete scrollProvider;
 
     return msg.wParam;
 }

@@ -1,6 +1,5 @@
 #pragma once
-#include "Windows\Base\DeviceContextProvider.h"
-#include "Windows\Base\Renderer.h"
+#include "Windows\Framework\Renderer.h"
 
 class Window
 {
