@@ -6,12 +6,12 @@
 class DictionaryWindow : public ContentWindow
 {
 protected:
-    POINT RenderDC() override;
+    SIZE RenderDC(Renderer* renderer) override;
 
 private:
     void ShowFullTranslation(int dictionaryIndex);
 
 public:
-    DictionaryWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
+    DictionaryWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~DictionaryWindow();
 };

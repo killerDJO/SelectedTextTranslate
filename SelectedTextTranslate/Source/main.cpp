@@ -2,6 +2,7 @@
 #include "TranslateEngine\TranslatePageParser.h"
 #include "Helpers\RequestProvider.h"
 #include "Windows\MainWindow.h"
+#include "Windows\Framework\Dto\WindowDescriptor.h"
 #include "Loggers\Logger.h"
 
 void AttachConsole()
@@ -10,6 +11,24 @@ void AttachConsole()
     AttachConsole(GetCurrentProcessId());
     FILE* file;
     freopen_s(&file, "CON", "w", stdout);
+}
+
+WindowDescriptor GetMainWindowDescriptor(RenderingContext* renderingContext)
+{
+    int padding = 5;
+
+    RECT workarea;
+    SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
+
+    int width = renderingContext->Scale(300);
+    int height = renderingContext->Scale(400);
+
+    int x = workarea.right - width - padding;
+    int y = workarea.bottom - height - padding;
+
+    WindowDescriptor descriptor = WindowDescriptor::CreateWindowDescriptor(x, y, width, height, OverflowModes::Scroll, OverflowModes::Scroll);
+
+    return descriptor;
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow)
@@ -30,11 +49,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     Translator* translator = new Translator(logger, requestProvider, translatePageParser);
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
 
-    Renderer* renderer = new Renderer();
-    ScrollProvider* scrollProvider = new ScrollProvider(renderer);
+    RenderingContext* renderingContext = new RenderingContext();
+    ScrollProvider* scrollProvider = new ScrollProvider(renderingContext);
 
     AppModel * appModel = new AppModel(translator, textPlayer, textExtractor, dictionaryLogger);
-    MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderer, scrollProvider);
+    MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderingContext, scrollProvider, GetMainWindowDescriptor(renderingContext));
     appModel->SetMainWindow(mainWindow);
 
     mainWindow->Initialize();
@@ -62,7 +81,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     delete appModel;
     delete textPlayer;
     delete mainWindow;
-    delete renderer;
+    delete renderingContext;
     delete scrollProvider;
 
     return msg.wParam;

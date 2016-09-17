@@ -8,11 +8,18 @@ AppModel::AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor
     this->translator = translator;
     this->textExtractor = textExtractor;
     this->dictionaryLogger = dictionaryLogger;
+
+    this->applicationView = ApplicactionViews::Hidden;
 }
 
 void AppModel::SetMainWindow(MainWindow* mainWindow)
 {
     this->mainWindow = mainWindow;
+}
+
+ApplicactionViews AppModel::GetCurrentApplicationView()
+{
+    return applicationView;
 }
 
 vector<LogRecord> AppModel::GetDictionaryRecords()
@@ -27,19 +34,22 @@ TranslateResult AppModel::GetCurrentTranslateResult()
 
 void AppModel::TranslateSelectedText()
 {
-    wstring selectedText = this->textExtractor->GetSelectedText();
+    wstring selectedText = textExtractor->GetSelectedText();
 
     dictionaryLogger->AddRecord(selectedText);
 
     translateResult = translator->TranslateSentence(selectedText);
-    mainWindow->ShowTranslateResultView();
+    applicationView = ApplicactionViews::TranslateResult;
+
+    mainWindow->Render();
     mainWindow->Maximize();
 }
 
 void AppModel::ToggleTranslateResultDictionary(int translateResultDictionaryIndex)
 {
     translateResult.TranslateCategories[translateResultDictionaryIndex].IsExtendedList ^= true;
-    mainWindow->ShowTranslateResultView(true);
+    applicationView = ApplicactionViews::TranslateResult;
+    mainWindow->Render(true);
 }
 
 void AppModel::PlaySelectedText()
@@ -56,7 +66,9 @@ void AppModel::PlayCurrentText()
 
 void AppModel::ShowDictionary()
 {
-    mainWindow->ShowDictionaryView();
+    applicationView = ApplicactionViews::Dictionary;
+    mainWindow->Render();
+    mainWindow->Maximize();
 }
 
 void AppModel::TranslateWordFromDictionary(int wordInDictionaryIndex)
@@ -65,7 +77,8 @@ void AppModel::TranslateWordFromDictionary(int wordInDictionaryIndex)
     LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
 
     translateResult = translator->TranslateSentence(logRecordToTranslate.Word);
-    mainWindow->ShowTranslateResultView();
+    applicationView = ApplicactionViews::TranslateResult;
+    mainWindow->Render();
 }
 
 void AppModel::Exit()

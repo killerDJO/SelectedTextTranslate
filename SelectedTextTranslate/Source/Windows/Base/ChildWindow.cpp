@@ -1,34 +1,33 @@
 #include "Windows\Base\ChildWindow.h"
 
-ChildWindow::ChildWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-    : Window(hInstance, renderer)
+ChildWindow::ChildWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow)
+    : Window(hInstance, renderingContext, scrollProvider, descriptor)
 {
     this->parentWindow = parentWindow;
-    this->x = x;
-    this->y = y;
-    this->width = width;
-    this->height = height;
 
     this->className = L"STT_CONTENT";
 
     this->activeChildWindows = vector<ChildWindow*>();
     this->destroyBeforeDrawQueue = vector<ChildWindow*>();
+
+    this->dcWidth = descriptor.Width;
+    this->dcHeight = descriptor.Height;
 }
 
 void ChildWindow::Initialize()
 {
     Window::Initialize();
 
-    InitializeInMemoryDC();
+    inMemoryDC = renderingContext->CreateInMemoryDC(dcWidth, dcHeight);
 
     hWindow = CreateWindow(
         className,
         NULL,
         WS_CHILD | WS_CLIPCHILDREN,
-        x,
-        y,
-        width,
-        height,
+        descriptor.X,
+        descriptor.Y,
+        descriptor.Width,
+        descriptor.Height,
         parentWindow,
         NULL,
         hInstance,
@@ -40,11 +39,6 @@ void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->lpfnWndProc = WndProc;
     windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-}
-
-void ChildWindow::InitializeInMemoryDC()
-{
-    inMemoryDC = renderer->CreateInMemoryDC(width, height);
 }
 
 LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -85,18 +79,36 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         break;
 
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return Window::WndProc(hWnd, message, wParam, lParam);
     }
 
     return 0;
 }
 
-POINT ChildWindow::RenderDC()
+SIZE ChildWindow::RenderContent()
 {
     destroyBeforeDrawQueue.insert(destroyBeforeDrawQueue.end(), activeChildWindows.begin(), activeChildWindows.end());
     activeChildWindows = vector<ChildWindow*>();
 
-    return POINT();
+    Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+    SIZE renderedSize = RenderDC(renderer);
+    delete renderer;
+
+    int requiredDcWidth = descriptor.OverflowX != OverflowModes::Fixed && renderedSize.cx > dcWidth ? renderedSize.cx : dcWidth;
+    int requiredDcHeight = descriptor.OverflowY != OverflowModes::Fixed && renderedSize.cy > dcHeight ? renderedSize.cy : dcHeight;
+
+    if (requiredDcWidth != dcWidth || requiredDcHeight != dcHeight)
+    {
+        dcWidth = requiredDcWidth;
+        dcHeight = requiredDcHeight;
+        renderingContext->ResizeDC(inMemoryDC, dcWidth, dcHeight);
+
+        Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+        RenderDC(renderer);
+        delete renderer;
+    }
+
+    return renderedSize;
 }
 
 void ChildWindow::Draw()
@@ -104,7 +116,7 @@ void ChildWindow::Draw()
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hWindow, &ps);
 
-    DWORD res = renderer->CopyDC(inMemoryDC, hdc, width, height);
+    DWORD res = renderingContext->CopyDC(inMemoryDC, hdc, currentWidth, currentHeight);
 
     EndPaint(hWindow, &ps);
 
@@ -115,7 +127,7 @@ void ChildWindow::Draw()
 void ChildWindow::ForceDraw()
 {
     HDC hdc = GetDC(hWindow);
-    DWORD res = renderer->CopyDC(inMemoryDC, hdc, width, height);
+    DWORD res = renderingContext->CopyDC(inMemoryDC, hdc, currentWidth, currentHeight);
     DeleteDC(hdc);
 }
 

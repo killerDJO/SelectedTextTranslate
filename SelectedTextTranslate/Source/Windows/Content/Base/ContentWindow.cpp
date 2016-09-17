@@ -1,61 +1,31 @@
 #include "Windows\Content\Base\ContentWindow.h"
 
-ContentWindow::ContentWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height)
-    : ChildWindow(renderer, parentWindow, hInstance, x, y, width, height)
+ContentWindow::ContentWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow)
 {
     this->appModel = appModel;
 
-    this->dcHeight = 0;
-    this->dcWidth = 0;
-
-    lineHeight = renderer->AdjustToYResolution(20);
-    paddingX = renderer->AdjustToXResolution(15);
-    paddingY = renderer->AdjustToYResolution(15);
+    lineHeight = 20;
+    paddingX = 15;
+    paddingY = 15;
 }
 
 void ContentWindow::Initialize()
 {
     ChildWindow::Initialize();
 
-    grayBrush = renderer->CreateCustomBrush(Colors::LightGray);
+    grayBrush = renderingContext->CreateCustomBrush(Colors::LightGray);
 
-    fontNormal = renderer->CreateCustomFont(hWindow, FontSizes::Normal);
-    fontHeader = renderer->CreateCustomFont(hWindow, FontSizes::Large);
-    fontItalic = renderer->CreateCustomFont(hWindow, FontSizes::Normal, true);
-    fontSmall = renderer->CreateCustomFont(hWindow, FontSizes::Small);
+    fontNormal = renderingContext->CreateCustomFont(hWindow, FontSizes::Normal);
+    fontHeader = renderingContext->CreateCustomFont(hWindow, FontSizes::Large);
+    fontItalic = renderingContext->CreateCustomFont(hWindow, FontSizes::Normal, true);
+    fontSmall = renderingContext->CreateCustomFont(hWindow, FontSizes::Small);
 }
 
-void ContentWindow::InitializeInMemoryDC()
+SIZE ContentWindow::RenderDC(Renderer* renderer)
 {
-    inMemoryDC = renderer->CreateInMemoryDC(dcWidth, dcHeight);
-}
-
-POINT ContentWindow::RenderResult()
-{
-    POINT bottomRight = RenderDC();
-
-    // Check if current buffer DC has enough size
-    if (bottomRight.x > (int)dcWidth || bottomRight.y > (int)dcHeight)
-    {
-        dcWidth = bottomRight.x;
-        dcHeight = bottomRight.y;
-        renderer->ResizeDC(inMemoryDC, dcWidth, dcHeight);
-        RenderDC();
-    }
-
-    width = bottomRight.x;
-    height = bottomRight.y;
-
-    InvalidateRect(hWindow, NULL, FALSE);
-    MoveWindow(hWindow, x, y, width, height, FALSE);
-    return bottomRight;
-}
-
-POINT ContentWindow::RenderDC()
-{
-    POINT bottomRight = ChildWindow::RenderDC();
-    renderer->ClearDC(inMemoryDC, dcWidth, dcHeight);
-    return bottomRight;
+    renderingContext->ClearDC(inMemoryDC, dcWidth, dcHeight);
+    return SIZE();
 }
 
 ContentWindow::~ContentWindow()

@@ -14,11 +14,11 @@ protected:
     HDC hoverStateDC;
     HDC normalStateDC;
 
-    POINT RenderDC() override;
+    SIZE RenderDC(Renderer* renderer) override;
     virtual void RenderStatesDC() = 0;
 
 public:
-    HoverButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback);
+    HoverButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback);
     virtual ~HoverButtonWindow();
 
     void Initialize() override;

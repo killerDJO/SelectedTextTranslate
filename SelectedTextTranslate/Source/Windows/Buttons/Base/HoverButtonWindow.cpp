@@ -1,7 +1,7 @@
 #include "Windows\Buttons\Base\HoverButtonWindow.h"
 
-HoverButtonWindow::HoverButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, function<void()> clickCallback)
-    : ChildWindow(renderer, parentWindow, hInstance, x, y, width, height)
+HoverButtonWindow::HoverButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback)
+    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow)
 {
     this->clickCallback = clickCallback;
     this->isHovered = false;
@@ -13,7 +13,7 @@ void HoverButtonWindow::Initialize()
     SetWindowLongPtr(hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
 
     RenderStatesDC();
-    RenderDC();
+    RenderDC(NULL);
 }
 
 LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -40,7 +40,7 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSEHOVER:
         window->isHovered = true;
-        window->RenderDC();
+        window->RenderDC(NULL);
         InvalidateRect(hWnd, NULL, TRUE);
 
         SetCursor(LoadCursor(NULL, IDC_HAND));
@@ -52,7 +52,7 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSELEAVE:
         window->isHovered = false;
-        window->RenderDC();
+        window->RenderDC(NULL);
         InvalidateRect(hWnd, NULL, TRUE);
 
         SetCursor(LoadCursor(NULL, IDC_ARROW));
@@ -66,22 +66,21 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
     return ChildWindow::WndProc(hWnd, message, wParam, lParam);
 }
 
-POINT HoverButtonWindow::RenderDC()
+SIZE HoverButtonWindow::RenderDC(Renderer* renderer)
 {
-    POINT bottomRight = ChildWindow::RenderDC();
-
     HDC sourceDC = isHovered
         ? hoverStateDC
         : normalStateDC;
 
-    DWORD res = renderer->CopyDC(sourceDC, inMemoryDC, width, height);
+    DWORD res = renderingContext->CopyDC(sourceDC, inMemoryDC, currentWidth, currentHeight);
 
-    MoveWindow(hWindow, x, y, width, height, FALSE);
+    MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
 
-    bottomRight.x = width;
-    bottomRight.y = height;
+    SIZE size;
+    size.cx = currentWidth;
+    size.cy = currentHeight;
 
-    return bottomRight;
+    return size;
 }
 
 HoverButtonWindow::~HoverButtonWindow()

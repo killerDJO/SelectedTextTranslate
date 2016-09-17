@@ -1,19 +1,19 @@
 #include "Windows\Framework\ScrollProvider.h"
 
-ScrollProvider::ScrollProvider(Renderer* renderer)
+ScrollProvider::ScrollProvider(RenderingContext* renderingContext)
 {
-    this->renderer = renderer;
+    this->renderingContext = renderingContext;
     this->scrollCharX = 8;
     this->scrollCharY = 20;
 }
 
-void ScrollProvider::InitializeScrollbars(HWND hWindow, int contentWidth, int contentHeight)
+void ScrollProvider::InitializeScrollbar(HWND hWindow, int contentSize, int windowSize, int nBar)
 {
-    RECT windowRect;
-    GetWindowRect(hWindow, &windowRect);
+    int scrollChar = nBar == SB_VERT
+        ? scrollCharY
+        : scrollCharX;
 
-    InitializeScrollbar(hWindow, windowRect.bottom - windowRect.top, contentHeight, scrollCharY, SB_VERT);
-    InitializeScrollbar(hWindow, windowRect.right - windowRect.left, contentWidth, scrollCharX, SB_HORZ);
+    InitializeScrollbar(hWindow, windowSize, contentSize, scrollChar, nBar);
 }
 
 void ScrollProvider::InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, int nBar)
@@ -133,7 +133,7 @@ void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, int 
         RECT windowRect;
         GetWindowRect(hWindow, &windowRect);
 
-        renderer->ClearDC(hdc, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+        renderingContext->ClearDC(hdc, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
         DeleteDC(hdc);
     }
 }

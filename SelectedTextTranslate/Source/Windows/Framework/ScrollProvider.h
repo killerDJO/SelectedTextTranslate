@@ -1,5 +1,5 @@
 #pragma once
-#include "Windows\Framework\Renderer.h"
+#include "Windows\Framework\RenderingContext.h"
 
 class ScrollProvider
 {
@@ -7,7 +7,7 @@ private:
     int scrollCharX;
     int scrollCharY;
 
-    Renderer* renderer;
+    RenderingContext* renderingContext;
 
     void InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, int nBar);
     void ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, int nBar);
@@ -15,10 +15,10 @@ private:
     SCROLLINFO GetScrollBarInfo(HWND hWindow, int nBar);
 
 public:
-    ScrollProvider(Renderer* renderer);
+    ScrollProvider(RenderingContext* renderingContext);
     ~ScrollProvider();
 
-    void InitializeScrollbars(HWND hWindow, int contentWidth, int contentHeight);
+    void InitializeScrollbar(HWND hWindow, int contentSize, int windowSize, int nBar);
     void ProcessVerticalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam);
     void ProcessHorizontalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam);
 

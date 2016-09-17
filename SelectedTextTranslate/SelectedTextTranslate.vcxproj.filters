@@ -76,6 +76,18 @@
     <Filter Include="Source\Windows\Framework">
       <UniqueIdentifier>{95360e94-4027-4e06-b00c-0daa879080ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Windows\Framework\Enums">
+      <UniqueIdentifier>{cc90c993-6d3d-42bc-b0fb-107b4a0e4859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Framework\Dto">
+      <UniqueIdentifier>{97d00024-acb7-455a-97e0-23ebc3bb7c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Model">
+      <UniqueIdentifier>{3ae07f34-2768-4bb9-8fca-9480c7647ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Model\Enums">
+      <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -129,9 +141,6 @@
     <ClCompile Include="Source\Windows\Base\ChildWindow.cpp">
       <Filter>Source\Windows\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AppModel.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Helpers\StringUtilities.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
@@ -144,11 +153,20 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp">
       <Filter>Source\Windows\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\ScrollProvider.cpp">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\RenderingContext.cpp">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Windows\Framework\Renderer.cpp">
       <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\ScrollProvider.cpp">
-      <Filter>Source\Windows\Framework</Filter>
+    <ClCompile Include="Source\Windows\Framework\Dto\WindowDescriptor.cpp">
+      <Filter>Source\Windows\Framework\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AppModel.cpp">
+      <Filter>Source\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,9 +250,6 @@
     <ClInclude Include="Source\Windows\Base\ChildWindow.h">
       <Filter>Source\Windows\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\AppModel.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -250,17 +265,32 @@
     <ClInclude Include="Source\Windows\Base\Window.h">
       <Filter>Source\Windows\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Renderer.h">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Windows\Framework\ScrollProvider.h">
       <Filter>Source\Windows\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Colors.h">
+    <ClInclude Include="Source\Windows\Framework\RenderingContext.h">
       <Filter>Source\Windows\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\FontSizes.h">
+    <ClInclude Include="Source\Windows\Framework\Renderer.h">
       <Filter>Source\Windows\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Enums\Colors.h">
+      <Filter>Source\Windows\Framework\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Enums\FontSizes.h">
+      <Filter>Source\Windows\Framework\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Enums\OverflowModes.h">
+      <Filter>Source\Windows\Framework\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Dto\WindowDescriptor.h">
+      <Filter>Source\Windows\Framework\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AppModel.h">
+      <Filter>Source\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Model\Enums\ApplicationViews.h">
+      <Filter>Source\Model\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

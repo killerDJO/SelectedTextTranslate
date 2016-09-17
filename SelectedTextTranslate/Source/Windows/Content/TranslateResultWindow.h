@@ -5,17 +5,17 @@
 
 class TranslateResultWindow : public ContentWindow
 {
-protected:
-    POINT RenderDC() override;
-
 private:
     HFONT fontUnderscored;
 
     void ExpandDictionary(int index);
-    int CreateExpandButton(TranslateResultDictionary category, int categoryIndex, int showedCount, int curY, POINT* bottomRight);
+    int CreateExpandButton(TranslateResultDictionary category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
+
+protected:
+    SIZE RenderDC(Renderer* renderer) override;
 
 public:
-    TranslateResultWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y);
+    TranslateResultWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~TranslateResultWindow();
 
     void Initialize() override;

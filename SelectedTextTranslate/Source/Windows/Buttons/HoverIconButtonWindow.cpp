@@ -1,7 +1,7 @@
 #include "Windows\Buttons\HoverIconButtonWindow.h"
 
-HoverIconButtonWindow::HoverIconButtonWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
-    : HoverButtonWindow(renderer, parentWindow, hInstance, x, y, width, height, clickCallback)
+HoverIconButtonWindow::HoverIconButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
+    : HoverButtonWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, clickCallback)
 {
     this->normalIconResource = normalIconResource;
     this->hoverIconResource = hoverIconResource;
@@ -9,8 +9,8 @@ HoverIconButtonWindow::HoverIconButtonWindow(Renderer* renderer, HWND parentWind
 
 void HoverIconButtonWindow::RenderStatesDC()
 {
-    normalStateDC = renderer->CreateInMemoryDC(width, height);
-    hoverStateDC = renderer->CreateInMemoryDC(width, height);
+    normalStateDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
+    hoverStateDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
 
     RenderStateDC(normalStateDC, normalIconResource);
     RenderStateDC(hoverStateDC, hoverIconResource);
@@ -19,7 +19,17 @@ void HoverIconButtonWindow::RenderStatesDC()
 void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
 {
     HBITMAP icon = LoadBitmap(hInstance, MAKEINTRESOURCE(iconResource));
-    SelectObject(hdc, icon);
+
+    BITMAP iconInfo;
+    GetObject(icon, sizeof(BITMAP), &iconInfo);
+
+    HDC bitmapDC = renderingContext->CreateInMemoryDC(iconInfo.bmWidth, iconInfo.bmHeight);
+    SelectObject(bitmapDC, icon);
+
+    //SetStretchBltMode(hDC, BLACKONWHITE);
+    StretchBlt(hdc, 0, 0, currentWidth, currentHeight, bitmapDC, 0, 0, iconInfo.bmWidth, iconInfo.bmHeight, SRCCOPY);
+
+    DeleteDC(bitmapDC);
 }
 
 HoverIconButtonWindow::~HoverIconButtonWindow()

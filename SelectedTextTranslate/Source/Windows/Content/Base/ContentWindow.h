@@ -5,27 +5,20 @@
 class ContentWindow : public ChildWindow
 {
 protected:
-    const UINT fontHeight = 20;
-
-    UINT paddingX;
-    UINT paddingY;
-    UINT lineHeight;
+    int paddingX;
+    int paddingY;
+    int lineHeight;
 
     HFONT fontNormal, fontHeader, fontItalic, fontSmall;
     HBRUSH grayBrush;
 
-    DWORD dcWidth;
-    DWORD dcHeight;
-
     AppModel* appModel;
 
-    void InitializeInMemoryDC() override;
-    POINT RenderDC() override;
+    SIZE RenderDC(Renderer* renderer) override;
 
 public:
-    ContentWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    ContentWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     virtual ~ContentWindow();
 
     void Initialize() override;
-    virtual POINT RenderResult();
 };

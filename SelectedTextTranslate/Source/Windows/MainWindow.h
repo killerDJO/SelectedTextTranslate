@@ -1,6 +1,5 @@
 #pragma once
 #include "Windows\Base\Window.h"
-#include "Windows\Framework\ScrollProvider.h"
 #include "Windows\Content\HeaderWindow.h"
 #include "Windows\Content\DictionaryWindow.h"
 #include "Windows\Content\TranslateResultWindow.h"
@@ -17,37 +16,35 @@
 class MainWindow : public Window
 {
 private:
-    UINT padding;
-
     static UINT WM_TASKBARCREATED;
 
     HMENU menu;
     NOTIFYICONDATA notifyIconData;
 
     AppModel* appModel;
-    Renderer* renderer;
-    ScrollProvider* scrollProvider;
+    RenderingContext* renderingContext;
 
     HeaderWindow* headerWindow;
     TranslateResultWindow* translateResultWindow;
     DictionaryWindow* dictionaryWindow;
 
-    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
-
-    void ComputeWindowDimensions(RECT workarea);
     void InitNotifyIconData();
+
+    SIZE RenderTranslateResultView();
+    SIZE RenderDictionaryView();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+protected:
+    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
+    SIZE RenderContent() override;
+
 public:
-    MainWindow(HINSTANCE hInstance, AppModel* appModel, Renderer* renderer, ScrollProvider* scrollProvider);
+    MainWindow(HINSTANCE hInstance, AppModel* appModel, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor);
     ~MainWindow();
 
     void Initialize() override;
 
     void Minimize();
     void Maximize();
-
-    void ShowTranslateResultView(bool preserveScroll = false);
-    void ShowDictionaryView();
 };

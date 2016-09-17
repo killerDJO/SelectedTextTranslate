@@ -1,5 +1,6 @@
 #pragma once
 #include "Windows\Base\Window.h"
+#include "Windows\Framework\Renderer.h"
 
 class ChildWindow : public Window
 {
@@ -15,19 +16,21 @@ private:
 
 protected:
     HWND parentWindow;
+
     HDC inMemoryDC;
+    int dcWidth;
+    int dcHeight;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
+    SIZE RenderContent() override;
 
-    virtual void InitializeInMemoryDC();
-    virtual POINT RenderDC();
-
+    virtual SIZE RenderDC(Renderer* renderer) = 0;
     void AddChildWindow(ChildWindow* childWindow);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-    ChildWindow(Renderer* renderer, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD width, DWORD height);
+    ChildWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow);
     virtual ~ChildWindow();
 
     void Initialize() override;

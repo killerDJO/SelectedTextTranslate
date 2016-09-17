@@ -1,31 +1,24 @@
 #pragma once
-#include "Windows\Framework\FontSizes.h"
-#include "Windows\Framework\Colors.h"
+#include "Windows\Framework\RenderingContext.h"
 
 class Renderer
 {
 private:
-    void ComputeAjustmentParameters();
+    RenderingContext* renderingContext;
+    HDC hdc;
+
+    SIZE scaledSize;
 
 public:
-    double kX;
-    double kY;
-
-    Renderer();
+    Renderer(HDC hdc, RenderingContext* renderingContext);
     ~Renderer();
 
-    DWORD AdjustToXResolution(double value);
-    DWORD AdjustToYResolution(double value);
+    POINT PrintText(const wchar_t* text, HFONT font, Colors color, int x, int y);
+    void DrawRect(RECT rect, HBRUSH brush);
 
-    HFONT CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false);
-    HBRUSH CreateCustomBrush(Colors color);
+    SIZE GetScaledSize();
+    SIZE GetSize();
 
-    SIZE GetTextSize(HDC hdc, const wchar_t* text, HFONT font);
-    POINT PrintText(HDC hdc, const wchar_t* text, HFONT font, Colors color, int x, int y, PPOINT bottomRight);
-    void DrawRect(HDC hdc, RECT rect, HBRUSH brush, PPOINT bottomRight);
-
-    HDC CreateInMemoryDC(DWORD width, DWORD height);
-    void ResizeDC(HDC& hdc, DWORD width, DWORD height);
-    DWORD CopyDC(HDC source, HDC target, DWORD width, DWORD height);
-    void ClearDC(HDC hdc, DWORD width, DWORD height);
+    void IncreaseWidth(int widthToAdd);
+    void IncreaseHeight(int heightToAdd);
 };

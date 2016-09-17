@@ -6,17 +6,17 @@
 
 class HeaderWindow : public ContentWindow
 {
-protected:
-    POINT RenderDC() override;
-
 private:
     HFONT fontSmallUnderscored;
 
     void PlayText();
-    void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLineBottomRight, POINT* bottomRight);
+    void PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLineBottomRight, Renderer* renderer);
+
+protected:
+    SIZE RenderDC(Renderer* renderer) override;
 
 public:
-    HeaderWindow(Renderer* renderer, AppModel* appModel, HWND parentWindow, HINSTANCE hInstance, DWORD x, DWORD y, DWORD height);
+    HeaderWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~HeaderWindow();
 
     void Initialize() override;

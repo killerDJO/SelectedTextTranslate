@@ -1,31 +1,42 @@
 #pragma once
-#include "Windows\Framework\Renderer.h"
+#include "Windows\Framework\RenderingContext.h"
+#include "Windows\Framework\ScrollProvider.h"
+#include "Windows\Framework\Dto\WindowDescriptor.h"
 
 class Window
 {
 protected:
-    DWORD x, y;
-    DWORD width, height;
 
     HWND hWindow;
     HINSTANCE hInstance;
-
-    Renderer* renderer;
-
     wchar_t* className;
 
+    WindowDescriptor descriptor;
+    int currentWidth;
+    int currentHeight;
+
+    RenderingContext* renderingContext;
+    ScrollProvider* scrollProvider;
+
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
+    virtual SIZE RenderContent() = 0;
+
+    DWORD GetScrollStyle();
+
+    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-    Window(HINSTANCE hInstance, Renderer* renderer);
+    Window(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor);
     virtual ~Window();
 
     HWND GetHandle();
     HINSTANCE GetInstance();
-    DWORD GetWidth();
-    DWORD GetHeight();
+    int GetWidth();
+    int GetHeight();
 
     virtual void Initialize();
     void Show();
     void Hide();
+
+    void Render(bool preserveVerticalScroll = false);
 };

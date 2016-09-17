@@ -1,12 +1,11 @@
 #include "Windows\MainWindow.h"
-#include "Windows\Content\TranslateResultWindow.h"
 
 UINT MainWindow::WM_TASKBARCREATED;
 
-MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel, Renderer* renderer, ScrollProvider* scrollProvider)
-    : Window(hInstance, renderer)
+MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor)
+    : Window(hInstance, renderingContext, scrollProvider, descriptor)
 {
-    this->renderer = renderer;
+    this->renderingContext = renderingContext;
     this->scrollProvider = scrollProvider;
     this->appModel = appModel;
     this->className = L"STT_MAIN";
@@ -16,20 +15,15 @@ void MainWindow::Initialize()
 {
     Window::Initialize();
 
-    RECT workarea;
-    SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
-
-    ComputeWindowDimensions(workarea);
-
     hWindow = CreateWindowEx(
         WS_EX_TOOLWINDOW,
         className,
         NULL,
-        WS_SIZEBOX | WS_POPUP | WS_HSCROLL | WS_VSCROLL | WS_CLIPCHILDREN,
-        workarea.right - width - padding,
-        workarea.bottom - height - padding,
-        width,
-        height,
+        WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
+        descriptor.X,
+        descriptor.Y,
+        descriptor.Width,
+        descriptor.Height,
         NULL,
         NULL,
         hInstance,
@@ -37,10 +31,16 @@ void MainWindow::Initialize()
 
     InitNotifyIconData();
 
-    int headerHeight = renderer->AdjustToYResolution(50);
-    dictionaryWindow = new DictionaryWindow(renderer, appModel, hWindow, hInstance, 0, 0);
-    translateResultWindow = new TranslateResultWindow(renderer, appModel, hWindow, hInstance, 0, headerHeight - 1);
-    headerWindow = new HeaderWindow(renderer, appModel, hWindow, hInstance, 0, 0, headerHeight);
+    int headerHeight = 50;
+
+    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(0, 0);
+    dictionaryWindow = new DictionaryWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(dictionaryWindowDescriptor), hWindow, appModel);
+
+    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, headerHeight - 1, descriptor.Width, 0, OverflowModes::Stretch, OverflowModes::Stretch);
+    translateResultWindow = new TranslateResultWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(translateResultWindowDescriptor), hWindow, appModel);
+
+    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, 0, descriptor.Width, headerHeight, OverflowModes::Stretch, OverflowModes::Fixed);
+    headerWindow = new HeaderWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(headerWindowDescriptor), hWindow, appModel);
 
     dictionaryWindow->Initialize();
     translateResultWindow->Initialize();
@@ -61,13 +61,6 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-}
-
-void MainWindow::ComputeWindowDimensions(RECT workarea)
-{
-    width = renderer->AdjustToXResolution(300);
-    height = renderer->AdjustToXResolution(400);
-    padding = 5;
 }
 
 void MainWindow::InitNotifyIconData()
@@ -96,44 +89,40 @@ void MainWindow::Maximize()
     SwitchToThisWindow(hWindow, TRUE);
 }
 
-void MainWindow::ShowTranslateResultView(bool preserveScroll)
+SIZE MainWindow::RenderContent()
 {
-    int verticalScroll = 0;
+    return appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
+        ? RenderTranslateResultView()
+        : RenderDictionaryView();
+}
 
-    if (preserveScroll)
-    {
-        verticalScroll = scrollProvider->GetScrollPosition(hWindow, SB_VERT);
-    }
-
+SIZE MainWindow::RenderTranslateResultView()
+{
     headerWindow->Show();
     translateResultWindow->Show();
     dictionaryWindow->Hide();
 
-    POINT headerBottomRight = headerWindow->RenderResult();
-    POINT contentBottomRight = translateResultWindow->RenderResult();
+    headerWindow->Render();
+    translateResultWindow->Render();
 
-    scrollProvider->InitializeScrollbars(
-        hWindow,
-        max(headerBottomRight.x, contentBottomRight.x),
-        headerBottomRight.y + contentBottomRight.y);
-
-    if (preserveScroll)
-    {
-        scrollProvider->SetScrollPosition(hWindow, SB_VERT, verticalScroll);
-    }
+    SIZE contentSize;
+    contentSize.cx = max(headerWindow->GetWidth(), translateResultWindow->GetWidth());
+    contentSize.cy = headerWindow->GetHeight() + translateResultWindow->GetHeight();
+    return contentSize;
 }
 
-void MainWindow::ShowDictionaryView()
+SIZE MainWindow::RenderDictionaryView()
 {
     headerWindow->Hide();
     translateResultWindow->Hide();
     dictionaryWindow->Show();
 
-    POINT contentBottomRight = dictionaryWindow->RenderResult();
+    dictionaryWindow->Render();
 
-    scrollProvider->InitializeScrollbars(hWindow, contentBottomRight.x, contentBottomRight.y);
-
-    Maximize();
+    SIZE contentSize;
+    contentSize.cx = dictionaryWindow->GetWidth();
+    contentSize.cy = dictionaryWindow->GetHeight();
+    return contentSize;
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -148,7 +137,6 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
     HWND windowWithFocus, currentWindow;
 
-    int zDelta;
     switch (message)
     {
 
@@ -171,21 +159,6 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
     case WM_SETCURSOR:
         SetCursor(LoadCursor(NULL, IDC_ARROW));
         return TRUE;
-
-    case WM_HSCROLL:
-        instance->scrollProvider->ProcessHorizontalScroll(hWnd, wParam, lParam);
-        break;
-
-    case WM_VSCROLL:
-        instance->scrollProvider->ProcessVerticalScroll(hWnd, wParam, lParam);
-        break;
-
-    case WM_MOUSEWHEEL:
-        zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-        if (zDelta < 0)
-            SendMessage(instance->GetHandle(), WM_VSCROLL, SB_LINEDOWN, NULL);
-        else
-            SendMessage(instance->GetHandle(), WM_VSCROLL, SB_LINEUP, NULL);
 
     case WM_SYSCOMMAND:
         switch (wParam & 0xfff0)
@@ -252,7 +225,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         break;
 
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return Window::WndProc(hWnd, message, wParam, lParam);
     }
 
     return 0;
