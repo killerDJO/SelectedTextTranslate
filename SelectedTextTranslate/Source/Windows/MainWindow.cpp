@@ -91,9 +91,15 @@ void MainWindow::Maximize()
 
 SIZE MainWindow::RenderContent()
 {
-    return appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
+    SIZE renderedSize = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
         ? RenderTranslateResultView()
         : RenderDictionaryView();
+
+    HDC hdc = GetDC(hWindow);
+    renderingContext->ClearDC(hdc, descriptor.Width, descriptor.Height);
+    DeleteDC(hdc);
+
+    return renderedSize;
 }
 
 SIZE MainWindow::RenderTranslateResultView()

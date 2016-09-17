@@ -1,6 +1,6 @@
 #pragma once
 #include "Windows\Base\ChildWindow.h"
-#include "AppModel.h"
+#include "Model\AppModel.h"
 
 class ContentWindow : public ChildWindow
 {

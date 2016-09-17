@@ -36,7 +36,7 @@ void Window::Render(bool preserveVerticalScroll)
 
     if (preserveVerticalScroll && descriptor.OverflowY == OverflowModes::Scroll)
     {
-        verticalScroll = scrollProvider->GetScrollPosition(hWindow, SB_VERT);
+        verticalScroll = scrollProvider->GetScrollPosition(hWindow, ScrollBars::Vertical);
     }
 
     SIZE renderedSize = RenderContent();
@@ -56,20 +56,25 @@ void Window::Render(bool preserveVerticalScroll)
 
     if (descriptor.OverflowX == OverflowModes::Scroll)
     {
-        scrollProvider->InitializeScrollbar(hWindow, contentWidth, currentWidth, SB_HORZ);
+        scrollProvider->InitializeScrollbar(hWindow, contentWidth, currentWidth, ScrollBars::Horizontal);
     }
 
     if (descriptor.OverflowY == OverflowModes::Scroll)
     {
-        scrollProvider->InitializeScrollbar(hWindow, contentHeight, currentHeight, SB_VERT);
+        scrollProvider->InitializeScrollbar(hWindow, contentHeight, currentHeight, ScrollBars::Vertical);
+
+        if (preserveVerticalScroll)
+        {
+            scrollProvider->SetScrollPosition(hWindow, ScrollBars::Vertical, verticalScroll);
+        }
     }
 
     InvalidateRect(hWindow, NULL, FALSE);
     MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
 
-    if (preserveVerticalScroll)
+    if (descriptor.OverflowY == OverflowModes::Scroll)
     {
-        scrollProvider->SetScrollPosition(hWindow, SB_VERT, verticalScroll);
+        
     }
 }
 

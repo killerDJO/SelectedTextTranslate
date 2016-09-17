@@ -33,7 +33,7 @@ WindowDescriptor GetMainWindowDescriptor(RenderingContext* renderingContext)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow)
 {
-    //AttachConsole();
+    // AttachConsole();
 
     HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
     if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
 
     RenderingContext* renderingContext = new RenderingContext();
-    ScrollProvider* scrollProvider = new ScrollProvider(renderingContext);
+    ScrollProvider* scrollProvider = new ScrollProvider();
 
     AppModel * appModel = new AppModel(translator, textPlayer, textExtractor, dictionaryLogger);
     MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderingContext, scrollProvider, GetMainWindowDescriptor(renderingContext));

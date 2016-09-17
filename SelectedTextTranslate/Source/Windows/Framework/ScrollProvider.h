@@ -1,5 +1,6 @@
 #pragma once
 #include "Windows\Framework\RenderingContext.h"
+#include "Windows\Framework\Enums\ScrollBars.h"
 
 class ScrollProvider
 {
@@ -7,21 +8,19 @@ private:
     int scrollCharX;
     int scrollCharY;
 
-    RenderingContext* renderingContext;
-
-    void InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, int nBar);
-    void ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, int nBar);
-    void SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, int nBar, int scrollOffset, int scrollChar);
-    SCROLLINFO GetScrollBarInfo(HWND hWindow, int nBar);
+    void InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar);
+    void ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar);
+    void SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar);
+    SCROLLINFO GetScrollBarInfo(HWND hWindow, ScrollBars scrollBar);
 
 public:
-    ScrollProvider(RenderingContext* renderingContext);
+    ScrollProvider();
     ~ScrollProvider();
 
-    void InitializeScrollbar(HWND hWindow, int contentSize, int windowSize, int nBar);
+    void InitializeScrollbar(HWND hWindow, int contentSize, int windowSize, ScrollBars scrollBar);
     void ProcessVerticalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam);
     void ProcessHorizontalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam);
 
-    int GetScrollPosition(HWND hWindow, int nBar);
-    void SetScrollPosition(HWND hWindow, int nBar, int position);
+    int GetScrollPosition(HWND hWindow, ScrollBars scrollBar);
+    void SetScrollPosition(HWND hWindow, ScrollBars scrollBar, int position);
 };
