@@ -11,16 +11,19 @@ private:
     void ComputeScaleFactor();
 
 public:
-
+    
     RenderingContext();
     ~RenderingContext();
 
-    int Scale(int x);
+    int Scale(int value);
     WindowDescriptor Scale(WindowDescriptor windowDescriptor);
     RECT Scale(RECT rect);
 
-    int Downscale(int x);
+    int Downscale(int value);
     SIZE Downscale(SIZE size);
+
+    int Rescale(int value, double scaleFactorAjustment);
+    void AjustScaleFactor(double scaleFactorAjustment);
 
     HFONT CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false);
     HBRUSH CreateCustomBrush(Colors color);

@@ -18,7 +18,7 @@ protected:
 
 public:
     ContentWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
-    virtual ~ContentWindow();
+    ~ContentWindow() override;
 
     void Initialize() override;
 };

@@ -71,11 +71,6 @@ void Window::Render(bool preserveVerticalScroll)
 
     InvalidateRect(hWindow, NULL, FALSE);
     MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
-
-    if (descriptor.OverflowY == OverflowModes::Scroll)
-    {
-        
-    }
 }
 
 DWORD Window::GetScrollStyle()
@@ -159,4 +154,5 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 Window::~Window()
 {
+    DestroyWindow(hWindow);
 }

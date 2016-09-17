@@ -71,11 +71,13 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
     renderer->IncreaseWidth(paddingX * 3);
 
     SIZE renderedSize = renderer->GetSize();
+    int windowHeight = renderingContext->Downscale(descriptor.Height);
+    int windowWidth = renderingContext->Downscale(descriptor.Width);
     RECT rect;
     rect.left = 0;
-    rect.right = max(renderedSize.cx, descriptor.Width);
-    rect.top = descriptor.Height - 1;
-    rect.bottom = descriptor.Height;
+    rect.right = max(renderedSize.cx, windowWidth);
+    rect.top = windowHeight - 1;
+    rect.bottom = windowHeight;
 
     renderer->DrawRect(rect, grayBrush);
 

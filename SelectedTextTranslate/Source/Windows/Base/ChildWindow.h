@@ -31,7 +31,7 @@ protected:
 
 public:
     ChildWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow);
-    virtual ~ChildWindow();
+    ~ChildWindow() override;
 
     void Initialize() override;
 };

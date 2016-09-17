@@ -31,20 +31,7 @@ void MainWindow::Initialize()
 
     InitNotifyIconData();
 
-    int headerHeight = 50;
-
-    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(0, 0);
-    dictionaryWindow = new DictionaryWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(dictionaryWindowDescriptor), hWindow, appModel);
-
-    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, headerHeight - 1, descriptor.Width, 0, OverflowModes::Stretch, OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(translateResultWindowDescriptor), hWindow, appModel);
-
-    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, 0, descriptor.Width, headerHeight, OverflowModes::Stretch, OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(headerWindowDescriptor), hWindow, appModel);
-
-    dictionaryWindow->Initialize();
-    translateResultWindow->Initialize();
-    headerWindow->Initialize();
+    InitializeChildWindows();
 
     RegisterHotKey(hWindow, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
     RegisterHotKey(hWindow, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
@@ -61,6 +48,31 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+}
+
+void MainWindow::InitializeChildWindows()
+{
+    int headerHeight = 50;
+
+    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(0, 0);
+    dictionaryWindow = new DictionaryWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(dictionaryWindowDescriptor), hWindow, appModel);
+
+    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, headerHeight - 1, descriptor.Width, 0, OverflowModes::Stretch, OverflowModes::Stretch);
+    translateResultWindow = new TranslateResultWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(translateResultWindowDescriptor), hWindow, appModel);
+
+    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, 0, descriptor.Width, headerHeight, OverflowModes::Stretch, OverflowModes::Fixed);
+    headerWindow = new HeaderWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(headerWindowDescriptor), hWindow, appModel);
+
+    dictionaryWindow->Initialize();
+    translateResultWindow->Initialize();
+    headerWindow->Initialize();
+}
+
+void MainWindow::DestroyChildWindows()
+{
+    delete dictionaryWindow;
+    delete headerWindow;
+    delete translateResultWindow;
 }
 
 void MainWindow::InitNotifyIconData()
@@ -104,12 +116,12 @@ SIZE MainWindow::RenderContent()
 
 SIZE MainWindow::RenderTranslateResultView()
 {
+    headerWindow->Render();
+    translateResultWindow->Render();
+
     headerWindow->Show();
     translateResultWindow->Show();
     dictionaryWindow->Hide();
-
-    headerWindow->Render();
-    translateResultWindow->Render();
 
     SIZE contentSize;
     contentSize.cx = max(headerWindow->GetWidth(), translateResultWindow->GetWidth());
@@ -119,16 +131,37 @@ SIZE MainWindow::RenderTranslateResultView()
 
 SIZE MainWindow::RenderDictionaryView()
 {
+    dictionaryWindow->Render();
+
     headerWindow->Hide();
     translateResultWindow->Hide();
     dictionaryWindow->Show();
-
-    dictionaryWindow->Render();
 
     SIZE contentSize;
     contentSize.cx = dictionaryWindow->GetWidth();
     contentSize.cy = dictionaryWindow->GetHeight();
     return contentSize;
+}
+
+void MainWindow::Scale(double scaleFactorAjustment)
+{
+    int scaledWidth = renderingContext->Rescale(descriptor.Width, scaleFactorAjustment);
+    int scaledHeight = renderingContext->Rescale(descriptor.Height, scaleFactorAjustment);
+
+    descriptor.X -= scaledWidth - descriptor.Width;
+    descriptor.Y -= scaledHeight - descriptor.Height;
+ 
+    currentWidth = descriptor.Width = scaledWidth;
+    currentHeight = descriptor.Height = scaledHeight;
+
+    renderingContext->AjustScaleFactor(scaleFactorAjustment);
+
+    MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
+
+    DestroyChildWindows();
+    InitializeChildWindows();
+
+    Render();
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -214,7 +247,15 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         {
             instance->appModel->PlaySelectedText();
         }
-        break;
+        if (wParam == ID_ZOOM_IN_HOTKEY)
+        {
+            instance->Scale(0.1);
+        }
+        if (wParam == ID_ZOOM_OUT_HOTKEY)
+        {
+            instance->Scale(-0.1);
+        }
+        return Window::WndProc(hWnd, message, wParam, lParam);
 
     case WM_KILLFOCUS:
         windowWithFocus = GetParent((HWND)wParam);
@@ -230,6 +271,19 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         instance->appModel->Exit();
         break;
 
+    case WM_SHOWWINDOW:
+        if (wParam == TRUE)
+        {
+            RegisterHotKey(hWnd, ID_ZOOM_IN_HOTKEY, MOD_CONTROL, 0x6B/*Numpad plus*/);
+            RegisterHotKey(hWnd, ID_ZOOM_OUT_HOTKEY, MOD_CONTROL, 0x6d/*Numpad minus*/);
+        }
+        else
+        {
+            UnregisterHotKey(hWnd, ID_ZOOM_IN_HOTKEY);
+            UnregisterHotKey(hWnd, ID_ZOOM_OUT_HOTKEY);
+        }
+        break;
+
     default:
         return Window::WndProc(hWnd, message, wParam, lParam);
     }
@@ -240,8 +294,5 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 MainWindow::~MainWindow()
 {
     Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
-
-    delete headerWindow;
-    delete translateResultWindow;
-    delete dictionaryWindow;
+    DestroyChildWindows();
 }

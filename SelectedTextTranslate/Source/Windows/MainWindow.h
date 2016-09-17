@@ -12,6 +12,8 @@
 #define ID_TRANSLATE_HOTKEY                     3003
 #define ID_PLAYTEXT_HOTKEY                      3004
 #define ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM    3005
+#define ID_ZOOM_IN_HOTKEY                       3006
+#define ID_ZOOM_OUT_HOTKEY                      3007
 
 class MainWindow : public Window
 {
@@ -29,6 +31,9 @@ private:
     DictionaryWindow* dictionaryWindow;
 
     void InitNotifyIconData();
+    void InitializeChildWindows();
+    void DestroyChildWindows();
+    void Scale(double scaleFactorAjustment);
 
     SIZE RenderTranslateResultView();
     SIZE RenderDictionaryView();

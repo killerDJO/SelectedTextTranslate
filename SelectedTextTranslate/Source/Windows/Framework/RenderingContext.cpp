@@ -13,12 +13,12 @@ void RenderingContext::ComputeScaleFactor()
     UINT screenResolutionX = workarea.right - workarea.left;
     UINT screenResolutionY = workarea.bottom - workarea.top;
     scaleFactor = screenResolutionY / 860.0;
-    //scaleFactor = 1.5;
+    //scaleFactor = 1.4;
 }
 
-int RenderingContext::Scale(int x)
+int RenderingContext::Scale(int value)
 {
-    return roundToInt(x * scaleFactor);
+    return roundToInt(value * scaleFactor);
 }
 
 RECT RenderingContext::Scale(RECT rect)
@@ -43,9 +43,9 @@ WindowDescriptor RenderingContext::Scale(WindowDescriptor windowDescriptor)
     );
 }
 
-int RenderingContext::Downscale(int x)
+int RenderingContext::Downscale(int value)
 {
-    return roundToInt(x / scaleFactor);
+    return roundToInt(value / scaleFactor);
 }
 
 SIZE RenderingContext::Downscale(SIZE size)
@@ -54,6 +54,16 @@ SIZE RenderingContext::Downscale(SIZE size)
     downscaledSize.cx = Downscale(size.cx);
     downscaledSize.cy = Downscale(size.cy);
     return downscaledSize;
+}
+
+int RenderingContext::Rescale(int value, double scaleFactorAjustment)
+{
+    return roundToInt(Downscale(value) * (scaleFactor + scaleFactorAjustment));
+}
+
+void RenderingContext::AjustScaleFactor(double scaleFactorAjustment)
+{
+    scaleFactor += scaleFactorAjustment;
 }
 
 SIZE RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)

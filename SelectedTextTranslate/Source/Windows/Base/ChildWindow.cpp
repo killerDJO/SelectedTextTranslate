@@ -161,7 +161,6 @@ void ChildWindow::DestroyChildWindows(vector<ChildWindow*>& childWindows)
 
 ChildWindow::~ChildWindow()
 {
-    DestroyWindow(hWindow);
     DeleteDC(inMemoryDC);
 
     DestroyChildWindows(activeChildWindows);
