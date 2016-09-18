@@ -173,21 +173,6 @@
     <Image Include="Resources\SelectedTextTranslate.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="Resources\Audio.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\Audio_Inactive.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\Resources\Audio.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\translate.bmp">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\translate_hover.bmp">
-      <Filter>Resources</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h">
@@ -297,11 +282,23 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\Audio.emf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Audio_Inactive.emf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\translate.emf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\translate_inactive.emf">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -35,10 +35,10 @@ SIZE DictionaryWindow::RenderDC(Renderer* renderer)
             hInstance,
             renderingContext,
             scrollProvider,
-            renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY + 2 - normalFontAscent, 13, 13)),
+            renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY + 2 - normalFontAscent, 16, 16)),
             hWindow,
-            IDB_TRANSLATE_INACTIVE,
-            IDB_TRANSLATE,
+            IDR_TRANSLATE_INACTIVE,
+            IDR_TRANSLATE,
             bind(&DictionaryWindow::ShowFullTranslation, this, i));
 
         AddChildWindow(translateButton);

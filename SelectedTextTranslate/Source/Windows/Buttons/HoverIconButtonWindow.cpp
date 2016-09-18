@@ -1,5 +1,7 @@
 #include "Windows\Buttons\HoverIconButtonWindow.h"
 
+map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
+
 HoverIconButtonWindow::HoverIconButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
     : HoverButtonWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, clickCallback)
 {
@@ -18,18 +20,80 @@ void HoverIconButtonWindow::RenderStatesDC()
 
 void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
 {
-    HBITMAP icon = LoadBitmap(hInstance, MAKEINTRESOURCE(iconResource));
+    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, currentWidth, currentHeight);
 
-    BITMAP iconInfo;
-    GetObject(icon, sizeof(BITMAP), &iconInfo);
+    if (iconsCache.count(cacheKey) != 0)
+    {
+        HDC renderedDC = iconsCache[cacheKey];
+        renderingContext->CopyDC(renderedDC, hdc, currentWidth, currentHeight);
+        return;
+    }
 
-    HDC bitmapDC = renderingContext->CreateInMemoryDC(iconInfo.bmWidth, iconInfo.bmHeight);
-    SelectObject(bitmapDC, icon);
+    Graphics graphics(hdc);
+    renderingContext->ClearDC(hdc, currentWidth, currentHeight);
 
-    //SetStretchBltMode(hDC, BLACKONWHITE);
-    StretchBlt(hdc, 0, 0, currentWidth, currentHeight, bitmapDC, 0, 0, iconInfo.bmWidth, iconInfo.bmHeight, SRCCOPY);
+    Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
 
-    DeleteDC(bitmapDC);
+    graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
+    graphics.SetSmoothingMode(SmoothingModeHighQuality);
+    graphics.SetPixelOffsetMode(PixelOffsetModeHighQuality);
+
+    BOOL converstionSucceded;
+    iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded);
+
+    graphics.DrawImage(iconMetafile, 0, 0, currentWidth, currentHeight);
+
+    delete iconMetafile;
+
+    HDC cachedDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
+    renderingContext->CopyDC(hdc, cachedDC, currentWidth, currentHeight);
+    iconsCache[cacheKey] = cachedDC;
+}
+
+Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId)
+{
+    HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    if (!hResource)
+    {
+        return NULL;
+    }
+
+    DWORD imageSize = SizeofResource(hInstance, hResource);
+    if (!imageSize)
+    {
+        return NULL;
+    }
+
+    const void* pResourceData = LockResource(LoadResource(hInstance, hResource));
+    if (!pResourceData)
+    {
+        return NULL;
+    }
+
+    HGLOBAL globalBuffer = GlobalAlloc(GMEM_MOVEABLE, imageSize);
+    if (globalBuffer)
+    {
+        void* pBuffer = GlobalLock(globalBuffer);
+        if (pBuffer)
+        {
+            CopyMemory(pBuffer, pResourceData, imageSize);
+
+            IStream* pStream = NULL;
+            if (CreateStreamOnHGlobal(globalBuffer, FALSE, &pStream) == S_OK)
+            {
+                Metafile* metafile = new Metafile(pStream);
+                pStream->Release();
+
+                return metafile;
+            }
+
+            GlobalUnlock(globalBuffer);
+        }
+
+        GlobalFree(globalBuffer);
+    }
+
+    return NULL;
 }
 
 HoverIconButtonWindow::~HoverIconButtonWindow()

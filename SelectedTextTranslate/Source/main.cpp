@@ -35,6 +35,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
 {
     // AttachConsole();
 
+    GdiplusStartupInput gdiplusStartupInput;
+    ULONG_PTR           gdiplusToken;
+
+    // Initialize GDI+.
+    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
     HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
     if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
@@ -83,6 +89,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     delete mainWindow;
     delete renderingContext;
     delete scrollProvider;
+
+    GdiplusShutdown(gdiplusToken);
 
     return msg.wParam;
 }

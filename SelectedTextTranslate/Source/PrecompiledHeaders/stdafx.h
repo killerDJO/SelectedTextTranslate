@@ -5,11 +5,15 @@
 
 #define roundToInt(x) int(round(x))
 
+#define GDIPVER     0x0110
+
 #include <SDKDDKVer.h>
 
 #include <windows.h>
 #include <mmsystem.h>
 #include <shellapi.h>
+#include <objidl.h>
+#include <gdiplus.h>
 
 #include <stdlib.h>
 #include <malloc.h>
@@ -38,3 +42,4 @@
 #include "..\Resources\resource.h"
 
 using namespace std;
+using namespace Gdiplus;

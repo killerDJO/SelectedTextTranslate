@@ -51,8 +51,8 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
         scrollProvider,
         renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - smallFontAscent, imageSize, imageSize)),
         hWindow,
-        IDB_AUDIO_INACTIVE,
-        IDB_AUDIO,
+        IDR_AUDIO_INACTIVE,
+        IDR_AUDIO,
         bind(&HeaderWindow::PlayText, this));
 
     AddChildWindow(audioButton);
