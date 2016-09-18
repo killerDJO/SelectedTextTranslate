@@ -14,6 +14,7 @@ POINT Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, int x, 
     SelectObject(hdc, font);
     SetTextColor(hdc, (COLORREF)color);
 
+    SetTextAlign(hdc, TA_BASELINE | TA_LEFT);
     TextOut(hdc, scaledX, scaledY, text, _tcslen(text));
 
     SIZE textSize;
@@ -26,7 +27,7 @@ POINT Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, int x, 
 
     POINT result;
     result.x = x + downscaledSize.cx;
-    result.y = y + downscaledSize.cy;
+    result.y = y - GetFontAscent(font) + downscaledSize.cy;
 
     return result;
 }
@@ -38,6 +39,17 @@ void Renderer::DrawRect(RECT rect, HBRUSH brush)
 
     scaledSize.cx = max(scaledSize.cx, scaledRect.right);
     scaledSize.cy = max(scaledSize.cy, scaledRect.bottom);
+}
+
+int Renderer::GetFontAscent(HFONT font)
+{
+    return renderingContext->Downscale(renderingContext->GetFontMetrics(hdc, font).tmAscent);
+}
+
+int Renderer::GetFontStrokeHeight(HFONT font)
+{
+    TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(hdc, font);
+    return renderingContext->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
 }
 
 SIZE Renderer::GetScaledSize()

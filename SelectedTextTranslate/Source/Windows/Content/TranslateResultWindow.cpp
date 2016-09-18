@@ -23,7 +23,7 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
 
     TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
-    int curY = lineHeight / 4;
+    int curY = lineHeight;
 
     for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i)
     {
@@ -32,14 +32,11 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
         // Draw category header
         POINT baseFormBottomRight = renderer->PrintText(category.BaseForm, fontNormal, Colors::Black, paddingX, curY);
 
-        if (_tcslen(category.PartOfSpeech) != 0)
-        {
-            wstring text = L" - " + wstring(category.PartOfSpeech);
-            renderer->PrintText(text.c_str(), fontItalic, Colors::Gray, baseFormBottomRight.x, curY);
-        }
+        wstring text = L" - " + wstring(category.PartOfSpeech);
+        renderer->PrintText(text.c_str(), fontItalic, Colors::Gray, baseFormBottomRight.x + 1, curY);
 
         vector<TranslateResultDictionaryEntry> showedEntries(0);
-        if (category.IsExtendedList) 
+        if (category.IsExtendedList)
         {
             showedEntries = category.Entries;
         }
@@ -57,9 +54,10 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
         }
 
         // Draw words
-        curY += lineHeight;
         for (size_t j = 0; j < showedEntries.size(); ++j)
         {
+            curY += lineHeight;
+
             TranslateResultDictionaryEntry entry = category.Entries[j];
             POINT wordBottomRight = renderer->PrintText(entry.Word, fontNormal, Colors::Black, paddingX * 3, curY);
 
@@ -80,18 +78,19 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
 
             int k = entry.Score >= 0.05 ? 0 : (entry.Score >= 0.0025 ? 1 : 2);
             int rateUnit = 8;
+            int strokeHeight = renderer->GetFontStrokeHeight(fontNormal);
 
             RECT rect;
             rect.right = paddingX + rateUnit * 3;
-            rect.top = curY + 5;
-            rect.bottom = rect.top + 8;
+            rect.bottom = curY;
+            rect.top = rect.bottom - strokeHeight + 2;
             rect.left = paddingX + k * rateUnit;
             renderer->DrawRect(rect, grayBrush);
-            curY += lineHeight;
         }
 
-        curY = CreateExpandButton(category, i, showedEntries.size(), curY, renderer);
-        curY += lineHeight / 2;
+        curY = CreateExpandButton(category, i, showedEntries.size(), curY , renderer);
+
+        curY += lineHeight + lineHeight / 2;
     }
 
     renderer->IncreaseWidth(paddingX * 3);
@@ -133,11 +132,12 @@ int TranslateResultWindow::CreateExpandButton(
             text = L"show less results";
         }
 
+        int underscoredFontAscent = renderer->GetFontAscent(fontUnderscored);
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
             hInstance,
             renderingContext,
             scrollProvider,
-            renderingContext->Scale(WindowDescriptor::CreateStretchWindowDescriptor(paddingX * 3, curY)),
+            renderingContext->Scale(WindowDescriptor::CreateStretchWindowDescriptor(paddingX * 3, curY + 7)),
             hWindow,
             fontUnderscored,
             Colors::Gray,
@@ -148,7 +148,7 @@ int TranslateResultWindow::CreateExpandButton(
         AddChildWindow(expandButton);
 
         renderer->IncreaseHeight(expandButton->GetHeight());
-        curY += lineHeight / 2;
+        curY += underscoredFontAscent;
     }
 
     return curY;

@@ -104,7 +104,7 @@ void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, Scro
 
     if (scrollInfo.nPos != scrollOffset)
     {
-        int scrollAmount = roundToInt(scrollChar * (scrollOffset - scrollInfo.nPos));
+        int scrollAmount = scrollChar * (scrollOffset - scrollInfo.nPos);
         int scrollAmountHorizontal = 0;
         int scrollAmountVertical = 0;
 

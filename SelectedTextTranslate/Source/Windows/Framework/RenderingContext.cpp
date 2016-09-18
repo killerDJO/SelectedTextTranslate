@@ -13,7 +13,6 @@ void RenderingContext::ComputeScaleFactor()
     UINT screenResolutionX = workarea.right - workarea.left;
     UINT screenResolutionY = workarea.bottom - workarea.top;
     scaleFactor = screenResolutionY / 860.0;
-    //scaleFactor = 1.4;
 }
 
 int RenderingContext::Scale(int value)
@@ -76,6 +75,16 @@ SIZE RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
     return textSize;
 }
 
+TEXTMETRIC RenderingContext::GetFontMetrics(HDC hdc, HFONT font)
+{
+    SelectObject(hdc, font);
+
+    TEXTMETRIC tm;
+    GetTextMetrics(hdc, &tm);
+
+    return tm;
+}
+
 HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic, bool isUnderscored)
 {
     HDC hdc = GetDC(hWindow);
@@ -100,7 +109,7 @@ HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool 
     int italicValue = isItalic ? 1 : 0;
     int underscoredValue = isUnderscored ? 1 : 0;
 
-    HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, isItalic, isUnderscored, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
+    HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
 
     DeleteDC(hdc);
 

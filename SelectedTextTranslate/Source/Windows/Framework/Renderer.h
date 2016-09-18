@@ -15,6 +15,8 @@ public:
 
     POINT PrintText(const wchar_t* text, HFONT font, Colors color, int x, int y);
     void DrawRect(RECT rect, HBRUSH brush);
+    int GetFontAscent(HFONT font);
+    int GetFontStrokeHeight(HFONT font);
 
     SIZE GetScaledSize();
     SIZE GetSize();

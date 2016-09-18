@@ -28,6 +28,7 @@ public:
     HFONT CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false);
     HBRUSH CreateCustomBrush(Colors color);
     SIZE GetTextSize(HDC hdc, const wchar_t* text, HFONT font);
+    TEXTMETRIC GetFontMetrics(HDC hdc, HFONT font);
 
     HDC CreateInMemoryDC(DWORD width, DWORD height);
     void ResizeDC(HDC& hdc, DWORD width, DWORD height);

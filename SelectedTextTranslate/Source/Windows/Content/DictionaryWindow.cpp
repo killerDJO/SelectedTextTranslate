@@ -13,18 +13,18 @@ void DictionaryWindow::ShowFullTranslation(int dictionaryIndex)
 SIZE DictionaryWindow::RenderDC(Renderer* renderer)
 {
     ContentWindow::RenderDC(renderer);
-
+    printf("Render\n");
     vector<LogRecord> records = appModel->GetDictionaryRecords();
-
-    int curY = paddingY / 2;
+    int normalFontAscent = renderer->GetFontAscent(fontNormal);
+    int curY = paddingY / 2 + normalFontAscent;
 
     size_t countToShow = min(200, records.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
     POINT lineBottomRight = renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, paddingX, curY);
-    
-    curY = lineBottomRight.y + paddingY / 2;
-    
+
+    curY += lineHeight;
+
     for (size_t i = 0; i < countToShow; ++i)
     {
         LogRecord record = records[i];
@@ -35,7 +35,7 @@ SIZE DictionaryWindow::RenderDC(Renderer* renderer)
             hInstance,
             renderingContext,
             scrollProvider,
-            renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY + 2, 13, 13)),
+            renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY + 2 - normalFontAscent, 13, 13)),
             hWindow,
             IDB_TRANSLATE_INACTIVE,
             IDB_TRANSLATE,

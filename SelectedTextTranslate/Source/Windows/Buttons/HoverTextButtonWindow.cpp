@@ -27,7 +27,11 @@ void HoverTextButtonWindow::RenderStatesDC()
 void HoverTextButtonWindow::RenderStateDC(HDC hdc, Colors color)
 {
     Renderer* renderer = new Renderer(hdc, renderingContext);
-    renderer->PrintText(text.c_str(), font, color, 0, 0);
+
+    renderingContext->ClearDC(hdc, currentWidth, currentHeight);
+    int fontAscent = renderer->GetFontAscent(font);
+    renderer->PrintText(text.c_str(), font, color, 0, fontAscent);
+
     delete renderer;
 }
 

@@ -23,12 +23,13 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
 
     TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
-    int curY = paddingY / 2;
+    int smallFontAscent = renderer->GetFontAscent(fontSmall);
+    int curY = lineHeight;
 
     const wchar_t* headerText;
     const wchar_t* subHeaderText;
 
-    if (translateResult.IsErrorResult()) 
+    if (translateResult.IsErrorResult())
     {
         headerText = L"[Error translating sentence]";
         subHeaderText = translateResult.ErrorMessage;
@@ -48,7 +49,7 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
         hInstance,
         renderingContext,
         scrollProvider,
-        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY, imageSize, imageSize)),
+        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - smallFontAscent, imageSize, imageSize)),
         hWindow,
         IDB_AUDIO_INACTIVE,
         IDB_AUDIO,
@@ -90,14 +91,15 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         L" (corrected from ",
         fontSmall,
         Colors::Gray,
-        originLintBottomRight.x,
+        originLintBottomRight.x + 1,
         curY);
 
+    int smallFontAscent = renderer->GetFontAscent(fontSmall);
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
         hInstance,
         renderingContext,
         scrollProvider,
-        renderingContext->Scale(WindowDescriptor::CreateStretchWindowDescriptor(originLintBottomRight.x, curY)),
+        renderingContext->Scale(WindowDescriptor::CreateStretchWindowDescriptor(originLintBottomRight.x, curY - smallFontAscent)),
         hWindow,
         fontSmallUnderscored,
         Colors::Gray,
@@ -111,7 +113,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         L")",
         fontSmall,
         Colors::Gray,
-        originLintBottomRight.x + forceTranslationButton->GetWidth(),
+        originLintBottomRight.x + renderingContext->Downscale(forceTranslationButton->GetWidth()),
         curY);
 }
 
