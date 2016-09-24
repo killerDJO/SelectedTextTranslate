@@ -3,7 +3,7 @@
 #include "Entities\TranslateResult.h"
 #include "TranslateEngine\Translator.h"
 #include "TranslateEngine\TextPlayer.h"
-#include "Loggers\DictionaryLogger.h"
+#include "Dictionary\Dictionary.h"
 #include "Helpers\TextExtractor.h"
 
 class MainWindow;
@@ -18,10 +18,10 @@ private:
     MainWindow* mainWindow;
     Translator* translator;
     TextPlayer* textPlayer;
-    DictionaryLogger* dictionaryLogger;
+    Dictionary* dictionary;
 
 public:
-    AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, DictionaryLogger* dictionaryLogger);
+    AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, Dictionary* dictionary);
     ~AppModel();
 
     void SetMainWindow(MainWindow* mainWindow);

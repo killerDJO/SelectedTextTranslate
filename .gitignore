@@ -10,7 +10,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-*/Thumbs.db
+*.db
 */Logs/*
 */My Inspector XE Results*
 

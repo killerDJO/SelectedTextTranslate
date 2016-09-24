@@ -4,6 +4,7 @@
 #include "Windows\MainWindow.h"
 #include "Windows\Framework\Dto\WindowDescriptor.h"
 #include "Loggers\Logger.h"
+#include "Dictionary\Dictionary.h"
 
 void AttachConsole()
 {
@@ -47,17 +48,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
     Logger* logger = new Logger();
-    DictionaryLogger* dictionaryLogger = new DictionaryLogger(logger);
+    Dictionary* dictionary = new Dictionary(logger);
     TextExtractor* textExtractor = new TextExtractor();
     RequestProvider* requestProvider = new RequestProvider(logger);
     TranslatePageParser* translatePageParser = new TranslatePageParser(logger, requestProvider);
-    Translator* translator = new Translator(logger, requestProvider, translatePageParser);
+    Translator* translator = new Translator(logger, requestProvider, translatePageParser, dictionary);
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
 
     RenderingContext* renderingContext = new RenderingContext();
     ScrollProvider* scrollProvider = new ScrollProvider();
-
-    AppModel * appModel = new AppModel(translator, textPlayer, textExtractor, dictionaryLogger);
+    
+    AppModel* appModel = new AppModel(translator, textPlayer, textExtractor, dictionary);
     MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderingContext, scrollProvider, GetMainWindowDescriptor(renderingContext));
     appModel->SetMainWindow(mainWindow);
 
@@ -78,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     CloseHandle(mutex);
 
     delete logger;
-    delete dictionaryLogger;
+    delete dictionary;
     delete textExtractor;
     delete requestProvider;
     delete translatePageParser;

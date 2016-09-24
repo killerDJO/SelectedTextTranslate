@@ -1,13 +1,13 @@
 #include "AppModel.h"
 #include "Windows\MainWindow.h"
 
-AppModel::AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, DictionaryLogger* dictionaryLogger)
+AppModel::AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, Dictionary* dictionary)
 {
     this->mainWindow = mainWindow;
     this->textPlayer = textPlayer;
     this->translator = translator;
     this->textExtractor = textExtractor;
-    this->dictionaryLogger = dictionaryLogger;
+    this->dictionary = dictionary;
 
     this->applicationView = ApplicactionViews::Hidden;
 }
@@ -24,7 +24,7 @@ ApplicactionViews AppModel::GetCurrentApplicationView() const
 
 vector<LogRecord> AppModel::GetDictionaryRecords() const
 {
-    return dictionaryLogger->GetRecords();
+    return dictionary->GetTopRecords(200);
 }
 
 TranslateResult AppModel::GetCurrentTranslateResult() const
@@ -36,9 +36,7 @@ void AppModel::TranslateSelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
 
-    dictionaryLogger->AddRecord(selectedText);
-
-    translateResult = translator->TranslateSentence(selectedText);
+    translateResult = translator->TranslateSentence(selectedText, true);
     applicationView = ApplicactionViews::TranslateResult;
 
     mainWindow->Render();
@@ -55,7 +53,7 @@ void AppModel::ToggleTranslateResultDictionary(int translateResultDictionaryInde
 void AppModel::PlaySelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
-    translateResult = translator->TranslateSentence(selectedText);
+    translateResult = translator->TranslateSentence(selectedText, false);
     textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
@@ -73,10 +71,10 @@ void AppModel::ShowDictionary()
 
 void AppModel::TranslateWordFromDictionary(int wordInDictionaryIndex)
 {
-    vector<LogRecord> logRecords = dictionaryLogger->GetRecords();
+    vector<LogRecord> logRecords = dictionary->GetTopRecords(200);
     LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
 
-    translateResult = translator->TranslateSentence(logRecordToTranslate.Word);
+    translateResult = translator->TranslateSentence(logRecordToTranslate.Word, false);
     applicationView = ApplicactionViews::TranslateResult;
     mainWindow->Render();
 }

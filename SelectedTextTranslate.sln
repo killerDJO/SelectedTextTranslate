@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gumbo", "Libs\gumbo-parser\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "duktape", "Libs\duktape\visualc\duktape\duktape.vcxproj", "{3EC3A4E3-52E2-47F5-828D-F1B969442854}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "Libs\sqlite\sqlite.vcxproj", "{8A2C4663-754D-49C7-9947-882C2BBC52A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -40,6 +42,12 @@ Global
 		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|Win32.Build.0 = Release|Win32
 		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|x64.ActiveCfg = Release|x64
 		{3EC3A4E3-52E2-47F5-828D-F1B969442854}.Release|x64.Build.0 = Release|x64
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7}.Debug|Win32.Build.0 = Debug|Win32
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7}.Debug|x64.ActiveCfg = Debug|Win32
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7}.Release|Win32.ActiveCfg = Release|Win32
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7}.Release|Win32.Build.0 = Release|Win32
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,5 +55,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2661FA5E-ACC3-4D27-8FD2-9DBB0414EEDC} = {196B6A2D-2A51-41A7-8A9F-3AB16D708A92}
 		{3EC3A4E3-52E2-47F5-828D-F1B969442854} = {196B6A2D-2A51-41A7-8A9F-3AB16D708A92}
+		{8A2C4663-754D-49C7-9947-882C2BBC52A7} = {196B6A2D-2A51-41A7-8A9F-3AB16D708A92}
 	EndGlobalSection
 EndGlobal

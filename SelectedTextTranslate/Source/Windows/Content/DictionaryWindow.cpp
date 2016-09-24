@@ -13,7 +13,7 @@ void DictionaryWindow::ShowFullTranslation(int dictionaryIndex) const
 SIZE DictionaryWindow::RenderDC(Renderer* renderer)
 {
     ContentWindow::RenderDC(renderer);
-    printf("Render\n");
+    
     vector<LogRecord> records = appModel->GetDictionaryRecords();
     int normalFontAscent = renderer->GetFontAscent(fontNormal);
     int curY = paddingY / 2 + normalFontAscent;

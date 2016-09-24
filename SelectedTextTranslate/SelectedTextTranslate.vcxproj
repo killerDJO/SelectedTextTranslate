@@ -14,13 +14,14 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp" />
     <ClCompile Include="Source\Windows\Framework\Dto\WindowDescriptor.cpp" />
     <ClCompile Include="Source\Windows\Framework\Renderer.cpp" />
     <ClCompile Include="Source\Windows\Framework\ScrollProvider.cpp" />
     <ClCompile Include="Source\Windows\Framework\RenderingContext.cpp" />
     <ClCompile Include="Source\Model\AppModel.cpp" />
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
-    <ClCompile Include="Source\Loggers\DictionaryLogger.cpp" />
+    <ClCompile Include="Source\Dictionary\Dictionary.cpp" />
     <ClCompile Include="Source\Loggers\Logger.cpp" />
     <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp" />
     <ClCompile Include="Source\Windows\Base\ChildWindow.cpp" />
@@ -55,7 +56,7 @@
     <ClInclude Include="Source\Windows\Framework\RenderingContext.h" />
     <ClInclude Include="Source\Model\AppModel.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Source\Entities\LogRecord.h" />
+    <ClInclude Include="Source\Dictionary\Dto\LogRecord.h" />
     <ClInclude Include="Source\Entities\TranslateResult.h" />
     <ClInclude Include="Source\Entities\TranslateResultDictionary.h" />
     <ClInclude Include="Source\Entities\TranslateResultDictionaryEntry.h" />
@@ -63,7 +64,7 @@
     <ClInclude Include="Source\Helpers\RequestProvider.h" />
     <ClInclude Include="Source\Helpers\TextExtractor.h" />
     <ClInclude Include="Source\Helpers\StringUtilities.h" />
-    <ClInclude Include="Source\Loggers\DictionaryLogger.h" />
+    <ClInclude Include="Source\Dictionary\Dictionary.h" />
     <ClInclude Include="Source\Loggers\Logger.h" />
     <ClInclude Include="Source\PrecompiledHeaders\stdafx.h" />
     <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h" />
@@ -97,6 +98,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Libs\gumbo-parser\visualc\gumbo.vcxproj">
       <Project>{2661fa5e-acc3-4d27-8fd2-9dbb0414eedc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs\sqlite\sqlite.vcxproj">
+      <Project>{8a2c4663-754d-49c7-9947-882c2bbc52a7}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -151,7 +155,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -177,7 +181,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>

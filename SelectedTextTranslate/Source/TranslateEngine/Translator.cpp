@@ -3,28 +3,49 @@
 
 using namespace web;
 
-Translator::Translator(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser)
+Translator::Translator(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser, Dictionary* dictionary)
 {
     this->requestProvider = requestProvider;
     this->translatePageParser = translatePageParser;
     this->logger = logger;
+    this->dictionary = dictionary;
 }
 
-TranslateResult Translator::TranslateSentence(wstring sentence)
+TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDictionary) const
 {
-    //wstring translatorResponse = L"[[[\"размер\",\"size\",,,2],[,,\"razmer\",\"sīz\"]],[[\"имя существительное\",[\"размер\",\"формат\",\"объем\",\"величина\",\"сечение\",\"габарит\",\"калибр\",\"номер\",\"клей\",\"шлихта\",\"мерка\",\"кегель\",\"проклейка\",\"класс крупности\",\"клейстер\",\"шлихт\",\"номер обуви\"],[[\"размер\",[\"size\",\"rate\",\"scale\",\"extent\",\"dimension\",\"proportions\"],,0.47236654],[\"формат\",[\"format\",\"size\",\"form\"],,0.011825466],[\"объем\",[\"volume\",\"capacity\",\"size\",\"bulk\",\"space\",\"content\"],,0.0077553294],[\"величина\",[\"value\",\"size\",\"quantity\",\"magnitude\",\"dimension\",\"greatness\"],,0.0074001872],[\"сечение\",[\"section\",\"cut\",\"size\"],,0.00028693638],[\"габарит\",[\"size\",\"overall dimensions\"],,0.00019415087],[\"калибр\",[\"caliber\",\"gauge\",\"gage\",\"size\",\"pass\",\"bore\"],,0.00016349142],[\"номер\",[\"room\",\"number\",\"item\",\"size\",\"gauge\",\"gage\"],,0.00011775846],[\"клей\",[\"glue\",\"adhesive\",\"paste\",\"cement\",\"size\",\"gum\"],,3.8230573e-05],[\"шлихта\",[\"size\"],,2.1445408e-05],[\"мерка\",[\"measure\",\"yardstick\",\"size\"],,9.8184237e-06],[\"кегель\",[\"size\"],,7.1833119e-06],[\"проклейка\",[\"size\"],,5.1739457e-06],[\"класс крупности\",[\"size\"],,3.0895039e-06],[\"клейстер\",[\"paste\",\"flour paste\",\"size\"],,1.0348542e-06],[\"шлихт\",[\"size\"],,1.0348542e-06],[\"номер обуви\",[\"size\"],,1.0348542e-06]],\"size\",1],[\"глагол\",[\"калибровать\",\"шлихтовать\",\"разделять по величине\",\"сортировать по размеру\",\"сортировать по величине\",\"определять величину\",\"классифицировать\",\"изготовлять по размеру\",\"доводить\",\"проклеивать\"],[[\"калибровать\",[\"calibrate\",\"gauge\",\"size\",\"gage\",\"standardize\",\"graduate\"],,7.1833119e-06],[\"шлихтовать\",[\"size\"],,1.5294154e-06],[\"разделять по величине\",[\"size\"],,1.0348542e-06],[\"сортировать по размеру\",[\"size\"],,1.0348542e-06],[\"сортировать по величине\",[\"size\"],,1.0348542e-06],[\"определять величину\",[\"size\"],,1.0348542e-06],[\"классифицировать\",[\"classify\",\"categorize\",\"sort\",\"class\",\"rank\",\"size\"],,1.0348542e-06],[\"изготовлять по размеру\",[\"size\"],,1.0348542e-06],[\"доводить\",[\"bring\",\"carry\",\"drive\",\"lead to\",\"lap\",\"size\"],,1.0348542e-06],[\"проклеивать\",[\"size\"],,1.0348542e-06]],\"size\",2]],\"en\",,,[[\"size\",32000,[[\"размер\",1000,true,false]],[[0,4]],\"size\",0,0]],0.92248064,,[[\"en\"],,[0.92248064],[\"en\"]],,,[[\"имя существительное\",[[[\"dimensions\",\"measurements\",\"proportions\",\"magnitude\",\"largeness\",\"bigness\",\"area\",\"expanse\",\"breadth\",\"width\",\"length\",\"height\",\"depth\",\"immensity\",\"hugeness\",\"vastness\"],\"m_en_us1291061.002\"],[[\"sizing\"],\"\"]],\"size\"],[\"глагол\",[[[\"sort\",\"categorize\",\"classify\"],\"m_en_us1291061.005\"]],\"size\"]],[[\"имя существительное\",[[\"the relative extent of something; a thing's overall dimensions or magnitude; how big something is.\",\"m_en_us1291061.001\",\"the schools varied in size\"],[\"each of the classes, typically numbered, into which garments or other articles are divided according to how large they are.\",\"m_en_us1291061.003\",\"I can never find anything in my size\"],[\"a gelatinous solution used in gilding paper, stiffening textiles, and preparing plastered walls for decoration.\",\"m_en_us1291062.001\"]],\"size\"],[\"глагол\",[[\"alter or sort in terms of size or according to size.\",\"m_en_us1291061.005\",\"some drills are sized in millimeters\"],[\"treat with size to glaze or stiffen.\",\"m_en_us1291062.002\",\"Be sure to prime or size any newly applied drywall compound before painting or papering.\"]],\"size\"],[\"имя прилагательное\",[[\"having a specified size; sized.\",\"m_en_us1291061.008\",\"marble-size chunks of hail\"]],\"size\"]],[[[\"They can range in \u003cb\u003esize\u003c/b\u003e from the huge Wellingtonia tree to ground cover woodland plants.\",,,,3,\"m_en_us1291061.001\"],[\"The collection ranges in \u003cb\u003esize\u003c/b\u003e from the miniature to those over five feet in height.\",,,,3,\"m_en_us1291061.001\"],[\"they can make them to \u003cb\u003esize\u003c/b\u003e\",,,,3,\"neid_18967\"],[\"she was wearing a \u003cb\u003esize\u003c/b\u003e 20\",,,,3,\"neid_18971\"],[\"She was barefoot, and wearing only a flowered dress which was a \u003cb\u003esize\u003c/b\u003e too big for her skinny frame.\",,,,3,\"m_en_us1291061.003\"],[\"The houses vary in \u003cb\u003esize\u003c/b\u003e , with a choice of one to four bedrooms, sleeping up to eight.\",,,,3,\"m_en_us1291061.001\"],[\"he bought a different \u003cb\u003esize\u003c/b\u003e\",,,,3,\"neid_18969\"],[\"You can also look at your current shoes, but if you feel a bit discomfort, it's ok to get a bigger \u003cb\u003esize\u003c/b\u003e .\",,,,3,\"m_en_us1291061.003\"],[\"Scans of patients' brains showed that the injured area almost doubled in \u003cb\u003esize\u003c/b\u003e following treatment.\",,,,3,\"m_en_us1291061.001\"],[\"the business increased in \u003cb\u003esize\u003c/b\u003e\",,,,3,\"neid_18967\"],[\"After 2012, the Olympic stadium would be reduced in \u003cb\u003esize\u003c/b\u003e to become a new home for athletics.\",,,,3,\"m_en_us1291061.001\"],[\"Even within the main cultivated species, yams vary to a remarkable extent in \u003cb\u003esize\u003c/b\u003e , shape, and colour.\",,,,3,\"m_en_us1291061.001\"],[\"The councils vary in size from seven to fifteen members depending on the \u003cb\u003esize\u003c/b\u003e of the settlement they manage.\",,,,3,\"m_en_us1291061.001\"],[\"The \u003cb\u003esize\u003c/b\u003e of the pelvic area varies in cows and those with small pelvic areas are more prone to difficulty.\",,,,3,\"m_en_us1291061.001\"],[\"I had ticked off ten shops already that we had been to and didn't even offer anything in my dress \u003cb\u003esize\u003c/b\u003e .\",,,,3,\"m_en_us1291061.003\"],[\"she was a \u003cb\u003esize\u003c/b\u003e 14\",,,,3,\"neid_18970\"],[\"While presidents often talk of reducing the \u003cb\u003esize\u003c/b\u003e of their White House staff, none actually do.\",,,,3,\"m_en_us1291061.001\"],[\"I looked over, and for the first time, I noticed that my belly had drastically reduced in \u003cb\u003esize\u003c/b\u003e .\",,,,3,\"m_en_us1291061.001\"],[\"The sac is often covered by a thin layer of skin and can range in \u003cb\u003esize\u003c/b\u003e from the dimensions of a grape to those of a grapefruit.\",,,,3,\"m_en_us1291061.001\"],[\"The \u003cb\u003esize\u003c/b\u003e of the house excluding underground parking is about 4,100 square feet.\",,,,3,\"m_en_us1291061.001\"],[\"what \u003cb\u003esize\u003c/b\u003e is it?\",,,,3,\"neid_18967\"],[\"The \u003cb\u003esize\u003c/b\u003e of the house wasn't really big, but what made it look big was the garden beyond.\",,,,3,\"m_en_us1291061.001\"],[\"All apartments will be for sale and will range in \u003cb\u003esize\u003c/b\u003e from 750 to 1500 square feet.\",,,,3,\"m_en_us1291061.001\"],[\"he was amazed at the \u003cb\u003esize\u003c/b\u003e of the hall\",,,,3,\"neid_18968\"],[\"Territories vary greatly in size, the largest one more than five times the \u003cb\u003esize\u003c/b\u003e of the smallest one.\",,,,3,\"m_en_us1291061.001\"],[\"The craftspeople construct everything in small scale and the houses range in \u003cb\u003esize\u003c/b\u003e up to palaces which can cost as much as a full-sized house.\",,,,3,\"m_en_us1291061.001\"],[\"I would have given anything to make the perfect dress in a \u003cb\u003esize\u003c/b\u003e 18 appear for her to stop the tears.\",,,,3,\"m_en_us1291061.003\"],[\"We are retaining the play area although this will be slightly reduced in \u003cb\u003esize\u003c/b\u003e .\",,,,3,\"m_en_us1291061.001\"],[\"I suggest you also \u003cb\u003esize\u003c/b\u003e the walls before doing this, and as your decorator is a traditionalist I am sure he will agree.\",,,,3,\"m_en_us1291062.002\"],[\"The judges were more interested in \u003cb\u003esize\u003c/b\u003e than overall balance, proportion and symmetry.\",,,,3,\"m_en_us1291061.001\"]]],[[\"font size\",\"file size\",\"actual size\",\"shoe size\",\"size up\",\"grain size\",\"full size\",\"paper size\",\"lot size\",\"small size\"]]]";
     logger->Log(L"Start translating sentence '" + sentence + L"'.");
 
-    wstring hash = GetHash(sentence);
-    wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=" 
-        + hash 
-        + L"&q=" + requestProvider->EscapeText(sentence);
+    vector<LogRecord> dictionaryRecords = dictionary->GetRecords(sentence);
 
-    wstring translatorResponse = requestProvider->GetStringResponse(translateURL);
+    wstring translatorResponse;
+
+    if(dictionaryRecords.size() != 0)
+    {
+        translatorResponse = dictionaryRecords[0].Json;
+
+        if (updateDictionary)
+        {
+            dictionary->UpdateTranslateResult(sentence);
+        }
+    }
+    else
+    {
+        wstring hash = GetHash(sentence);
+        wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk="
+            + hash
+            + L"&q=" + requestProvider->EscapeText(sentence);
+
+        translatorResponse = requestProvider->GetStringResponse(translateURL);
+
+        if (updateDictionary)
+        {
+            dictionary->AddTranslateResult(sentence, translatorResponse);
+        }
+    }
 
     TranslateResult result;
-    
-    try 
+
+    try
     {
         result = ParseJSONResponse(translatorResponse);
         result.Sentence.Input = StringUtilities::CopyWideChar(sentence);

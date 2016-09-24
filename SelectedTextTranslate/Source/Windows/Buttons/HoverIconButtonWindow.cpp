@@ -39,12 +39,9 @@ void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
     graphics.SetSmoothingMode(SmoothingModeHighQuality);
     graphics.SetPixelOffsetMode(PixelOffsetModeHighQuality);
 
-    
-
     BOOL converstionSucceded;
     iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded);
 
-    graphics.SetPageUnit(UnitPixel);
     graphics.DrawImage(iconMetafile, 0, 0, currentWidth, currentHeight);
 
     delete iconMetafile;

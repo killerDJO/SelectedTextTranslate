@@ -88,6 +88,12 @@
     <Filter Include="Source\Model\Enums">
       <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Dictionary">
+      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Dictionary\Dto">
+      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -116,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp">
       <Filter>Source\Windows\Content</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Loggers\DictionaryLogger.cpp">
-      <Filter>Source\Loggers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Loggers\Logger.cpp">
       <Filter>Source\Loggers</Filter>
@@ -168,6 +171,12 @@
     <ClCompile Include="Source\Model\AppModel.cpp">
       <Filter>Source\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Dictionary\Dictionary.cpp">
+      <Filter>Source\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp">
+      <Filter>Source\Dictionary\Dto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -184,9 +193,6 @@
     <ClInclude Include="Source\Windows\Content\HeaderWindow.h">
       <Filter>Source\Windows\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Entities\LogRecord.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entities\TranslateResult.h">
       <Filter>Source\Entities</Filter>
     </ClInclude>
@@ -200,9 +206,6 @@
       <Filter>Source\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Source\Loggers\Logger.h">
-      <Filter>Source\Loggers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Loggers\DictionaryLogger.h">
       <Filter>Source\Loggers</Filter>
     </ClInclude>
     <ClInclude Include="Source\PrecompiledHeaders\stdafx.h">
@@ -279,6 +282,12 @@
     </ClInclude>
     <ClInclude Include="Source\Windows\Framework\Enums\ScrollBars.h">
       <Filter>Source\Windows\Framework\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dictionary\Dictionary.h">
+      <Filter>Source\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dictionary\Dto\LogRecord.h">
+      <Filter>Source\Dictionary\Dto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
