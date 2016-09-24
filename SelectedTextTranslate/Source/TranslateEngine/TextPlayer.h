@@ -13,8 +13,8 @@ private:
     RequestProvider* requestProvider;
     Logger* logger;
 
-    string GetAudioFilePath(string extension);
-    string SaveToFile(vector<unsigned char> content);
+    string GetAudioFilePath(string extension) const;
+    string SaveToFile(vector<unsigned char> content) const;
 
     static DWORD WINAPI Play(LPVOID arg);
 

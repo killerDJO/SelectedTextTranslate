@@ -3,7 +3,11 @@
 UINT MainWindow::WM_TASKBARCREATED;
 
 MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor)
-    : Window(hInstance, renderingContext, scrollProvider, descriptor)
+    : Window(hInstance, renderingContext, scrollProvider, descriptor),
+    menu(nullptr),
+    headerWindow(nullptr),
+    translateResultWindow(nullptr),
+    dictionaryWindow(nullptr)
 {
     this->renderingContext = renderingContext;
     this->scrollProvider = scrollProvider;
@@ -18,14 +22,14 @@ void MainWindow::Initialize()
     hWindow = CreateWindowEx(
         WS_EX_TOOLWINDOW,
         className,
-        NULL,
+        nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
         descriptor.X,
         descriptor.Y,
         descriptor.Width,
         descriptor.Height,
-        NULL,
-        NULL,
+        nullptr,
+        nullptr,
         hInstance,
         this);
 
@@ -46,7 +50,7 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->lpfnWndProc = WndProc;
     windowClass->hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
-    windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
+    windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 }
 
@@ -68,7 +72,7 @@ void MainWindow::InitializeChildWindows()
     headerWindow->Initialize();
 }
 
-void MainWindow::DestroyChildWindows()
+void MainWindow::DestroyChildWindows() const
 {
     delete dictionaryWindow;
     delete headerWindow;
@@ -95,7 +99,7 @@ void MainWindow::Minimize()
     Hide();
 }
 
-void MainWindow::Maximize()
+void MainWindow::Maximize() const
 {
     Show();
     SwitchToThisWindow(hWindow, TRUE);
@@ -114,7 +118,7 @@ SIZE MainWindow::RenderContent()
     return renderedSize;
 }
 
-SIZE MainWindow::RenderTranslateResultView()
+SIZE MainWindow::RenderTranslateResultView() const
 {
     headerWindow->Render();
     translateResultWindow->Render();
@@ -129,7 +133,7 @@ SIZE MainWindow::RenderTranslateResultView()
     return contentSize;
 }
 
-SIZE MainWindow::RenderDictionaryView()
+SIZE MainWindow::RenderDictionaryView() const
 {
     dictionaryWindow->Render();
 
@@ -189,14 +193,14 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         instance->menu = CreatePopupMenu();
         AppendMenu(instance->menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM, TEXT("Translate from clipboard"));
         AppendMenu(instance->menu, MF_STRING, ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM, TEXT("Dictionary"));
-        AppendMenu(instance->menu, MF_SEPARATOR, NULL, NULL);
+        AppendMenu(instance->menu, MF_SEPARATOR, NULL, nullptr);
         AppendMenu(instance->menu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit"));
 
         break;
     }
 
     case WM_SETCURSOR:
-        SetCursor(LoadCursor(NULL, IDC_ARROW));
+        SetCursor(LoadCursor(nullptr, IDC_ARROW));
         return TRUE;
 
     case WM_SYSCOMMAND:
@@ -222,7 +226,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
             POINT curPoint;
             GetCursorPos(&curPoint);
             SetForegroundWindow(hWnd);
-            UINT clicked = TrackPopupMenu(instance->menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, hWnd, NULL);
+            UINT clicked = TrackPopupMenu(instance->menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, hWnd, nullptr);
             if (clicked == ID_TRAY_EXIT_CONTEXT_MENU_ITEM)
             {
                 instance->appModel->Exit();

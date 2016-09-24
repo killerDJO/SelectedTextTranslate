@@ -1,6 +1,5 @@
 #pragma once
 #include "Entities\LogRecord.h"
-#include "Helpers\StringUtilities.h"
 #include "Loggers\Logger.h"
 
 class DictionaryLogger 
@@ -21,7 +20,6 @@ public:
     ~DictionaryLogger();
 
     void AddRecord(wstring word);
-    void RemoveRecord(wstring word);
     vector<LogRecord> GetRecords();
     void Flush();
 };

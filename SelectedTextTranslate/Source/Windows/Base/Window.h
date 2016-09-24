@@ -21,7 +21,7 @@ protected:
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
     virtual SIZE RenderContent() = 0;
 
-    DWORD GetScrollStyle();
+    DWORD GetScrollStyle() const;
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -29,14 +29,14 @@ public:
     Window(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor);
     virtual ~Window();
 
-    HWND GetHandle();
-    HINSTANCE GetInstance();
-    int GetWidth();
-    int GetHeight();
+    HWND GetHandle() const;
+    HINSTANCE GetInstance() const;
+    int GetWidth() const;
+    int GetHeight() const;
 
     virtual void Initialize();
-    void Show();
-    void Hide();
+    void Show() const;
+    void Hide() const;
 
     void Render(bool preserveVerticalScroll = false);
 };

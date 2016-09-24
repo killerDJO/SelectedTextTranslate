@@ -1,4 +1,5 @@
 #include "Helpers\RequestProvider.h"
+#include "Helpers\StringUtilities.h"
 
 using namespace web;
 using namespace web::http;
@@ -62,18 +63,18 @@ vector<unsigned char> RequestProvider::GetResponse(wstring url)
     }
 }
 
-wstring RequestProvider::EscapeText(wstring text)
+wstring RequestProvider::EscapeText(wstring text) const
 {
     wstring encodedString = uri::encode_data_string(text);
     return encodedString;
 }
 
-void RequestProvider::LogRequestException(wstring url, exception exception)
+void RequestProvider::LogRequestException(wstring url, exception exception) const
 {
     LogRequestError(url, L"Exception: " + StringUtilities::GetUtf16String(exception.what()));
 }
 
-void RequestProvider::LogRequestError(wstring url, wstring message)
+void RequestProvider::LogRequestError(wstring url, wstring message) const
 {
     logger->Log(L"Error requesting URL '" + url + L"'. " + message);
 }

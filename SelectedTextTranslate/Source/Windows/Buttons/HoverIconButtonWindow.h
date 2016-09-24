@@ -8,7 +8,7 @@ private:
     DWORD hoverIconResource;
 
     void RenderStateDC(HDC hdc, DWORD iconResource);
-    Metafile* LoadMetafileFromResource(DWORD resourceId);
+    Metafile* LoadMetafileFromResource(DWORD resourceId) const;
 
     static map<tuple<DWORD, int, int>, HDC> iconsCache;
 

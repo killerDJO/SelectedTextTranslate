@@ -1,15 +1,13 @@
 #pragma once
 #include "PrecompiledHeaders\stdafx.h"
-#include <chrono>
-#include <iomanip>
 
 class Logger
 {
 private:
-    wstring GetCurrentDateTime();
-    wstring GetCurrentDate();
-    wstring GetLocalComputerName();
-    wstring GetLogFileName();
+    wstring GetCurrentDateTime() const;
+    wstring GetCurrentDate() const;
+    wstring GetLocalComputerName() const;
+    wstring GetLogFileName() const;
 
 public:
     Logger();

@@ -32,11 +32,11 @@ private:
 
     void InitNotifyIconData();
     void InitializeChildWindows();
-    void DestroyChildWindows();
+    void DestroyChildWindows() const;
     void Scale(double scaleFactorAjustment);
 
-    SIZE RenderTranslateResultView();
-    SIZE RenderDictionaryView();
+    SIZE RenderTranslateResultView() const;
+    SIZE RenderDictionaryView() const;
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -51,5 +51,5 @@ public:
     void Initialize() override;
 
     void Minimize();
-    void Maximize();
+    void Maximize() const;
 };

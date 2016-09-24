@@ -26,19 +26,19 @@ public:
 
     void SetMainWindow(MainWindow* mainWindow);
 
-    ApplicactionViews GetCurrentApplicationView();
+    ApplicactionViews GetCurrentApplicationView() const;
 
-    vector<LogRecord> GetDictionaryRecords();
-    TranslateResult GetCurrentTranslateResult();
+    vector<LogRecord> GetDictionaryRecords() const;
+    TranslateResult GetCurrentTranslateResult() const;
 
     void TranslateSelectedText();
     void ToggleTranslateResultDictionary(int translateResultDictionaryIndex);
 
     void PlaySelectedText();
-    void PlayCurrentText();
+    void PlayCurrentText() const;
 
     void ShowDictionary();
     void TranslateWordFromDictionary(int wordInDictionaryIndex);
 
-    void Exit();
+    void Exit() const;
 };

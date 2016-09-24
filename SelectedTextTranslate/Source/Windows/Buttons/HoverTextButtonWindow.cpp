@@ -24,7 +24,7 @@ void HoverTextButtonWindow::RenderStatesDC()
     RenderStateDC(hoverStateDC, hoverColor);
 }
 
-void HoverTextButtonWindow::RenderStateDC(HDC hdc, Colors color)
+void HoverTextButtonWindow::RenderStateDC(HDC hdc, Colors color) const
 {
     Renderer* renderer = new Renderer(hdc, renderingContext);
 

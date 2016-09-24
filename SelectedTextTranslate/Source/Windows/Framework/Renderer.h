@@ -15,11 +15,11 @@ public:
 
     POINT PrintText(const wchar_t* text, HFONT font, Colors color, int x, int y);
     void DrawRect(RECT rect, HBRUSH brush);
-    int GetFontAscent(HFONT font);
-    int GetFontStrokeHeight(HFONT font);
+    int GetFontAscent(HFONT font) const;
+    int GetFontStrokeHeight(HFONT font) const;
 
-    SIZE GetScaledSize();
-    SIZE GetSize();
+    SIZE GetScaledSize() const;
+    SIZE GetSize() const;
 
     void IncreaseWidth(int widthToAdd);
     void IncreaseHeight(int heightToAdd);

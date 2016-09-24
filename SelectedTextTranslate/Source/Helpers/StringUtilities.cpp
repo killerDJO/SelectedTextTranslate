@@ -2,7 +2,7 @@
 
 wstring StringUtilities::GetUtf16String(string text)
 {
-    int requiredLen = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
+    int requiredLen = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
 
     wchar_t* buffer = new wchar_t[requiredLen + 1];
 
@@ -17,11 +17,11 @@ wstring StringUtilities::GetUtf16String(string text)
 
 string StringUtilities::GetUtf8String(wstring text)
 {
-    int requiredLen = WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, NULL, 0, NULL, NULL);
+    int requiredLen = WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, nullptr, 0, nullptr, nullptr);
 
     char* buffer = new char[requiredLen + 1];
 
-    WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, buffer, requiredLen, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, buffer, requiredLen, nullptr, nullptr);
 
     string result(buffer);
 

@@ -1,4 +1,5 @@
 ﻿#include "TranslateEngine\Translator.h"
+#include "Helpers\StringUtilities.h"
 
 using namespace web;
 
@@ -42,7 +43,7 @@ TranslateResult Translator::TranslateSentence(wstring sentence)
 }
 
 // Grabbed from google minified js code
-wstring Translator::GetHash(wstring sentence)
+wstring Translator::GetHash(wstring sentence) const
 {
     string utf8Sentence = StringUtilities::GetUtf8String(sentence);
     const char* bytes = utf8Sentence.c_str();
@@ -99,7 +100,7 @@ wstring Translator::GetHash(wstring sentence)
 //		],		
 //	]
 //]
-TranslateResult Translator::ParseJSONResponse(wstring json)
+TranslateResult Translator::ParseJSONResponse(wstring json) const
 {
     TranslateResult result;
 
@@ -183,7 +184,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json)
     return result;
 }
 
-void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &replace)
+void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &replace) const
 {
     for (size_t pos = 0;; pos += replace.length() - 1)
     {

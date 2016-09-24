@@ -9,10 +9,10 @@ private:
     vector<ChildWindow*> destroyBeforeDrawQueue;
 
     void Draw();
-    void ForceDraw();
+    void ForceDraw() const;
     void DrawChildWindows();
 
-    void DestroyChildWindows(vector<ChildWindow*>& childWindows);
+    void DestroyChildWindows(vector<ChildWindow*>& childWindows) const;
 
 protected:
     HWND parentWindow;

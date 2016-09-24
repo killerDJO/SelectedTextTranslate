@@ -1,4 +1,5 @@
 #include "TranslateEngine\TranslatePageParser.h"
+#include "Helpers\StringUtilities.h"
 
 TranslatePageParser::TranslatePageParser(Logger* logger, RequestProvider* requestProvider)
 {
@@ -64,7 +65,8 @@ void TranslatePageParser::UpateTkkIfNeccessary()
     }
 }
 
-string TranslatePageParser::SearchScriptTag(GumboNode* node) {
+string TranslatePageParser::SearchScriptTag(GumboNode* node) const
+{
 
     if (node->type != GUMBO_NODE_ELEMENT)
     {
@@ -95,7 +97,8 @@ string TranslatePageParser::SearchScriptTag(GumboNode* node) {
     return "";
 }
 
-vector<string> TranslatePageParser::Split(const string &s, char delim) {
+vector<string> TranslatePageParser::Split(const string &s, char delim) const
+{
     vector<string> elems;
 
     stringstream ss(s);

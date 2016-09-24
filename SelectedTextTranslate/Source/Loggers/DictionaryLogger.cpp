@@ -1,5 +1,6 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\DictionaryLogger.h"
+#include "Helpers/StringUtilities.h"
 
 using namespace web;
 
@@ -34,10 +35,6 @@ void DictionaryLogger::AddRecord(wstring word)
     records.push_back(newRecord);
 
     Flush();
-}
-
-void DictionaryLogger::RemoveRecord(wstring word)
-{
 }
 
 vector<LogRecord> DictionaryLogger::GetRecords()
@@ -75,8 +72,8 @@ void DictionaryLogger::Initialize()
 
 void DictionaryLogger::ReadRecords()
 {
-    HANDLE hFile = CreateFile(logFileName, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    DWORD error = GetLastError();
+    HANDLE hFile = CreateFile(logFileName, GENERIC_READ, 0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+
     if (hFile == INVALID_HANDLE_VALUE) 
     {
         return;
@@ -89,7 +86,7 @@ void DictionaryLogger::ReadRecords()
     DWORD nWritten;
     do 
     {
-        ReadFile(hFile, buffer, bufferSize, &nWritten, NULL);
+        ReadFile(hFile, buffer, bufferSize, &nWritten, nullptr);
         json += wstring((wchar_t*)buffer, nWritten / sizeof(wchar_t));
     } 
     while (nWritten == bufferSize);
@@ -144,7 +141,7 @@ void DictionaryLogger::WriteRecords()
 
     wstring json = root.serialize().c_str();
 
-    HANDLE hFile = CreateFile(logFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HANDLE hFile = CreateFile(logFileName, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
     if (hFile == INVALID_HANDLE_VALUE)
     {
@@ -153,7 +150,7 @@ void DictionaryLogger::WriteRecords()
 
     DWORD nWritten;
     const wchar_t* buffer = json.c_str();
-    WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
+    WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, nullptr);
 
     CloseHandle(hFile);
 }

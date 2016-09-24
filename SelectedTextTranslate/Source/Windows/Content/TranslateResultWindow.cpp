@@ -1,7 +1,7 @@
 ﻿#include "Windows\Content\TranslateResultWindow.h"
 
 TranslateResultWindow::TranslateResultWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
-: ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel)
+: ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel), fontUnderscored(nullptr)
 {
 }
 
@@ -12,7 +12,7 @@ void TranslateResultWindow::Initialize()
     fontUnderscored = renderingContext->CreateCustomFont(hWindow, FontSizes::Small, false, true);
 }
 
-void TranslateResultWindow::ExpandDictionary(int index)
+void TranslateResultWindow::ExpandDictionary(int index) const
 {
     appModel->ToggleTranslateResultDictionary(index);
 }
@@ -32,8 +32,8 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
         // Draw category header
         POINT baseFormBottomRight = renderer->PrintText(category.BaseForm, fontNormal, Colors::Black, paddingX, curY);
 
-        wstring text = L" - " + wstring(category.PartOfSpeech);
-        renderer->PrintText(text.c_str(), fontItalic, Colors::Gray, baseFormBottomRight.x + 1, curY);
+        wstring partOfSpeech = L" - " + wstring(category.PartOfSpeech);
+        renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, baseFormBottomRight.x + 1, curY);
 
         vector<TranslateResultDictionaryEntry> showedEntries(0);
         if (category.IsExtendedList)
@@ -42,14 +42,14 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
         }
         else
         {
-            for (size_t i = 0; i < category.Entries.size(); ++i)
+            for (size_t j = 0; j < category.Entries.size(); ++j)
             {
-                if (category.Entries[i].Score < 0.003 && i >= 7)
+                if (category.Entries[j].Score < 0.003 && j >= 7)
                 {
                     continue;
                 }
 
-                showedEntries.push_back(category.Entries[i]);
+                showedEntries.push_back(category.Entries[j]);
             }
         }
 
@@ -118,7 +118,7 @@ int TranslateResultWindow::CreateExpandButton(
     DWORD hiddenCount = category.Entries.size() - showedCount;
 
     if (category.IsExtendedList || hiddenCount > 0) {
-        wstring text = L"";
+        wstring text;
 
         if (!category.IsExtendedList) {
             if (hiddenCount == 1) {

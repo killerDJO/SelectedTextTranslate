@@ -5,13 +5,14 @@ TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* 
     this->translator = translator;
     this->requestProvider = requestProvider;
     this->logger = logger;
+    this->currentTextToPlay = nullptr;
 }
 
 void TextPlayer::PlayText(const wchar_t* text)
 {
     currentTextToPlay = text;
     DWORD threadId;
-    HANDLE hThread = CreateThread(NULL, 0, TextPlayer::Play, this, 0, &threadId);
+    HANDLE hThread = CreateThread(nullptr, 0, TextPlayer::Play, this, 0, &threadId);
     CloseHandle(hThread);
 }
 
@@ -32,30 +33,30 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
     audio.clear();
 
     string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
-    mciSendStringA(openFileCommand.c_str(), NULL, 0, 0);
+    mciSendStringA(openFileCommand.c_str(), nullptr, 0, nullptr);
 
     string playAudioCommand = "play " + string(AUDIO_FILE_NAME) + " wait";
-    mciSendStringA(playAudioCommand.c_str(), NULL, 0, 0);
+    mciSendStringA(playAudioCommand.c_str(), nullptr, 0, nullptr);
 
     string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
-    mciSendStringA(closeAudioCommand.c_str(), NULL, 0, 0);
+    mciSendStringA(closeAudioCommand.c_str(), nullptr, 0, nullptr);
 
     textPlayer->logger->Log(L"End playing sentence.");
 
     return 0;
 }
 
-string TextPlayer::SaveToFile(vector<unsigned char> content)
+string TextPlayer::SaveToFile(vector<unsigned char> content) const
 {
     string path = TextPlayer::GetAudioFilePath(".mp3");
-    HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+    HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     DWORD dwWritten;
-    WriteFile(hFile, &content[0], sizeof(unsigned char) * content.size(), &dwWritten, 0);
+    WriteFile(hFile, &content[0], sizeof(unsigned char) * content.size(), &dwWritten, nullptr);
     CloseHandle(hFile);
     return path;
 }
 
-string TextPlayer::GetAudioFilePath(string extension)
+string TextPlayer::GetAudioFilePath(string extension) const
 {
     char buffer[MAX_PATH];
     DWORD pathLength = GetTempPathA(MAX_PATH, buffer);

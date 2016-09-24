@@ -15,12 +15,12 @@ void RenderingContext::ComputeScaleFactor()
     scaleFactor = screenResolutionY / 860.0;
 }
 
-int RenderingContext::Scale(int value)
+int RenderingContext::Scale(int value) const
 {
     return roundToInt(value * scaleFactor);
 }
 
-RECT RenderingContext::Scale(RECT rect)
+RECT RenderingContext::Scale(RECT rect) const
 {
     RECT scaledRect;
     scaledRect.left = Scale(rect.left);
@@ -30,7 +30,7 @@ RECT RenderingContext::Scale(RECT rect)
     return scaledRect;
 }
 
-WindowDescriptor RenderingContext::Scale(WindowDescriptor windowDescriptor)
+WindowDescriptor RenderingContext::Scale(WindowDescriptor windowDescriptor) const
 {
     return WindowDescriptor::CreateWindowDescriptor(
         Scale(windowDescriptor.X),
@@ -42,12 +42,12 @@ WindowDescriptor RenderingContext::Scale(WindowDescriptor windowDescriptor)
     );
 }
 
-int RenderingContext::Downscale(int value)
+int RenderingContext::Downscale(int value) const
 {
     return roundToInt(value / scaleFactor);
 }
 
-SIZE RenderingContext::Downscale(SIZE size)
+SIZE RenderingContext::Downscale(SIZE size) const
 {
     SIZE downscaledSize;
     downscaledSize.cx = Downscale(size.cx);
@@ -55,7 +55,7 @@ SIZE RenderingContext::Downscale(SIZE size)
     return downscaledSize;
 }
 
-int RenderingContext::Rescale(int value, double scaleFactorAjustment)
+int RenderingContext::Rescale(int value, double scaleFactorAjustment) const
 {
     return roundToInt(Downscale(value) * (scaleFactor + scaleFactorAjustment));
 }
@@ -65,7 +65,7 @@ void RenderingContext::AjustScaleFactor(double scaleFactorAjustment)
     scaleFactor += scaleFactorAjustment;
 }
 
-SIZE RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
+SIZE RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font) const
 {
     SelectObject(hdc, font);
 
@@ -75,7 +75,7 @@ SIZE RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font)
     return textSize;
 }
 
-TEXTMETRIC RenderingContext::GetFontMetrics(HDC hdc, HFONT font)
+TEXTMETRIC RenderingContext::GetFontMetrics(HDC hdc, HFONT font) const
 {
     SelectObject(hdc, font);
 
@@ -85,7 +85,7 @@ TEXTMETRIC RenderingContext::GetFontMetrics(HDC hdc, HFONT font)
     return tm;
 }
 
-HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic, bool isUnderscored)
+HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic, bool isUnderscored) const
 {
     HDC hdc = GetDC(hWindow);
 
@@ -116,14 +116,14 @@ HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool 
     return font;
 }
 
-HBRUSH RenderingContext::CreateCustomBrush(Colors color)
+HBRUSH RenderingContext::CreateCustomBrush(Colors color) const
 {
     return CreateSolidBrush((COLORREF)color);
 }
 
-HDC RenderingContext::CreateInMemoryDC(DWORD width, DWORD height)
+HDC RenderingContext::CreateInMemoryDC(DWORD width, DWORD height) const
 {
-    HDC hdc = CreateCompatibleDC(NULL);
+    HDC hdc = CreateCompatibleDC(nullptr);
 
     BITMAPINFO i;
     ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
@@ -136,20 +136,20 @@ HDC RenderingContext::CreateInMemoryDC(DWORD width, DWORD height)
     i.bmiHeader.biClrUsed = 0;
     i.bmiHeader.biClrImportant = 0;
     VOID *pvBits;
-    HBITMAP bitmap = CreateDIBSection(hdc, &i, DIB_RGB_COLORS, &pvBits, NULL, 0);
+    HBITMAP bitmap = CreateDIBSection(hdc, &i, DIB_RGB_COLORS, &pvBits, nullptr, 0);
 
     SelectObject(hdc, bitmap);
 
     return hdc;
 }
 
-void RenderingContext::ResizeDC(HDC &hdc, DWORD width, DWORD height)
+void RenderingContext::ResizeDC(HDC &hdc, DWORD width, DWORD height) const
 {
     DeleteDC(hdc);
     hdc = CreateInMemoryDC(width, height);
 }
 
-void RenderingContext::ClearDC(HDC hdc, DWORD width, DWORD height)
+void RenderingContext::ClearDC(HDC hdc, DWORD width, DWORD height) const
 {
     RECT rect;
     rect.top = 0;
@@ -159,7 +159,7 @@ void RenderingContext::ClearDC(HDC hdc, DWORD width, DWORD height)
     FillRect(hdc, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
 }
 
-DWORD RenderingContext::CopyDC(HDC source, HDC target, DWORD width, DWORD height)
+DWORD RenderingContext::CopyDC(HDC source, HDC target, DWORD width, DWORD height) const
 {
     return BitBlt(target, 0, 0, width, height, source, 0, 0, SRCCOPY);
 }

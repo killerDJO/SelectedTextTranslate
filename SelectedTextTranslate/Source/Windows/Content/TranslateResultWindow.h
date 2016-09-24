@@ -8,7 +8,7 @@ class TranslateResultWindow : public ContentWindow
 private:
     HFONT fontUnderscored;
 
-    void ExpandDictionary(int index);
+    void ExpandDictionary(int index) const;
     int CreateExpandButton(TranslateResultDictionary category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
 
 protected:

@@ -69,11 +69,11 @@ void Window::Render(bool preserveVerticalScroll)
         }
     }
 
-    InvalidateRect(hWindow, NULL, FALSE);
+    InvalidateRect(hWindow, nullptr, FALSE);
     MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
 }
 
-DWORD Window::GetScrollStyle()
+DWORD Window::GetScrollStyle() const
 {
     int scrollStyle = 0;
 
@@ -90,32 +90,32 @@ DWORD Window::GetScrollStyle()
     return scrollStyle;
 }
 
-HWND Window::GetHandle()
+HWND Window::GetHandle() const
 {
     return hWindow;
 }
 
-HINSTANCE Window::GetInstance()
+HINSTANCE Window::GetInstance() const
 {
     return hInstance;
 }
 
-int Window::GetWidth()
+int Window::GetWidth() const
 {
     return currentWidth;
 }
 
-int Window::GetHeight()
+int Window::GetHeight() const
 {
     return currentHeight;
 }
 
-void Window::Show()
+void Window::Show() const
 {
     ShowWindow(hWindow, SW_SHOW);
 }
 
-void Window::Hide()
+void Window::Hide() const
 {
     ShowWindow(hWindow, SW_HIDE);
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "Helpers\StringUtilities.h"
 #include "Loggers\Logger.h"
 
 class RequestProvider
@@ -7,8 +6,8 @@ class RequestProvider
 private:
     Logger* logger;
 
-    void LogRequestException(wstring url, exception exception);
-    void LogRequestError(wstring url, wstring message);
+    void LogRequestException(wstring url, exception exception) const;
+    void LogRequestError(wstring url, wstring message) const;
 
 public:
     RequestProvider(Logger* logger);
@@ -16,5 +15,5 @@ public:
 
     wstring GetStringResponse(wstring url);
     vector<unsigned char> GetResponse(wstring url);
-    wstring EscapeText(wstring text);
+    wstring EscapeText(wstring text) const;
 };

@@ -50,24 +50,24 @@ void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
     iconsCache[cacheKey] = cachedDC;
 }
 
-Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId)
+Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) const
 {
     HRSRC hResource = FindResource(hInstance, MAKEINTRESOURCE(resourceId), RT_RCDATA);
     if (!hResource)
     {
-        return NULL;
+        return nullptr;
     }
 
     DWORD imageSize = SizeofResource(hInstance, hResource);
     if (!imageSize)
     {
-        return NULL;
+        return nullptr;
     }
 
     const void* pResourceData = LockResource(LoadResource(hInstance, hResource));
     if (!pResourceData)
     {
-        return NULL;
+        return nullptr;
     }
 
     HGLOBAL globalBuffer = GlobalAlloc(GMEM_MOVEABLE, imageSize);
@@ -78,7 +78,7 @@ Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId)
         {
             CopyMemory(pBuffer, pResourceData, imageSize);
 
-            IStream* pStream = NULL;
+            IStream* pStream = nullptr;
             if (CreateStreamOnHGlobal(globalBuffer, FALSE, &pStream) == S_OK)
             {
                 Metafile* metafile = new Metafile(pStream);
@@ -93,7 +93,7 @@ Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId)
         GlobalFree(globalBuffer);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 HoverIconButtonWindow::~HoverIconButtonWindow()

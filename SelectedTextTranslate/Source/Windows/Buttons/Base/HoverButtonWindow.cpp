@@ -1,7 +1,7 @@
 #include "Windows\Buttons\Base\HoverButtonWindow.h"
 
 HoverButtonWindow::HoverButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback)
-    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow)
+    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow), hoverStateDC(nullptr), normalStateDC(nullptr)
 {
     this->clickCallback = clickCallback;
     this->isHovered = false;
@@ -13,7 +13,7 @@ void HoverButtonWindow::Initialize()
     SetWindowLongPtr(hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
 
     RenderStatesDC();
-    RenderDC(NULL);
+    RenderDC(nullptr);
 }
 
 LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -40,10 +40,10 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSEHOVER:
         window->isHovered = true;
-        window->RenderDC(NULL);
-        InvalidateRect(hWnd, NULL, TRUE);
+        window->RenderDC(nullptr);
+        InvalidateRect(hWnd, nullptr, TRUE);
 
-        SetCursor(LoadCursor(NULL, IDC_HAND));
+        SetCursor(LoadCursor(nullptr, IDC_HAND));
 
         break;
 
@@ -52,10 +52,10 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSELEAVE:
         window->isHovered = false;
-        window->RenderDC(NULL);
-        InvalidateRect(hWnd, NULL, TRUE);
+        window->RenderDC(nullptr);
+        InvalidateRect(hWnd, nullptr, TRUE);
 
-        SetCursor(LoadCursor(NULL, IDC_ARROW));
+        SetCursor(LoadCursor(nullptr, IDC_ARROW));
 
         return TRUE;
 
@@ -72,7 +72,7 @@ SIZE HoverButtonWindow::RenderDC(Renderer* renderer)
         ? hoverStateDC
         : normalStateDC;
 
-    DWORD res = renderingContext->CopyDC(sourceDC, inMemoryDC, currentWidth, currentHeight);
+    renderingContext->CopyDC(sourceDC, inMemoryDC, currentWidth, currentHeight);
 
     MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
 

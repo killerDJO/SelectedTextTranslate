@@ -38,14 +38,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR           gdiplusToken;
 
-    // Initialize GDI+.
-    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-
-    HANDLE mutex = CreateMutex(NULL,FALSE,_T("Selected text translate"));
+    HANDLE mutex = CreateMutex(nullptr, FALSE,_T("Selected text translate"));
     if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
         FatalAppExit(0, TEXT("SelectedTextTranslate already started!"));
     }
+
+    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
     Logger* logger = new Logger();
     DictionaryLogger* dictionaryLogger = new DictionaryLogger(logger);
@@ -67,7 +66,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     logger->Log(L"Application start.");
 
     MSG msg;
-    while (GetMessage (&msg, NULL, 0, 0))
+    while (GetMessage (&msg, nullptr, 0, 0))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);

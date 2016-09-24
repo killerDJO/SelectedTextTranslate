@@ -41,23 +41,23 @@ void Renderer::DrawRect(RECT rect, HBRUSH brush)
     scaledSize.cy = max(scaledSize.cy, scaledRect.bottom);
 }
 
-int Renderer::GetFontAscent(HFONT font)
+int Renderer::GetFontAscent(HFONT font) const
 {
     return renderingContext->Downscale(renderingContext->GetFontMetrics(hdc, font).tmAscent);
 }
 
-int Renderer::GetFontStrokeHeight(HFONT font)
+int Renderer::GetFontStrokeHeight(HFONT font) const
 {
     TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(hdc, font);
     return renderingContext->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
 }
 
-SIZE Renderer::GetScaledSize()
+SIZE Renderer::GetScaledSize() const
 {
     return scaledSize;
 }
 
-SIZE Renderer::GetSize()
+SIZE Renderer::GetSize() const
 {
     return renderingContext->Downscale(scaledSize);
 }

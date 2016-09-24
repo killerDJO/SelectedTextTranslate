@@ -4,7 +4,7 @@ TextExtractor::TextExtractor()
 {
 }
 
-wstring TextExtractor::GetSelectedText()
+wstring TextExtractor::GetSelectedText() const
 {
     wstring result = L"";
 
@@ -27,15 +27,15 @@ wstring TextExtractor::GetSelectedText()
     input[3].ki.wVk = input[1].ki.wVk;
     input[3].ki.wScan = input[1].ki.wScan;
 
-    SendInput( key_count, (LPINPUT)input, sizeof(INPUT) );
+    SendInput( key_count, LPINPUT(input), sizeof(INPUT) );
 
     // Waiting for input event
     Sleep(100);
 
-    if( OpenClipboard(NULL) )
+    if(OpenClipboard(nullptr))
     {
         HGLOBAL hglb = GetClipboardData(CF_UNICODETEXT);
-        TCHAR* lpstr = (TCHAR*)GlobalLock(hglb);
+        TCHAR* lpstr = static_cast<TCHAR*>(GlobalLock(hglb));
 
         if(lpstr)
         {

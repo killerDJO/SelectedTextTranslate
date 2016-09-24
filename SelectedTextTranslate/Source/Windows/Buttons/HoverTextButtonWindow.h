@@ -12,7 +12,7 @@ private:
     Colors hoverColor;
     wstring text;
 
-    void RenderStateDC(HDC hdc, Colors color);
+    void RenderStateDC(HDC hdc, Colors color) const;
 
 public:
     HoverTextButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback);

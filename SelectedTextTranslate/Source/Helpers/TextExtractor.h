@@ -6,5 +6,5 @@ public:
     TextExtractor();
     ~TextExtractor();
 
-    wstring GetSelectedText();
+    wstring GetSelectedText() const;
 };

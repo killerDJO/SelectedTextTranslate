@@ -15,7 +15,7 @@ void ScrollProvider::InitializeScrollbar(HWND hWindow, int contentSize, int wind
     InitializeScrollbar(hWindow, windowSize, contentSize, scrollChar, scrollBar);
 }
 
-void ScrollProvider::InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar)
+void ScrollProvider::InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar) const
 {
     SCROLLINFO si;
 
@@ -28,13 +28,13 @@ void ScrollProvider::InitializeScrollbar(HWND hWindow, int windowDimension, int 
     SetScrollInfo(hWindow, (int)scrollBar, &si, TRUE);
 }
 
-int ScrollProvider::GetScrollPosition(HWND hWindow, ScrollBars scrollBar)
+int ScrollProvider::GetScrollPosition(HWND hWindow, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo = GetScrollBarInfo(hWindow, scrollBar);
     return scrollInfo.nPos;
 }
 
-void ScrollProvider::SetScrollPosition(HWND hWindow, ScrollBars scrollBar, int position)
+void ScrollProvider::SetScrollPosition(HWND hWindow, ScrollBars scrollBar, int position) const
 {
     SCROLLINFO scrollInfo = GetScrollBarInfo(hWindow, scrollBar);
     int scrollOffset = scrollInfo.nPos;
@@ -44,17 +44,17 @@ void ScrollProvider::SetScrollPosition(HWND hWindow, ScrollBars scrollBar, int p
     SetScrollPosition(hWindow, scrollInfo, scrollBar, scrollOffset, scrollCharY);
 }
 
-void ScrollProvider::ProcessVerticalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam)
+void ScrollProvider::ProcessVerticalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam) const
 {
     ProcessScroll(hWindow, wParam, lParam, scrollCharY, ScrollBars::Vertical);
 }
 
-void ScrollProvider::ProcessHorizontalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam)
+void ScrollProvider::ProcessHorizontalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam) const
 {
     ProcessScroll(hWindow, wParam, lParam, scrollCharX, ScrollBars::Horizontal);
 }
 
-void ScrollProvider::ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar)
+void ScrollProvider::ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo = GetScrollBarInfo(hWindow, scrollBar);
     int scrollOffset = scrollInfo.nPos;
@@ -96,7 +96,7 @@ void ScrollProvider::ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, i
     SetScrollPosition(hWindow, scrollInfo, scrollBar, scrollOffset, scrollChar);
 }
 
-void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar)
+void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar) const
 {
     scrollInfo.fMask = SIF_POS;
     SetScrollInfo(hWindow, (int)scrollBar, &scrollInfo, TRUE);
@@ -121,15 +121,15 @@ void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, Scro
             hWindow,
             scrollAmountHorizontal,
             scrollAmountVertical,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
+            nullptr,
+            nullptr,
+            nullptr,
+            nullptr,
             SW_SCROLLCHILDREN);
     }
 }
 
-SCROLLINFO ScrollProvider::GetScrollBarInfo(HWND hWindow, ScrollBars scrollBar)
+SCROLLINFO ScrollProvider::GetScrollBarInfo(HWND hWindow, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo;
     scrollInfo.cbSize = sizeof(scrollInfo);

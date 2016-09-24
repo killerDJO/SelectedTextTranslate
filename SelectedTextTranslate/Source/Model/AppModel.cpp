@@ -17,17 +17,17 @@ void AppModel::SetMainWindow(MainWindow* mainWindow)
     this->mainWindow = mainWindow;
 }
 
-ApplicactionViews AppModel::GetCurrentApplicationView()
+ApplicactionViews AppModel::GetCurrentApplicationView() const
 {
     return applicationView;
 }
 
-vector<LogRecord> AppModel::GetDictionaryRecords()
+vector<LogRecord> AppModel::GetDictionaryRecords() const
 {
     return dictionaryLogger->GetRecords();
 }
 
-TranslateResult AppModel::GetCurrentTranslateResult()
+TranslateResult AppModel::GetCurrentTranslateResult() const
 {
     return translateResult;
 }
@@ -59,7 +59,7 @@ void AppModel::PlaySelectedText()
     textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
-void AppModel::PlayCurrentText()
+void AppModel::PlayCurrentText() const
 {
     textPlayer->PlayText(translateResult.Sentence.Origin);
 }
@@ -81,7 +81,7 @@ void AppModel::TranslateWordFromDictionary(int wordInDictionaryIndex)
     mainWindow->Render();
 }
 
-void AppModel::Exit()
+void AppModel::Exit() const
 {
     PostQuitMessage(0);
 }

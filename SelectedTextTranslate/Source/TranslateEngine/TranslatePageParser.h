@@ -1,6 +1,5 @@
 #pragma once
 #include "Helpers\RequestProvider.h"
-#include "Helpers\StringUtilities.h"
 #include "Loggers\Logger.h"
 
 class TranslatePageParser
@@ -13,9 +12,9 @@ private:
     long long tkk2;
     time_t lastTkkRequestTime;
 
-    void UpateTkkIfNeccessary();	
-    vector<string> Split(const string &s, char delim);
-    string SearchScriptTag(GumboNode* node);
+    void UpateTkkIfNeccessary();
+    vector<string> Split(const string &s, char delim) const;
+    string SearchScriptTag(GumboNode* node) const;
 
 public:
     TranslatePageParser(Logger* logger, RequestProvider* requestProvider);

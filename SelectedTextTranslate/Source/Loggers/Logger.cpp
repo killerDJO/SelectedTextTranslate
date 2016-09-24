@@ -1,14 +1,16 @@
 #include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\Logger.h"
+#include <chrono>
+#include <iomanip>
 
 Logger::Logger()
 {
-    CreateDirectory(L".\\logs", NULL);
+    CreateDirectory(L".\\logs", nullptr);
 }
 
 void Logger::Log(wstring record)
 {
-    HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
     if (hFile == INVALID_HANDLE_VALUE)
     {
@@ -19,12 +21,12 @@ void Logger::Log(wstring record)
 
     DWORD nWritten;
     const wchar_t* buffer = record.c_str();
-    WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, NULL);
+    WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, nullptr);
 
     CloseHandle(hFile);
 }
 
-wstring Logger::GetLogFileName()
+wstring Logger::GetLogFileName() const
 {
     wstring currentDate = GetCurrentDate();
     wstring computerName = GetLocalComputerName();
@@ -34,7 +36,7 @@ wstring Logger::GetLogFileName()
     return fullFileName;
 }
 
-wstring Logger::GetLocalComputerName()
+wstring Logger::GetLocalComputerName() const
 {
     wchar_t buffer[MAX_COMPUTERNAME_LENGTH + 1];
     DWORD bufCharCount = MAX_COMPUTERNAME_LENGTH + 1;
@@ -44,7 +46,7 @@ wstring Logger::GetLocalComputerName()
     return wstring(buffer);
 }
 
-tm GetTimeInfo() 
+tm GetTimeInfo()
 {
     auto now = chrono::system_clock::now();
     time_t time = chrono::system_clock::to_time_t(now);
@@ -55,7 +57,7 @@ tm GetTimeInfo()
     return timeinfo;
 }
 
-wstring Logger::GetCurrentDate()
+wstring Logger::GetCurrentDate() const
 {
     tm timeinfo = GetTimeInfo();
 
@@ -67,7 +69,7 @@ wstring Logger::GetCurrentDate()
     return date;
 }
 
-wstring Logger::GetCurrentDateTime()
+wstring Logger::GetCurrentDateTime() const
 {
     tm timeinfo = GetTimeInfo();
 

@@ -1,7 +1,12 @@
 #include "Windows\Content\Base\ContentWindow.h"
 
 ContentWindow::ContentWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
-    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow)
+    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow),
+    fontNormal(nullptr),
+    fontHeader(nullptr),
+    fontItalic(nullptr),
+    fontSmall(nullptr),
+    grayBrush(nullptr)
 {
     this->appModel = appModel;
 

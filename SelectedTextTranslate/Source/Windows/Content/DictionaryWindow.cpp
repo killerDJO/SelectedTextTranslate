@@ -5,7 +5,7 @@ DictionaryWindow::DictionaryWindow(HINSTANCE hInstance, RenderingContext* render
 {
 }
 
-void DictionaryWindow::ShowFullTranslation(int dictionaryIndex)
+void DictionaryWindow::ShowFullTranslation(int dictionaryIndex) const
 {
     appModel->TranslateWordFromDictionary(dictionaryIndex);
 }
@@ -21,7 +21,7 @@ SIZE DictionaryWindow::RenderDC(Renderer* renderer)
     size_t countToShow = min(200, records.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
-    POINT lineBottomRight = renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, paddingX, curY);
+    renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, paddingX, curY);
 
     curY += lineHeight;
 

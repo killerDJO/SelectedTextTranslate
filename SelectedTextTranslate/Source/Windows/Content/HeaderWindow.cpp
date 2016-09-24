@@ -1,11 +1,14 @@
 #include "Windows\Content\HeaderWindow.h"
+#include "Windows\Buttons\HoverIconButtonWindow.h"
+#include "Windows\Buttons\HoverTextButtonWindow.h"
 
 HeaderWindow::HeaderWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
 : ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel)
 {
+    fontSmallUnderscored = nullptr;
 }
 
-void HeaderWindow::PlayText()
+void HeaderWindow::PlayText() const
 {
     appModel->PlayCurrentText();
 }
@@ -49,7 +52,7 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
         hInstance,
         renderingContext,
         scrollProvider,
-        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - smallFontAscent, imageSize, imageSize)),
+        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - imageSize, imageSize, imageSize)),
         hWindow,
         IDR_AUDIO_INACTIVE,
         IDR_AUDIO,
@@ -109,7 +112,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
 
     AddChildWindow(forceTranslationButton);
 
-    originLintBottomRight = renderer->PrintText(
+    renderer->PrintText(
         L")",
         fontSmall,
         Colors::Gray,

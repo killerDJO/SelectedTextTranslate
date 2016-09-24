@@ -1,7 +1,7 @@
 #include "Windows\Base\ChildWindow.h"
 
 ChildWindow::ChildWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow)
-    : Window(hInstance, renderingContext, scrollProvider, descriptor)
+    : Window(hInstance, renderingContext, scrollProvider, descriptor), inMemoryDC(nullptr)
 {
     this->parentWindow = parentWindow;
 
@@ -37,7 +37,7 @@ void ChildWindow::Initialize()
 void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
     windowClass->lpfnWndProc = WndProc;
-    windowClass->hCursor = LoadCursor(NULL, IDC_ARROW);
+    windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 }
 
@@ -65,7 +65,7 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         POINTS pos = MAKEPOINTS(lParam);
         GetWindowRect(hWnd, &rcWindow);
         MoveWindow(hWnd, pos.x, pos.y, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, FALSE);
-        InvalidateRect(hWnd, NULL, FALSE);
+        InvalidateRect(hWnd, nullptr, FALSE);
         return TRUE;
     }
 
@@ -103,7 +103,7 @@ SIZE ChildWindow::RenderContent()
         dcHeight = requiredDcHeight;
         renderingContext->ResizeDC(inMemoryDC, dcWidth, dcHeight);
 
-        Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+        renderer = new Renderer(inMemoryDC, renderingContext);
         RenderDC(renderer);
         delete renderer;
     }
@@ -116,7 +116,7 @@ void ChildWindow::Draw()
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hWindow, &ps);
 
-    DWORD res = renderingContext->CopyDC(inMemoryDC, hdc, currentWidth, currentHeight);
+    renderingContext->CopyDC(inMemoryDC, hdc, currentWidth, currentHeight);
 
     EndPaint(hWindow, &ps);
 
@@ -124,10 +124,10 @@ void ChildWindow::Draw()
     DrawChildWindows();
 }
 
-void ChildWindow::ForceDraw()
+void ChildWindow::ForceDraw() const
 {
     HDC hdc = GetDC(hWindow);
-    DWORD res = renderingContext->CopyDC(inMemoryDC, hdc, currentWidth, currentHeight);
+    renderingContext->CopyDC(inMemoryDC, hdc, currentWidth, currentHeight);
     DeleteDC(hdc);
 }
 
@@ -148,7 +148,7 @@ void ChildWindow::AddChildWindow(ChildWindow* childWindow)
     activeChildWindows.push_back(childWindow);
 }
 
-void ChildWindow::DestroyChildWindows(vector<ChildWindow*>& childWindows)
+void ChildWindow::DestroyChildWindows(vector<ChildWindow*>& childWindows) const
 {
     for (size_t i = 0; i < childWindows.size(); ++i)
     {

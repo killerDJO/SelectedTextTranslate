@@ -1,15 +1,12 @@
 #pragma once
-#include "Entities\TranslateResult.h"
 #include "Windows\Content\Base\ContentWindow.h"
-#include "Windows\Buttons\HoverIconButtonWindow.h"
-#include "Windows\Buttons\HoverTextButtonWindow.h"
 
 class HeaderWindow : public ContentWindow
 {
 private:
     HFONT fontSmallUnderscored;
 
-    void PlayText();
+    void PlayText() const;
     void PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLineBottomRight, Renderer* renderer);
 
 protected:
