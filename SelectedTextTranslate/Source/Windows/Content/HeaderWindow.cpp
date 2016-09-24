@@ -47,12 +47,12 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
 
     curY += lineHeight;
 
-    DWORD imageSize = 15;
+    int imageSize = smallFontAscent;
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
         hInstance,
         renderingContext,
         scrollProvider,
-        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - imageSize, imageSize, imageSize)),
+        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - imageSize + 2, imageSize, imageSize)),
         hWindow,
         IDR_AUDIO_INACTIVE,
         IDR_AUDIO,
