@@ -13,7 +13,7 @@ protected:
     Size RenderDC(Renderer* renderer) override;
 
 public:
-    HeaderWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    HeaderWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~HeaderWindow();
 
     void Initialize() override;

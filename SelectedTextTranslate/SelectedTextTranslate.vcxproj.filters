@@ -97,6 +97,9 @@
     <Filter Include="Source\Windows\Controls\Buttons\Base">
       <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Windows\Framework\Providers">
+      <UniqueIdentifier>{f5798579-2dcd-4072-8913-8bdfb5ade6f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -150,9 +153,6 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp">
       <Filter>Source\Windows\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\ScrollProvider.cpp">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Windows\Framework\RenderingContext.cpp">
       <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
@@ -179,6 +179,18 @@
     </ClCompile>
     <ClCompile Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.cpp">
       <Filter>Source\Windows\Controls\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\Providers\ScrollProvider.cpp">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\Providers\ScaleProvider.cpp">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\Providers\DeviceContextProvider.cpp">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\WindowContext.cpp">
+      <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,9 +259,6 @@
     <ClInclude Include="Source\Windows\Base\Window.h">
       <Filter>Source\Windows\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\ScrollProvider.h">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Windows\Framework\RenderingContext.h">
       <Filter>Source\Windows\Framework</Filter>
     </ClInclude>
@@ -291,6 +300,18 @@
     </ClInclude>
     <ClInclude Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.h">
       <Filter>Source\Windows\Controls\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Providers\ScrollProvider.h">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Providers\ScaleProvider.h">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Providers\DeviceContextProvider.h">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\WindowContext.h">
+      <Filter>Source\Windows\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

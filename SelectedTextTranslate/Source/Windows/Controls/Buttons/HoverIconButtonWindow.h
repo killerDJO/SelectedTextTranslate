@@ -16,6 +16,6 @@ protected:
     void RenderStatesDC() override;
 
 public:
-    HoverIconButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback);
+    HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback);
     ~HoverIconButtonWindow();
 };

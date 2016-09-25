@@ -1,7 +1,7 @@
 #include "Windows\Base\ChildWindow.h"
 
-ChildWindow::ChildWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow)
-    : Window(hInstance, renderingContext, scrollProvider, descriptor)
+ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow)
+    : Window(context, descriptor)
 {
     this->parentWindow = parentWindow;
 
@@ -21,7 +21,7 @@ void ChildWindow::Initialize()
         descriptor.WindowSize.Height,
         parentWindow,
         NULL,
-        hInstance,
+        context->GetInstance(),
         this);
 }
 

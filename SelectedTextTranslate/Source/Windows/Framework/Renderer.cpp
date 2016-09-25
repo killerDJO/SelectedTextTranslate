@@ -1,15 +1,16 @@
 #include "Windows\Framework\Renderer.h"
 
-Renderer::Renderer(HDC hdc, RenderingContext* renderingContext)
+Renderer::Renderer(HDC hdc, RenderingContext* renderingContext, ScaleProvider* scaleProvider)
 {
     this->hdc = hdc;
     this->renderingContext = renderingContext;
+    this->scaleProvider = scaleProvider;
     this->scaledSize = Size(0, 0);
 }
 
 Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point position)
 {
-    Point scaledPosition = renderingContext->Scale(position);
+    Point scaledPosition = scaleProvider->Scale(position);
 
     SelectObject(hdc, font);
     SetTextColor(hdc, (COLORREF)color);
@@ -22,7 +23,7 @@ Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point p
     scaledSize.Width = max(scaledSize.Width, scaledPosition.X + textSize.Width);
     scaledSize.Height = max(scaledSize.Height, scaledPosition.Y + textSize.Height);
 
-    Size downscaledSize = renderingContext->Downscale(textSize);
+    Size downscaledSize = scaleProvider->Downscale(textSize);
 
     Point result;
     result.X = position.X + downscaledSize.Width;
@@ -33,7 +34,7 @@ Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point p
 
 void Renderer::DrawRect(Rect rect, HBRUSH brush)
 {
-    Rect scaledRect = renderingContext->Scale(rect);
+    Rect scaledRect = scaleProvider->Scale(rect);
 
     RECT gdiRect;
     gdiRect.left = scaledRect.X;
@@ -58,13 +59,13 @@ void Renderer::ClearDC(HDC hdc, Size dcSize) const
 
 int Renderer::GetFontAscent(HFONT font) const
 {
-    return renderingContext->Downscale(renderingContext->GetFontMetrics(hdc, font).tmAscent);
+    return scaleProvider->Downscale(renderingContext->GetFontMetrics(hdc, font).tmAscent);
 }
 
 int Renderer::GetFontStrokeHeight(HFONT font) const
 {
     TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(hdc, font);
-    return renderingContext->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
+    return scaleProvider->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
 }
 
 Size Renderer::GetScaledSize() const
@@ -74,17 +75,17 @@ Size Renderer::GetScaledSize() const
 
 Size Renderer::GetSize() const
 {
-    return renderingContext->Downscale(scaledSize);
+    return scaleProvider->Downscale(scaledSize);
 }
 
 void Renderer::IncreaseWidth(int widthToAdd)
 {
-    scaledSize.Width += renderingContext->Scale(widthToAdd);
+    scaledSize.Width += scaleProvider->Scale(widthToAdd);
 }
 
 void Renderer::IncreaseHeight(int heightToAdd)
 {
-    scaledSize.Height += renderingContext->Scale(heightToAdd);
+    scaledSize.Height += scaleProvider->Scale(heightToAdd);
 }
 
 Renderer::~Renderer()

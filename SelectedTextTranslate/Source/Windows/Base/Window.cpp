@@ -1,19 +1,17 @@
 #include "Windows\Base\Window.h"
 
-Window::Window(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor)
+Window::Window(WindowContext* context, WindowDescriptor descriptor)
 {
     if(descriptor.AutoScale)
     {
-        this->descriptor = renderingContext->Scale(descriptor);
+        this->descriptor = context->GetScaleProvider()->Scale(descriptor);
     }
     else
     {
         this->descriptor = descriptor;
     }
 
-    this->hInstance = hInstance;
-    this->renderingContext = renderingContext;
-    this->scrollProvider = scrollProvider;
+    this->context = context;
 
     this->windowSize = this->descriptor.WindowSize;
     this->dcSize = this->descriptor.WindowSize;
@@ -24,16 +22,16 @@ Window::Window(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollPr
 
     this->hWindow = nullptr;
     this->className = nullptr;
-    this->inMemoryDC = renderingContext->CreateInMemoryDC(dcSize);
+    this->inMemoryDC = context->GetDeviceContextProvider()->CreateInMemoryDC(dcSize);
 }
 
 void Window::Initialize()
 {
     WNDCLASSEX windowClass = { 0 };
 
-    if (!GetClassInfoEx(hInstance, className, &windowClass))
+    if (!GetClassInfoEx(context->GetInstance(), className, &windowClass))
     {
-        windowClass.hInstance = hInstance;
+        windowClass.hInstance = context->GetInstance();
         windowClass.lpszClassName = className;
         windowClass.lpfnWndProc = WndProc;
         windowClass.cbSize = sizeof(WNDCLASSEX);
@@ -55,7 +53,7 @@ void Window::Render(bool preserveVerticalScroll)
 
     if (preserveVerticalScroll && descriptor.OverflowY == OverflowModes::Scroll)
     {
-        verticalScroll = scrollProvider->GetScrollPosition(this, ScrollBars::Vertical);
+        verticalScroll = context->GetScrollProvider()->GetScrollPosition(this, ScrollBars::Vertical);
     }
 
     Size renderedSize = RenderContent();
@@ -75,16 +73,16 @@ void Window::Render(bool preserveVerticalScroll)
 
     if (descriptor.OverflowX == OverflowModes::Scroll)
     {
-        scrollProvider->InitializeScrollbar(this, contentSize.Width, windowSize.Width, ScrollBars::Horizontal);
+        context->GetScrollProvider()->InitializeScrollbar(this, contentSize.Width, ScrollBars::Horizontal);
     }
 
     if (descriptor.OverflowY == OverflowModes::Scroll)
     {
-        scrollProvider->InitializeScrollbar(this, contentSize.Height, windowSize.Height, ScrollBars::Vertical);
+        context->GetScrollProvider()->InitializeScrollbar(this, contentSize.Height, ScrollBars::Vertical);
 
         if (preserveVerticalScroll)
         {
-            scrollProvider->SetScrollPosition(this, ScrollBars::Vertical, verticalScroll);
+            context->GetScrollProvider()->SetScrollPosition(this, ScrollBars::Vertical, verticalScroll);
         }
     }
 
@@ -97,9 +95,9 @@ Size Window::RenderContent()
     destroyBeforeDrawQueue.insert(destroyBeforeDrawQueue.end(), activeChildWindows.begin(), activeChildWindows.end());
     activeChildWindows = vector<Window*>();
 
-    Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
     Size renderedSize = RenderDC(renderer);
-    delete renderer;
+    context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     int requiredDcWidth = descriptor.OverflowX != OverflowModes::Fixed && renderedSize.Width > dcSize.Width
         ? renderedSize.Width
@@ -114,11 +112,11 @@ Size Window::RenderContent()
     if (!requiredDcSize.Equals(dcSize))
     {
         dcSize = requiredDcSize;
-        renderingContext->ResizeDC(inMemoryDC, dcSize);
+        context->GetDeviceContextProvider()->ResizeDC(inMemoryDC, dcSize);
 
-        renderer = new Renderer(inMemoryDC, renderingContext);
+        renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
         RenderDC(renderer);
-        delete renderer;
+        context->GetRenderingContext()->ReleaseRenderer(renderer);
     }
 
     return renderedSize;
@@ -129,7 +127,7 @@ void Window::Draw()
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hWindow, &ps);
 
-    renderingContext->CopyDC(inMemoryDC, hdc, windowSize);
+    context->GetDeviceContextProvider()->CopyDC(inMemoryDC, hdc, windowSize);
 
     EndPaint(hWindow, &ps);
 
@@ -140,7 +138,7 @@ void Window::Draw()
 void Window::ForceDraw() const
 {
     HDC hdc = GetDC(hWindow);
-    renderingContext->CopyDC(inMemoryDC, hdc, windowSize);
+    context->GetDeviceContextProvider()->CopyDC(inMemoryDC, hdc, windowSize);
     DeleteDC(hdc);
 }
 
@@ -194,11 +192,6 @@ HWND Window::GetHandle() const
     return hWindow;
 }
 
-HINSTANCE Window::GetInstance() const
-{
-    return hInstance;
-}
-
 int Window::GetWidth() const
 {
     return windowSize.Width;
@@ -238,14 +231,14 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     case WM_HSCROLL:
         if(instance->descriptor.OverflowX == OverflowModes::Scroll)
         {
-            instance->scrollProvider->ProcessHorizontalScroll(instance, wParam, lParam);
+            instance->context->GetScrollProvider()->ProcessHorizontalScroll(instance, wParam, lParam);
         }
         break;
 
     case WM_VSCROLL:
         if (instance->descriptor.OverflowY == OverflowModes::Scroll)
         {
-            instance->scrollProvider->ProcessVerticalScroll(instance, wParam, lParam);
+            instance->context->GetScrollProvider()->ProcessVerticalScroll(instance, wParam, lParam);
         }
         break;
 

@@ -2,8 +2,8 @@
 #include "Windows\Controls\Buttons\HoverIconButtonWindow.h"
 #include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
-HeaderWindow::HeaderWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
-: ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel)
+HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+: ContentWindow(context, descriptor, parentWindow, appModel)
 {
     fontSmallUnderscored = nullptr;
 }
@@ -17,7 +17,7 @@ void HeaderWindow::Initialize()
 {
     ContentWindow::Initialize();
 
-    fontSmallUnderscored = renderingContext->CreateCustomFont(hWindow, FontSizes::Small, false, true);
+    fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Small, false, true);
 }
 
 Size HeaderWindow::RenderDC(Renderer* renderer)
@@ -49,9 +49,7 @@ Size HeaderWindow::RenderDC(Renderer* renderer)
 
     int imageSize = smallFontAscent;
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
-        hInstance,
-        renderingContext,
-        scrollProvider,
+        context,
         WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize)),
         hWindow,
         IDR_AUDIO_INACTIVE,
@@ -86,9 +84,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
-        hInstance,
-        renderingContext,
-        scrollProvider,
+        context,
         WindowDescriptor::CreateStretchWindowDescriptor(Point(originLintBottomRight.X, curY - smallFontAscent)),
         hWindow,
         fontSmallUnderscored,
@@ -103,7 +99,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         L")",
         fontSmall,
         Colors::Gray,
-        Point(originLintBottomRight.X + renderingContext->Downscale(forceTranslationButton->GetWidth()), curY));
+        Point(originLintBottomRight.X + context->GetScaleProvider()->Downscale(forceTranslationButton->GetWidth()), curY));
 }
 
 HeaderWindow::~HeaderWindow()

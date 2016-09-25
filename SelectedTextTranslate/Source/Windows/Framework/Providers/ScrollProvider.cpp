@@ -1,24 +1,26 @@
-#include "Windows\Framework\ScrollProvider.h"
-#include "RenderingContext.h"
+#include "Windows\Framework\Providers\ScrollProvider.h"
 
-ScrollProvider::ScrollProvider(RenderingContext* renderingContext)
+ScrollProvider::ScrollProvider()
 {
-    this->renderingContext = renderingContext;
     this->scrollCharX = 8;
     this->scrollCharY = 20;
 }
 
-void ScrollProvider::InitializeScrollbar(Window* window, int contentSize, int windowSize, ScrollBars scrollBar)
+void ScrollProvider::InitializeScrollbar(Window* window, int contentSize, ScrollBars scrollBar)
 {
     int scrollChar = scrollBar == ScrollBars::Vertical
         ? scrollCharY
         : scrollCharX;
 
-    InitializeScrollbar(window, windowSize, contentSize, scrollChar, scrollBar);
+    InitializeScrollbar(window, contentSize, scrollChar, scrollBar);
 }
 
-void ScrollProvider::InitializeScrollbar(Window* window, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar) const
+void ScrollProvider::InitializeScrollbar(Window* window, int contentDimension, int scrollChar, ScrollBars scrollBar) const
 {
+    int windowDimension = scrollBar == ScrollBars::Vertical
+        ? window->GetHeight()
+        : window->GetWidth();
+
     SCROLLINFO si;
 
     si.cbSize = sizeof(si);

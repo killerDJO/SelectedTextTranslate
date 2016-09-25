@@ -11,6 +11,6 @@ private:
     void ShowFullTranslation(int dictionaryIndex) const;
 
 public:
-    DictionaryWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~DictionaryWindow();
 };

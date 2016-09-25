@@ -14,10 +14,12 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Windows\Framework\Providers\DeviceContextProvider.cpp" />
+    <ClCompile Include="Source\Windows\Framework\Providers\ScaleProvider.cpp" />
     <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp" />
     <ClCompile Include="Source\Windows\Framework\Dto\WindowDescriptor.cpp" />
     <ClCompile Include="Source\Windows\Framework\Renderer.cpp" />
-    <ClCompile Include="Source\Windows\Framework\ScrollProvider.cpp" />
+    <ClCompile Include="Source\Windows\Framework\Providers\ScrollProvider.cpp" />
     <ClCompile Include="Source\Windows\Framework\RenderingContext.cpp" />
     <ClCompile Include="Source\Model\AppModel.cpp" />
     <ClCompile Include="Source\Entities\TranslateResult.cpp" />
@@ -44,15 +46,18 @@
     <ClCompile Include="Source\Windows\Content\TranslateResultWindow.cpp" />
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
     <ClCompile Include="Source\Windows\Base\Window.cpp" />
+    <ClCompile Include="Source\Windows\Framework\WindowContext.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Windows\Framework\Providers\DeviceContextProvider.h" />
+    <ClInclude Include="Source\Windows\Framework\Providers\ScaleProvider.h" />
     <ClInclude Include="Source\Model\Enums\ApplicationViews.h" />
     <ClInclude Include="Source\Windows\Framework\Enums\OverflowModes.h" />
     <ClInclude Include="Source\Windows\Framework\Enums\ScrollBars.h" />
     <ClInclude Include="Source\Windows\Framework\Renderer.h" />
     <ClInclude Include="Source\Windows\Framework\Enums\Colors.h" />
     <ClInclude Include="Source\Windows\Framework\Enums\FontSizes.h" />
-    <ClInclude Include="Source\Windows\Framework\ScrollProvider.h" />
+    <ClInclude Include="Source\Windows\Framework\Providers\ScrollProvider.h" />
     <ClInclude Include="Source\Windows\Framework\RenderingContext.h" />
     <ClInclude Include="Source\Model\AppModel.h" />
     <ClInclude Include="Resources\resource.h" />
@@ -81,6 +86,7 @@
     <ClInclude Include="Source\Windows\MainWindow.h" />
     <ClInclude Include="Source\Windows\Base\Window.h" />
     <ClInclude Include="Source\Windows\Framework\Dto\WindowDescriptor.h" />
+    <ClInclude Include="Source\Windows\Framework\WindowContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

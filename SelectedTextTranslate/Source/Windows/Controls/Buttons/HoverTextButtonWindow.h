@@ -15,6 +15,6 @@ private:
     void RenderStateDC(HDC hdc, Colors color) const;
 
 public:
-    HoverTextButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback);
+    HoverTextButtonWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback);
     ~HoverTextButtonWindow();
 };

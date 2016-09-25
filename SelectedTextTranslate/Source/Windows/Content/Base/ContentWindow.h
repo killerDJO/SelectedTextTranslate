@@ -17,7 +17,7 @@ protected:
     Size RenderDC(Renderer* renderer) override;
 
 public:
-    ContentWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    ContentWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~ContentWindow() override;
 
     void Initialize() override;

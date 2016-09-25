@@ -24,7 +24,6 @@ private:
     NOTIFYICONDATA notifyIconData;
 
     AppModel* appModel;
-    RenderingContext* renderingContext;
 
     HeaderWindow* headerWindow;
     TranslateResultWindow* translateResultWindow;
@@ -48,7 +47,7 @@ protected:
     Size RenderDC(Renderer* renderer) override;
 
 public:
-    MainWindow(HINSTANCE hInstance, AppModel* appModel, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor);
+    MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel);
     ~MainWindow();
 
     void Initialize() override;

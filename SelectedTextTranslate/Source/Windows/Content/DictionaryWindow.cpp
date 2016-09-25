@@ -1,7 +1,7 @@
 #include "Windows\Content\DictionaryWindow.h"
 
-DictionaryWindow::DictionaryWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
-    : ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel)
+DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+    : ContentWindow(context, descriptor, parentWindow, appModel)
 {
 }
 
@@ -32,9 +32,7 @@ Size DictionaryWindow::RenderDC(Renderer* renderer)
         renderer->PrintText(wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
-            hInstance,
-            renderingContext,
-            scrollProvider,
+            context,
             WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16)),
             hWindow,
             IDR_TRANSLATE_INACTIVE,

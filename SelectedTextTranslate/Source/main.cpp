@@ -14,15 +14,15 @@ void AttachConsole()
     freopen_s(&file, "CON", "w", stdout);
 }
 
-WindowDescriptor GetMainWindowDescriptor(RenderingContext* renderingContext)
+WindowDescriptor GetMainWindowDescriptor(ScaleProvider* scaleProvider)
 {
     int padding = 5;
 
     RECT workarea;
     SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
 
-    int width = renderingContext->Scale(300);
-    int height = renderingContext->Scale(400);
+    int width = scaleProvider->Scale(300);
+    int height = scaleProvider->Scale(400);
 
     int x = workarea.right - width - padding;
     int y = workarea.bottom - height - padding;
@@ -60,11 +60,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     Translator* translator = new Translator(logger, requestProvider, translatePageParser, dictionary);
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
 
-    RenderingContext* renderingContext = new RenderingContext();
-    ScrollProvider* scrollProvider = new ScrollProvider(renderingContext);
+    ScaleProvider* scaleProvider = new ScaleProvider();
+    DeviceContextProvider* deviceContextProvider = new DeviceContextProvider();
+    ScrollProvider* scrollProvider = new ScrollProvider();
+    RenderingContext* renderingContext = new RenderingContext(scaleProvider);
+    WindowContext* windowContext = new WindowContext(hInstance, scrollProvider, scaleProvider, deviceContextProvider, renderingContext);
     
     AppModel* appModel = new AppModel(translator, textPlayer, textExtractor, dictionary);
-    MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderingContext, scrollProvider, GetMainWindowDescriptor(renderingContext));
+    MainWindow* mainWindow = new MainWindow(windowContext, GetMainWindowDescriptor(scaleProvider), appModel);
     appModel->SetMainWindow(mainWindow);
 
     mainWindow->Initialize();
@@ -94,6 +97,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     delete mainWindow;
     delete renderingContext;
     delete scrollProvider;
+    delete scaleProvider;
+    delete deviceContextProvider;
 
     GdiplusShutdown(gdiplusToken);
 

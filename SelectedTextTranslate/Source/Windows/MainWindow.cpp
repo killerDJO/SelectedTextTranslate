@@ -2,15 +2,13 @@
 
 UINT MainWindow::WM_TASKBARCREATED;
 
-MainWindow::MainWindow(HINSTANCE hInstance, AppModel* appModel, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor)
-    : Window(hInstance, renderingContext, scrollProvider, descriptor),
+MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel)
+    : Window(context, descriptor),
     menu(nullptr),
     headerWindow(nullptr),
     translateResultWindow(nullptr),
     dictionaryWindow(nullptr)
 {
-    this->renderingContext = renderingContext;
-    this->scrollProvider = scrollProvider;
     this->appModel = appModel;
     this->className = L"STT_MAIN";
 }
@@ -30,7 +28,7 @@ void MainWindow::Initialize()
         descriptor.WindowSize.Height,
         nullptr,
         nullptr,
-        hInstance,
+        context->GetInstance(),
         this);
 
     InitNotifyIconData();
@@ -48,8 +46,8 @@ void MainWindow::Initialize()
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
     windowClass->lpfnWndProc = WndProc;
-    windowClass->hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
-    windowClass->hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIcon = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIconSm = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 }
@@ -59,21 +57,21 @@ void MainWindow::InitializeChildWindows()
     int headerHeight = 50;
 
     WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(Point(0, 0));
-    dictionaryWindow = new DictionaryWindow(hInstance, renderingContext, scrollProvider, dictionaryWindowDescriptor, hWindow, appModel);
+    dictionaryWindow = new DictionaryWindow(context, dictionaryWindowDescriptor, hWindow, appModel);
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, headerHeight + 1),
         Size(descriptor.WindowSize.Width, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(hInstance, renderingContext, scrollProvider, translateResultWindowDescriptor, hWindow, appModel);
+    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, hWindow, appModel);
 
     WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
         Size(descriptor.WindowSize.Width, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(hInstance, renderingContext, scrollProvider, headerWindowDescriptor, hWindow, appModel);
+    headerWindow = new HeaderWindow(context, headerWindowDescriptor, hWindow, appModel);
 
     dictionaryWindow->Initialize();
     translateResultWindow->Initialize();
@@ -97,7 +95,7 @@ void MainWindow::InitNotifyIconData()
     notifyIconData.uID = ID_TRAY_APP_ICON;
     notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     notifyIconData.uCallbackMessage = WM_TRAYICON;
-    notifyIconData.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
+    notifyIconData.hIcon = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     wcscpy_s(notifyIconData.szTip, TEXT("Selected text translate.."));
 }
 
@@ -115,9 +113,9 @@ void MainWindow::Maximize() const
 
 Size MainWindow::RenderContent()
 {
-    Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
     RenderDC(renderer);
-    delete renderer;
+    context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     Size renderedSize = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
         ? RenderTranslateResultView()
@@ -163,8 +161,8 @@ Size MainWindow::RenderDictionaryView() const
 
 void MainWindow::Scale(double scaleFactorAjustment)
 {
-    int scaledWidth = renderingContext->Rescale(descriptor.WindowSize.Width, scaleFactorAjustment);
-    int scaledHeight = renderingContext->Rescale(descriptor.WindowSize.Height, scaleFactorAjustment);
+    int scaledWidth = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Width, scaleFactorAjustment);
+    int scaledHeight = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Height, scaleFactorAjustment);
 
     descriptor.Position.X -= scaledWidth - descriptor.WindowSize.Width;
     descriptor.Position.Y -= scaledHeight - descriptor.WindowSize.Height;
@@ -172,7 +170,7 @@ void MainWindow::Scale(double scaleFactorAjustment)
     windowSize.Width = descriptor.WindowSize.Width = scaledWidth;
     windowSize.Height = descriptor.WindowSize.Height = scaledHeight;
 
-    renderingContext->AjustScaleFactor(scaleFactorAjustment);
+    context->GetScaleProvider()->AjustScaleFactor(scaleFactorAjustment);
 
     MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
     SendMessage(hWindow, WM_NCPAINT, NULL, NULL);
@@ -192,20 +190,20 @@ void MainWindow::Resize()
     descriptor.Position.X = windowRect.left;
     descriptor.Position.Y = windowRect.top;
 
-    renderingContext->ResizeDC(inMemoryDC, windowSize);
+    context->GetDeviceContextProvider()->ResizeDC(inMemoryDC, windowSize);
 
-    Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
     RenderDC(renderer);
-    delete renderer;
+    context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     if (descriptor.OverflowX == OverflowModes::Scroll)
     {
-        scrollProvider->InitializeScrollbar(this, contentSize.Width, windowSize.Width, ScrollBars::Horizontal);
+        context->GetScrollProvider()->InitializeScrollbar(this, contentSize.Width, ScrollBars::Horizontal);
     }
 
     if (descriptor.OverflowY == OverflowModes::Scroll)
     {
-        scrollProvider->InitializeScrollbar(this, contentSize.Height, windowSize.Height, ScrollBars::Vertical);
+        context->GetScrollProvider()->InitializeScrollbar(this, contentSize.Height, ScrollBars::Vertical);
     }
 }
 

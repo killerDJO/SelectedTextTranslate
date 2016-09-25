@@ -15,7 +15,7 @@ protected:
     Size RenderDC(Renderer* renderer) override;
 
 public:
-    TranslateResultWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
     ~TranslateResultWindow();
 
     void Initialize() override;

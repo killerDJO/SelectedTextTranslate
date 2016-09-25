@@ -1,7 +1,7 @@
 #include "Windows\Content\Base\ContentWindow.h"
 
-ContentWindow::ContentWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
-    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow),
+ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+    : ChildWindow(context, descriptor, parentWindow),
     fontNormal(nullptr),
     fontHeader(nullptr),
     fontItalic(nullptr),
@@ -19,12 +19,12 @@ void ContentWindow::Initialize()
 {
     ChildWindow::Initialize();
 
-    grayBrush = renderingContext->CreateCustomBrush(Colors::LightGray);
+    grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
 
-    fontNormal = renderingContext->CreateCustomFont(hWindow, FontSizes::Normal);
-    fontHeader = renderingContext->CreateCustomFont(hWindow, FontSizes::Large);
-    fontItalic = renderingContext->CreateCustomFont(hWindow, FontSizes::Normal, true);
-    fontSmall = renderingContext->CreateCustomFont(hWindow, FontSizes::Small);
+    fontNormal = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Normal);
+    fontHeader = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Large);
+    fontItalic = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Normal, true);
+    fontSmall = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Small);
 }
 
 Size ContentWindow::RenderDC(Renderer* renderer)

@@ -1,7 +1,7 @@
 ﻿#include "Windows\Content\TranslateResultWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
-: ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel), fontUnderscored(nullptr)
+TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+: ContentWindow(context, descriptor, parentWindow, appModel), fontUnderscored(nullptr)
 {
 }
 
@@ -9,7 +9,7 @@ void TranslateResultWindow::Initialize()
 {
     ContentWindow::Initialize();
 
-    fontUnderscored = renderingContext->CreateCustomFont(hWindow, FontSizes::Small, false, true);
+    fontUnderscored = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Small, false, true);
 }
 
 void TranslateResultWindow::ExpandDictionary(int index) const
@@ -126,9 +126,7 @@ int TranslateResultWindow::CreateExpandButton(
 
         int underscoredFontAscent = renderer->GetFontAscent(fontUnderscored);
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
-            hInstance,
-            renderingContext,
-            scrollProvider,
+            context,
             WindowDescriptor::CreateStretchWindowDescriptor(Point(paddingX * 3, curY + 7)),
             hWindow,
             fontUnderscored,

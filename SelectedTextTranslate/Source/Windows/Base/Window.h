@@ -1,10 +1,9 @@
 #pragma once
-#include "Windows\Framework\RenderingContext.h"
-#include "Windows\Framework\ScrollProvider.h"
+#include "Windows\Framework\WindowContext.h"
 #include "Windows\Framework\Dto\WindowDescriptor.h"
-#include "Windows\Framework\Renderer.h"
 
-class ScrollProvider;
+class WindowContext;
+class Renderer;
 
 class Window
 {
@@ -17,9 +16,7 @@ private:
     void DestroyChildWindows(vector<Window*>& childWindows) const;
 
 protected:
-
     HWND hWindow;
-    HINSTANCE hInstance;
     wchar_t* className;
 
     WindowDescriptor descriptor;
@@ -29,8 +26,7 @@ protected:
     HDC inMemoryDC;
     Size dcSize;
 
-    RenderingContext* renderingContext;
-    ScrollProvider* scrollProvider;
+    WindowContext* context;
 
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
 
@@ -44,11 +40,10 @@ protected:
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-    Window(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor);
+    Window(WindowContext* context, WindowDescriptor descriptor);
     virtual ~Window();
 
     HWND GetHandle() const;
-    HINSTANCE GetInstance() const;
     int GetWidth() const;
     int GetHeight() const;
 

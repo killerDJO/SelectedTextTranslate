@@ -1,7 +1,7 @@
 #include "Windows\Controls\Buttons\Base\HoverButtonWindow.h"
 
-HoverButtonWindow::HoverButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback)
-    : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow), hoverStateDC(nullptr), normalStateDC(nullptr)
+HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback)
+    : ChildWindow(context, descriptor, parentWindow), hoverStateDC(nullptr), normalStateDC(nullptr)
 {
     this->clickCallback = clickCallback;
     this->isHovered = false;
@@ -22,7 +22,7 @@ Size HoverButtonWindow::RenderDC(Renderer* renderer)
         ? hoverStateDC
         : normalStateDC;
 
-    renderingContext->CopyDC(sourceDC, inMemoryDC, windowSize);
+    context->GetDeviceContextProvider()->CopyDC(sourceDC, inMemoryDC, windowSize);
 
     MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
 
