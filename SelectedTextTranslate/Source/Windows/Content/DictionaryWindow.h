@@ -1,6 +1,6 @@
 #pragma once
 #include "Windows\Content\Base\ContentWindow.h"
-#include "Windows\Buttons\HoverIconButtonWindow.h"
+#include "Windows\Controls\Buttons\HoverIconButtonWindow.h"
 
 class DictionaryWindow : public ContentWindow
 {

@@ -25,9 +25,9 @@
     <ClCompile Include="Source\Loggers\Logger.cpp" />
     <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp" />
     <ClCompile Include="Source\Windows\Base\ChildWindow.cpp" />
-    <ClCompile Include="Source\Windows\Buttons\Base\HoverButtonWindow.cpp" />
-    <ClCompile Include="Source\Windows\Buttons\HoverIconButtonWindow.cpp" />
-    <ClCompile Include="Source\Windows\Buttons\HoverTextButtonWindow.cpp" />
+    <ClCompile Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.cpp" />
+    <ClCompile Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.cpp" />
+    <ClCompile Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
     <ClCompile Include="Source\Helpers\RequestProvider.cpp" />
     <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
@@ -71,9 +71,9 @@
     <ClInclude Include="Source\TranslateEngine\TextPlayer.h" />
     <ClInclude Include="Source\TranslateEngine\Translator.h" />
     <ClInclude Include="Source\Windows\Base\ChildWindow.h" />
-    <ClInclude Include="Source\Windows\Buttons\Base\HoverButtonWindow.h" />
-    <ClInclude Include="Source\Windows\Buttons\HoverIconButtonWindow.h" />
-    <ClInclude Include="Source\Windows\Buttons\HoverTextButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.h" />
+    <ClInclude Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.h" />
     <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h" />
     <ClInclude Include="Source\Windows\Content\DictionaryWindow.h" />
     <ClInclude Include="Source\Windows\Content\HeaderWindow.h" />

@@ -1,6 +1,6 @@
 #include "Windows\Content\HeaderWindow.h"
-#include "Windows\Buttons\HoverIconButtonWindow.h"
-#include "Windows\Buttons\HoverTextButtonWindow.h"
+#include "Windows\Controls\Buttons\HoverIconButtonWindow.h"
+#include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
 HeaderWindow::HeaderWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
 : ContentWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, appModel)

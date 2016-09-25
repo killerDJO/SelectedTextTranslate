@@ -1,4 +1,4 @@
-#include "Windows\Buttons\HoverIconButtonWindow.h"
+#include "Windows\Controls\Buttons\HoverIconButtonWindow.h"
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 

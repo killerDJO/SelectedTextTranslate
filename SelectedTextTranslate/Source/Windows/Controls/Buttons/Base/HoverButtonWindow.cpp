@@ -1,4 +1,4 @@
-#include "Windows\Buttons\Base\HoverButtonWindow.h"
+#include "Windows\Controls\Buttons\Base\HoverButtonWindow.h"
 
 HoverButtonWindow::HoverButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback)
     : ChildWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow), hoverStateDC(nullptr), normalStateDC(nullptr)

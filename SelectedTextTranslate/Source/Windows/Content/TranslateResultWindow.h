@@ -1,7 +1,7 @@
 #pragma once
 #include "Windows\Content\Base\ContentWindow.h"
 #include "Entities\TranslateResult.h"
-#include "Windows\Buttons\HoverTextButtonWindow.h"
+#include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
 class TranslateResultWindow : public ContentWindow
 {

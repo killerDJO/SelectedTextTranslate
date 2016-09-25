@@ -1,4 +1,4 @@
-#include "Windows\Buttons\HoverTextButtonWindow.h"
+#include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
 HoverTextButtonWindow::HoverTextButtonWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback)
     : HoverButtonWindow(hInstance, renderingContext, scrollProvider, descriptor, parentWindow, clickCallback)

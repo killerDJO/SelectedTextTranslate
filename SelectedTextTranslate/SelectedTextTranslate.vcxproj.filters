@@ -37,9 +37,6 @@
     <Filter Include="Source\Windows\Content\Base">
       <UniqueIdentifier>{3d09291e-4b90-41ff-95ac-b1f681efbb19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Buttons">
-      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Windows\Content">
       <UniqueIdentifier>{921224de-b7af-4c67-a280-7aa7cb14a63f}</UniqueIdentifier>
     </Filter>
@@ -57,9 +54,6 @@
     </Filter>
     <Filter Include="Source\Windows\Buttons">
       <UniqueIdentifier>{f0bb7d86-ece3-4552-b0da-ddf1e05099fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Buttons\Base">
-      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Windows\Buttons\Base">
       <UniqueIdentifier>{dd9ac7ff-b1c1-4b30-98fd-0bd3048cd8b5}</UniqueIdentifier>
@@ -93,6 +87,15 @@
     </Filter>
     <Filter Include="Source\Dictionary\Dto">
       <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Controls">
+      <UniqueIdentifier>{1ad5c4d7-d432-40b1-a523-6adf151a1482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Controls\Buttons">
+      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Controls\Buttons\Base">
+      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,15 +135,6 @@
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <Filter>Source\PrecompiledSource</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Buttons\Base\HoverButtonWindow.cpp">
-      <Filter>Source\Windows\Buttons\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Buttons\HoverTextButtonWindow.cpp">
-      <Filter>Source\Windows\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Buttons\HoverIconButtonWindow.cpp">
-      <Filter>Source\Windows\Buttons</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Windows\Base\ChildWindow.cpp">
       <Filter>Source\Windows\Base</Filter>
     </ClCompile>
@@ -176,6 +170,15 @@
     </ClCompile>
     <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp">
       <Filter>Source\Dictionary\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.cpp">
+      <Filter>Source\Windows\Controls\Buttons\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.cpp">
+      <Filter>Source\Windows\Controls\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.cpp">
+      <Filter>Source\Windows\Controls\Buttons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,15 +228,6 @@
     </ClInclude>
     <ClInclude Include="Source\Windows\Content\TranslateResultWindow.h">
       <Filter>Source\Windows\Content</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Buttons\Base\HoverButtonWindow.h">
-      <Filter>Source\Windows\Buttons\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Buttons\HoverTextButtonWindow.h">
-      <Filter>Source\Windows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Buttons\HoverIconButtonWindow.h">
-      <Filter>Source\Windows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows\Base\ChildWindow.h">
       <Filter>Source\Windows\Base</Filter>
@@ -288,6 +282,15 @@
     </ClInclude>
     <ClInclude Include="Source\Dictionary\Dto\LogRecord.h">
       <Filter>Source\Dictionary\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.h">
+      <Filter>Source\Windows\Controls\Buttons\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.h">
+      <Filter>Source\Windows\Controls\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.h">
+      <Filter>Source\Windows\Controls\Buttons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
