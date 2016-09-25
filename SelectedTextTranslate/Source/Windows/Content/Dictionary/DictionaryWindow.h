@@ -12,5 +12,5 @@ private:
 
 public:
     DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
-    ~DictionaryWindow();
+    ~DictionaryWindow() override;
 };

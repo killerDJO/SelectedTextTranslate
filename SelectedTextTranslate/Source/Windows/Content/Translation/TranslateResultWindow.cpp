@@ -1,4 +1,4 @@
-﻿#include "Windows\Content\TranslateResultWindow.h"
+﻿#include "Windows\Content\Translation\TranslateResultWindow.h"
 
 TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
 : ContentWindow(context, descriptor, parentWindow, appModel), fontUnderscored(nullptr)

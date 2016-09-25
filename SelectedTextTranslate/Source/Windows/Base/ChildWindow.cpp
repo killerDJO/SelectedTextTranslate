@@ -32,6 +32,8 @@ void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    ChildWindow* instance = (ChildWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
     switch (message)
     {
 
@@ -40,7 +42,9 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
         GetWindowRect(hWnd, &rcWindow);
-        MoveWindow(hWnd, pos.x, pos.y, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, FALSE);
+        MoveWindow(hWnd, pos.x, pos.y, instance->windowSize.Width, instance->windowSize.Height, FALSE);
+        instance->position.X = pos.x;
+        instance->position.Y = pos.y;
         InvalidateRect(hWnd, nullptr, FALSE);
         return TRUE;
     }

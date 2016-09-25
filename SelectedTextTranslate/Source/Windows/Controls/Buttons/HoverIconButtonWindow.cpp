@@ -32,7 +32,7 @@ void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
     Graphics graphics(hdc);
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer(hdc);
-    renderer->ClearDC(hdc, windowSize);
+    renderer->ClearDC(windowSize);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     Metafile* iconMetafile = LoadMetafileFromResource(iconResource);

@@ -1,13 +1,12 @@
 #include "Windows\MainWindow.h"
+#include "Windows\Content\Dictionary\DictionaryWindow.h"
+#include "Windows\Content\Translation\TranslationWindow.h"
 
 UINT MainWindow::WM_TASKBARCREATED;
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel)
     : Window(context, descriptor),
-    menu(nullptr),
-    headerWindow(nullptr),
-    translateResultWindow(nullptr),
-    dictionaryWindow(nullptr)
+    menu(nullptr)
 {
     this->appModel = appModel;
     this->className = L"STT_MAIN";
@@ -33,12 +32,10 @@ void MainWindow::Initialize()
 
     InitNotifyIconData();
 
-    InitializeChildWindows();
-
     RegisterHotKey(hWindow, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
     RegisterHotKey(hWindow, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
 
-    MainWindow::WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
+    WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
 
     Minimize();
 }
@@ -50,39 +47,6 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hIconSm = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-}
-
-void MainWindow::InitializeChildWindows()
-{
-    int headerHeight = 50;
-
-    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(Point(0, 0));
-    dictionaryWindow = new DictionaryWindow(context, dictionaryWindowDescriptor, hWindow, appModel);
-
-    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
-        Point(0, headerHeight + 1),
-        Size(descriptor.WindowSize.Width, 0),
-        OverflowModes::Stretch,
-        OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, hWindow, appModel);
-
-    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
-        Point(0, 0),
-        Size(descriptor.WindowSize.Width, headerHeight),
-        OverflowModes::Stretch,
-        OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(context, headerWindowDescriptor, hWindow, appModel);
-
-    dictionaryWindow->Initialize();
-    translateResultWindow->Initialize();
-    headerWindow->Initialize();
-}
-
-void MainWindow::DestroyChildWindows() const
-{
-    delete dictionaryWindow;
-    delete headerWindow;
-    delete translateResultWindow;
 }
 
 void MainWindow::InitNotifyIconData()
@@ -111,51 +75,29 @@ void MainWindow::Maximize() const
     SwitchToThisWindow(hWindow, TRUE);
 }
 
-Size MainWindow::RenderContent()
-{
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
-    RenderDC(renderer);
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
-
-    Size renderedSize = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
-        ? RenderTranslateResultView()
-        : RenderDictionaryView();
-
-    return renderedSize;
-}
-
 Size MainWindow::RenderDC(Renderer* renderer)
 {
-    renderer->ClearDC(inMemoryDC, windowSize);
-    return renderer->GetScaledSize();
-}
+    renderer->ClearDC(windowSize);
 
-Size MainWindow::RenderTranslateResultView() const
-{
-    headerWindow->Render();
-    translateResultWindow->Render();
+    Window* renderedView;
+    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+        Point(0, 0),
+        Size(windowSize.Width, 0),
+        OverflowModes::Stretch,
+        OverflowModes::Stretch);
 
-    headerWindow->Show();
-    translateResultWindow->Show();
-    dictionaryWindow->Hide();
+    renderedView = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
+        ? (Window*)new TranslationWindow(context, dictionaryWindowDescriptor, hWindow, appModel)
+        : (Window*)new DictionaryWindow(context, dictionaryWindowDescriptor, hWindow, appModel);
 
-    Size contentSize;
-    contentSize.Width = max(headerWindow->GetWidth(), translateResultWindow->GetWidth());
-    contentSize.Height = headerWindow->GetHeight() + translateResultWindow->GetHeight();
-    return contentSize;
-}
+    AddChildWindow(renderedView);
 
-Size MainWindow::RenderDictionaryView() const
-{
-    dictionaryWindow->Render();
-
-    headerWindow->Hide();
-    translateResultWindow->Hide();
-    dictionaryWindow->Show();
+    renderedView->Render();
 
     Size contentSize;
-    contentSize.Width = dictionaryWindow->GetWidth();
-    contentSize.Height = dictionaryWindow->GetHeight();
+    contentSize.Width = renderedView->GetWidth();
+    contentSize.Height = renderedView->GetHeight();
+
     return contentSize;
 }
 
@@ -166,19 +108,18 @@ void MainWindow::Scale(double scaleFactorAjustment)
 
     descriptor.Position.X -= scaledWidth - descriptor.WindowSize.Width;
     descriptor.Position.Y -= scaledHeight - descriptor.WindowSize.Height;
+    position.X = descriptor.Position.X;
+    position.Y = descriptor.Position.Y;
 
     windowSize.Width = descriptor.WindowSize.Width = scaledWidth;
     windowSize.Height = descriptor.WindowSize.Height = scaledHeight;
 
     context->GetScaleProvider()->AjustScaleFactor(scaleFactorAjustment);
 
+    Render();
+
     MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
     SendMessage(hWindow, WM_NCPAINT, NULL, NULL);
-
-    DestroyChildWindows();
-    InitializeChildWindows();
-
-    Render();
 }
 
 void MainWindow::Resize()
@@ -187,14 +128,16 @@ void MainWindow::Resize()
     GetWindowRect(hWindow, &windowRect);
     descriptor.WindowSize.Width = windowSize.Width = windowRect.right - windowRect.left;
     descriptor.WindowSize.Height = windowSize.Height = windowRect.bottom - windowRect.top;
-    descriptor.Position.X = windowRect.left;
-    descriptor.Position.Y = windowRect.top;
+    position.X = descriptor.Position.X = windowRect.left;
+    position.Y = descriptor.Position.Y = windowRect.top;
 
     context->GetDeviceContextProvider()->ResizeDC(inMemoryDC, windowSize);
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
-    RenderDC(renderer);
+    renderer->ClearDC(windowSize);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
+
+    context->GetScrollProvider()->ResetScrollPosition(this);
 
     if (descriptor.OverflowX == OverflowModes::Scroll)
     {
@@ -337,5 +280,4 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 MainWindow::~MainWindow()
 {
     Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
-    DestroyChildWindows();
 }

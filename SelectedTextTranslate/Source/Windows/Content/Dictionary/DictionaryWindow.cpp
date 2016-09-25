@@ -1,4 +1,4 @@
-#include "Windows\Content\DictionaryWindow.h"
+#include "Windows\Content\Dictionary\DictionaryWindow.h"
 
 DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
     : ContentWindow(context, descriptor, parentWindow, appModel)

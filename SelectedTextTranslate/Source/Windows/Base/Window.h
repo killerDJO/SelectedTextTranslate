@@ -11,6 +11,7 @@ private:
     vector<Window*> activeChildWindows;
     vector<Window*> destroyBeforeDrawQueue;
 
+    Size RenderContent();
     void Draw();
     void DrawChildWindows();
     void DestroyChildWindows(vector<Window*>& childWindows) const;
@@ -22,6 +23,7 @@ protected:
     WindowDescriptor descriptor;
     Size windowSize;
     Size contentSize;
+    Point position;
 
     HDC inMemoryDC;
     Size dcSize;
@@ -30,7 +32,6 @@ protected:
 
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
 
-    virtual Size RenderContent();
     virtual Size RenderDC(Renderer* renderer) = 0;
 
     void AddChildWindow(Window* childWindow);
@@ -46,6 +47,7 @@ public:
     HWND GetHandle() const;
     int GetWidth() const;
     int GetHeight() const;
+    Point GetPosition() const;
 
     virtual void Initialize();
     void Show() const;

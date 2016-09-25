@@ -23,6 +23,8 @@ HDC DeviceContextProvider::CreateInMemoryDC(Size dcSize) const
 
     SelectObject(hdc, bitmap);
 
+    DeleteObject(bitmap);
+
     return hdc;
 }
 

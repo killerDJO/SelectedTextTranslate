@@ -15,6 +15,7 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
 
     this->windowSize = this->descriptor.WindowSize;
     this->dcSize = this->descriptor.WindowSize;
+    this->position = this->descriptor.Position;
     this->contentSize = Size(0, 0);
 
     this->activeChildWindows = vector<Window*>();
@@ -57,7 +58,7 @@ void Window::Render(bool preserveVerticalScroll)
     }
 
     Size renderedSize = RenderContent();
-
+   
     windowSize = descriptor.WindowSize;
     contentSize = renderedSize;
 
@@ -96,14 +97,16 @@ Size Window::RenderContent()
     activeChildWindows = vector<Window*>();
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
+    
     Size renderedSize = RenderDC(renderer);
+    
     context->GetRenderingContext()->ReleaseRenderer(renderer);
-
+    
     int requiredDcWidth = descriptor.OverflowX != OverflowModes::Fixed && renderedSize.Width > dcSize.Width
         ? renderedSize.Width
         : dcSize.Width;
     int requiredDcHeight = descriptor.OverflowY != OverflowModes::Fixed && renderedSize.Height > dcSize.Height
-        ? renderedSize.Width
+        ? renderedSize.Height
         : dcSize.Height;
 
     Size requiredDcSize(requiredDcWidth, requiredDcHeight);
@@ -149,13 +152,13 @@ void Window::DrawChildWindows()
         Window* childWindow = activeChildWindows[i];
         childWindow->ForceDraw();
         childWindow->DrawChildWindows();
+        childWindow->Show();
     }
 }
 
 void Window::AddChildWindow(Window* childWindow)
 {
     childWindow->Initialize();
-    childWindow->Show();
     activeChildWindows.push_back(childWindow);
 }
 
@@ -200,6 +203,11 @@ int Window::GetWidth() const
 int Window::GetHeight() const
 {
     return windowSize.Height;
+}
+
+Point Window::GetPosition() const
+{
+    return position;
 }
 
 void Window::Show() const

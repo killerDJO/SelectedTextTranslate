@@ -23,12 +23,15 @@ void ScrollProvider::InitializeScrollbar(Window* window, int contentDimension, i
 
     SCROLLINFO si;
 
+    int numberOfLines = int(ceil(contentDimension / scrollChar));
+    int availableLines = int(floor(windowDimension / scrollChar));
+
     si.cbSize = sizeof(si);
     si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
     si.nMin = 0;
     si.nPos = 0;
-    si.nMax = roundToInt(contentDimension / scrollChar);
-    si.nPage = roundToInt(windowDimension / scrollChar);
+    si.nMax = numberOfLines - 1;
+    si.nPage = availableLines;
     SetScrollInfo(window->GetHandle(), (int)scrollBar, &si, TRUE);
 }
 
@@ -46,6 +49,27 @@ void ScrollProvider::SetScrollPosition(Window* window, ScrollBars scrollBar, int
     scrollInfo.nPos = min(scrollInfo.nMax - scrollInfo.nPage + 1, (unsigned)max(position, 0));
 
     SetScrollPosition(window, scrollInfo, scrollBar, scrollOffset, scrollCharY);
+}
+
+void ScrollProvider::ResetScrollPosition(Window* window)
+{
+    SCROLLINFO verticalScrollInfo = GetScrollBarInfo(window, ScrollBars::Vertical);
+    int scrollAmountVertical = verticalScrollInfo.nPos * scrollCharY;
+    
+    SCROLLINFO horizontalScrollInfo = GetScrollBarInfo(window, ScrollBars::Horizontal);
+    int scrollAmountHorizontal = horizontalScrollInfo.nPos * scrollCharX;
+
+    ScrollWindowEx(
+        window->GetHandle(),
+        scrollAmountHorizontal,
+        scrollAmountVertical,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        SW_SCROLLCHILDREN);
+
+    window->ForceDraw();
 }
 
 void ScrollProvider::ProcessVerticalScroll(Window* window, WPARAM wParam, LPARAM lParam) const
@@ -132,11 +156,6 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
             SW_SCROLLCHILDREN);
 
         window->ForceDraw();
-       /* HDC hdc = GetDC(window->GetHandle());
-
-        renderingContext->ClearDC(hdc, window->GetWidth(), window->GetHeight());
-
-        DeleteDC(hdc);*/
     }
 }
 

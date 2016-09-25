@@ -47,7 +47,7 @@ void Renderer::DrawRect(Rect rect, HBRUSH brush)
     scaledSize.Height = max(scaledSize.Height, scaledRect.Height);
 }
 
-void Renderer::ClearDC(HDC hdc, Size dcSize) const
+void Renderer::ClearDC(Size dcSize) const
 {
     RECT rect;
     rect.top = 0;

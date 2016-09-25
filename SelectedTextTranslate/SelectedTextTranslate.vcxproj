@@ -30,7 +30,7 @@
     <ClCompile Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.cpp" />
     <ClCompile Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.cpp" />
-    <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\Dictionary\DictionaryWindow.cpp" />
     <ClCompile Include="Source\Helpers\RequestProvider.cpp" />
     <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
     <ClCompile Include="Source\Helpers\StringUtilities.cpp" />
@@ -42,11 +42,12 @@
     <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp" />
     <ClCompile Include="Source\TranslateEngine\Translator.cpp" />
     <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp" />
-    <ClCompile Include="Source\Windows\Content\HeaderWindow.cpp" />
-    <ClCompile Include="Source\Windows\Content\TranslateResultWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\Translation\HeaderWindow.cpp" />
+    <ClCompile Include="Source\Windows\Content\Translation\TranslateResultWindow.cpp" />
     <ClCompile Include="Source\Windows\MainWindow.cpp" />
     <ClCompile Include="Source\Windows\Base\Window.cpp" />
     <ClCompile Include="Source\Windows\Framework\WindowContext.cpp" />
+    <ClCompile Include="Source\Windows\Content\Translation\TranslationWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Windows\Framework\Providers\DeviceContextProvider.h" />
@@ -80,13 +81,14 @@
     <ClInclude Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.h" />
     <ClInclude Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.h" />
     <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h" />
-    <ClInclude Include="Source\Windows\Content\DictionaryWindow.h" />
-    <ClInclude Include="Source\Windows\Content\HeaderWindow.h" />
-    <ClInclude Include="Source\Windows\Content\TranslateResultWindow.h" />
+    <ClInclude Include="Source\Windows\Content\Dictionary\DictionaryWindow.h" />
+    <ClInclude Include="Source\Windows\Content\Translation\HeaderWindow.h" />
+    <ClInclude Include="Source\Windows\Content\Translation\TranslateResultWindow.h" />
     <ClInclude Include="Source\Windows\MainWindow.h" />
     <ClInclude Include="Source\Windows\Base\Window.h" />
     <ClInclude Include="Source\Windows\Framework\Dto\WindowDescriptor.h" />
     <ClInclude Include="Source\Windows\Framework\WindowContext.h" />
+    <ClInclude Include="Source\Windows\Content\Translation\TranslationWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

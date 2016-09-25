@@ -52,12 +52,6 @@
     <Filter Include="Source\PrecompiledSource">
       <UniqueIdentifier>{e1a7bde5-b6e4-4265-844b-1892921145d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Buttons">
-      <UniqueIdentifier>{f0bb7d86-ece3-4552-b0da-ddf1e05099fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Buttons\Base">
-      <UniqueIdentifier>{dd9ac7ff-b1c1-4b30-98fd-0bd3048cd8b5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Loggers">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
     </Filter>
@@ -100,16 +94,16 @@
     <Filter Include="Source\Windows\Framework\Providers">
       <UniqueIdentifier>{f5798579-2dcd-4072-8913-8bdfb5ade6f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Windows\Content\Translation">
+      <UniqueIdentifier>{0fb3ebea-d276-4722-bee8-9a167ac10542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Windows\Content\Dictionary">
+      <UniqueIdentifier>{e67beaf6-ff41-4df5-bd36-648b745610e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp">
-      <Filter>Source\Windows\Content\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Content\HeaderWindow.cpp">
-      <Filter>Source\Windows\Content</Filter>
     </ClCompile>
     <ClCompile Include="Source\Windows\MainWindow.cpp">
       <Filter>Source\Windows</Filter>
@@ -120,14 +114,8 @@
     <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp">
       <Filter>Source\TranslateEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Content\TranslateResultWindow.cpp">
-      <Filter>Source\Windows\Content</Filter>
-    </ClCompile>
     <ClCompile Include="Source\TranslateEngine\Translator.cpp">
       <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Content\DictionaryWindow.cpp">
-      <Filter>Source\Windows\Content</Filter>
     </ClCompile>
     <ClCompile Include="Source\Loggers\Logger.cpp">
       <Filter>Source\Loggers</Filter>
@@ -192,6 +180,21 @@
     <ClCompile Include="Source\Windows\Framework\WindowContext.cpp">
       <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp">
+      <Filter>Source\Windows\Content\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\Dictionary\DictionaryWindow.cpp">
+      <Filter>Source\Windows\Content\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\Translation\HeaderWindow.cpp">
+      <Filter>Source\Windows\Content\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\Translation\TranslateResultWindow.cpp">
+      <Filter>Source\Windows\Content\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Content\Translation\TranslationWindow.cpp">
+      <Filter>Source\Windows\Content\Translation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -201,12 +204,6 @@
   <ItemGroup>
     <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h">
       <Filter>Source\Windows\Content\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Content\DictionaryWindow.h">
-      <Filter>Source\Windows\Content</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Content\HeaderWindow.h">
-      <Filter>Source\Windows\Content</Filter>
     </ClInclude>
     <ClInclude Include="Source\Entities\TranslateResult.h">
       <Filter>Source\Entities</Filter>
@@ -238,9 +235,6 @@
     <ClInclude Include="Source\Windows\MainWindow.h">
       <Filter>Source\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Content\TranslateResultWindow.h">
-      <Filter>Source\Windows\Content</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Windows\Base\ChildWindow.h">
       <Filter>Source\Windows\Base</Filter>
     </ClInclude>
@@ -255,9 +249,6 @@
     </ClInclude>
     <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h">
       <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Base\Window.h">
-      <Filter>Source\Windows\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows\Framework\RenderingContext.h">
       <Filter>Source\Windows\Framework</Filter>
@@ -312,6 +303,21 @@
     </ClInclude>
     <ClInclude Include="Source\Windows\Framework\WindowContext.h">
       <Filter>Source\Windows\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Base\Window.h">
+      <Filter>Source\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Content\Dictionary\DictionaryWindow.h">
+      <Filter>Source\Windows\Content\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Content\Translation\HeaderWindow.h">
+      <Filter>Source\Windows\Content\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Content\Translation\TranslateResultWindow.h">
+      <Filter>Source\Windows\Content\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Content\Translation\TranslationWindow.h">
+      <Filter>Source\Windows\Content\Translation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

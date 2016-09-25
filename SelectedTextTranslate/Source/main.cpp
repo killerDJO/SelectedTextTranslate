@@ -39,7 +39,7 @@ WindowDescriptor GetMainWindowDescriptor(ScaleProvider* scaleProvider)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow)
 {
-    // AttachConsole();
+    //AttachConsole();
 
     GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR           gdiplusToken;

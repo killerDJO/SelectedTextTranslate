@@ -18,7 +18,7 @@ public:
 
     Point PrintText(const wchar_t* text, HFONT font, Colors color, Point position);
     void DrawRect(Rect rect, HBRUSH brush);
-    void ClearDC(HDC hdc, Size size) const;
+    void ClearDC(Size size) const;
     int GetFontAscent(HFONT font) const;
     int GetFontStrokeHeight(HFONT font) const;
 

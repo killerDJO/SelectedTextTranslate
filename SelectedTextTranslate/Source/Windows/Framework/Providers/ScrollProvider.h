@@ -25,4 +25,6 @@ public:
 
     int GetScrollPosition(Window* window, ScrollBars scrollBar) const;
     void SetScrollPosition(Window* window, ScrollBars scrollBar, int position) const;
+
+    void ResetScrollPosition(Window* window);
 };

@@ -16,7 +16,7 @@ protected:
 
 public:
     TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
-    ~TranslateResultWindow();
+    ~TranslateResultWindow() override;
 
     void Initialize() override;
 };

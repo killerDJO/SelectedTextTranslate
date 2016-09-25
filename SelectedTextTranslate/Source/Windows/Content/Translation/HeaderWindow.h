@@ -14,7 +14,7 @@ protected:
 
 public:
     HeaderWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
-    ~HeaderWindow();
+    ~HeaderWindow() override;
 
     void Initialize() override;
 };

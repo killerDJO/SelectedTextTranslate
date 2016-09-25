@@ -29,7 +29,7 @@ void ContentWindow::Initialize()
 
 Size ContentWindow::RenderDC(Renderer* renderer)
 {
-    renderer->ClearDC(inMemoryDC, dcSize);
+    renderer->ClearDC(dcSize);
     return Size(0, 0);
 }
 

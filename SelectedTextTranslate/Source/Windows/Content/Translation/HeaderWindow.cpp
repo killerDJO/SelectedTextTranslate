@@ -1,4 +1,4 @@
-#include "Windows\Content\HeaderWindow.h"
+#include "Windows\Content\Translation\HeaderWindow.h"
 #include "Windows\Controls\Buttons\HoverIconButtonWindow.h"
 #include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
