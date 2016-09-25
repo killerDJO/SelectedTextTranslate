@@ -10,7 +10,7 @@ void DictionaryWindow::ShowFullTranslation(int dictionaryIndex) const
     appModel->TranslateWordFromDictionary(dictionaryIndex);
 }
 
-SIZE DictionaryWindow::RenderDC(Renderer* renderer)
+Size DictionaryWindow::RenderDC(Renderer* renderer)
 {
     ContentWindow::RenderDC(renderer);
     
@@ -21,21 +21,21 @@ SIZE DictionaryWindow::RenderDC(Renderer* renderer)
     size_t countToShow = min(200, records.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(records.size());
-    renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, paddingX, curY);
+    renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, Point(paddingX, curY));
 
     curY += lineHeight;
 
     for (size_t i = 0; i < countToShow; ++i)
     {
         LogRecord record = records[i];
-        POINT lineBottomRight = renderer->PrintText(record.Word.c_str(), fontNormal, Colors::Black, paddingX * 2 + 4, curY);
-        renderer->PrintText(wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, Colors::Gray, lineBottomRight.x + 1, curY);
+        Point lineBottomRight = renderer->PrintText(record.Word.c_str(), fontNormal, Colors::Black, Point(paddingX * 2 + 4, curY));
+        renderer->PrintText(wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
             hInstance,
             renderingContext,
             scrollProvider,
-            renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY + 2 - normalFontAscent, 16, 16)),
+            WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16)),
             hWindow,
             IDR_TRANSLATE_INACTIVE,
             IDR_TRANSLATE,

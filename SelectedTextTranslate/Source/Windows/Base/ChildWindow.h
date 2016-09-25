@@ -4,28 +4,9 @@
 
 class ChildWindow : public Window
 {
-private:
-    vector<ChildWindow*> activeChildWindows;
-    vector<ChildWindow*> destroyBeforeDrawQueue;
-
-    void Draw();
-    void ForceDraw() const;
-    void DrawChildWindows();
-
-    void DestroyChildWindows(vector<ChildWindow*>& childWindows) const;
-
 protected:
     HWND parentWindow;
-
-    HDC inMemoryDC;
-    int dcWidth;
-    int dcHeight;
-
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
-    SIZE RenderContent() override;
-
-    virtual SIZE RenderDC(Renderer* renderer) = 0;
-    void AddChildWindow(ChildWindow* childWindow);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

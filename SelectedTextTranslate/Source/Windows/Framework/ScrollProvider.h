@@ -1,25 +1,30 @@
 #pragma once
 #include "Windows\Framework\Enums\ScrollBars.h"
+#include "Windows\Base\Window.h"
+
+class Window;
 
 class ScrollProvider
 {
 private:
+    RenderingContext* renderingContext;
+
     int scrollCharX;
     int scrollCharY;
 
-    void InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar) const;
-    void ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const;
-    void SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar) const;
-    SCROLLINFO GetScrollBarInfo(HWND hWindow, ScrollBars scrollBar) const;
+    void InitializeScrollbar(Window* window, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar) const;
+    void ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const;
+    void SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar) const;
+    SCROLLINFO GetScrollBarInfo(Window* window, ScrollBars scrollBar) const;
 
 public:
-    ScrollProvider();
+    ScrollProvider(RenderingContext* renderingContext);
     ~ScrollProvider();
 
-    void InitializeScrollbar(HWND hWindow, int contentSize, int windowSize, ScrollBars scrollBar);
-    void ProcessVerticalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam) const;
-    void ProcessHorizontalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam) const;
+    void InitializeScrollbar(Window* window, int contentSize, int windowSize, ScrollBars scrollBar);
+    void ProcessVerticalScroll(Window* window, WPARAM wParam, LPARAM lParam) const;
+    void ProcessHorizontalScroll(Window* window, WPARAM wParam, LPARAM lParam) const;
 
-    int GetScrollPosition(HWND hWindow, ScrollBars scrollBar) const;
-    void SetScrollPosition(HWND hWindow, ScrollBars scrollBar, int position) const;
+    int GetScrollPosition(Window* window, ScrollBars scrollBar) const;
+    void SetScrollPosition(Window* window, ScrollBars scrollBar, int position) const;
 };

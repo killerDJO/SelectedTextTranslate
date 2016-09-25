@@ -14,7 +14,7 @@ protected:
     HDC hoverStateDC;
     HDC normalStateDC;
 
-    SIZE RenderDC(Renderer* renderer) override;
+    Size RenderDC(Renderer* renderer) override;
     virtual void RenderStatesDC() = 0;
 
 public:

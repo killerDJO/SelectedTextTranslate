@@ -24,10 +24,10 @@ void MainWindow::Initialize()
         className,
         nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        descriptor.X,
-        descriptor.Y,
-        descriptor.Width,
-        descriptor.Height,
+        descriptor.Position.X,
+        descriptor.Position.Y,
+        descriptor.WindowSize.Width,
+        descriptor.WindowSize.Height,
         nullptr,
         nullptr,
         hInstance,
@@ -58,14 +58,22 @@ void MainWindow::InitializeChildWindows()
 {
     int headerHeight = 50;
 
-    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(0, 0);
-    dictionaryWindow = new DictionaryWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(dictionaryWindowDescriptor), hWindow, appModel);
+    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateStretchWindowDescriptor(Point(0, 0));
+    dictionaryWindow = new DictionaryWindow(hInstance, renderingContext, scrollProvider, dictionaryWindowDescriptor, hWindow, appModel);
 
-    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, headerHeight - 1, descriptor.Width, 0, OverflowModes::Stretch, OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(translateResultWindowDescriptor), hWindow, appModel);
+    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+        Point(0, headerHeight + 1),
+        Size(descriptor.WindowSize.Width, 0),
+        OverflowModes::Stretch,
+        OverflowModes::Stretch);
+    translateResultWindow = new TranslateResultWindow(hInstance, renderingContext, scrollProvider, translateResultWindowDescriptor, hWindow, appModel);
 
-    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(0, 0, descriptor.Width, headerHeight, OverflowModes::Stretch, OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(hInstance, renderingContext, scrollProvider, renderingContext->Scale(headerWindowDescriptor), hWindow, appModel);
+    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+        Point(0, 0),
+        Size(descriptor.WindowSize.Width, headerHeight),
+        OverflowModes::Stretch,
+        OverflowModes::Fixed);
+    headerWindow = new HeaderWindow(hInstance, renderingContext, scrollProvider, headerWindowDescriptor, hWindow, appModel);
 
     dictionaryWindow->Initialize();
     translateResultWindow->Initialize();
@@ -105,20 +113,26 @@ void MainWindow::Maximize() const
     SwitchToThisWindow(hWindow, TRUE);
 }
 
-SIZE MainWindow::RenderContent()
+Size MainWindow::RenderContent()
 {
-    SIZE renderedSize = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
+    Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+    RenderDC(renderer);
+    delete renderer;
+
+    Size renderedSize = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
         ? RenderTranslateResultView()
         : RenderDictionaryView();
-
-    HDC hdc = GetDC(hWindow);
-    renderingContext->ClearDC(hdc, descriptor.Width, descriptor.Height);
-    DeleteDC(hdc);
 
     return renderedSize;
 }
 
-SIZE MainWindow::RenderTranslateResultView() const
+Size MainWindow::RenderDC(Renderer* renderer)
+{
+    renderer->ClearDC(inMemoryDC, windowSize);
+    return renderer->GetScaledSize();
+}
+
+Size MainWindow::RenderTranslateResultView() const
 {
     headerWindow->Render();
     translateResultWindow->Render();
@@ -127,13 +141,13 @@ SIZE MainWindow::RenderTranslateResultView() const
     translateResultWindow->Show();
     dictionaryWindow->Hide();
 
-    SIZE contentSize;
-    contentSize.cx = max(headerWindow->GetWidth(), translateResultWindow->GetWidth());
-    contentSize.cy = headerWindow->GetHeight() + translateResultWindow->GetHeight();
+    Size contentSize;
+    contentSize.Width = max(headerWindow->GetWidth(), translateResultWindow->GetWidth());
+    contentSize.Height = headerWindow->GetHeight() + translateResultWindow->GetHeight();
     return contentSize;
 }
 
-SIZE MainWindow::RenderDictionaryView() const
+Size MainWindow::RenderDictionaryView() const
 {
     dictionaryWindow->Render();
 
@@ -141,31 +155,58 @@ SIZE MainWindow::RenderDictionaryView() const
     translateResultWindow->Hide();
     dictionaryWindow->Show();
 
-    SIZE contentSize;
-    contentSize.cx = dictionaryWindow->GetWidth();
-    contentSize.cy = dictionaryWindow->GetHeight();
+    Size contentSize;
+    contentSize.Width = dictionaryWindow->GetWidth();
+    contentSize.Height = dictionaryWindow->GetHeight();
     return contentSize;
 }
 
 void MainWindow::Scale(double scaleFactorAjustment)
 {
-    int scaledWidth = renderingContext->Rescale(descriptor.Width, scaleFactorAjustment);
-    int scaledHeight = renderingContext->Rescale(descriptor.Height, scaleFactorAjustment);
+    int scaledWidth = renderingContext->Rescale(descriptor.WindowSize.Width, scaleFactorAjustment);
+    int scaledHeight = renderingContext->Rescale(descriptor.WindowSize.Height, scaleFactorAjustment);
 
-    descriptor.X -= scaledWidth - descriptor.Width;
-    descriptor.Y -= scaledHeight - descriptor.Height;
- 
-    currentWidth = descriptor.Width = scaledWidth;
-    currentHeight = descriptor.Height = scaledHeight;
+    descriptor.Position.X -= scaledWidth - descriptor.WindowSize.Width;
+    descriptor.Position.Y -= scaledHeight - descriptor.WindowSize.Height;
+
+    windowSize.Width = descriptor.WindowSize.Width = scaledWidth;
+    windowSize.Height = descriptor.WindowSize.Height = scaledHeight;
 
     renderingContext->AjustScaleFactor(scaleFactorAjustment);
 
-    MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
+    MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
+    SendMessage(hWindow, WM_NCPAINT, NULL, NULL);
 
     DestroyChildWindows();
     InitializeChildWindows();
 
     Render();
+}
+
+void MainWindow::Resize()
+{
+    RECT windowRect;
+    GetWindowRect(hWindow, &windowRect);
+    descriptor.WindowSize.Width = windowSize.Width = windowRect.right - windowRect.left;
+    descriptor.WindowSize.Height = windowSize.Height = windowRect.bottom - windowRect.top;
+    descriptor.Position.X = windowRect.left;
+    descriptor.Position.Y = windowRect.top;
+
+    renderingContext->ResizeDC(inMemoryDC, windowSize);
+
+    Renderer* renderer = new Renderer(inMemoryDC, renderingContext);
+    RenderDC(renderer);
+    delete renderer;
+
+    if (descriptor.OverflowX == OverflowModes::Scroll)
+    {
+        scrollProvider->InitializeScrollbar(this, contentSize.Width, windowSize.Width, ScrollBars::Horizontal);
+    }
+
+    if (descriptor.OverflowY == OverflowModes::Scroll)
+    {
+        scrollProvider->InitializeScrollbar(this, contentSize.Height, windowSize.Height, ScrollBars::Vertical);
+    }
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -177,8 +218,6 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         instance->Minimize();
         return 0;
     }
-
-    HWND windowWithFocus, currentWindow;
 
     switch (message)
     {
@@ -199,17 +238,17 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         break;
     }
 
-    case WM_SETCURSOR:
-        SetCursor(LoadCursor(nullptr, IDC_ARROW));
+    case WM_SIZE:
+        instance->Resize();
         return TRUE;
 
     case WM_SYSCOMMAND:
         switch (wParam & 0xfff0)
         {
-            case SC_MINIMIZE:
-            case SC_CLOSE:
-                instance->Minimize();
-                return 0;
+        case SC_MINIMIZE:
+        case SC_CLOSE:
+            instance->Minimize();
+            return 0;
         }
 
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -262,13 +301,15 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         return Window::WndProc(hWnd, message, wParam, lParam);
 
     case WM_KILLFOCUS:
-        windowWithFocus = GetParent((HWND)wParam);
-        currentWindow = instance->GetHandle();
+    {
+        HWND windowWithFocus = GetParent((HWND)wParam);
+        HWND currentWindow = instance->GetHandle();
         if (windowWithFocus != currentWindow)
         {
             instance->Minimize();
         }
         break;
+    }
 
     case WM_DESTROY:
     case WM_CLOSE:

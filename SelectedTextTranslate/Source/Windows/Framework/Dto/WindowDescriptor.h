@@ -3,19 +3,18 @@
 
 struct WindowDescriptor
 {
-    int X;
-    int Y;
-
-    int Width;
-    int Height;
+    Point Position;
+    Size WindowSize;
 
     OverflowModes OverflowY;
     OverflowModes OverflowX;
 
-    static WindowDescriptor CreateWindowDescriptor(int x, int y, int width, int height, OverflowModes overflowX, OverflowModes overflowY);
-    static WindowDescriptor CreateFixedWindowDescriptor(int x, int y, int width, int height);
-    static WindowDescriptor CreateStretchWindowDescriptor(int x, int y);
+    bool AutoScale;
+
+    static WindowDescriptor CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale = true);
+    static WindowDescriptor CreateFixedWindowDescriptor(Point position, Size windowSize);
+    static WindowDescriptor CreateStretchWindowDescriptor(Point position);
 
     WindowDescriptor();
-    WindowDescriptor(int x, int y, int width, int height, OverflowModes overflowX, OverflowModes overflowY);
+    WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale = true);
 };

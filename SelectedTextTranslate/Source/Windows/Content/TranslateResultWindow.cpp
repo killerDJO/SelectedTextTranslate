@@ -17,7 +17,7 @@ void TranslateResultWindow::ExpandDictionary(int index) const
     appModel->ToggleTranslateResultDictionary(index);
 }
 
-SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
+Size TranslateResultWindow::RenderDC(Renderer* renderer)
 {
     ContentWindow::RenderDC(renderer);
 
@@ -30,10 +30,10 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
         TranslateResultDictionary category = translateResult.TranslateCategories[i];
 
         // Draw category header
-        POINT baseFormBottomRight = renderer->PrintText(category.BaseForm, fontNormal, Colors::Black, paddingX, curY);
+        Point baseFormBottomRight = renderer->PrintText(category.BaseForm, fontNormal, Colors::Black, Point(paddingX, curY));
 
         wstring partOfSpeech = L" - " + wstring(category.PartOfSpeech);
-        renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, baseFormBottomRight.x + 1, curY);
+        renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, Point(baseFormBottomRight.X + 1, curY));
 
         vector<TranslateResultDictionaryEntry> showedEntries(0);
         if (category.IsExtendedList)
@@ -59,12 +59,12 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
             curY += lineHeight;
 
             TranslateResultDictionaryEntry entry = category.Entries[j];
-            POINT wordBottomRight = renderer->PrintText(entry.Word, fontNormal, Colors::Black, paddingX * 3, curY);
+            Point wordBottomRight = renderer->PrintText(entry.Word, fontNormal, Colors::Black, Point(paddingX * 3, curY));
 
             // Draw reverse translation
             if (entry.ReverseTranslation.size() != 0)
             {
-                wordBottomRight = renderer->PrintText(L" - ", fontNormal, Colors::Gray, wordBottomRight.x + 2, curY);
+                wordBottomRight = renderer->PrintText(L" - ", fontNormal, Colors::Gray, Point(wordBottomRight.X + 2, curY));
                 for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
                 {
                     wstring text = wstring(entry.ReverseTranslation[k]);
@@ -72,7 +72,7 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
                     {
                         text += L", ";
                     }
-                    wordBottomRight = renderer->PrintText(text.c_str(), fontItalic, Colors::Gray, wordBottomRight.x, curY);
+                    wordBottomRight = renderer->PrintText(text.c_str(), fontItalic, Colors::Gray, Point(wordBottomRight.X, curY));
                 }
             }
 
@@ -80,11 +80,12 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
             int rateUnit = 8;
             int strokeHeight = renderer->GetFontStrokeHeight(fontNormal);
 
-            RECT rect;
-            rect.right = paddingX + rateUnit * 3;
-            rect.bottom = curY;
-            rect.top = rect.bottom - strokeHeight + 2;
-            rect.left = paddingX + k * rateUnit;
+            Rect rect;
+            rect.Y = curY - strokeHeight + 2;
+            rect.X = paddingX + k * rateUnit;
+            rect.Width = (3 - k) * rateUnit;
+            rect.Height = strokeHeight - 2;
+
             renderer->DrawRect(rect, grayBrush);
         }
 
@@ -95,15 +96,6 @@ SIZE TranslateResultWindow::RenderDC(Renderer* renderer)
 
     renderer->IncreaseWidth(paddingX * 3);
     renderer->IncreaseHeight(lineHeight * 3);
-
-    // Draw header line
-    SIZE renderedSize = renderer->GetSize();
-    RECT rect;
-    rect.left = 0;
-    rect.right = renderedSize.cx;
-    rect.top = 0;
-    rect.bottom = 1;
-    renderer->DrawRect(rect, grayBrush);
 
     return renderer->GetScaledSize();
 }
@@ -137,7 +129,7 @@ int TranslateResultWindow::CreateExpandButton(
             hInstance,
             renderingContext,
             scrollProvider,
-            renderingContext->Scale(WindowDescriptor::CreateStretchWindowDescriptor(paddingX * 3, curY + 7)),
+            WindowDescriptor::CreateStretchWindowDescriptor(Point(paddingX * 3, curY + 7)),
             hWindow,
             fontUnderscored,
             Colors::Gray,

@@ -2,37 +2,37 @@
 
 WindowDescriptor::WindowDescriptor()
 {
-    X = 0;
-    Y = 0;
-    Width = 0;
-    Height = 0;
+    Position = Point(0, 0);
+    WindowSize = Size(0, 0);
+
     OverflowX = OverflowModes::Fixed;
     OverflowY = OverflowModes::Fixed;
+
+    AutoScale = false;
 }
 
-WindowDescriptor::WindowDescriptor(int x, int y, int width, int height, OverflowModes overflowX, OverflowModes overflowY)
+WindowDescriptor::WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale)
 {
-    X = x;
-    Y = y;
-
-    Width = width;
-    Height = height;
+    Position = position;
+    WindowSize = windowSize;
 
     OverflowY = overflowY;
     OverflowX = overflowX;
+
+    AutoScale = autoScale;
 }
 
-WindowDescriptor WindowDescriptor::CreateWindowDescriptor(int x, int y, int width, int height, OverflowModes overflowX, OverflowModes overflowY)
+WindowDescriptor WindowDescriptor::CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale)
 {
-    return WindowDescriptor(x, y, width, height, overflowX, overflowY);
+    return WindowDescriptor(position, windowSize, overflowX, overflowY, autoScale);
 }
 
-WindowDescriptor WindowDescriptor::CreateFixedWindowDescriptor(int x, int y, int width, int height)
+WindowDescriptor WindowDescriptor::CreateFixedWindowDescriptor(Point position, Size windowSize)
 {
-    return WindowDescriptor(x, y, width, height, OverflowModes::Fixed, OverflowModes::Fixed);
+    return WindowDescriptor(position, windowSize, OverflowModes::Fixed, OverflowModes::Fixed);
 }
 
-WindowDescriptor WindowDescriptor::CreateStretchWindowDescriptor(int x, int y)
+WindowDescriptor WindowDescriptor::CreateStretchWindowDescriptor(Point position)
 {
-    return WindowDescriptor(x, y, 0, 0, OverflowModes::Stretch, OverflowModes::Stretch);
+    return WindowDescriptor(position, Size(0, 0), OverflowModes::Stretch, OverflowModes::Stretch);
 }

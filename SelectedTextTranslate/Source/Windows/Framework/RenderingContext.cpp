@@ -20,23 +20,31 @@ int RenderingContext::Scale(int value) const
     return roundToInt(value * scaleFactor);
 }
 
-RECT RenderingContext::Scale(RECT rect) const
+Rect RenderingContext::Scale(Rect rect) const
 {
-    RECT scaledRect;
-    scaledRect.left = Scale(rect.left);
-    scaledRect.right = Scale(rect.right);
-    scaledRect.top = Scale(rect.top);
-    scaledRect.bottom = Scale(rect.bottom);
+    Rect scaledRect;
+    scaledRect.X = Scale(rect.X);
+    scaledRect.Y = Scale(rect.Y);
+    scaledRect.Width = Scale(rect.Width);
+    scaledRect.Height = Scale(rect.Height);
     return scaledRect;
+}
+
+Size RenderingContext::Scale(Size size) const
+{
+    return Size(Scale(size.Width), Scale(size.Height));
+}
+
+Point RenderingContext::Scale(Point point) const
+{
+    return Point(Scale(point.X), Scale(point.Y));
 }
 
 WindowDescriptor RenderingContext::Scale(WindowDescriptor windowDescriptor) const
 {
     return WindowDescriptor::CreateWindowDescriptor(
-        Scale(windowDescriptor.X),
-        Scale(windowDescriptor.Y),
-        Scale(windowDescriptor.Width),
-        Scale(windowDescriptor.Height),
+        Scale(windowDescriptor.Position),
+        Scale(windowDescriptor.WindowSize),
         windowDescriptor.OverflowX,
         windowDescriptor.OverflowY
     );
@@ -47,11 +55,11 @@ int RenderingContext::Downscale(int value) const
     return roundToInt(value / scaleFactor);
 }
 
-SIZE RenderingContext::Downscale(SIZE size) const
+Size RenderingContext::Downscale(Size size) const
 {
-    SIZE downscaledSize;
-    downscaledSize.cx = Downscale(size.cx);
-    downscaledSize.cy = Downscale(size.cy);
+    Size downscaledSize;
+    downscaledSize.Width = Downscale(size.Width);
+    downscaledSize.Height = Downscale(size.Height);
     return downscaledSize;
 }
 
@@ -65,14 +73,14 @@ void RenderingContext::AjustScaleFactor(double scaleFactorAjustment)
     scaleFactor += scaleFactorAjustment;
 }
 
-SIZE RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font) const
+Size RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font) const
 {
     SelectObject(hdc, font);
 
     SIZE textSize;
     GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
 
-    return textSize;
+    return Size(textSize.cx, textSize.cy);
 }
 
 TEXTMETRIC RenderingContext::GetFontMetrics(HDC hdc, HFONT font) const
@@ -121,14 +129,14 @@ HBRUSH RenderingContext::CreateCustomBrush(Colors color) const
     return CreateSolidBrush((COLORREF)color);
 }
 
-HDC RenderingContext::CreateInMemoryDC(DWORD width, DWORD height) const
+HDC RenderingContext::CreateInMemoryDC(Size dcSize) const
 {
     HDC hdc = CreateCompatibleDC(nullptr);
 
     BITMAPINFO i;
     ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
-    i.bmiHeader.biWidth = width;
-    i.bmiHeader.biHeight = height;
+    i.bmiHeader.biWidth = dcSize.Width;
+    i.bmiHeader.biHeight = dcSize.Height;
     i.bmiHeader.biPlanes = 1;
     i.bmiHeader.biBitCount = 24;
     i.bmiHeader.biSizeImage = 0;
@@ -143,25 +151,15 @@ HDC RenderingContext::CreateInMemoryDC(DWORD width, DWORD height) const
     return hdc;
 }
 
-void RenderingContext::ResizeDC(HDC &hdc, DWORD width, DWORD height) const
+void RenderingContext::ResizeDC(HDC &hdc, Size dcSize) const
 {
     DeleteDC(hdc);
-    hdc = CreateInMemoryDC(width, height);
+    hdc = CreateInMemoryDC(dcSize);
 }
 
-void RenderingContext::ClearDC(HDC hdc, DWORD width, DWORD height) const
+DWORD RenderingContext::CopyDC(HDC source, HDC target, Size dcSize) const
 {
-    RECT rect;
-    rect.top = 0;
-    rect.left = 0;
-    rect.bottom = height;
-    rect.right = width;
-    FillRect(hdc, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-}
-
-DWORD RenderingContext::CopyDC(HDC source, HDC target, DWORD width, DWORD height) const
-{
-    return BitBlt(target, 0, 0, width, height, source, 0, 0, SRCCOPY);
+    return BitBlt(target, 0, 0, dcSize.Width, dcSize.Height, source, 0, 0, SRCCOPY);
 }
 
 RenderingContext::~RenderingContext()

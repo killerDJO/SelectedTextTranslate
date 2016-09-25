@@ -5,7 +5,7 @@
 class DictionaryWindow : public ContentWindow
 {
 protected:
-    SIZE RenderDC(Renderer* renderer) override;
+    Size RenderDC(Renderer* renderer) override;
 
 private:
     void ShowFullTranslation(int dictionaryIndex) const;

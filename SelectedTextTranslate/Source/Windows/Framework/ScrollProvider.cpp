@@ -1,21 +1,23 @@
 #include "Windows\Framework\ScrollProvider.h"
+#include "RenderingContext.h"
 
-ScrollProvider::ScrollProvider()
+ScrollProvider::ScrollProvider(RenderingContext* renderingContext)
 {
+    this->renderingContext = renderingContext;
     this->scrollCharX = 8;
     this->scrollCharY = 20;
 }
 
-void ScrollProvider::InitializeScrollbar(HWND hWindow, int contentSize, int windowSize, ScrollBars scrollBar)
+void ScrollProvider::InitializeScrollbar(Window* window, int contentSize, int windowSize, ScrollBars scrollBar)
 {
     int scrollChar = scrollBar == ScrollBars::Vertical
         ? scrollCharY
         : scrollCharX;
 
-    InitializeScrollbar(hWindow, windowSize, contentSize, scrollChar, scrollBar);
+    InitializeScrollbar(window, windowSize, contentSize, scrollChar, scrollBar);
 }
 
-void ScrollProvider::InitializeScrollbar(HWND hWindow, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar) const
+void ScrollProvider::InitializeScrollbar(Window* window, int windowDimension, int contentDimension, int scrollChar, ScrollBars scrollBar) const
 {
     SCROLLINFO si;
 
@@ -25,38 +27,38 @@ void ScrollProvider::InitializeScrollbar(HWND hWindow, int windowDimension, int 
     si.nPos = 0;
     si.nMax = roundToInt(contentDimension / scrollChar);
     si.nPage = roundToInt(windowDimension / scrollChar);
-    SetScrollInfo(hWindow, (int)scrollBar, &si, TRUE);
+    SetScrollInfo(window->GetHandle(), (int)scrollBar, &si, TRUE);
 }
 
-int ScrollProvider::GetScrollPosition(HWND hWindow, ScrollBars scrollBar) const
+int ScrollProvider::GetScrollPosition(Window* window, ScrollBars scrollBar) const
 {
-    SCROLLINFO scrollInfo = GetScrollBarInfo(hWindow, scrollBar);
+    SCROLLINFO scrollInfo = GetScrollBarInfo(window, scrollBar);
     return scrollInfo.nPos;
 }
 
-void ScrollProvider::SetScrollPosition(HWND hWindow, ScrollBars scrollBar, int position) const
+void ScrollProvider::SetScrollPosition(Window* window, ScrollBars scrollBar, int position) const
 {
-    SCROLLINFO scrollInfo = GetScrollBarInfo(hWindow, scrollBar);
+    SCROLLINFO scrollInfo = GetScrollBarInfo(window, scrollBar);
     int scrollOffset = scrollInfo.nPos;
 
     scrollInfo.nPos = min(scrollInfo.nMax - scrollInfo.nPage + 1, (unsigned)max(position, 0));
 
-    SetScrollPosition(hWindow, scrollInfo, scrollBar, scrollOffset, scrollCharY);
+    SetScrollPosition(window, scrollInfo, scrollBar, scrollOffset, scrollCharY);
 }
 
-void ScrollProvider::ProcessVerticalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam) const
+void ScrollProvider::ProcessVerticalScroll(Window* window, WPARAM wParam, LPARAM lParam) const
 {
-    ProcessScroll(hWindow, wParam, lParam, scrollCharY, ScrollBars::Vertical);
+    ProcessScroll(window, wParam, lParam, scrollCharY, ScrollBars::Vertical);
 }
 
-void ScrollProvider::ProcessHorizontalScroll(HWND hWindow, WPARAM wParam, LPARAM lParam) const
+void ScrollProvider::ProcessHorizontalScroll(Window* window, WPARAM wParam, LPARAM lParam) const
 {
-    ProcessScroll(hWindow, wParam, lParam, scrollCharX, ScrollBars::Horizontal);
+    ProcessScroll(window, wParam, lParam, scrollCharX, ScrollBars::Horizontal);
 }
 
-void ScrollProvider::ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const
+void ScrollProvider::ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const
 {
-    SCROLLINFO scrollInfo = GetScrollBarInfo(hWindow, scrollBar);
+    SCROLLINFO scrollInfo = GetScrollBarInfo(window, scrollBar);
     int scrollOffset = scrollInfo.nPos;
 
     switch (LOWORD(wParam))
@@ -93,14 +95,14 @@ void ScrollProvider::ProcessScroll(HWND hWindow, WPARAM wParam, LPARAM lParam, i
         break;
     }
 
-    SetScrollPosition(hWindow, scrollInfo, scrollBar, scrollOffset, scrollChar);
+    SetScrollPosition(window, scrollInfo, scrollBar, scrollOffset, scrollChar);
 }
 
-void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar) const
+void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar) const
 {
     scrollInfo.fMask = SIF_POS;
-    SetScrollInfo(hWindow, (int)scrollBar, &scrollInfo, TRUE);
-    GetScrollInfo(hWindow, (int)scrollBar, &scrollInfo);
+    SetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo, TRUE);
+    GetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo);
 
     if (scrollInfo.nPos != scrollOffset)
     {
@@ -118,7 +120,7 @@ void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, Scro
         }
 
         ScrollWindowEx(
-            hWindow,
+            window->GetHandle(),
             scrollAmountHorizontal,
             scrollAmountVertical,
             nullptr,
@@ -126,15 +128,22 @@ void ScrollProvider::SetScrollPosition(HWND hWindow, SCROLLINFO scrollInfo, Scro
             nullptr,
             nullptr,
             SW_SCROLLCHILDREN);
+
+        window->ForceDraw();
+       /* HDC hdc = GetDC(window->GetHandle());
+
+        renderingContext->ClearDC(hdc, window->GetWidth(), window->GetHeight());
+
+        DeleteDC(hdc);*/
     }
 }
 
-SCROLLINFO ScrollProvider::GetScrollBarInfo(HWND hWindow, ScrollBars scrollBar) const
+SCROLLINFO ScrollProvider::GetScrollBarInfo(Window* window, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo;
     scrollInfo.cbSize = sizeof(scrollInfo);
     scrollInfo.fMask = SIF_ALL;
-    GetScrollInfo(hWindow, (int)scrollBar, &scrollInfo);
+    GetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo);
 
     return scrollInfo;
 }

@@ -11,8 +11,8 @@ HoverIconButtonWindow::HoverIconButtonWindow(HINSTANCE hInstance, RenderingConte
 
 void HoverIconButtonWindow::RenderStatesDC()
 {
-    normalStateDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
-    hoverStateDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
+    normalStateDC = renderingContext->CreateInMemoryDC(windowSize);
+    hoverStateDC = renderingContext->CreateInMemoryDC(windowSize);
 
     RenderStateDC(normalStateDC, normalIconResource);
     RenderStateDC(hoverStateDC, hoverIconResource);
@@ -20,18 +20,20 @@ void HoverIconButtonWindow::RenderStatesDC()
 
 void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
 {
-    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, currentWidth, currentHeight);
+    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, windowSize.Width, windowSize.Height);
 
     if (iconsCache.count(cacheKey) != 0)
     {
         HDC renderedDC = iconsCache[cacheKey];
-        renderingContext->CopyDC(renderedDC, hdc, currentWidth, currentHeight);
+        renderingContext->CopyDC(renderedDC, hdc, windowSize);
         return;
     }
 
     Graphics graphics(hdc);
 
-    renderingContext->ClearDC(hdc, currentWidth, currentHeight);
+    Renderer* renderer = new Renderer(hdc, renderingContext);
+    renderer->ClearDC(hdc, windowSize);
+    delete renderer;
 
     Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
 
@@ -42,12 +44,12 @@ void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
     BOOL converstionSucceded;
     iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded);
 
-    graphics.DrawImage(iconMetafile, 0, 0, currentWidth, currentHeight);
+    graphics.DrawImage(iconMetafile, 0, 0, windowSize.Width, windowSize.Height);
 
     delete iconMetafile;
 
-    HDC cachedDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
-    renderingContext->CopyDC(hdc, cachedDC, currentWidth, currentHeight);
+    HDC cachedDC = renderingContext->CreateInMemoryDC(windowSize);
+    renderingContext->CopyDC(hdc, cachedDC, windowSize);
     iconsCache[cacheKey] = cachedDC;
 }
 

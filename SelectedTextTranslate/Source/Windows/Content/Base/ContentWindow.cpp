@@ -27,10 +27,10 @@ void ContentWindow::Initialize()
     fontSmall = renderingContext->CreateCustomFont(hWindow, FontSizes::Small);
 }
 
-SIZE ContentWindow::RenderDC(Renderer* renderer)
+Size ContentWindow::RenderDC(Renderer* renderer)
 {
-    renderingContext->ClearDC(inMemoryDC, dcWidth, dcHeight);
-    return SIZE();
+    renderer->ClearDC(inMemoryDC, dcSize);
+    return Size(0, 0);
 }
 
 ContentWindow::~ContentWindow()

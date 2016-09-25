@@ -27,7 +27,12 @@ WindowDescriptor GetMainWindowDescriptor(RenderingContext* renderingContext)
     int x = workarea.right - width - padding;
     int y = workarea.bottom - height - padding;
 
-    WindowDescriptor descriptor = WindowDescriptor::CreateWindowDescriptor(x, y, width, height, OverflowModes::Scroll, OverflowModes::Scroll);
+    WindowDescriptor descriptor = WindowDescriptor::CreateWindowDescriptor(
+        Point(x, y),
+        Size(width, height),
+        OverflowModes::Scroll,
+        OverflowModes::Scroll,
+        false);
 
     return descriptor;
 }
@@ -56,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
 
     RenderingContext* renderingContext = new RenderingContext();
-    ScrollProvider* scrollProvider = new ScrollProvider();
+    ScrollProvider* scrollProvider = new ScrollProvider(renderingContext);
     
     AppModel* appModel = new AppModel(translator, textPlayer, textExtractor, dictionary);
     MainWindow* mainWindow = new MainWindow(hInstance, appModel, renderingContext, scrollProvider, GetMainWindowDescriptor(renderingContext));

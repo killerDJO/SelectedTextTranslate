@@ -33,16 +33,19 @@ private:
     void InitNotifyIconData();
     void InitializeChildWindows();
     void DestroyChildWindows() const;
-    void Scale(double scaleFactorAjustment);
 
-    SIZE RenderTranslateResultView() const;
-    SIZE RenderDictionaryView() const;
+    void Scale(double scaleFactorAjustment);
+    void Resize();
+
+    Size RenderTranslateResultView() const;
+    Size RenderDictionaryView() const;
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
-    SIZE RenderContent() override;
+    Size RenderContent() override;
+    Size RenderDC(Renderer* renderer) override;
 
 public:
     MainWindow(HINSTANCE hInstance, AppModel* appModel, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor);

@@ -2,9 +2,20 @@
 #include "Windows\Framework\RenderingContext.h"
 #include "Windows\Framework\ScrollProvider.h"
 #include "Windows\Framework\Dto\WindowDescriptor.h"
+#include "Windows\Framework\Renderer.h"
+
+class ScrollProvider;
 
 class Window
 {
+private:
+    vector<Window*> activeChildWindows;
+    vector<Window*> destroyBeforeDrawQueue;
+
+    void Draw();
+    void DrawChildWindows();
+    void DestroyChildWindows(vector<Window*>& childWindows) const;
+
 protected:
 
     HWND hWindow;
@@ -12,14 +23,21 @@ protected:
     wchar_t* className;
 
     WindowDescriptor descriptor;
-    int currentWidth;
-    int currentHeight;
+    Size windowSize;
+    Size contentSize;
+
+    HDC inMemoryDC;
+    Size dcSize;
 
     RenderingContext* renderingContext;
     ScrollProvider* scrollProvider;
 
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
-    virtual SIZE RenderContent() = 0;
+
+    virtual Size RenderContent();
+    virtual Size RenderDC(Renderer* renderer) = 0;
+
+    void AddChildWindow(Window* childWindow);
 
     DWORD GetScrollStyle() const;
 
@@ -39,4 +57,5 @@ public:
     void Hide() const;
 
     void Render(bool preserveVerticalScroll = false);
+    void ForceDraw() const;
 };

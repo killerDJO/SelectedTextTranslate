@@ -7,10 +7,10 @@ private:
     HFONT fontSmallUnderscored;
 
     void PlayText() const;
-    void PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLineBottomRight, Renderer* renderer);
+    void PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
 
 protected:
-    SIZE RenderDC(Renderer* renderer) override;
+    Size RenderDC(Renderer* renderer) override;
 
 public:
     HeaderWindow(HINSTANCE hInstance, RenderingContext* renderingContext, ScrollProvider* scrollProvider, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);

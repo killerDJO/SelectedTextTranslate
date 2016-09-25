@@ -11,14 +11,14 @@ HoverTextButtonWindow::HoverTextButtonWindow(HINSTANCE hInstance, RenderingConte
 
 void HoverTextButtonWindow::RenderStatesDC()
 {
-    SIZE textSize = renderingContext->GetTextSize(inMemoryDC, text.c_str(), font);
+    Size textSize = renderingContext->GetTextSize(inMemoryDC, text.c_str(), font);
 
-    currentWidth = max(currentWidth, textSize.cx);
-    currentHeight = max(currentHeight, textSize.cy);
+    windowSize.Width = max(windowSize.Width, textSize.Width);
+    windowSize.Height = max(windowSize.Height, textSize.Height);
 
-    normalStateDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
-    hoverStateDC = renderingContext->CreateInMemoryDC(currentWidth, currentHeight);
-    renderingContext->ResizeDC(inMemoryDC, currentWidth, currentHeight);
+    normalStateDC = renderingContext->CreateInMemoryDC(windowSize);
+    hoverStateDC = renderingContext->CreateInMemoryDC(windowSize);
+    renderingContext->ResizeDC(inMemoryDC, windowSize);
 
     RenderStateDC(normalStateDC, normalColor);
     RenderStateDC(hoverStateDC, hoverColor);
@@ -28,9 +28,9 @@ void HoverTextButtonWindow::RenderStateDC(HDC hdc, Colors color) const
 {
     Renderer* renderer = new Renderer(hdc, renderingContext);
 
-    renderingContext->ClearDC(hdc, currentWidth, currentHeight);
+    renderer->ClearDC(hdc, windowSize);
     int fontAscent = renderer->GetFontAscent(font);
-    renderer->PrintText(text.c_str(), font, color, 0, fontAscent);
+    renderer->PrintText(text.c_str(), font, color, Point(0, fontAscent));
 
     delete renderer;
 }

@@ -4,41 +4,56 @@ Renderer::Renderer(HDC hdc, RenderingContext* renderingContext)
 {
     this->hdc = hdc;
     this->renderingContext = renderingContext;
+    this->scaledSize = Size(0, 0);
 }
 
-POINT Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, int x, int y)
+Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point position)
 {
-    int scaledX = renderingContext->Scale(x);
-    int scaledY = renderingContext->Scale(y);
+    Point scaledPosition = renderingContext->Scale(position);
 
     SelectObject(hdc, font);
     SetTextColor(hdc, (COLORREF)color);
 
     SetTextAlign(hdc, TA_BASELINE | TA_LEFT);
-    TextOut(hdc, scaledX, scaledY, text, _tcslen(text));
+    TextOut(hdc, scaledPosition.X, scaledPosition.Y, text, wcslen(text));
 
-    SIZE textSize;
-    GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+    Size textSize = renderingContext->GetTextSize(hdc, text, font);
 
-    scaledSize.cx = max(scaledSize.cx, scaledX + textSize.cx);
-    scaledSize.cy = max(scaledSize.cy, scaledY + textSize.cy);
+    scaledSize.Width = max(scaledSize.Width, scaledPosition.X + textSize.Width);
+    scaledSize.Height = max(scaledSize.Height, scaledPosition.Y + textSize.Height);
 
-    SIZE downscaledSize = renderingContext->Downscale(textSize);
+    Size downscaledSize = renderingContext->Downscale(textSize);
 
-    POINT result;
-    result.x = x + downscaledSize.cx;
-    result.y = y - GetFontAscent(font) + downscaledSize.cy;
+    Point result;
+    result.X = position.X + downscaledSize.Width;
+    result.Y = position.Y - GetFontAscent(font) + downscaledSize.Height;
 
     return result;
 }
 
-void Renderer::DrawRect(RECT rect, HBRUSH brush)
+void Renderer::DrawRect(Rect rect, HBRUSH brush)
 {
-    RECT scaledRect = renderingContext->Scale(rect);
-    FillRect(hdc, &scaledRect, brush);
+    Rect scaledRect = renderingContext->Scale(rect);
 
-    scaledSize.cx = max(scaledSize.cx, scaledRect.right);
-    scaledSize.cy = max(scaledSize.cy, scaledRect.bottom);
+    RECT gdiRect;
+    gdiRect.left = scaledRect.X;
+    gdiRect.right = scaledRect.GetRight();
+    gdiRect.top = scaledRect.Y;
+    gdiRect.bottom = scaledRect.GetBottom();
+    FillRect(hdc, &gdiRect, brush);
+
+    scaledSize.Width = max(scaledSize.Width, scaledRect.Width);
+    scaledSize.Height = max(scaledSize.Height, scaledRect.Height);
+}
+
+void Renderer::ClearDC(HDC hdc, Size dcSize) const
+{
+    RECT rect;
+    rect.top = 0;
+    rect.left = 0;
+    rect.bottom = dcSize.Height;
+    rect.right = dcSize.Width;
+    FillRect(hdc, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
 }
 
 int Renderer::GetFontAscent(HFONT font) const
@@ -52,24 +67,24 @@ int Renderer::GetFontStrokeHeight(HFONT font) const
     return renderingContext->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
 }
 
-SIZE Renderer::GetScaledSize() const
+Size Renderer::GetScaledSize() const
 {
     return scaledSize;
 }
 
-SIZE Renderer::GetSize() const
+Size Renderer::GetSize() const
 {
     return renderingContext->Downscale(scaledSize);
 }
 
 void Renderer::IncreaseWidth(int widthToAdd)
 {
-    scaledSize.cx += renderingContext->Scale(widthToAdd);
+    scaledSize.Width += renderingContext->Scale(widthToAdd);
 }
 
 void Renderer::IncreaseHeight(int heightToAdd)
 {
-    scaledSize.cy += renderingContext->Scale(heightToAdd);
+    scaledSize.Height += renderingContext->Scale(heightToAdd);
 }
 
 Renderer::~Renderer()

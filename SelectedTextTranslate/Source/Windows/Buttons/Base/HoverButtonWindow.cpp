@@ -16,6 +16,19 @@ void HoverButtonWindow::Initialize()
     RenderDC(nullptr);
 }
 
+Size HoverButtonWindow::RenderDC(Renderer* renderer)
+{
+    HDC sourceDC = isHovered
+        ? hoverStateDC
+        : normalStateDC;
+
+    renderingContext->CopyDC(sourceDC, inMemoryDC, windowSize);
+
+    MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
+
+    return windowSize;
+}
+
 LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     TRACKMOUSEEVENT tme;
@@ -64,23 +77,6 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
     }
 
     return ChildWindow::WndProc(hWnd, message, wParam, lParam);
-}
-
-SIZE HoverButtonWindow::RenderDC(Renderer* renderer)
-{
-    HDC sourceDC = isHovered
-        ? hoverStateDC
-        : normalStateDC;
-
-    renderingContext->CopyDC(sourceDC, inMemoryDC, currentWidth, currentHeight);
-
-    MoveWindow(hWindow, descriptor.X, descriptor.Y, currentWidth, currentHeight, FALSE);
-
-    SIZE size;
-    size.cx = currentWidth;
-    size.cy = currentHeight;
-
-    return size;
 }
 
 HoverButtonWindow::~HoverButtonWindow()

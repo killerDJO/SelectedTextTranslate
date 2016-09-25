@@ -20,7 +20,7 @@ void HeaderWindow::Initialize()
     fontSmallUnderscored = renderingContext->CreateCustomFont(hWindow, FontSizes::Small, false, true);
 }
 
-SIZE HeaderWindow::RenderDC(Renderer* renderer)
+Size HeaderWindow::RenderDC(Renderer* renderer)
 {
     ContentWindow::RenderDC(renderer);
 
@@ -43,7 +43,7 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
         subHeaderText = translateResult.Sentence.Origin;
     }
 
-    renderer->PrintText(headerText, fontHeader, Colors::Black, paddingX, curY);
+    renderer->PrintText(headerText, fontHeader, Colors::Black, Point(paddingX, curY));
 
     curY += lineHeight;
 
@@ -52,7 +52,7 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
         hInstance,
         renderingContext,
         scrollProvider,
-        renderingContext->Scale(WindowDescriptor::CreateFixedWindowDescriptor(paddingX, curY - imageSize + 2, imageSize, imageSize)),
+        WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize)),
         hWindow,
         IDR_AUDIO_INACTIVE,
         IDR_AUDIO,
@@ -60,12 +60,11 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
 
     AddChildWindow(audioButton);
 
-    POINT originLintBottomRight = renderer->PrintText(
+    Point originLintBottomRight = renderer->PrintText(
         subHeaderText,
         fontSmall,
         Colors::Gray,
-        paddingX + imageSize + 2,
-        curY);
+        Point(paddingX + imageSize + 2, curY));
 
     if (translateResult.IsInputCorrected())
     {
@@ -74,35 +73,23 @@ SIZE HeaderWindow::RenderDC(Renderer* renderer)
 
     renderer->IncreaseWidth(paddingX * 3);
 
-    SIZE renderedSize = renderer->GetSize();
-    int windowHeight = renderingContext->Downscale(descriptor.Height);
-    int windowWidth = renderingContext->Downscale(descriptor.Width);
-    RECT rect;
-    rect.left = 0;
-    rect.right = max(renderedSize.cx, windowWidth);
-    rect.top = windowHeight - 1;
-    rect.bottom = windowHeight;
-
-    renderer->DrawRect(rect, grayBrush);
-
     return renderer->GetScaledSize();
 }
 
-void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, POINT originLintBottomRight, Renderer* renderer)
+void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, Point originLintBottomRight, Renderer* renderer)
 {
     originLintBottomRight = renderer->PrintText(
         L" (corrected from ",
         fontSmall,
         Colors::Gray,
-        originLintBottomRight.x + 1,
-        curY);
+        Point(originLintBottomRight.X + 1, curY));
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
         hInstance,
         renderingContext,
         scrollProvider,
-        renderingContext->Scale(WindowDescriptor::CreateStretchWindowDescriptor(originLintBottomRight.x, curY - smallFontAscent)),
+        WindowDescriptor::CreateStretchWindowDescriptor(Point(originLintBottomRight.X, curY - smallFontAscent)),
         hWindow,
         fontSmallUnderscored,
         Colors::Gray,
@@ -116,8 +103,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         L")",
         fontSmall,
         Colors::Gray,
-        originLintBottomRight.x + renderingContext->Downscale(forceTranslationButton->GetWidth()),
-        curY);
+        Point(originLintBottomRight.X + renderingContext->Downscale(forceTranslationButton->GetWidth()), curY));
 }
 
 HeaderWindow::~HeaderWindow()
