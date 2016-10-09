@@ -1,6 +1,6 @@
 ﻿#include "Windows\Content\Translation\TranslateResultWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
 : ContentWindow(context, descriptor, parentWindow, appModel), fontUnderscored(nullptr)
 {
 }
@@ -9,7 +9,7 @@ void TranslateResultWindow::Initialize()
 {
     ContentWindow::Initialize();
 
-    fontUnderscored = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Small, false, true);
+    fontUnderscored = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small, false, true);
 }
 
 void TranslateResultWindow::ExpandDictionary(int index) const
@@ -17,9 +17,10 @@ void TranslateResultWindow::ExpandDictionary(int index) const
     appModel->ToggleTranslateResultDictionary(index);
 }
 
-Size TranslateResultWindow::RenderDC(Renderer* renderer)
+Size TranslateResultWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderDC(renderer);
+    ContentWindow::RenderContent(renderer);
+    DestroyChildWindows();
 
     TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
@@ -94,8 +95,8 @@ Size TranslateResultWindow::RenderDC(Renderer* renderer)
         curY += lineHeight + lineHeight / 2;
     }
 
-    renderer->IncreaseWidth(paddingX * 3);
-    renderer->IncreaseHeight(lineHeight * 3);
+    renderer->IncreaseWidth(paddingX);
+    renderer->IncreaseHeight(lineHeight);
 
     return renderer->GetScaledSize();
 }
@@ -128,7 +129,7 @@ int TranslateResultWindow::CreateExpandButton(
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
             context,
             WindowDescriptor::CreateStretchWindowDescriptor(Point(paddingX * 3, curY + 7)),
-            hWindow,
+            this,
             fontUnderscored,
             Colors::Gray,
             Colors::Black,
@@ -137,7 +138,7 @@ int TranslateResultWindow::CreateExpandButton(
 
         AddChildWindow(expandButton);
 
-        renderer->IncreaseHeight(expandButton->GetHeight());
+        renderer->IncreaseHeight(expandButton->GetSize().Height);
         curY += underscoredFontAscent;
     }
 

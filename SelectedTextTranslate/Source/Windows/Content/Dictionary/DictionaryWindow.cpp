@@ -1,6 +1,6 @@
 #include "Windows\Content\Dictionary\DictionaryWindow.h"
 
-DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
     : ContentWindow(context, descriptor, parentWindow, appModel)
 {
 }
@@ -10,10 +10,11 @@ void DictionaryWindow::ShowFullTranslation(int dictionaryIndex) const
     appModel->TranslateWordFromDictionary(dictionaryIndex);
 }
 
-Size DictionaryWindow::RenderDC(Renderer* renderer)
+Size DictionaryWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderDC(renderer);
-    
+    ContentWindow::RenderContent(renderer);
+    DestroyChildWindows();
+
     vector<LogRecord> records = appModel->GetDictionaryRecords();
     int normalFontAscent = renderer->GetFontAscent(fontNormal);
     int curY = paddingY / 2 + normalFontAscent;
@@ -34,7 +35,7 @@ Size DictionaryWindow::RenderDC(Renderer* renderer)
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
             context,
             WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16)),
-            hWindow,
+            this,
             IDR_TRANSLATE_INACTIVE,
             IDR_TRANSLATE,
             bind(&DictionaryWindow::ShowFullTranslation, this, i));

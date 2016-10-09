@@ -4,46 +4,68 @@ ScrollProvider::ScrollProvider()
 {
     this->scrollCharX = 8;
     this->scrollCharY = 20;
+
+    this->verticalScrollBarWidth = GetSystemMetrics(SM_CYVSCROLL);
+    this->horizontalScrollBarHeight = GetSystemMetrics(SM_CYHSCROLL);
 }
 
-void ScrollProvider::InitializeScrollbar(Window* window, int contentSize, ScrollBars scrollBar)
+void ScrollProvider::InitializeScrollbars(Window* window, bool initializeHorizontalScroll, bool initializeVerticalScroll) const
 {
-    int scrollChar = scrollBar == ScrollBars::Vertical
-        ? scrollCharY
-        : scrollCharX;
+    if(!initializeVerticalScroll && !initializeHorizontalScroll)
+    {
+        return;
+    }
 
-    InitializeScrollbar(window, contentSize, scrollChar, scrollBar);
+    Size clientSize = window->GetAvailableClientSize();
+    Size contentSize = window->GetContentSize();
+    bool horizontalScrollVisible = initializeHorizontalScroll && clientSize.Width < contentSize.Width;
+    bool verticalScrollVisible = initializeVerticalScroll && clientSize.Height < contentSize.Height;
+
+    if(horizontalScrollVisible)
+    {
+        clientSize.Height -= GetHorizontalScrollBarHeight();
+    }
+
+    if (verticalScrollVisible)
+    {
+        clientSize.Width -= GetVerticalScrollBarWidth();
+    }
+
+    if(initializeHorizontalScroll)
+    {
+        InitializeScrollbar(window->GetHandle(), contentSize.Width, clientSize.Width, scrollCharX, ScrollBars::Horizontal);
+    }
+
+    if(initializeVerticalScroll)
+    {
+        InitializeScrollbar(window->GetHandle(), contentSize.Height, clientSize.Height, scrollCharY, ScrollBars::Vertical);
+    }
 }
 
-void ScrollProvider::InitializeScrollbar(Window* window, int contentDimension, int scrollChar, ScrollBars scrollBar) const
+void ScrollProvider::InitializeScrollbar(HWND windowHandle, int contentDimension, int windowDimension, int scrollChar, ScrollBars scrollBar) const
 {
-    int windowDimension = scrollBar == ScrollBars::Vertical
-        ? window->GetHeight()
-        : window->GetWidth();
+    int numberOfLines = int(ceil(contentDimension * 1.0 / scrollChar));
+    int availableLines = int(ceil(windowDimension * 1.0 / scrollChar));
 
     SCROLLINFO si;
-
-    int numberOfLines = int(ceil(contentDimension / scrollChar));
-    int availableLines = int(floor(windowDimension / scrollChar));
-
     si.cbSize = sizeof(si);
     si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
     si.nMin = 0;
     si.nPos = 0;
     si.nMax = numberOfLines - 1;
     si.nPage = availableLines;
-    SetScrollInfo(window->GetHandle(), (int)scrollBar, &si, TRUE);
+    SetScrollInfo(windowHandle, (int)scrollBar, &si, TRUE);
 }
 
 int ScrollProvider::GetScrollPosition(Window* window, ScrollBars scrollBar) const
 {
-    SCROLLINFO scrollInfo = GetScrollBarInfo(window, scrollBar);
+    SCROLLINFO scrollInfo = GetWindowScrollInfo(window, scrollBar);
     return scrollInfo.nPos;
 }
 
 void ScrollProvider::SetScrollPosition(Window* window, ScrollBars scrollBar, int position) const
 {
-    SCROLLINFO scrollInfo = GetScrollBarInfo(window, scrollBar);
+    SCROLLINFO scrollInfo = GetWindowScrollInfo(window, scrollBar);
     int scrollOffset = scrollInfo.nPos;
 
     scrollInfo.nPos = min(scrollInfo.nMax - scrollInfo.nPage + 1, (unsigned)max(position, 0));
@@ -51,12 +73,12 @@ void ScrollProvider::SetScrollPosition(Window* window, ScrollBars scrollBar, int
     SetScrollPosition(window, scrollInfo, scrollBar, scrollOffset, scrollCharY);
 }
 
-void ScrollProvider::ResetScrollPosition(Window* window)
+void ScrollProvider::ResetScrollsPosition(Window* window) const
 {
-    SCROLLINFO verticalScrollInfo = GetScrollBarInfo(window, ScrollBars::Vertical);
+    SCROLLINFO verticalScrollInfo = GetWindowScrollInfo(window, ScrollBars::Vertical);
     int scrollAmountVertical = verticalScrollInfo.nPos * scrollCharY;
     
-    SCROLLINFO horizontalScrollInfo = GetScrollBarInfo(window, ScrollBars::Horizontal);
+    SCROLLINFO horizontalScrollInfo = GetWindowScrollInfo(window, ScrollBars::Horizontal);
     int scrollAmountHorizontal = horizontalScrollInfo.nPos * scrollCharX;
 
     ScrollWindowEx(
@@ -72,6 +94,16 @@ void ScrollProvider::ResetScrollPosition(Window* window)
     window->ForceDraw();
 }
 
+int ScrollProvider::GetVerticalScrollBarWidth() const
+{
+    return verticalScrollBarWidth;
+}
+
+int ScrollProvider::GetHorizontalScrollBarHeight() const
+{
+    return horizontalScrollBarHeight;
+}
+
 void ScrollProvider::ProcessVerticalScroll(Window* window, WPARAM wParam, LPARAM lParam) const
 {
     ProcessScroll(window, wParam, lParam, scrollCharY, ScrollBars::Vertical);
@@ -84,7 +116,7 @@ void ScrollProvider::ProcessHorizontalScroll(Window* window, WPARAM wParam, LPAR
 
 void ScrollProvider::ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const
 {
-    SCROLLINFO scrollInfo = GetScrollBarInfo(window, scrollBar);
+    SCROLLINFO scrollInfo = GetWindowScrollInfo(window, scrollBar);
     int scrollOffset = scrollInfo.nPos;
 
     switch (LOWORD(wParam))
@@ -159,7 +191,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
     }
 }
 
-SCROLLINFO ScrollProvider::GetScrollBarInfo(Window* window, ScrollBars scrollBar) const
+SCROLLINFO ScrollProvider::GetWindowScrollInfo(Window* window, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo;
     scrollInfo.cbSize = sizeof(scrollInfo);

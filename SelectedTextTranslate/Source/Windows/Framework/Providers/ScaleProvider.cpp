@@ -63,14 +63,14 @@ Size ScaleProvider::Downscale(Size size) const
     return downscaledSize;
 }
 
-int ScaleProvider::Rescale(int value, double scaleFactorAjustment) const
+int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const
 {
-    return roundToInt(Downscale(value) * (scaleFactor + scaleFactorAjustment));
+    return roundToInt(Downscale(value) * (scaleFactor + scaleFactorAdjustment));
 }
 
-void ScaleProvider::AjustScaleFactor(double scaleFactorAjustment)
+void ScaleProvider::AdjustScaleFactor(double scaleFactorAdjustment)
 {
-    scaleFactor += scaleFactorAjustment;
+    scaleFactor += scaleFactorAdjustment;
 }
 
 ScaleProvider::~ScaleProvider()

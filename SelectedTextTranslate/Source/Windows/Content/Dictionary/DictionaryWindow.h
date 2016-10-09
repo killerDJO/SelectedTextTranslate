@@ -5,12 +5,12 @@
 class DictionaryWindow : public ContentWindow
 {
 protected:
-    Size RenderDC(Renderer* renderer) override;
+    Size RenderContent(Renderer* renderer) override;
 
 private:
     void ShowFullTranslation(int dictionaryIndex) const;
 
 public:
-    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
     ~DictionaryWindow() override;
 };

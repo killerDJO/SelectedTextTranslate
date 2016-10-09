@@ -12,10 +12,10 @@ private:
     int CreateExpandButton(TranslateResultDictionary category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
 
 protected:
-    Size RenderDC(Renderer* renderer) override;
+    Size RenderContent(Renderer* renderer) override;
 
 public:
-    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
     ~TranslateResultWindow() override;
 
     void Initialize() override;

@@ -1,6 +1,6 @@
 #include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback)
+HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback)
     : HoverButtonWindow(context, descriptor, parentWindow, clickCallback)
 {
     this->font = font;
@@ -9,28 +9,28 @@ HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, WindowDescr
     this->text = text;
 }
 
-void HoverTextButtonWindow::RenderStatesDC()
+void HoverTextButtonWindow::RenderStatesDeviceContext()
 {
-    Size textSize = context->GetRenderingContext()->GetTextSize(inMemoryDC, text.c_str(), font);
+    Size textSize = context->GetRenderingContext()->GetTextSize(deviceContextBuffer->GetDeviceContext(), text.c_str(), font);
 
     windowSize.Width = max(windowSize.Width, textSize.Width);
     windowSize.Height = max(windowSize.Height, textSize.Height);
 
-    normalStateDC = context->GetDeviceContextProvider()->CreateInMemoryDC(windowSize);
-    hoverStateDC = context->GetDeviceContextProvider()->CreateInMemoryDC(windowSize);
-    context->GetDeviceContextProvider()->ResizeDC(inMemoryDC, windowSize);
+    normalStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    hoverStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    deviceContextBuffer->Resize(windowSize);
 
-    RenderStateDC(normalStateDC, normalColor);
-    RenderStateDC(hoverStateDC, hoverColor);
+    RenderStateDeviceContext(normalStateDeviceContext, normalColor);
+    RenderStateDeviceContext(hoverStateDeviceContext, hoverColor);
 }
 
-void HoverTextButtonWindow::RenderStateDC(HDC hdc, Colors color) const
+void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors color) const
 {
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer(hdc);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    renderer->ClearDC(windowSize);
     int fontAscent = renderer->GetFontAscent(font);
     renderer->PrintText(text.c_str(), font, color, Point(0, fontAscent));
+    renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 }

@@ -1,23 +1,21 @@
 #include "Windows\Content\Translation\TranslationWindow.h"
-#include "Windows\Content\Translation\HeaderWindow.h"
-#include "Windows\Content\Translation\TranslateResultWindow.h"
 
-TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
     : ContentWindow(context, descriptor, parentWindow, appModel)
 {
     separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
 }
 
-Size TranslationWindow::RenderDC(Renderer* renderer)
+void TranslationWindow::Initialize()
 {
-    ContentWindow::RenderDC(renderer);
+    ContentWindow::Initialize();
 
     WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
         Size(0, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
-    HeaderWindow* headerWindow = new HeaderWindow(context, headerWindowDescriptor, hWindow, appModel);
+    headerWindow = new HeaderWindow(context, headerWindowDescriptor, this, appModel);
     AddChildWindow(headerWindow);
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
@@ -25,27 +23,54 @@ Size TranslationWindow::RenderDC(Renderer* renderer)
         Size(0, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    TranslateResultWindow* translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, hWindow, appModel);
+    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, this, appModel);
     AddChildWindow(translateResultWindow);
+}
+
+Size TranslationWindow::RenderContent(Renderer* renderer)
+{
+    ContentWindow::RenderContent(renderer);
 
     headerWindow->Render();
     translateResultWindow->Render();
 
     Size contentSize;
-    contentSize.Width = max(headerWindow->GetWidth(), translateResultWindow->GetWidth());
-    contentSize.Height = headerWindow->GetHeight() + translateResultWindow->GetHeight();
+    contentSize.Width = max(headerWindow->GetSize().Width, translateResultWindow->GetSize().Width);
+    contentSize.Height = headerWindow->GetSize().Height + translateResultWindow->GetSize().Height;
 
-    RenderSeparator(renderer, max(contentSize.Width, windowSize.Width));
+    RenderSeparator(renderer, max(windowSize.Width, contentSize.Width));
 
     return contentSize;
 }
 
-void TranslationWindow::RenderSeparator(Renderer* renderer, int width)
+void TranslationWindow::Resize()
 {
-    //int width = windowSize.Width;
+    Size parentClientSize = parentWindow->GetAvailableClientSize();
+    descriptor.WindowSize = parentClientSize;
+
+    windowSize.Width = max(parentClientSize.Width, windowSize.Width);
+    windowSize.Height = max(parentClientSize.Height, windowSize.Height);
+
+    Size bufferingDeviceContextSize = deviceContextBuffer->GetSize();
+    bufferingDeviceContextSize.Width = max(parentClientSize.Width, bufferingDeviceContextSize.Width);
+    bufferingDeviceContextSize.Height = max(parentClientSize.Height, bufferingDeviceContextSize.Height);
+    deviceContextBuffer->Resize(bufferingDeviceContextSize);
+
+    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
+
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    RenderSeparator(renderer, max(contentSize.Width, windowSize.Width));
+    renderer->Render(deviceContextBuffer);
+    context->GetRenderingContext()->ReleaseRenderer(renderer);
+
+    ForceDraw();
+}
+
+void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const
+{
     int height = 1;
-    //int verticalScrollOffset = context->GetScrollProvider()->GetCurrentOffset(this, ScrollBars::Vertical);
-    renderer->DrawRect(Rect(0, headerHeight, width, height), separatorBrush);
+    int scaledWidth = context->GetScaleProvider()->Downscale(width);
+    renderer->DrawRect(Rect(0, headerHeight, scaledWidth, height), separatorBrush);
 }
 
 TranslationWindow::~TranslationWindow()

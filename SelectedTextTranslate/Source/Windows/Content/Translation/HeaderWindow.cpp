@@ -2,7 +2,7 @@
 #include "Windows\Controls\Buttons\HoverIconButtonWindow.h"
 #include "Windows\Controls\Buttons\HoverTextButtonWindow.h"
 
-HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
 : ContentWindow(context, descriptor, parentWindow, appModel)
 {
     fontSmallUnderscored = nullptr;
@@ -17,12 +17,13 @@ void HeaderWindow::Initialize()
 {
     ContentWindow::Initialize();
 
-    fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Small, false, true);
+    fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small, false, true);
 }
 
-Size HeaderWindow::RenderDC(Renderer* renderer)
+Size HeaderWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderDC(renderer);
+    ContentWindow::RenderContent(renderer);
+    DestroyChildWindows();
 
     TranslateResult translateResult = appModel->GetCurrentTranslateResult();
 
@@ -51,7 +52,7 @@ Size HeaderWindow::RenderDC(Renderer* renderer)
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
         context,
         WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize)),
-        hWindow,
+        this,
         IDR_AUDIO_INACTIVE,
         IDR_AUDIO,
         bind(&HeaderWindow::PlayText, this));
@@ -69,7 +70,7 @@ Size HeaderWindow::RenderDC(Renderer* renderer)
         PrintInputCorrectionWarning(translateResult.Sentence.Input, curY, originLintBottomRight, renderer);
     }
 
-    renderer->IncreaseWidth(paddingX * 3);
+    /*renderer->IncreaseWidth(paddingX * 3);*/
 
     return renderer->GetScaledSize();
 }
@@ -86,7 +87,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
         context,
         WindowDescriptor::CreateStretchWindowDescriptor(Point(originLintBottomRight.X, curY - smallFontAscent)),
-        hWindow,
+        this,
         fontSmallUnderscored,
         Colors::Gray,
         Colors::Black,
@@ -99,7 +100,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         L")",
         fontSmall,
         Colors::Gray,
-        Point(originLintBottomRight.X + context->GetScaleProvider()->Downscale(forceTranslationButton->GetWidth()), curY));
+        Point(originLintBottomRight.X + context->GetScaleProvider()->Downscale(forceTranslationButton->GetSize().Width), curY));
 }
 
 HeaderWindow::~HeaderWindow()

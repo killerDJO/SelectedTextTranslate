@@ -1,7 +1,7 @@
 #include "Windows\Controls\Buttons\Base\HoverButtonWindow.h"
 
-HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, function<void()> clickCallback)
-    : ChildWindow(context, descriptor, parentWindow), hoverStateDC(nullptr), normalStateDC(nullptr)
+HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, function<void()> clickCallback)
+    : ChildWindow(context, descriptor, parentWindow), hoverStateDeviceContext(nullptr), normalStateDeviceContext(nullptr)
 {
     this->clickCallback = clickCallback;
     this->isHovered = false;
@@ -10,21 +10,21 @@ HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor de
 void HoverButtonWindow::Initialize()
 {
     ChildWindow::Initialize();
-    SetWindowLongPtr(hWindow, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
+    SetWindowLongPtr(windowHandle, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
 
-    RenderStatesDC();
-    RenderDC(nullptr);
+    RenderStatesDeviceContext();
+    RenderContent(nullptr);
 }
 
-Size HoverButtonWindow::RenderDC(Renderer* renderer)
+Size HoverButtonWindow::RenderContent(Renderer* renderer)
 {
     HDC sourceDC = isHovered
-        ? hoverStateDC
-        : normalStateDC;
+        ? hoverStateDeviceContext
+        : normalStateDeviceContext;
 
-    context->GetDeviceContextProvider()->CopyDC(sourceDC, inMemoryDC, windowSize);
+    context->GetDeviceContextProvider()->CopyDeviceContext(sourceDC, deviceContextBuffer->GetDeviceContext(), windowSize);
 
-    MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
+    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
 
     return windowSize;
 }
@@ -53,7 +53,7 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSEHOVER:
         window->isHovered = true;
-        window->RenderDC(nullptr);
+        window->RenderContent(nullptr);
         InvalidateRect(hWnd, nullptr, TRUE);
 
         SetCursor(LoadCursor(nullptr, IDC_HAND));
@@ -65,7 +65,7 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSELEAVE:
         window->isHovered = false;
-        window->RenderDC(nullptr);
+        window->RenderContent(nullptr);
         InvalidateRect(hWnd, nullptr, TRUE);
 
         SetCursor(LoadCursor(nullptr, IDC_ARROW));
@@ -81,6 +81,6 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
 HoverButtonWindow::~HoverButtonWindow()
 {
-    DeleteDC(normalStateDC);
-    DeleteDC(hoverStateDC);
+    DeleteDC(normalStateDeviceContext);
+    DeleteDC(hoverStateDeviceContext);
 }

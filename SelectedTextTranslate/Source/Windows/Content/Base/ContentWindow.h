@@ -9,15 +9,19 @@ protected:
     int paddingY;
     int lineHeight;
 
-    HFONT fontNormal, fontHeader, fontItalic, fontSmall;
+    HFONT fontNormal;
+    HFONT fontHeader;
+    HFONT fontItalic;
+    HFONT fontSmall;
+
     HBRUSH grayBrush;
 
     AppModel* appModel;
 
-    Size RenderDC(Renderer* renderer) override;
+    Size RenderContent(Renderer* renderer) override;
 
 public:
-    ContentWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
     ~ContentWindow() override;
 
     void Initialize() override;

@@ -1,33 +1,34 @@
 #include "Windows\Framework\RenderingContext.h"
 
-RenderingContext::RenderingContext(ScaleProvider* scaleProvider)
+RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider)
 {
     this->scaleProvider = scaleProvider;
+    this->deviceContextProvider = deviceContextProvider;
 }
 
-Size RenderingContext::GetTextSize(HDC hdc, const wchar_t* text, HFONT font) const
+Size RenderingContext::GetTextSize(HDC deviceContext, const wchar_t* text, HFONT font) const
 {
-    SelectObject(hdc, font);
+    SelectObject(deviceContext, font);
 
     SIZE textSize;
-    GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+    GetTextExtentPoint32(deviceContext, text, wcslen(text), &textSize);
 
     return Size(textSize.cx, textSize.cy);
 }
 
-TEXTMETRIC RenderingContext::GetFontMetrics(HDC hdc, HFONT font) const
+TEXTMETRIC RenderingContext::GetFontMetrics(HDC deviceContext, HFONT font) const
 {
-    SelectObject(hdc, font);
+    SelectObject(deviceContext, font);
 
     TEXTMETRIC tm;
-    GetTextMetrics(hdc, &tm);
+    GetTextMetrics(deviceContext, &tm);
 
     return tm;
 }
 
-Renderer* RenderingContext::GetRenderer(HDC hdc)
+Renderer* RenderingContext::GetRenderer()
 {
-    return new Renderer(hdc, this, scaleProvider);
+    return new Renderer(this, deviceContextProvider, scaleProvider);
 }
 
 void RenderingContext::ReleaseRenderer(Renderer* renderer) const
@@ -35,9 +36,9 @@ void RenderingContext::ReleaseRenderer(Renderer* renderer) const
     delete renderer;
 }
 
-HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool isItalic, bool isUnderscored) const
+HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic, bool isUnderscored) const
 {
-    HDC hdc = GetDC(hWindow);
+    HDC deviceContext = GetDC(windowHandle);
 
     int fontSizeInPixels = 10;
 
@@ -54,14 +55,14 @@ HFONT RenderingContext::CreateCustomFont(HWND hWindow, FontSizes fontSize, bool 
         break;
     }
 
-    long logicalFontSize = -MulDiv(scaleProvider->Scale(fontSizeInPixels), GetDeviceCaps(hdc, LOGPIXELSY), 72);
+    long logicalFontSize = -MulDiv(scaleProvider->Scale(fontSizeInPixels), GetDeviceCaps(deviceContext, LOGPIXELSY), 72);
 
     int italicValue = isItalic ? 1 : 0;
     int underscoredValue = isUnderscored ? 1 : 0;
 
     HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
 
-    DeleteDC(hdc);
+    DeleteDC(deviceContext);
 
     return font;
 }

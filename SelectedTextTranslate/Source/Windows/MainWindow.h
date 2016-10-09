@@ -1,6 +1,8 @@
 #pragma once
 #include "Windows\Base\Window.h"
 #include "Model\AppModel.h"
+#include "Windows\Content\Dictionary\DictionaryWindow.h"
+#include "Windows\Content\Translation\TranslationWindow.h"
 
 #define ID_TRAY_APP_ICON    5000
 #define WM_TRAYICON ( WM_USER + 1 )
@@ -23,16 +25,20 @@ private:
 
     AppModel* appModel;
 
+    TranslationWindow* translationWindow;
+    DictionaryWindow* dictionaryWindow;
+
     void InitNotifyIconData();
+    void CreateViews();
 
     void Scale(double scaleFactorAjustment);
-    void Resize();
+    void Resize() override;
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
-    Size RenderDC(Renderer* renderer) override;
+    Size RenderContent(Renderer* renderer) override;
 
 public:
     MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel);
@@ -41,5 +47,5 @@ public:
     void Initialize() override;
 
     void Minimize();
-    void Maximize() const;
+    void Maximize();
 };

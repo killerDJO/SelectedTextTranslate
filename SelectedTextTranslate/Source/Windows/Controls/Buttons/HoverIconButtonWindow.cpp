@@ -2,37 +2,37 @@
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
+HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
     : HoverButtonWindow(context, descriptor, parentWindow, clickCallback)
 {
     this->normalIconResource = normalIconResource;
     this->hoverIconResource = hoverIconResource;
 }
 
-void HoverIconButtonWindow::RenderStatesDC()
+void HoverIconButtonWindow::RenderStatesDeviceContext()
 {
-    normalStateDC = context->GetDeviceContextProvider()->CreateInMemoryDC(windowSize);
-    hoverStateDC = context->GetDeviceContextProvider()->CreateInMemoryDC(windowSize);
+    normalStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    hoverStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
 
-    RenderStateDC(normalStateDC, normalIconResource);
-    RenderStateDC(hoverStateDC, hoverIconResource);
+    RenderStateDeviceContext(normalStateDeviceContext, normalIconResource);
+    RenderStateDeviceContext(hoverStateDeviceContext, hoverIconResource);
 }
 
-void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
+void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource)
 {
     tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, windowSize.Width, windowSize.Height);
 
     if (iconsCache.count(cacheKey) != 0)
     {
         HDC renderedDC = iconsCache[cacheKey];
-        context->GetDeviceContextProvider()->CopyDC(renderedDC, hdc, windowSize);
+        context->GetDeviceContextProvider()->CopyDeviceContext(renderedDC, deviceContext, windowSize);
         return;
     }
 
-    Graphics graphics(hdc);
+    Graphics graphics(deviceContext);
 
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer(hdc);
-    renderer->ClearDC(windowSize);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    renderer->Render(deviceContext, deviceContextBuffer->GetSize());
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
@@ -48,8 +48,8 @@ void HoverIconButtonWindow::RenderStateDC(HDC hdc, DWORD iconResource)
 
     delete iconMetafile;
 
-    HDC cachedDC = context->GetDeviceContextProvider()->CreateInMemoryDC(windowSize);
-    context->GetDeviceContextProvider()->CopyDC(hdc, cachedDC, windowSize);
+    HDC cachedDC = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    context->GetDeviceContextProvider()->CopyDeviceContext(deviceContext, cachedDC, windowSize);
     iconsCache[cacheKey] = cachedDC;
 }
 

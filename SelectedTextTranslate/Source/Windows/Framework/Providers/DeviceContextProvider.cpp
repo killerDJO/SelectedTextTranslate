@@ -4,14 +4,14 @@ DeviceContextProvider::DeviceContextProvider()
 {
 }
 
-HDC DeviceContextProvider::CreateInMemoryDC(Size dcSize) const
+HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
 {
     HDC hdc = CreateCompatibleDC(nullptr);
 
     BITMAPINFO i;
     ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
-    i.bmiHeader.biWidth = dcSize.Width;
-    i.bmiHeader.biHeight = dcSize.Height;
+    i.bmiHeader.biWidth = deviceContextSize.Width;
+    i.bmiHeader.biHeight = deviceContextSize.Height;
     i.bmiHeader.biPlanes = 1;
     i.bmiHeader.biBitCount = 24;
     i.bmiHeader.biSizeImage = 0;
@@ -28,15 +28,15 @@ HDC DeviceContextProvider::CreateInMemoryDC(Size dcSize) const
     return hdc;
 }
 
-void DeviceContextProvider::ResizeDC(HDC &hdc, Size dcSize) const
+void DeviceContextProvider::ResizeDeviceContext(HDC &deviceContext, Size newDeviceContextSize) const
 {
-    DeleteDC(hdc);
-    hdc = CreateInMemoryDC(dcSize);
+    DeleteDC(deviceContext);
+    deviceContext = CreateDeviceContext(newDeviceContextSize);
 }
 
-DWORD DeviceContextProvider::CopyDC(HDC source, HDC target, Size dcSize) const
+DWORD DeviceContextProvider::CopyDeviceContext(HDC source, HDC target, Size deviceContextSize) const
 {
-    return BitBlt(target, 0, 0, dcSize.Width, dcSize.Height, source, 0, 0, SRCCOPY);
+    return BitBlt(target, 0, 0, deviceContextSize.Width, deviceContextSize.Height, source, 0, 0, SRCCOPY);
 }
 
 DeviceContextProvider::~DeviceContextProvider()

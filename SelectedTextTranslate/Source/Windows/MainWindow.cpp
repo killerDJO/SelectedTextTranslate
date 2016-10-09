@@ -1,6 +1,4 @@
 #include "Windows\MainWindow.h"
-#include "Windows\Content\Dictionary\DictionaryWindow.h"
-#include "Windows\Content\Translation\TranslationWindow.h"
 
 UINT MainWindow::WM_TASKBARCREATED;
 
@@ -10,13 +8,16 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppM
 {
     this->appModel = appModel;
     this->className = L"STT_MAIN";
+    
+    this->dictionaryWindow = nullptr;
+    this->translationWindow = nullptr;
 }
 
 void MainWindow::Initialize()
 {
     Window::Initialize();
 
-    hWindow = CreateWindowEx(
+    windowHandle = CreateWindowEx(
         WS_EX_TOOLWINDOW,
         className,
         nullptr,
@@ -32,12 +33,36 @@ void MainWindow::Initialize()
 
     InitNotifyIconData();
 
-    RegisterHotKey(hWindow, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
-    RegisterHotKey(hWindow, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
+    RegisterHotKey(windowHandle, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
+    RegisterHotKey(windowHandle, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
 
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
 
+    CreateViews();
+
     Minimize();
+}
+
+void MainWindow::CreateViews()
+{
+    DestroyChildWindows();
+
+    Size clientSize = GetAvailableClientSize();
+    WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+        Point(0, 0),
+        clientSize,
+        OverflowModes::Stretch,
+        OverflowModes::Stretch,
+        false);
+
+    translationWindow = new TranslationWindow(context, windowDescriptor, this, appModel);
+    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this, appModel);
+
+    translationWindow->Hide();
+    dictionaryWindow->Hide();
+
+    AddChildWindow(translationWindow);
+    AddChildWindow(dictionaryWindow);
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -55,7 +80,7 @@ void MainWindow::InitNotifyIconData()
 
     notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
 
-    notifyIconData.hWnd = hWindow;
+    notifyIconData.hWnd = windowHandle;
     notifyIconData.uID = ID_TRAY_APP_ICON;
     notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     notifyIconData.uCallbackMessage = WM_TRAYICON;
@@ -66,37 +91,45 @@ void MainWindow::InitNotifyIconData()
 void MainWindow::Minimize()
 {
     Shell_NotifyIcon(NIM_ADD, &notifyIconData);
+    ShowWindow(windowHandle, SW_HIDE);
     Hide();
 }
 
-void MainWindow::Maximize() const
+void MainWindow::Maximize()
 {
+    ShowWindow(windowHandle, SW_SHOW);
+    SwitchToThisWindow(windowHandle, TRUE);
     Show();
-    SwitchToThisWindow(hWindow, TRUE);
 }
 
-Size MainWindow::RenderDC(Renderer* renderer)
+Size MainWindow::RenderContent(Renderer* renderer)
 {
-    renderer->ClearDC(windowSize);
+    ApplicactionViews currentView = appModel->GetCurrentApplicationView();
 
-    Window* renderedView;
-    WindowDescriptor dictionaryWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
-        Point(0, 0),
-        Size(windowSize.Width, 0),
-        OverflowModes::Stretch,
-        OverflowModes::Stretch);
+    for(size_t i = 0; i < activeChildWindows.size(); ++i)
+    {
+        activeChildWindows[i]->Hide();
+    }
 
-    renderedView = appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult
-        ? (Window*)new TranslationWindow(context, dictionaryWindowDescriptor, hWindow, appModel)
-        : (Window*)new DictionaryWindow(context, dictionaryWindowDescriptor, hWindow, appModel);
+    Window* currentWindow;
+    if (currentView == ApplicactionViews::TranslateResult)
+    {
+        currentWindow = translationWindow;
+    }
+    else
+    {
+        currentWindow = dictionaryWindow;
+    }
 
-    AddChildWindow(renderedView);
+    currentWindow->Render();
+    currentWindow->Show();
 
-    renderedView->Render();
+    Size viewContentSize = currentWindow->GetContentSize();
+    Size clientSize = GetAvailableClientSize();
 
-    Size contentSize;
-    contentSize.Width = renderedView->GetWidth();
-    contentSize.Height = renderedView->GetHeight();
+    ScrollProvider* scrollProvider = context->GetScrollProvider();
+    contentSize.Width = max(viewContentSize.Width, clientSize.Width - scrollProvider->GetVerticalScrollBarWidth());
+    contentSize.Height = max(viewContentSize.Height , clientSize.Height - scrollProvider->GetHorizontalScrollBarHeight());
 
     return contentSize;
 }
@@ -114,47 +147,75 @@ void MainWindow::Scale(double scaleFactorAjustment)
     windowSize.Width = descriptor.WindowSize.Width = scaledWidth;
     windowSize.Height = descriptor.WindowSize.Height = scaledHeight;
 
-    context->GetScaleProvider()->AjustScaleFactor(scaleFactorAjustment);
+    context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAjustment);
 
+    deviceContextBuffer->Resize(windowSize);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    renderer->Render(deviceContextBuffer);
+    context->GetRenderingContext()->ReleaseRenderer(renderer);
+
+    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
+    SendMessage(windowHandle, WM_NCPAINT, NULL, NULL);
+
+    CreateViews();
     Render();
-
-    MoveWindow(hWindow, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
-    SendMessage(hWindow, WM_NCPAINT, NULL, NULL);
 }
 
 void MainWindow::Resize()
 {
     RECT windowRect;
-    GetWindowRect(hWindow, &windowRect);
-    descriptor.WindowSize.Width = windowSize.Width = windowRect.right - windowRect.left;
-    descriptor.WindowSize.Height = windowSize.Height = windowRect.bottom - windowRect.top;
+    GetWindowRect(windowHandle, &windowRect);
+    int newWidth = windowRect.right - windowRect.left;
+    int newHeight = windowRect.bottom - windowRect.top;
+
+    if(descriptor.WindowSize.Width == newWidth && descriptor.WindowSize.Height == newHeight)
+    {
+        return;
+    }
+
+    descriptor.WindowSize.Width = windowSize.Width = newWidth;
+    descriptor.WindowSize.Height = windowSize.Height = newHeight;
     position.X = descriptor.Position.X = windowRect.left;
     position.Y = descriptor.Position.Y = windowRect.top;
 
-    context->GetDeviceContextProvider()->ResizeDC(inMemoryDC, windowSize);
-
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer(inMemoryDC);
-    renderer->ClearDC(windowSize);
+    deviceContextBuffer->Resize(windowSize);
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    context->GetScrollProvider()->ResetScrollPosition(this);
-
-    if (descriptor.OverflowX == OverflowModes::Scroll)
+    for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
-        context->GetScrollProvider()->InitializeScrollbar(this, contentSize.Width, ScrollBars::Horizontal);
+        activeChildWindows[i]->Resize();
     }
 
-    if (descriptor.OverflowY == OverflowModes::Scroll)
+    Window* currentWindow;
+    if (appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult)
     {
-        context->GetScrollProvider()->InitializeScrollbar(this, contentSize.Height, ScrollBars::Vertical);
+        currentWindow = translationWindow;
     }
+    else
+    {
+        currentWindow = dictionaryWindow;
+    }
+    Size viewContentSize = currentWindow->GetContentSize();
+    Size clientSize = GetAvailableClientSize();
+
+    ScrollProvider* scrollProvider = context->GetScrollProvider();
+    contentSize.Width = max(viewContentSize.Width, clientSize.Width - scrollProvider->GetVerticalScrollBarWidth());
+    contentSize.Height = max(viewContentSize.Height, clientSize.Height - scrollProvider->GetHorizontalScrollBarHeight());
+
+    context->GetScrollProvider()->ResetScrollsPosition(this);
+    context->GetScrollProvider()->InitializeScrollbars(
+        this,
+        descriptor.OverflowX == OverflowModes::Scroll,
+        descriptor.OverflowY == OverflowModes::Scroll);
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     MainWindow* instance = (MainWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
-    if (message == MainWindow::WM_TASKBARCREATED && !IsWindowVisible(instance->hWindow))
+    if (message == MainWindow::WM_TASKBARCREATED && !IsWindowVisible(instance->windowHandle))
     {
         instance->Minimize();
         return 0;
@@ -167,7 +228,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
     {
         CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
         instance = (MainWindow*)createstruct->lpCreateParams;
-        instance->hWindow = hWnd;
+        instance->windowHandle = hWnd;
         SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
 
         instance->menu = CreatePopupMenu();

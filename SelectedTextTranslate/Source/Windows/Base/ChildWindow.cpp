@@ -1,6 +1,6 @@
 #include "Windows\Base\ChildWindow.h"
 
-ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow)
+ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : Window(context, descriptor)
 {
     this->parentWindow = parentWindow;
@@ -11,7 +11,7 @@ ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, HW
 void ChildWindow::Initialize()
 {
     Window::Initialize();
-    hWindow = CreateWindow(
+    windowHandle = CreateWindow(
         className,
         NULL,
         WS_CHILD | WS_CLIPCHILDREN,
@@ -19,7 +19,7 @@ void ChildWindow::Initialize()
         descriptor.Position.Y,
         descriptor.WindowSize.Width,
         descriptor.WindowSize.Height,
-        parentWindow,
+        parentWindow->GetHandle(),
         NULL,
         context->GetInstance(),
         this);
@@ -37,6 +37,8 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
     switch (message)
     {
 
+    // This message should be processed in order to enable scrolling to work.
+    // Its sent to child windows after ScrollWindow on parent is called.
     case WM_MOVE:
     {
         RECT rcWindow;

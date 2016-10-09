@@ -39,7 +39,7 @@ WindowDescriptor GetMainWindowDescriptor(ScaleProvider* scaleProvider)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow)
 {
-    //AttachConsole();
+    // AttachConsole();
 
     GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR           gdiplusToken;
@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     ScaleProvider* scaleProvider = new ScaleProvider();
     DeviceContextProvider* deviceContextProvider = new DeviceContextProvider();
     ScrollProvider* scrollProvider = new ScrollProvider();
-    RenderingContext* renderingContext = new RenderingContext(scaleProvider);
+    RenderingContext* renderingContext = new RenderingContext(scaleProvider, deviceContextProvider);
     WindowContext* windowContext = new WindowContext(hInstance, scrollProvider, scaleProvider, deviceContextProvider, renderingContext);
     
     AppModel* appModel = new AppModel(translator, textPlayer, textExtractor, dictionary);

@@ -10,10 +10,10 @@ private:
     void PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
 
 protected:
-    Size RenderDC(Renderer* renderer) override;
+    Size RenderContent(Renderer* renderer) override;
 
 public:
-    HeaderWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel);
+    HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
     ~HeaderWindow() override;
 
     void Initialize() override;

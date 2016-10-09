@@ -1,6 +1,6 @@
 #include "Windows\Content\Base\ContentWindow.h"
 
-ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, HWND parentWindow, AppModel* appModel)
+ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
     : ChildWindow(context, descriptor, parentWindow),
     fontNormal(nullptr),
     fontHeader(nullptr),
@@ -21,15 +21,14 @@ void ContentWindow::Initialize()
 
     grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
 
-    fontNormal = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Normal);
-    fontHeader = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Large);
-    fontItalic = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Normal, true);
-    fontSmall = context->GetRenderingContext()->CreateCustomFont(hWindow, FontSizes::Small);
+    fontNormal = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Normal);
+    fontHeader = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Large);
+    fontItalic = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Normal, true);
+    fontSmall = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small);
 }
 
-Size ContentWindow::RenderDC(Renderer* renderer)
+Size ContentWindow::RenderContent(Renderer* renderer)
 {
-    renderer->ClearDC(dcSize);
     return Size(0, 0);
 }
 

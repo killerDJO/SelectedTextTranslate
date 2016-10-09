@@ -195,6 +195,9 @@
     <ClCompile Include="Source\Windows\Content\Translation\TranslationWindow.cpp">
       <Filter>Source\Windows\Content\Translation</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\DeviceContextBuffer.cpp">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -318,6 +321,12 @@
     </ClInclude>
     <ClInclude Include="Source\Windows\Content\Translation\TranslationWindow.h">
       <Filter>Source\Windows\Content\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\DeviceContextBuffer.h">
+      <Filter>Source\Windows\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Enums\WindowStates.h">
+      <Filter>Source\Windows\Framework\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
