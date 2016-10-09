@@ -5,12 +5,14 @@ WindowContext::WindowContext(
     ScrollProvider* scrollProvider,
     ScaleProvider* scaleProvider,
     DeviceContextProvider* deviceContextProvider,
+    HotkeyProvider* hotkeyProvider,
     RenderingContext* renderingContext)
 {
     this->hInstance = hInstance;
     this->scrollProvider = scrollProvider;
     this->scaleProvider = scaleProvider;
     this->deviceContextProvider = deviceContextProvider;
+    this->hotkeyProvider = hotkeyProvider;
     this->renderingContext = renderingContext;
 }
 
@@ -32,6 +34,11 @@ ScaleProvider* WindowContext::GetScaleProvider() const
 DeviceContextProvider* WindowContext::GetDeviceContextProvider() const
 {
     return deviceContextProvider;
+}
+
+HotkeyProvider* WindowContext::GetHotkeyProvider() const
+{
+    return hotkeyProvider;
 }
 
 RenderingContext* WindowContext::GetRenderingContext() const

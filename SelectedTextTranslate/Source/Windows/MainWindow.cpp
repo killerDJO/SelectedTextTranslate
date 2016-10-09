@@ -33,8 +33,9 @@ void MainWindow::Initialize()
 
     InitNotifyIconData();
 
-    RegisterHotKey(windowHandle, ID_TRANSLATE_HOTKEY, MOD_CONTROL, 0x54/*T*/);
-    RegisterHotKey(windowHandle, ID_PLAYTEXT_HOTKEY, MOD_CONTROL, 0x52/*R*/);
+    HotkeyProvider* hotkeyProvider = context->GetHotkeyProvider();
+    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appModel->TranslateSelectedText(); });
+    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appModel->PlaySelectedText(); });
 
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
 
@@ -215,12 +216,6 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 {
     MainWindow* instance = (MainWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
-    if (message == MainWindow::WM_TASKBARCREATED && !IsWindowVisible(instance->windowHandle))
-    {
-        instance->Minimize();
-        return 0;
-    }
-
     switch (message)
     {
 
@@ -284,22 +279,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         break;
 
     case WM_HOTKEY:
-        if (wParam == ID_TRANSLATE_HOTKEY)
-        {
-            instance->appModel->TranslateSelectedText();
-        }
-        if (wParam == ID_PLAYTEXT_HOTKEY)
-        {
-            instance->appModel->PlaySelectedText();
-        }
-        if (wParam == ID_ZOOM_IN_HOTKEY)
-        {
-            instance->Scale(0.1);
-        }
-        if (wParam == ID_ZOOM_OUT_HOTKEY)
-        {
-            instance->Scale(-0.1);
-        }
+        instance->context->GetHotkeyProvider()->ProcessHotkey(wParam);
         return Window::WndProc(hWnd, message, wParam, lParam);
 
     case WM_KILLFOCUS:
@@ -319,17 +299,25 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         break;
 
     case WM_SHOWWINDOW:
+    {
+        HotkeyProvider* hotkeyProvider = instance->context->GetHotkeyProvider();
         if (wParam == TRUE)
         {
-            RegisterHotKey(hWnd, ID_ZOOM_IN_HOTKEY, MOD_CONTROL, 0x6B/*Numpad plus*/);
-            RegisterHotKey(hWnd, ID_ZOOM_OUT_HOTKEY, MOD_CONTROL, 0x6d/*Numpad minus*/);
+            hotkeyProvider->RegisterZoomInHotkey(
+                instance->GetHandle(),
+                [=]() -> void { instance->Scale(0.1); });
+
+            hotkeyProvider->RegisterZoomOutHotkey(
+                instance->GetHandle(),
+                [=]() -> void { instance->Scale(-0.1); });
         }
         else
         {
-            UnregisterHotKey(hWnd, ID_ZOOM_IN_HOTKEY);
-            UnregisterHotKey(hWnd, ID_ZOOM_OUT_HOTKEY);
+            hotkeyProvider->UnregisterZoomInHotkey(instance->GetHandle());
+            hotkeyProvider->UnregisterZoomOutHotkey(instance->GetHandle());
         }
         break;
+    }
 
     default:
         return Window::WndProc(hWnd, message, wParam, lParam);

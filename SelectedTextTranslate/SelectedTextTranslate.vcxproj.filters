@@ -198,6 +198,9 @@
     <ClCompile Include="Source\Windows\Framework\DeviceContextBuffer.cpp">
       <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Windows\Framework\Providers\HotkeyProvider.cpp">
+      <Filter>Source\Windows\Framework\Providers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -327,6 +330,9 @@
     </ClInclude>
     <ClInclude Include="Source\Windows\Framework\Enums\WindowStates.h">
       <Filter>Source\Windows\Framework\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Framework\Providers\HotkeyProvider.h">
+      <Filter>Source\Windows\Framework\Providers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

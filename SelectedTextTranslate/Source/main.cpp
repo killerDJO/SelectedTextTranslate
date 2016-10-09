@@ -63,9 +63,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     ScaleProvider* scaleProvider = new ScaleProvider();
     DeviceContextProvider* deviceContextProvider = new DeviceContextProvider();
     ScrollProvider* scrollProvider = new ScrollProvider();
+    HotkeyProvider* hotkeyProvider = new HotkeyProvider();
     RenderingContext* renderingContext = new RenderingContext(scaleProvider, deviceContextProvider);
-    WindowContext* windowContext = new WindowContext(hInstance, scrollProvider, scaleProvider, deviceContextProvider, renderingContext);
-    
+    WindowContext* windowContext = new WindowContext(
+        hInstance,
+        scrollProvider,
+        scaleProvider,
+        deviceContextProvider,
+        hotkeyProvider,
+        renderingContext);
+
     AppModel* appModel = new AppModel(translator, textPlayer, textExtractor, dictionary);
     MainWindow* mainWindow = new MainWindow(windowContext, GetMainWindowDescriptor(scaleProvider), appModel);
     appModel->SetMainWindow(mainWindow);
@@ -97,6 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     delete mainWindow;
     delete renderingContext;
     delete scrollProvider;
+    delete hotkeyProvider;
     delete scaleProvider;
     delete deviceContextProvider;
 

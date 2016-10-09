@@ -2,6 +2,7 @@
 #include "Windows\Framework\Providers\ScrollProvider.h"
 #include "Windows\Framework\Providers\ScaleProvider.h"
 #include "Windows\Framework\Providers\DeviceContextProvider.h"
+#include "Windows\Framework\Providers\HotkeyProvider.h"
 #include "Windows\Framework\RenderingContext.h"
 
 class ScrollProvider;
@@ -33,6 +34,11 @@ class WindowContext
     DeviceContextProvider* deviceContextProvider;
 
     /// <summary>
+    /// The hotkeys provider.
+    /// </summary>
+    HotkeyProvider* hotkeyProvider;
+
+    /// <summary>
     /// The rendering context.
     /// </summary>
     RenderingContext* renderingContext;
@@ -45,12 +51,14 @@ public:
     /// <param name="scrollProvider">The scroll provider.</param>
     /// <param name="scaleProvider">The scale provider.</param>
     /// <param name="deviceContextProvider">The device context provider.</param>
+    /// <param name="HotkeyProvider">The hotkeys provider.</param>
     /// <param name="renderingContext">The rendering context.</param>
     WindowContext(
         HINSTANCE hInstance,
         ScrollProvider* scrollProvider,
         ScaleProvider* scaleProvider,
         DeviceContextProvider* deviceContextProvider,
+        HotkeyProvider* hotkeyProvider,
         RenderingContext* renderingContext);
 
     /// <summary>
@@ -81,6 +89,12 @@ public:
     /// </summary>
     /// <returns>The device context provider.</returns>
     DeviceContextProvider* GetDeviceContextProvider() const;
+
+    /// <summary>
+    /// Gets the hotkeys provider.
+    /// </summary>
+    /// <returns></returns>
+    HotkeyProvider* GetHotkeyProvider() const;
 
     /// <summary>
     /// Gets the rendering context.

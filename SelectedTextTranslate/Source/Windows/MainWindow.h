@@ -6,14 +6,9 @@
 
 #define ID_TRAY_APP_ICON    5000
 #define WM_TRAYICON ( WM_USER + 1 )
-
 #define ID_TRAY_EXIT_CONTEXT_MENU_ITEM          3000
 #define ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM     3002
-#define ID_TRANSLATE_HOTKEY                     3003
-#define ID_PLAYTEXT_HOTKEY                      3004
 #define ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM    3005
-#define ID_ZOOM_IN_HOTKEY                       3006
-#define ID_ZOOM_OUT_HOTKEY                      3007
 
 class MainWindow : public Window
 {

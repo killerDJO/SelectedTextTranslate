@@ -14,6 +14,7 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Windows\Framework\Providers\HotkeyProvider.cpp" />
     <ClCompile Include="Source\Windows\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\Windows\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\Windows\Framework\Providers\ScaleProvider.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Source\Windows\Content\Translation\TranslationWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Windows\Framework\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\Windows\Framework\DeviceContextBuffer.h" />
     <ClInclude Include="Source\Windows\Framework\Enums\WindowStates.h" />
     <ClInclude Include="Source\Windows\Framework\Providers\DeviceContextProvider.h" />
