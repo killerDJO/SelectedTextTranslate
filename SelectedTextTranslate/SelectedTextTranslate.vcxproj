@@ -14,7 +14,7 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Windows\Framework\Providers\HotkeyProvider.cpp" />
+    <ClCompile Include="Source\Windows\Providers\HotkeyProvider.cpp" />
     <ClCompile Include="Source\Windows\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\Windows\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\Windows\Framework\Providers\ScaleProvider.cpp" />
@@ -50,9 +50,10 @@
     <ClCompile Include="Source\Windows\Base\Window.cpp" />
     <ClCompile Include="Source\Windows\Framework\WindowContext.cpp" />
     <ClCompile Include="Source\Windows\Content\Translation\TranslationWindow.cpp" />
+    <ClCompile Include="Source\Windows\Providers\TrayIconProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Windows\Framework\Providers\HotkeyProvider.h" />
+    <ClInclude Include="Source\Windows\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\Windows\Framework\DeviceContextBuffer.h" />
     <ClInclude Include="Source\Windows\Framework\Enums\WindowStates.h" />
     <ClInclude Include="Source\Windows\Framework\Providers\DeviceContextProvider.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Source\Windows\Framework\Dto\WindowDescriptor.h" />
     <ClInclude Include="Source\Windows\Framework\WindowContext.h" />
     <ClInclude Include="Source\Windows\Content\Translation\TranslationWindow.h" />
+    <ClInclude Include="Source\Windows\Providers\TrayIconProvider.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

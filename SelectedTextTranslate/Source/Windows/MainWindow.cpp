@@ -1,14 +1,14 @@
 #include "Windows\MainWindow.h"
 
-UINT MainWindow::WM_TASKBARCREATED;
-
-MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel)
-    : Window(context, descriptor),
-    menu(nullptr)
+MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider)
+    : Window(context, descriptor)
 {
     this->appModel = appModel;
+    this->hotkeyProvider = hotkeyProvider;
+    this->trayIconProvider = trayIconProvider;
+
     this->className = L"STT_MAIN";
-    
+
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
 }
@@ -31,13 +31,10 @@ void MainWindow::Initialize()
         context->GetInstance(),
         this);
 
-    InitNotifyIconData();
-
-    HotkeyProvider* hotkeyProvider = context->GetHotkeyProvider();
     hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appModel->TranslateSelectedText(); });
     hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appModel->PlaySelectedText(); });
 
-    WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
+    notifyIconData = trayIconProvider->CreateTrayIcon(context->GetInstance(), windowHandle);
 
     CreateViews();
 
@@ -75,23 +72,8 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 }
 
-void MainWindow::InitNotifyIconData()
-{
-    memset(&notifyIconData, 0, sizeof(NOTIFYICONDATA));
-
-    notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
-
-    notifyIconData.hWnd = windowHandle;
-    notifyIconData.uID = ID_TRAY_APP_ICON;
-    notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-    notifyIconData.uCallbackMessage = WM_TRAYICON;
-    notifyIconData.hIcon = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
-    wcscpy_s(notifyIconData.szTip, TEXT("Selected text translate.."));
-}
-
 void MainWindow::Minimize()
 {
-    Shell_NotifyIcon(NIM_ADD, &notifyIconData);
     ShowWindow(windowHandle, SW_HIDE);
     Hide();
 }
@@ -216,30 +198,20 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 {
     MainWindow* instance = (MainWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
+    if(instance != nullptr)
+    {
+        instance->trayIconProvider->ProcessTrayIconMessages(instance->notifyIconData, hWnd, message, wParam, lParam);
+    }
+
     switch (message)
     {
-
-    case WM_CREATE:
-    {
-        CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
-        instance = (MainWindow*)createstruct->lpCreateParams;
-        instance->windowHandle = hWnd;
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
-
-        instance->menu = CreatePopupMenu();
-        AppendMenu(instance->menu, MF_STRING, ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM, TEXT("Translate from clipboard"));
-        AppendMenu(instance->menu, MF_STRING, ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM, TEXT("Dictionary"));
-        AppendMenu(instance->menu, MF_SEPARATOR, NULL, nullptr);
-        AppendMenu(instance->menu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit"));
-
-        break;
-    }
 
     case WM_SIZE:
         instance->Resize();
         return TRUE;
 
     case WM_SYSCOMMAND:
+    {
         switch (wParam & 0xfff0)
         {
         case SC_MINIMIZE:
@@ -249,37 +221,10 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         }
 
         return DefWindowProc(hWnd, message, wParam, lParam);
-
-    case WM_TRAYICON:
-
-        if (lParam == WM_LBUTTONUP)
-        {
-            instance->appModel->TranslateSelectedText();
-        }
-
-        if (lParam == WM_RBUTTONUP)
-        {
-            POINT curPoint;
-            GetCursorPos(&curPoint);
-            SetForegroundWindow(hWnd);
-            UINT clicked = TrackPopupMenu(instance->menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, hWnd, nullptr);
-            if (clicked == ID_TRAY_EXIT_CONTEXT_MENU_ITEM)
-            {
-                instance->appModel->Exit();
-            }
-            if (clicked == ID_TRAY_TRANSLATE_CONTEXT_MENU_ITEM)
-            {
-                instance->appModel->TranslateSelectedText();
-            }
-            if (clicked == ID_TRAY_DICTIONARY_CONTEXT_MENU_ITEM)
-            {
-                instance->appModel->ShowDictionary();
-            }
-        }
-        break;
+    }
 
     case WM_HOTKEY:
-        instance->context->GetHotkeyProvider()->ProcessHotkey(wParam);
+        instance->hotkeyProvider->ProcessHotkey(wParam);
         return Window::WndProc(hWnd, message, wParam, lParam);
 
     case WM_KILLFOCUS:
@@ -300,21 +245,20 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
     case WM_SHOWWINDOW:
     {
-        HotkeyProvider* hotkeyProvider = instance->context->GetHotkeyProvider();
         if (wParam == TRUE)
         {
-            hotkeyProvider->RegisterZoomInHotkey(
+            instance->hotkeyProvider->RegisterZoomInHotkey(
                 instance->GetHandle(),
                 [=]() -> void { instance->Scale(0.1); });
 
-            hotkeyProvider->RegisterZoomOutHotkey(
+            instance->hotkeyProvider->RegisterZoomOutHotkey(
                 instance->GetHandle(),
                 [=]() -> void { instance->Scale(-0.1); });
         }
         else
         {
-            hotkeyProvider->UnregisterZoomInHotkey(instance->GetHandle());
-            hotkeyProvider->UnregisterZoomOutHotkey(instance->GetHandle());
+            instance->hotkeyProvider->UnregisterZoomInHotkey(instance->GetHandle());
+            instance->hotkeyProvider->UnregisterZoomOutHotkey(instance->GetHandle());
         }
         break;
     }
@@ -328,5 +272,5 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
 MainWindow::~MainWindow()
 {
-    Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
+    trayIconProvider->DestroyTrayIcon(notifyIconData);
 }

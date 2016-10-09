@@ -100,6 +100,9 @@
     <Filter Include="Source\Windows\Content\Dictionary">
       <UniqueIdentifier>{e67beaf6-ff41-4df5-bd36-648b745610e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Windows\Providers">
+      <UniqueIdentifier>{eb4a919c-5cee-4fbd-9964-96f98f213f53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -198,8 +201,11 @@
     <ClCompile Include="Source\Windows\Framework\DeviceContextBuffer.cpp">
       <Filter>Source\Windows\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\Providers\HotkeyProvider.cpp">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClCompile Include="Source\Windows\Providers\HotkeyProvider.cpp">
+      <Filter>Source\Windows\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Providers\TrayIconProvider.cpp">
+      <Filter>Source\Windows\Providers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,8 +337,11 @@
     <ClInclude Include="Source\Windows\Framework\Enums\WindowStates.h">
       <Filter>Source\Windows\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Providers\HotkeyProvider.h">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClInclude Include="Source\Windows\Providers\HotkeyProvider.h">
+      <Filter>Source\Windows\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Providers\TrayIconProvider.h">
+      <Filter>Source\Windows\Providers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

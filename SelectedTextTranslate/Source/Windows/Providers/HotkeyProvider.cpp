@@ -1,4 +1,4 @@
-#include "Windows\Framework\Providers\HotkeyProvider.h"
+#include "Windows\Providers\HotkeyProvider.h"
 
 HotkeyProvider::HotkeyProvider()
 {
