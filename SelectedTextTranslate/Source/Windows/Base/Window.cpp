@@ -76,6 +76,12 @@ void Window::Render(bool preserveVerticalScroll)
         windowSize.Height = contentSize.Height;
     }
 
+    HDC deviceContext = GetDC(windowHandle);
+    Draw(deviceContext, true);
+    DeleteDC(deviceContext);
+
+    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, TRUE);
+
     context->GetScrollProvider()->InitializeScrollbars(
         this,
         descriptor.OverflowX == OverflowModes::Scroll,
@@ -87,9 +93,6 @@ void Window::Render(bool preserveVerticalScroll)
     }
 
     windowState = WindowStates::Rendered;
-
-    InvalidateRect(windowHandle, nullptr, FALSE);
-    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
 }
 
 Size Window::RenderToBuffer()
@@ -120,32 +123,25 @@ Size Window::RenderToBuffer()
     return renderedSize;
 }
 
-void Window::Draw()
+void Window::Draw(HDC deviceContext, bool drawChildren)
 {
-    // Important to draw child windows before drawing parent window.
-    // Otherwise, WM_CLIPCHILDREN style will cause redraw of the parent window after the child windows draw.
-    DestroyChildWindows(destroyBeforeDrawList);
-    DrawChildWindows();
-
-    PAINTSTRUCT ps;
-    HDC deviceContext = BeginPaint(windowHandle, &ps);
+    if(drawChildren)
+    {
+        // Important to draw child windows before drawing parent window.
+        // Otherwise, WM_CLIPCHILDREN style will cause redraw of the parent window after the child windows draw.
+        DestroyChildWindows(destroyBeforeDrawList);
+        DrawChildWindows();
+    }
 
     deviceContextBuffer->Render(deviceContext, windowSize);
-
-    EndPaint(windowHandle, &ps);
 
     windowState = WindowStates::Drawn;
 }
 
-void Window::Resize()
-{
-    // By default, do nothing on resize.
-}
-
-void Window::ForceDraw()
+void Window::Redraw()
 {
     HDC deviceContext = GetDC(windowHandle);
-    deviceContextBuffer->Render(deviceContext, windowSize);
+    Draw(deviceContext, false);
     DeleteDC(deviceContext);
 
     windowState = WindowStates::Drawn;
@@ -159,7 +155,7 @@ void Window::DrawChildWindows()
         if(childWindow->IsVisible())
         {
             ShowWindow(childWindow->GetHandle(), SW_SHOW);
-            childWindow->ForceDraw();
+            childWindow->Redraw();
             childWindow->DrawChildWindows();
         }
         else
@@ -190,6 +186,11 @@ void Window::DestroyChildWindows(vector<Window*>& childWindows) const
 
     childWindows.clear();
     childWindows.resize(0);
+}
+
+void Window::Resize()
+{
+    // By default, do nothing on resize.
 }
 
 DWORD Window::GetScrollStyle() const
@@ -329,8 +330,13 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     }
 
     case WM_PAINT:
-        instance->Draw();
+    {
+        PAINTSTRUCT ps;
+        HDC deviceContext = BeginPaint(instance->GetHandle(), &ps);
+        instance->Draw(deviceContext, true);
+        EndPaint(instance->GetHandle(), &ps);
         break;
+    }
 
     // Prevent of the background erase reduces flickering before Draw.
     case WM_ERASEBKGND:

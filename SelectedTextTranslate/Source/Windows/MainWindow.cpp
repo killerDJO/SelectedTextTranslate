@@ -45,10 +45,9 @@ void MainWindow::CreateViews()
 {
     DestroyChildWindows();
 
-    Size clientSize = GetAvailableClientSize();
     WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
-        clientSize,
+        windowSize,
         OverflowModes::Stretch,
         OverflowModes::Stretch,
         false);
@@ -87,34 +86,17 @@ void MainWindow::Maximize()
 
 Size MainWindow::RenderContent(Renderer* renderer)
 {
-    ApplicactionViews currentView = appModel->GetCurrentApplicationView();
-
     for(size_t i = 0; i < activeChildWindows.size(); ++i)
     {
         activeChildWindows[i]->Hide();
     }
 
-    Window* currentWindow;
-    if (currentView == ApplicactionViews::TranslateResult)
-    {
-        currentWindow = translationWindow;
-    }
-    else
-    {
-        currentWindow = dictionaryWindow;
-    }
+    Window* currentView = GetCurrentView();
 
-    currentWindow->Render();
-    currentWindow->Show();
+    currentView->Render();
+    currentView->Show();
 
-    Size viewContentSize = currentWindow->GetContentSize();
-    Size clientSize = GetAvailableClientSize();
-
-    ScrollProvider* scrollProvider = context->GetScrollProvider();
-    contentSize.Width = max(viewContentSize.Width, clientSize.Width - scrollProvider->GetVerticalScrollBarWidth());
-    contentSize.Height = max(viewContentSize.Height , clientSize.Height - scrollProvider->GetHorizontalScrollBarHeight());
-
-    return contentSize;
+    return currentView->GetContentSize();
 }
 
 void MainWindow::Scale(double scaleFactorAjustment)
@@ -133,15 +115,11 @@ void MainWindow::Scale(double scaleFactorAjustment)
     context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAjustment);
 
     deviceContextBuffer->Resize(windowSize);
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
-    renderer->Render(deviceContextBuffer);
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
-
-    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
-    SendMessage(windowHandle, WM_NCPAINT, NULL, NULL);
 
     CreateViews();
     Render();
+
+    SendMessage(windowHandle, WM_NCPAINT, NULL, NULL);
 }
 
 void MainWindow::Resize()
@@ -162,36 +140,32 @@ void MainWindow::Resize()
     position.Y = descriptor.Position.Y = windowRect.top;
 
     deviceContextBuffer->Resize(windowSize);
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
-    renderer->Render(deviceContextBuffer);
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
+    Redraw();
 
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
         activeChildWindows[i]->Resize();
     }
 
-    Window* currentWindow;
-    if (appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult)
-    {
-        currentWindow = translationWindow;
-    }
-    else
-    {
-        currentWindow = dictionaryWindow;
-    }
-    Size viewContentSize = currentWindow->GetContentSize();
-    Size clientSize = GetAvailableClientSize();
+    Window* currentView = GetCurrentView();
+    contentSize = currentView->GetContentSize();
 
-    ScrollProvider* scrollProvider = context->GetScrollProvider();
-    contentSize.Width = max(viewContentSize.Width, clientSize.Width - scrollProvider->GetVerticalScrollBarWidth());
-    contentSize.Height = max(viewContentSize.Height, clientSize.Height - scrollProvider->GetHorizontalScrollBarHeight());
-
-    context->GetScrollProvider()->ResetScrollsPosition(this);
     context->GetScrollProvider()->InitializeScrollbars(
         this,
         descriptor.OverflowX == OverflowModes::Scroll,
         descriptor.OverflowY == OverflowModes::Scroll);
+}
+
+Window* MainWindow::GetCurrentView() const
+{
+    if (appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult)
+    {
+        return translationWindow;
+    }
+    else
+    {
+        return dictionaryWindow;
+    }
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

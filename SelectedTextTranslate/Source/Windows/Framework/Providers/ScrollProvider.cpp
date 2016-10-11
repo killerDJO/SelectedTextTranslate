@@ -91,7 +91,7 @@ void ScrollProvider::ResetScrollsPosition(Window* window) const
         nullptr,
         SW_SCROLLCHILDREN);
 
-    window->ForceDraw();
+    window->Redraw();
 }
 
 int ScrollProvider::GetVerticalScrollBarWidth() const
@@ -187,7 +187,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
             nullptr,
             SW_SCROLLCHILDREN);
 
-        window->ForceDraw();
+        window->Redraw();
     }
 }
 

@@ -21,6 +21,7 @@ private:
 
     void Scale(double scaleFactorAjustment);
     void Resize() override;
+    Window* GetCurrentView() const;
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

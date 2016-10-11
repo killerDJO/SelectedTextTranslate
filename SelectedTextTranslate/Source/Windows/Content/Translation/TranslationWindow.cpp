@@ -4,6 +4,8 @@ TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor de
     : ContentWindow(context, descriptor, parentWindow, appModel)
 {
     separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+    headerWindow = nullptr;
+    translateResultWindow = nullptr;
 }
 
 void TranslationWindow::Initialize()
@@ -45,15 +47,15 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
 
 void TranslationWindow::Resize()
 {
-    Size parentClientSize = parentWindow->GetAvailableClientSize();
-    descriptor.WindowSize = parentClientSize;
+    Size parentSize = parentWindow->GetSize();
+    descriptor.WindowSize = parentSize;
 
-    windowSize.Width = max(parentClientSize.Width, windowSize.Width);
-    windowSize.Height = max(parentClientSize.Height, windowSize.Height);
+    windowSize.Width = max(parentSize.Width, windowSize.Width);
+    windowSize.Height = max(parentSize.Height, windowSize.Height);
 
     Size bufferingDeviceContextSize = deviceContextBuffer->GetSize();
-    bufferingDeviceContextSize.Width = max(parentClientSize.Width, bufferingDeviceContextSize.Width);
-    bufferingDeviceContextSize.Height = max(parentClientSize.Height, bufferingDeviceContextSize.Height);
+    bufferingDeviceContextSize.Width = max(parentSize.Width, bufferingDeviceContextSize.Width);
+    bufferingDeviceContextSize.Height = max(parentSize.Height, bufferingDeviceContextSize.Height);
     deviceContextBuffer->Resize(bufferingDeviceContextSize);
 
     MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
@@ -63,7 +65,7 @@ void TranslationWindow::Resize()
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    ForceDraw();
+    Redraw();
 }
 
 void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const
