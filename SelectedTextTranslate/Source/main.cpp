@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int
     ScaleProvider* scaleProvider = new ScaleProvider();
     DeviceContextProvider* deviceContextProvider = new DeviceContextProvider();
     ScrollProvider* scrollProvider = new ScrollProvider();
-    RenderingContext* renderingContext = new RenderingContext(scaleProvider, deviceContextProvider);
+    RenderingContext* renderingContext = new RenderingContext(scaleProvider, deviceContextProvider, scrollProvider);
     WindowContext* windowContext = new WindowContext(
         hInstance,
         scrollProvider,

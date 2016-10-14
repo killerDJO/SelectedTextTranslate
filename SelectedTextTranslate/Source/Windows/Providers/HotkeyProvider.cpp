@@ -32,26 +32,34 @@ void HotkeyProvider::RegisterPlayTextHotkey(HWND windowHandle, function<void()> 
 
 void HotkeyProvider::RegisterZoomInHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterHotKey(windowHandle, ZoomInHotkeyId, MOD_CONTROL, 0x6B/*Numpad plus*/);
-    RegisterHotkeyCallback(ZoomInHotkeyId, pressedCallback);
+    RegisterHotKey(windowHandle, ZoomInHotkeyPrimaryId, MOD_CONTROL, 0x6B/*Numpad plus*/);
+    RegisterHotKey(windowHandle, ZoomInHotkeySecondaryId, MOD_CONTROL, VK_OEM_PLUS);
+    RegisterHotkeyCallback(ZoomInHotkeyPrimaryId, pressedCallback);
+    RegisterHotkeyCallback(ZoomInHotkeySecondaryId, pressedCallback);
 }
 
 void HotkeyProvider::RegisterZoomOutHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterHotKey(windowHandle, ZoomOutHotkeyId, MOD_CONTROL, 0x6d/*Numpad minus*/);
-    RegisterHotkeyCallback(ZoomOutHotkeyId, pressedCallback);
+    RegisterHotKey(windowHandle, ZoomOutHotkeyPrimaryId, MOD_CONTROL, 0x6d/*Numpad minus*/);
+    RegisterHotKey(windowHandle, ZoomOutHotkeySecondaryId, MOD_CONTROL, VK_OEM_MINUS);
+    RegisterHotkeyCallback(ZoomOutHotkeyPrimaryId, pressedCallback);
+    RegisterHotkeyCallback(ZoomOutHotkeySecondaryId, pressedCallback);
 }
 
 void HotkeyProvider::UnregisterZoomInHotkey(HWND windowHandle)
 {
-    UnregisterHotKey(windowHandle, ZoomInHotkeyId);
-    UnregisterHotkeyCallback(ZoomInHotkeyId);
+    UnregisterHotKey(windowHandle, ZoomInHotkeyPrimaryId);
+    UnregisterHotKey(windowHandle, ZoomInHotkeySecondaryId);
+    UnregisterHotkeyCallback(ZoomInHotkeyPrimaryId);
+    UnregisterHotkeyCallback(ZoomInHotkeySecondaryId);
 }
 
 void HotkeyProvider::UnregisterZoomOutHotkey(HWND windowHandle)
 {
-    UnregisterHotKey(windowHandle, ZoomOutHotkeyId);
-    UnregisterHotkeyCallback(ZoomOutHotkeyId);
+    UnregisterHotKey(windowHandle, ZoomOutHotkeyPrimaryId);
+    UnregisterHotKey(windowHandle, ZoomOutHotkeySecondaryId);
+    UnregisterHotkeyCallback(ZoomOutHotkeyPrimaryId);
+    UnregisterHotkeyCallback(ZoomOutHotkeySecondaryId);
 }
 
 void HotkeyProvider::ProcessHotkey(DWORD hotkeyId)

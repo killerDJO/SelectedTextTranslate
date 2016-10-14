@@ -118,8 +118,6 @@ void MainWindow::Scale(double scaleFactorAdjustment)
 
     CreateViews();
     Render();
-
-    SendMessage(windowHandle, WM_NCPAINT, NULL, NULL);
 }
 
 void MainWindow::Resize()
@@ -145,7 +143,11 @@ void MainWindow::Resize()
     position.Y = descriptor.Position.Y = windowRect.top;
 
     deviceContextBuffer->Resize(windowSize);
-    Draw(true);
+
+    // Clear background
+    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    renderer->Render(deviceContextBuffer);
+    context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
@@ -155,10 +157,7 @@ void MainWindow::Resize()
     Window* currentView = GetCurrentView();
     contentSize = currentView->GetContentSize();
 
-    context->GetScrollProvider()->InitializeScrollbars(
-        this,
-        descriptor.OverflowX == OverflowModes::Scroll,
-        descriptor.OverflowY == OverflowModes::Scroll);
+    ApplyRenderedState(true);
 }
 
 Window* MainWindow::GetCurrentView() const

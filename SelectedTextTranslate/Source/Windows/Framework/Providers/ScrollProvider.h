@@ -17,7 +17,6 @@ private:
 
     SCROLLINFO GetWindowScrollInfo(Window* window, ScrollBars scrollBar) const;
     void SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const;
-    int GetScrollChar(ScrollBars scrollBar) const;
 
 public:
     ScrollProvider();
@@ -38,4 +37,6 @@ public:
 
     bool IsScrollBarVisible(const Window* window, ScrollBars scrollBar) const;
     int GetScrollBarSize(const Window* window, ScrollBars scrollBar) const;
+
+    int GetScrollChar(ScrollBars scrollBar) const;
 };

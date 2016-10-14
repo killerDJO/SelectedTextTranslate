@@ -14,11 +14,12 @@ class RenderingContext
 private:
     ScaleProvider* scaleProvider;
     DeviceContextProvider* deviceContextProvider;
+    ScrollProvider* scrollProvider;
 
     Window* renderingRoot;
 
 public:
-    RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
+    RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider, ScrollProvider* scrollProvider);
     ~RenderingContext();
 
     HFONT CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false) const;

@@ -70,7 +70,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
         PrintInputCorrectionWarning(translateResult.Sentence.Input, curY, originLintBottomRight, renderer);
     }
 
-    /*renderer->IncreaseWidth(paddingX * 3);*/
+    renderer->IncreaseWidth(paddingX);
 
     return renderer->GetScaledSize();
 }

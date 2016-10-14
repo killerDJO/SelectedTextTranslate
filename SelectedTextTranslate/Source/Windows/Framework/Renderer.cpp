@@ -1,12 +1,13 @@
 #include "Windows\Framework\Renderer.h"
 #include "Helpers\StringUtilities.h"
 
-Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider)
+Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider, ScrollProvider* scrollProvider)
 {
     this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(0, 0));
     this->renderingContext = renderingContext;
     this->scaleProvider = scaleProvider;
-    this->scaledSize = Size(0, 0);
+    this->scrollProvider = scrollProvider;
+    this->originalSize = Size(0, 0);
     renderActions = vector<function<void(HDC)>>();
 }
 
@@ -28,8 +29,8 @@ Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point p
 
     Size textSize = renderingContext->GetTextSize(emptyDeviceContext, text, font);
 
-    scaledSize.Width = max(scaledSize.Width, scaledPosition.X + textSize.Width);
-    scaledSize.Height = max(scaledSize.Height, scaledPosition.Y + textSize.Height);
+    originalSize.Width = max(originalSize.Width, scaledPosition.X + textSize.Width);
+    originalSize.Height = max(originalSize.Height, scaledPosition.Y + textSize.Height);
 
     Size downscaledSize = scaleProvider->Downscale(textSize);
 
@@ -55,8 +56,8 @@ void Renderer::DrawRect(Rect rect, HBRUSH brush)
     };
     renderActions.push_back(drawRectAction);
 
-    scaledSize.Width = max(scaledSize.Width, scaledRect.Width);
-    scaledSize.Height = max(scaledSize.Height, scaledRect.Height);
+    originalSize.Width = max(originalSize.Width, scaledRect.Width);
+    originalSize.Height = max(originalSize.Height, scaledRect.Height);
 }
 
 void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const
@@ -83,12 +84,17 @@ int Renderer::GetFontStrokeHeight(HFONT font) const
 
 Size Renderer::GetScaledSize() const
 {
-    return scaledSize;
+    // Align content size with scrolling grid.
+    int scrollCharX = scrollProvider->GetScrollChar(ScrollBars::Horizontal);
+    int scrollCharY = scrollProvider->GetScrollChar(ScrollBars::Vertical);
+    return Size(
+        roundToInt(ceil(originalSize.Width * 1.0 / scrollCharX) * scrollCharX),
+        roundToInt(ceil(originalSize.Height * 1.0 / scrollCharY) * scrollCharY));
 }
 
 Size Renderer::GetSize() const
 {
-    return scaleProvider->Downscale(scaledSize);
+    return scaleProvider->Downscale(GetScaledSize());
 }
 
 void Renderer::Render(HDC deviceContext, Size deviceContextSize)
@@ -108,12 +114,12 @@ void Renderer::Render(DeviceContextBuffer* deviceContextBuffer)
 
 void Renderer::IncreaseWidth(int widthToAdd)
 {
-    scaledSize.Width += scaleProvider->Scale(widthToAdd);
+    originalSize.Width += scaleProvider->Scale(widthToAdd);
 }
 
 void Renderer::IncreaseHeight(int heightToAdd)
 {
-    scaledSize.Height += scaleProvider->Scale(heightToAdd);
+    originalSize.Height += scaleProvider->Scale(heightToAdd);
 }
 
 Renderer::~Renderer()

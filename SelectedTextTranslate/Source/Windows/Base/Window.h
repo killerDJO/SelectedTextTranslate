@@ -12,10 +12,13 @@ class Renderer;
 /// Window has several life-cycle phases: Initialize, Render, Draw, Destroy.
 /// Initialize must be called first to initialize window.
 /// Render must be called to change content of window and its dimensions/position.
-/// Draw is called automatically after WM_PAIN message received. Also it can be forced by calling ForceDraw method.
-/// Destroy should be called when window is no longer necessary.
+/// Draw is called automatically after WM_PAIN message received. Also it can be forced by calling Draw method.
+/// Destroy should be called when window is no longer required.
 /// The following transitions are allowed:
 /// Initialize -> Render -> (Render or Draw) -> ... -> (Render or Draw) -> Destroy (delete).
+/// Render has two phases:
+/// 1. Content is rendered, dimensions/position changed and child windows created / rendered.
+/// 2. Window moved, scroll initialized, child window and window itself drawn.
 /// </summary>
 class Window
 {
@@ -23,7 +26,6 @@ private:
     vector<Window*> destroyBeforeDrawList;
 
     Size RenderToBuffer();
-    void ApplyRenderedChanges();
 
     void DrawChildWindows();
     void DestroyChildWindows(vector<Window*>& childWindows) const;
@@ -52,6 +54,8 @@ protected:
 
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
     virtual Size RenderContent(Renderer* renderer) = 0;
+
+    void ApplyRenderedState(bool preserveScrolls);
     virtual Point GetInitialWindowOffset();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -1,9 +1,10 @@
 #include "Windows\Framework\RenderingContext.h"
 
-RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider)
+RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider, ScrollProvider* scrollProvider)
 {
     this->scaleProvider = scaleProvider;
     this->deviceContextProvider = deviceContextProvider;
+    this->scrollProvider = scrollProvider;
 
     this->renderingRoot = nullptr;
 }
@@ -30,7 +31,7 @@ TEXTMETRIC RenderingContext::GetFontMetrics(HDC deviceContext, HFONT font) const
 
 Renderer* RenderingContext::GetRenderer()
 {
-    return new Renderer(this, deviceContextProvider, scaleProvider);
+    return new Renderer(this, deviceContextProvider, scaleProvider, scrollProvider);
 }
 
 void RenderingContext::ReleaseRenderer(Renderer* renderer) const

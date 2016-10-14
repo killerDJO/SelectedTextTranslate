@@ -5,8 +5,10 @@ class HotkeyProvider
 private:
     const int TranslateHotkeyId = 3003;
     const int PlayTextHotkeyId = 3004;
-    const int ZoomInHotkeyId = 3006;
-    const int ZoomOutHotkeyId = 3007;
+    const int ZoomInHotkeyPrimaryId = 3006;
+    const int ZoomOutHotkeyPrimaryId = 3007;
+    const int ZoomInHotkeySecondaryId = 3008;
+    const int ZoomOutHotkeySecondaryId = 3009;
 
     map<int, function<void()>> hotkeyCallbacks;
 

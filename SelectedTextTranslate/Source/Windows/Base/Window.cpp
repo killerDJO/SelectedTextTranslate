@@ -53,20 +53,12 @@ void Window::Initialize()
     windowState = WindowStates::Initialized;
 }
 
-void Window::Render(bool preserveVerticalScroll)
+void Window::Render(bool preserveScrolls)
 {
     RenderingContext* renderingContext = context->GetRenderingContext();
     renderingContext->BeginRender(this);
 
     windowState = WindowStates::Rendering;
-
-    int initialVerticalScrollPosition = 0;
-    bool rememberScrollPosition = preserveVerticalScroll && descriptor.OverflowY == OverflowModes::Scroll;
-
-    if (rememberScrollPosition)
-    {
-        initialVerticalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Vertical);
-    }
 
     contentSize = RenderToBuffer();
     windowSize = descriptor.WindowSize;
@@ -81,18 +73,11 @@ void Window::Render(bool preserveVerticalScroll)
         windowSize.Height = contentSize.Height;
     }
 
-    context->GetScrollProvider()->InitializeScrollbars(
-        this,
-        descriptor.OverflowX == OverflowModes::Scroll,
-        descriptor.OverflowY == OverflowModes::Scroll,
-        initialVerticalScrollPosition,
-        0);
-
     windowState = WindowStates::Rendered;
 
     if (renderingContext->IsRenderingRoot(this))
     {
-        ApplyRenderedChanges();
+        ApplyRenderedState(preserveScrolls);
     }
 
     renderingContext->EndRender(this);
@@ -126,12 +111,31 @@ Size Window::RenderToBuffer()
     return renderedSize;
 }
 
-void Window::ApplyRenderedChanges()
+void Window::ApplyRenderedState(bool preserveScrolls)
 {
     DestroyChildWindows(destroyBeforeDrawList);
 
     Point offset = GetInitialWindowOffset();
     MoveWindow(windowHandle, descriptor.Position.X - offset.X, descriptor.Position.Y - offset.Y, windowSize.Width, windowSize.Height, FALSE);
+
+    int verticalScrollPosition = 0;
+    int horizontalScrollPosition = 0;
+    if(preserveScrolls)
+    {
+        verticalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Vertical);
+        horizontalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Horizontal);
+    }
+
+    // Important to initialize scroll only after window has been moved
+    context->GetScrollProvider()->InitializeScrollbars(
+        this,
+        descriptor.OverflowX == OverflowModes::Scroll,
+        descriptor.OverflowY == OverflowModes::Scroll,
+        verticalScrollPosition,
+        horizontalScrollPosition);
+
+    // Render scroll immediately
+    SendMessage(windowHandle, WM_NCPAINT, NULL, NULL);
 
     // Important to draw child windows first
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
@@ -140,7 +144,7 @@ void Window::ApplyRenderedChanges()
         if (childWindow->IsVisible())
         {
             ShowWindow(childWindow->GetHandle(), SW_SHOW);
-            childWindow->ApplyRenderedChanges();
+            childWindow->ApplyRenderedState(preserveScrolls);
         }
         else
         {

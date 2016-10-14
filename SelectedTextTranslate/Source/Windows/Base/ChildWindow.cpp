@@ -58,7 +58,7 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         MoveWindow(hWnd, pos.x, pos.y, instance->windowSize.Width, instance->windowSize.Height, FALSE);
         instance->position.X = pos.x;
         instance->position.Y = pos.y;
-        InvalidateRect(hWnd, nullptr, FALSE);
+
         return TRUE;
     }
 
