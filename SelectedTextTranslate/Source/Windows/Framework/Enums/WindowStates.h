@@ -6,9 +6,11 @@ enum class WindowStates
 
     Initialized = 1,
 
-    Rendered = 2,
+    Rendering = 2,
 
-    Drawn = 3,
+    Rendered = 3,
 
-    Destroyed = 4,
+    Drawn = 4,
+
+    Destroyed = 5,
 };

@@ -65,7 +65,7 @@ void TranslationWindow::Resize()
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    Redraw();
+    Draw();
 }
 
 void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const

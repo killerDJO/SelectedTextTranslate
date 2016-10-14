@@ -11,12 +11,14 @@ ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, Wi
 void ChildWindow::Initialize()
 {
     Window::Initialize();
+
+    Point offset = GetInitialWindowOffset();
     windowHandle = CreateWindow(
         className,
         NULL,
         WS_CHILD | WS_CLIPCHILDREN,
-        descriptor.Position.X,
-        descriptor.Position.Y,
+        descriptor.Position.X - offset.X,
+        descriptor.Position.Y - offset.Y,
         descriptor.WindowSize.Width,
         descriptor.WindowSize.Height,
         parentWindow->GetHandle(),
@@ -28,6 +30,15 @@ void ChildWindow::Initialize()
 void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
     windowClass->lpfnWndProc = WndProc;
+}
+
+Point ChildWindow::GetInitialWindowOffset()
+{
+    ScrollProvider* scrollProvider = context->GetScrollProvider();
+    int offsetY = scrollProvider->GetCurrentScrollOffset(parentWindow, ScrollBars::Vertical);
+    int offsetX = scrollProvider->GetCurrentScrollOffset(parentWindow, ScrollBars::Horizontal);
+
+    return Point(offsetX, offsetY);
 }
 
 LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

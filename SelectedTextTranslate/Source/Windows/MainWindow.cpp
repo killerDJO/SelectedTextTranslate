@@ -99,10 +99,10 @@ Size MainWindow::RenderContent(Renderer* renderer)
     return currentView->GetContentSize();
 }
 
-void MainWindow::Scale(double scaleFactorAjustment)
+void MainWindow::Scale(double scaleFactorAdjustment)
 {
-    int scaledWidth = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Width, scaleFactorAjustment);
-    int scaledHeight = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Height, scaleFactorAjustment);
+    int scaledWidth = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Width, scaleFactorAdjustment);
+    int scaledHeight = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Height, scaleFactorAdjustment);
 
     descriptor.Position.X -= scaledWidth - descriptor.WindowSize.Width;
     descriptor.Position.Y -= scaledHeight - descriptor.WindowSize.Height;
@@ -112,7 +112,7 @@ void MainWindow::Scale(double scaleFactorAjustment)
     windowSize.Width = descriptor.WindowSize.Width = scaledWidth;
     windowSize.Height = descriptor.WindowSize.Height = scaledHeight;
 
-    context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAjustment);
+    context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAdjustment);
 
     deviceContextBuffer->Resize(windowSize);
 
@@ -124,6 +124,11 @@ void MainWindow::Scale(double scaleFactorAjustment)
 
 void MainWindow::Resize()
 {
+    if(windowState == WindowStates::Rendering)
+    {
+        return;
+    }
+
     RECT windowRect;
     GetWindowRect(windowHandle, &windowRect);
     int newWidth = windowRect.right - windowRect.left;
@@ -140,7 +145,7 @@ void MainWindow::Resize()
     position.Y = descriptor.Position.Y = windowRect.top;
 
     deviceContextBuffer->Resize(windowSize);
-    Redraw();
+    Draw(true);
 
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {

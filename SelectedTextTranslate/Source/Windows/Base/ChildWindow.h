@@ -7,6 +7,7 @@ protected:
     Window* parentWindow;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
+    Point GetInitialWindowOffset() override;
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:

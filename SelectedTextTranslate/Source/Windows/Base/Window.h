@@ -20,17 +20,13 @@ class Renderer;
 class Window
 {
 private:
-    WindowStates windowState;
-
     vector<Window*> destroyBeforeDrawList;
 
     Size RenderToBuffer();
+    void ApplyRenderedChanges();
 
-    void Draw(HDC deviceContext, bool drawChildren);
     void DrawChildWindows();
     void DestroyChildWindows(vector<Window*>& childWindows) const;
-
-    int GetScrollBarSize(ScrollBars scrollBar) const;
 
 protected:
     HWND windowHandle;
@@ -41,6 +37,7 @@ protected:
     Size contentSize;
     Point position;
 
+    WindowStates windowState;
     bool isVisible;
 
     DeviceContextBuffer* deviceContextBuffer;
@@ -55,6 +52,7 @@ protected:
 
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
     virtual Size RenderContent(Renderer* renderer) = 0;
+    virtual Point GetInitialWindowOffset();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -63,10 +61,9 @@ public:
     virtual ~Window();
 
     HWND GetHandle() const;
-    
+
     Size GetSize() const;
     Size GetAvailableClientSize() const;
-    Size GetCurrentClientSize() const;
     Size GetContentSize() const;
 
     Point GetPosition() const;
@@ -76,8 +73,7 @@ public:
     bool IsVisible() const;
 
     void Render(bool preserveVerticalScroll = false);
-
-    void Redraw();
+    void Draw(bool drawChildren = false);
 
     virtual void Initialize();
     virtual void Resize();

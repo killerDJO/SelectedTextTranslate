@@ -2,7 +2,7 @@
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
 {
-    if(descriptor.AutoScale)
+    if (descriptor.AutoScale)
     {
         this->descriptor = context->GetScaleProvider()->Scale(descriptor);
     }
@@ -55,12 +55,17 @@ void Window::Initialize()
 
 void Window::Render(bool preserveVerticalScroll)
 {
-    int verticalScroll = 0;
+    RenderingContext* renderingContext = context->GetRenderingContext();
+    renderingContext->BeginRender(this);
+
+    windowState = WindowStates::Rendering;
+
+    int initialVerticalScrollPosition = 0;
     bool rememberScrollPosition = preserveVerticalScroll && descriptor.OverflowY == OverflowModes::Scroll;
 
     if (rememberScrollPosition)
     {
-        verticalScroll = context->GetScrollProvider()->GetScrollPosition(this, ScrollBars::Vertical);
+        initialVerticalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Vertical);
     }
 
     contentSize = RenderToBuffer();
@@ -76,23 +81,21 @@ void Window::Render(bool preserveVerticalScroll)
         windowSize.Height = contentSize.Height;
     }
 
-    HDC deviceContext = GetDC(windowHandle);
-    Draw(deviceContext, true);
-    DeleteDC(deviceContext);
-
-    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, TRUE);
-
     context->GetScrollProvider()->InitializeScrollbars(
         this,
         descriptor.OverflowX == OverflowModes::Scroll,
-        descriptor.OverflowY == OverflowModes::Scroll);
-
-    if (rememberScrollPosition)
-    {
-        context->GetScrollProvider()->SetScrollPosition(this, ScrollBars::Vertical, verticalScroll);
-    }
+        descriptor.OverflowY == OverflowModes::Scroll,
+        initialVerticalScrollPosition,
+        0);
 
     windowState = WindowStates::Rendered;
+
+    if (renderingContext->IsRenderingRoot(this))
+    {
+        ApplyRenderedChanges();
+    }
+
+    renderingContext->EndRender(this);
 }
 
 Size Window::RenderToBuffer()
@@ -123,28 +126,50 @@ Size Window::RenderToBuffer()
     return renderedSize;
 }
 
-void Window::Draw(HDC deviceContext, bool drawChildren)
+void Window::ApplyRenderedChanges()
 {
-    if(drawChildren)
+    DestroyChildWindows(destroyBeforeDrawList);
+
+    Point offset = GetInitialWindowOffset();
+    MoveWindow(windowHandle, descriptor.Position.X - offset.X, descriptor.Position.Y - offset.Y, windowSize.Width, windowSize.Height, FALSE);
+
+    // Important to draw child windows first
+    for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
-        // Important to draw child windows before drawing parent window.
-        // Otherwise, WM_CLIPCHILDREN style will cause redraw of the parent window after the child windows draw.
-        DestroyChildWindows(destroyBeforeDrawList);
-        DrawChildWindows();
+        Window* childWindow = activeChildWindows[i];
+        if (childWindow->IsVisible())
+        {
+            ShowWindow(childWindow->GetHandle(), SW_SHOW);
+            childWindow->ApplyRenderedChanges();
+        }
+        else
+        {
+            ShowWindow(childWindow->GetHandle(), SW_HIDE);
+        }
     }
 
-    deviceContextBuffer->Render(deviceContext, windowSize);
+    Draw(false);
 
     windowState = WindowStates::Drawn;
 }
 
-void Window::Redraw()
+Point Window::GetInitialWindowOffset()
 {
-    HDC deviceContext = GetDC(windowHandle);
-    Draw(deviceContext, false);
-    DeleteDC(deviceContext);
+    return Point(0, 0);
+}
 
-    windowState = WindowStates::Drawn;
+void Window::Draw(bool drawChildren)
+{
+    if (drawChildren)
+    {
+        // Important to draw child windows before drawing parent window.
+        // Otherwise, WM_CLIPCHILDREN style will cause redraw of the parent window after the child windows draw.
+        DrawChildWindows();
+    }
+
+    HDC deviceContext = GetDC(windowHandle);
+    deviceContextBuffer->Render(deviceContext, windowSize);
+    DeleteDC(deviceContext);
 }
 
 void Window::DrawChildWindows()
@@ -152,16 +177,7 @@ void Window::DrawChildWindows()
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
         Window* childWindow = activeChildWindows[i];
-        if(childWindow->IsVisible())
-        {
-            ShowWindow(childWindow->GetHandle(), SW_SHOW);
-            childWindow->Redraw();
-            childWindow->DrawChildWindows();
-        }
-        else
-        {
-            ShowWindow(childWindow->GetHandle(), SW_HIDE);
-        }
+        childWindow->Draw(true);
     }
 }
 
@@ -225,38 +241,10 @@ Size Window::GetAvailableClientSize() const
     RECT clientRect;
     GetClientRect(windowHandle, &clientRect);
 
+    ScrollProvider* scrollProvider = context->GetScrollProvider();
     return Size(
-        clientRect.right + GetScrollBarSize(ScrollBars::Vertical),
-        clientRect.bottom + GetScrollBarSize(ScrollBars::Horizontal));
-}
-
-Size Window::GetCurrentClientSize() const
-{
-    RECT clientRect;
-    GetClientRect(windowHandle, &clientRect);
-
-    return Size(clientRect.right, clientRect.bottom);
-}
-
-int Window::GetScrollBarSize(ScrollBars scrollBar) const
-{
-    SCROLLBARINFO scrollBarInfo;
-    scrollBarInfo.cbSize = sizeof SCROLLBARINFO;
-
-    GetScrollBarInfo(
-        windowHandle,
-        scrollBar == ScrollBars::Vertical ? OBJID_VSCROLL : OBJID_HSCROLL,
-        &scrollBarInfo);
-
-    if ((scrollBarInfo.rgstate[0] & STATE_SYSTEM_INVISIBLE) != STATE_SYSTEM_INVISIBLE)
-    {
-        int scrollBarSize = scrollBar == ScrollBars::Vertical
-            ? context->GetScrollProvider()->GetVerticalScrollBarWidth()
-            : context->GetScrollProvider()->GetHorizontalScrollBarHeight();
-        return scrollBarSize;
-    }
-
-    return 0;
+        clientRect.right + scrollProvider->GetScrollBarSize(this, ScrollBars::Vertical),
+        clientRect.bottom + scrollProvider->GetScrollBarSize(this, ScrollBars::Horizontal));
 }
 
 Size Window::GetContentSize() const
@@ -302,16 +290,16 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     }
 
     case WM_HSCROLL:
-        if(instance->descriptor.OverflowX == OverflowModes::Scroll)
+        if (instance->descriptor.OverflowX == OverflowModes::Scroll)
         {
-            instance->context->GetScrollProvider()->ProcessHorizontalScroll(instance, wParam, lParam);
+            instance->context->GetScrollProvider()->ProcessScroll(instance, wParam, lParam, ScrollBars::Horizontal);
         }
         break;
 
     case WM_VSCROLL:
         if (instance->descriptor.OverflowY == OverflowModes::Scroll)
         {
-            instance->context->GetScrollProvider()->ProcessVerticalScroll(instance, wParam, lParam);
+            instance->context->GetScrollProvider()->ProcessScroll(instance, wParam, lParam, ScrollBars::Vertical);
         }
         break;
 
@@ -332,8 +320,8 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        HDC deviceContext = BeginPaint(instance->GetHandle(), &ps);
-        instance->Draw(deviceContext, true);
+        BeginPaint(instance->GetHandle(), &ps);
+        instance->Draw(false);
         EndPaint(instance->GetHandle(), &ps);
         break;
     }

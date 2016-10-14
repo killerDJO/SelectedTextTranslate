@@ -52,28 +52,39 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
         return TRUE;
 
     case WM_MOUSEHOVER:
-        window->isHovered = true;
-        window->RenderContent(nullptr);
-        InvalidateRect(hWnd, nullptr, TRUE);
+    {
+        if (!window->isHovered)
+        {
+            window->isHovered = true;
+            window->RenderContent(nullptr);
+            InvalidateRect(hWnd, nullptr, TRUE);
 
-        SetCursor(LoadCursor(nullptr, IDC_HAND));
+            SetCursor(LoadCursor(nullptr, IDC_HAND));
+        }
 
         break;
+    }
+
 
     case WM_SETCURSOR:
         return TRUE;
 
     case WM_MOUSELEAVE:
-        window->isHovered = false;
-        window->RenderContent(nullptr);
-        InvalidateRect(hWnd, nullptr, TRUE);
+    {
+        if(window->isHovered)
+        {
+            window->isHovered = false;
+            window->RenderContent(nullptr);
+            InvalidateRect(hWnd, nullptr, TRUE);
 
-        SetCursor(LoadCursor(nullptr, IDC_ARROW));
+            SetCursor(LoadCursor(nullptr, IDC_ARROW));
 
-        return TRUE;
+            return TRUE;
+        }
 
-    default:
         break;
+    }
+
     }
 
     return ChildWindow::WndProc(hWnd, message, wParam, lParam);

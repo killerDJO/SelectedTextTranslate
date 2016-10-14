@@ -29,4 +29,8 @@ public:
 
     Renderer* GetRenderer();
     void ReleaseRenderer(Renderer* renderer) const;
+
+    void BeginRender(Window* window);
+    void EndRender(Window* window);
+    bool IsRenderingRoot(Window* window) const;
 };

@@ -13,23 +13,29 @@ private:
     int verticalScrollBarWidth;
     int horizontalScrollBarHeight;
 
-    void InitializeScrollbar(HWND windowHandle, int contentDimension, int windowDimension, int scrollChar, ScrollBars scrollBar) const;
-    void ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, int scrollChar, ScrollBars scrollBar) const;
-    void SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset, int scrollChar) const;
+    void InitializeScrollbar(HWND windowHandle, int contentDimension, int windowDimension, ScrollBars scrollBar, int initialPosition) const;
+
     SCROLLINFO GetWindowScrollInfo(Window* window, ScrollBars scrollBar) const;
+    void SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const;
+    int GetScrollChar(ScrollBars scrollBar) const;
 
 public:
     ScrollProvider();
     ~ScrollProvider();
 
-    void InitializeScrollbars(Window* window, bool showHorizontalScroll, bool showVerticalScroll) const;
-    void ProcessVerticalScroll(Window* window, WPARAM wParam, LPARAM lParam) const;
-    void ProcessHorizontalScroll(Window* window, WPARAM wParam, LPARAM lParam) const;
+    void InitializeScrollbars(
+        Window* window,
+        bool showHorizontalScroll,
+        bool showVerticalScroll,
+        int initialVerticalScrollPosition = 0,
+        int initialHorizontalScrollPostion = 0) const;
+    void ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const;
 
-    int GetScrollPosition(Window* window, ScrollBars scrollBar) const;
-    void SetScrollPosition(Window* window, ScrollBars scrollBar, int position) const;
+    int GetCurrentScrollPostion(Window* window, ScrollBars scrollBar) const;
+    int GetCurrentScrollOffset(Window* window, ScrollBars scrollBar) const;
+
     void ResetScrollsPosition(Window* window) const;
 
-    int GetVerticalScrollBarWidth() const;
-    int GetHorizontalScrollBarHeight() const;
+    bool IsScrollBarVisible(const Window* window, ScrollBars scrollBar) const;
+    int GetScrollBarSize(const Window* window, ScrollBars scrollBar) const;
 };

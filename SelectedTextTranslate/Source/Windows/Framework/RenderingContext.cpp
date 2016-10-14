@@ -4,6 +4,8 @@ RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextPr
 {
     this->scaleProvider = scaleProvider;
     this->deviceContextProvider = deviceContextProvider;
+
+    this->renderingRoot = nullptr;
 }
 
 Size RenderingContext::GetTextSize(HDC deviceContext, const wchar_t* text, HFONT font) const
@@ -34,6 +36,27 @@ Renderer* RenderingContext::GetRenderer()
 void RenderingContext::ReleaseRenderer(Renderer* renderer) const
 {
     delete renderer;
+}
+
+void RenderingContext::BeginRender(Window* window)
+{
+    if(renderingRoot == nullptr)
+    {
+        renderingRoot = window;
+    }
+}
+
+void RenderingContext::EndRender(Window* window)
+{
+    if(window == renderingRoot)
+    {
+        renderingRoot = nullptr;
+    }
+}
+
+bool RenderingContext::IsRenderingRoot(Window* window) const
+{
+    return window == renderingRoot;
 }
 
 HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic, bool isUnderscored) const
