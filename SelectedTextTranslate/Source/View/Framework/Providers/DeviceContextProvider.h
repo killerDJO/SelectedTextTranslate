@@ -10,5 +10,5 @@ public:
 
     void ResizeDeviceContext(HDC& deviceContext, Size newDeviceContextSize) const;
 
-    DWORD CopyDeviceContext(HDC source, HDC target, Size deviceContextSize) const;
+    void CopyDeviceContext(HDC source, HDC target, Size deviceContextSize) const;
 };

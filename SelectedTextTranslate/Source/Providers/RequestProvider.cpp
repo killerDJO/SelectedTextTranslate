@@ -1,6 +1,7 @@
 #include "Providers\RequestProvider.h"
 #include "Helpers\StringUtilities.h"
 #include "Exceptions\SelectedTextTranslateException.h"
+#include "Helpers\ExceptionHelper.h"
 
 using namespace web;
 using namespace web::http;
@@ -45,12 +46,12 @@ vector<unsigned char> RequestProvider::GetResponse(wstring url)
                     }
                     else
                     {
-                        throw SelectedTextTranslateException(StringUtilities::Format(L"Invalid status code: %d.", statusCode), __WFILE__, __LINE__);
+                        ThrowSelectedTextTranslateException(StringUtilities::Format(L"Invalid status code: %d.", statusCode));
                     }
                 }
                 catch (const http_exception& e)
                 {
-                    ExceptionHelper::ThrowFromStdException((exception)e, __WFILE__, __LINE__);
+                    ThrowSelectedTextTranslateException(StringUtilities::GetUtf16StringFromChar(e.what()));
                 }
 
                 return vector<unsigned char>();
@@ -59,8 +60,7 @@ vector<unsigned char> RequestProvider::GetResponse(wstring url)
     }
     catch (const exception& e)
     {
-        ExceptionHelper::ThrowFromStdException(e, __WFILE__, __LINE__);
-        return vector<unsigned char>();
+        ThrowSelectedTextTranslateException(StringUtilities::GetUtf16StringFromChar(e.what()));
     }
 }
 

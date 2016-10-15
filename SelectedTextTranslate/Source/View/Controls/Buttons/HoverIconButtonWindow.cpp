@@ -1,4 +1,6 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
+#include "Exceptions\SelectedTextTranslateFatalException.h"
+#include "Helpers\ExceptionHelper.h"
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
@@ -37,14 +39,14 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
 
     Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
 
-    graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
-    graphics.SetSmoothingMode(SmoothingModeHighQuality);
-    graphics.SetPixelOffsetMode(PixelOffsetModeHighQuality);
+    AssertGdiPlusResult(graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic));
+    AssertGdiPlusResult(graphics.SetSmoothingMode(SmoothingModeHighQuality));
+    AssertGdiPlusResult(graphics.SetPixelOffsetMode(PixelOffsetModeHighQuality));
 
     BOOL converstionSucceded;
-    iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded);
+    AssertGdiPlusResult(iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded));
 
-    graphics.DrawImage(iconMetafile, 0, 0, windowSize.Width, windowSize.Height);
+    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, windowSize.Width, windowSize.Height));
 
     delete iconMetafile;
 
@@ -56,47 +58,38 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
 Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) const
 {
     HRSRC hResource = FindResource(context->GetInstance(), MAKEINTRESOURCE(resourceId), RT_RCDATA);
-    if (!hResource)
-    {
-        return nullptr;
-    }
+    AssertCriticalWinApiResult(hResource);
 
     DWORD imageSize = SizeofResource(context->GetInstance(), hResource);
-    if (!imageSize)
-    {
-        return nullptr;
-    }
+    AssertCriticalWinApiResult(imageSize);
 
-    const void* pResourceData = LockResource(LoadResource(context->GetInstance(), hResource));
-    if (!pResourceData)
-    {
-        return nullptr;
-    }
+    void* pResourceData = LockResource(LoadResource(context->GetInstance(), hResource));
+    AssertCriticalWinApiResult(pResourceData);
 
     HGLOBAL globalBuffer = GlobalAlloc(GMEM_MOVEABLE, imageSize);
-    if (globalBuffer)
+    AssertCriticalWinApiResult(globalBuffer);
+
+    void* pBuffer = GlobalLock(globalBuffer);
+    AssertCriticalWinApiResult(pBuffer);
+
+    CopyMemory(pBuffer, pResourceData, imageSize);
+
+    IStream* pStream = nullptr;
+    Metafile* metafile;
+    if (CreateStreamOnHGlobal(globalBuffer, FALSE, &pStream) == S_OK)
     {
-        void* pBuffer = GlobalLock(globalBuffer);
-        if (pBuffer)
-        {
-            CopyMemory(pBuffer, pResourceData, imageSize);
-
-            IStream* pStream = nullptr;
-            if (CreateStreamOnHGlobal(globalBuffer, FALSE, &pStream) == S_OK)
-            {
-                Metafile* metafile = new Metafile(pStream);
-                pStream->Release();
-
-                return metafile;
-            }
-
-            GlobalUnlock(globalBuffer);
-        }
-
-        GlobalFree(globalBuffer);
+        metafile = new Metafile(pStream);
+        pStream->Release();
+    }
+    else
+    {
+        throw SelectedTextTranslateFatalException(L"Unable to CreateStreamOnHGlobal", __WFILE__, __LINE__);
     }
 
-    return nullptr;
+    GlobalUnlock(globalBuffer);
+    GlobalFree(globalBuffer);
+
+    return metafile;
 }
 
 HoverIconButtonWindow::~HoverIconButtonWindow()

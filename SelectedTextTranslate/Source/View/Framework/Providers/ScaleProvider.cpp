@@ -1,4 +1,5 @@
 #include "View\Framework\Providers\ScaleProvider.h"
+#include "Helpers\ExceptionHelper.h"
 
 ScaleProvider::ScaleProvider()
 {
@@ -8,9 +9,8 @@ ScaleProvider::ScaleProvider()
 void ScaleProvider::ComputeScaleFactor()
 {
     RECT workarea;
-    SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
+    AssertCriticalWinApiResult(SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0));
 
-    UINT screenResolutionX = workarea.right - workarea.left;
     UINT screenResolutionY = workarea.bottom - workarea.top;
     scaleFactor = screenResolutionY / 860.0;
 }

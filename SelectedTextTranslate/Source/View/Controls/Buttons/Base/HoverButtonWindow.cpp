@@ -1,4 +1,5 @@
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
+#include "Helpers\ExceptionHelper.h"
 
 HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, function<void()> clickCallback)
     : ChildWindow(context, descriptor, parentWindow), hoverStateDeviceContext(nullptr), normalStateDeviceContext(nullptr)
@@ -23,7 +24,7 @@ Size HoverButtonWindow::RenderContent(Renderer* renderer)
 
     context->GetDeviceContextProvider()->CopyDeviceContext(sourceDC, deviceContextBuffer->GetDeviceContext(), windowSize);
 
-    MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE);
+    AssertCriticalWinApiResult(MoveWindow(windowHandle, descriptor.Position.X, descriptor.Position.Y, windowSize.Width, windowSize.Height, FALSE));
 
     return windowSize;
 }
@@ -44,7 +45,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     case WM_MOUSEMOVE:
         tme.dwFlags = TME_HOVER | TME_LEAVE;
-        TrackMouseEvent(&tme);
+        AssertCriticalWinApiResult(TrackMouseEvent(&tme));
 
         return TRUE;
 
@@ -89,6 +90,6 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
 HoverButtonWindow::~HoverButtonWindow()
 {
-    DeleteDC(normalStateDeviceContext);
-    DeleteDC(hoverStateDeviceContext);
+    AssertWinApiResult(DeleteDC(normalStateDeviceContext));
+    AssertWinApiResult(DeleteDC(hoverStateDeviceContext));
 }

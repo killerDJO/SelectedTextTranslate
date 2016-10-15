@@ -1,4 +1,5 @@
 #include "View\Providers\TrayIconProvider.h"
+#include "Helpers\ExceptionHelper.h"
 
 TrayIconProvider::TrayIconProvider(AppController* appController)
 {
@@ -6,15 +7,18 @@ TrayIconProvider::TrayIconProvider(AppController* appController)
 
     CreateMenu();
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
+    AssertWinApiResult(WM_TASKBARCREATED);
 }
 
 void TrayIconProvider::CreateMenu()
 {
     menu = CreatePopupMenu();
-    AppendMenu(menu, MF_STRING, MenuTranslateItemId, TEXT("Translate from clipboard"));
-    AppendMenu(menu, MF_STRING, MenuDictionaryItemId, TEXT("Dictionary"));
-    AppendMenu(menu, MF_SEPARATOR, NULL, nullptr);
-    AppendMenu(menu, MF_STRING, MenuExitItemId, TEXT("Exit"));
+    AssertCriticalWinApiResult(menu);
+
+    AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuTranslateItemId, TEXT("Translate from clipboard")));
+    AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuDictionaryItemId, TEXT("Dictionary")));
+    AssertCriticalWinApiResult(AppendMenu(menu, MF_SEPARATOR, NULL, nullptr));
+    AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuExitItemId, TEXT("Exit")));
 }
 
 NOTIFYICONDATA TrayIconProvider::CreateTrayIcon(HINSTANCE instance, HWND windowHandle) const
@@ -31,14 +35,14 @@ NOTIFYICONDATA TrayIconProvider::CreateTrayIcon(HINSTANCE instance, HWND windowH
     notifyIconData.hIcon = LoadIcon(instance, MAKEINTRESOURCE(IDI_APP_ICON));
     wcscpy_s(notifyIconData.szTip, TEXT("Selected text translate.."));
 
-    Shell_NotifyIcon(NIM_ADD, &notifyIconData);
+    AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
 
     return notifyIconData;
 }
 
 void TrayIconProvider::DestroyTrayIcon(NOTIFYICONDATA notifyIconData) const
 {
-    Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
+    AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_DELETE, &notifyIconData));
 }
 
 void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam) const
@@ -53,9 +57,10 @@ void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HW
         if (lParam == WM_RBUTTONUP)
         {
             POINT curPoint;
-            GetCursorPos(&curPoint);
+            AssertWinApiResult(GetCursorPos(&curPoint));
             SetForegroundWindow(windowHandle);
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
+            AssertWinApiResult(clicked);
             if (clicked == MenuExitItemId)
             {
                 appController->Exit();
@@ -73,7 +78,7 @@ void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HW
 
     if (message == WM_TASKBARCREATED)
     {
-        Shell_NotifyIcon(NIM_ADD, &notifyIconData);
+        AssertWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
     }
 }
 

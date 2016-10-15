@@ -1,5 +1,6 @@
 #include "View\Content\MainWindow.h"
 #include "Exceptions\SelectedTextTranslateException.h"
+#include "Helpers\ExceptionHelper.h"
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppController* appController, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider)
     : Window(context, descriptor)
@@ -32,6 +33,7 @@ void MainWindow::Initialize()
         nullptr,
         context->GetInstance(),
         this);
+    AssertCriticalWinApiResult(windowHandle);
 
     hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appController->TranslateSelectedText(); });
     hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appController->PlaySelectedText(); });
@@ -70,9 +72,16 @@ void MainWindow::CreateViews()
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
     windowClass->hIcon = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    AssertCriticalWinApiResult(windowClass->hIcon);
+
     windowClass->hIconSm = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    AssertCriticalWinApiResult(windowClass->hIconSm);
+
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
+    AssertCriticalWinApiResult(windowClass->hCursor);
+
     windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    AssertCriticalWinApiResult(windowClass->hbrBackground);
 }
 
 void MainWindow::Minimize()
@@ -132,7 +141,7 @@ void MainWindow::Resize()
     }
 
     RECT windowRect;
-    GetWindowRect(windowHandle, &windowRect);
+    AssertCriticalWinApiResult(GetWindowRect(windowHandle, &windowRect));
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 

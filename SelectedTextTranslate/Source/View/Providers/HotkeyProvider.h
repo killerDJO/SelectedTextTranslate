@@ -15,6 +15,9 @@ private:
     void RegisterHotkeyCallback(int hotkeyId, function<void()> pressedCallback);
     void UnregisterHotkeyCallback(int hotkeyId);
 
+    void RegisterCustomHotkey(HWND windowHandle, function<void()> pressedCallback, int hotkeyId, UINT modifiers, UINT virtualCode);
+    void UnregisterCustomHotkey(HWND windowHandle, int hotkeyId);
+
 public:
     HotkeyProvider();
     ~HotkeyProvider();

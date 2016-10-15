@@ -1,6 +1,7 @@
 ﻿#include "Service\Translation\Translator.h"
 #include "Helpers\StringUtilities.h"
 #include "Exceptions\SelectedTextTranslateException.h"
+#include "Helpers\ExceptionHelper.h"
 
 using namespace web;
 
@@ -32,7 +33,7 @@ TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDicti
     else
     {
         wstring hash = GetHash(sentence);
-        wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk="
+        wstring translateURL = L"https://translate.googlefaf.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk="
             + hash
             + L"&q=" + requestProvider->EscapeText(sentence);
 

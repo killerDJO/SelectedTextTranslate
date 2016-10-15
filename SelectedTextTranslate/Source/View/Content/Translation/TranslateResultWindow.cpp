@@ -1,5 +1,6 @@
 ﻿#include "View\Content\Translation\TranslateResultWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Helpers\ExceptionHelper.h"
 
 TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
 : ContentWindow(context, descriptor, parentWindow, appController)
@@ -149,5 +150,5 @@ int TranslateResultWindow::CreateExpandButton(
 
 TranslateResultWindow::~TranslateResultWindow()
 {
-    DeleteObject(this->fontUnderscored);
+    AssertCriticalWinApiResult(DeleteObject(this->fontUnderscored));
 }

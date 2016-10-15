@@ -1,6 +1,6 @@
 #include "Service\Dictionary\Dictionary.h"
 #include "Helpers\StringUtilities.h"
-#include "Exceptions\SelectedTextTranslateException.h"
+#include "Helpers\ExceptionHelper.h"
 
 Dictionary::Dictionary(Logger* logger)
 {
@@ -12,7 +12,7 @@ Dictionary::Dictionary(Logger* logger)
     {
         sqlite3_close(database);
         wstring message = StringUtilities::Format(L"Can't open dictionary.db: %ls", StringUtilities::GetUtf16String(sqlite3_errmsg(database)).c_str());
-        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(message);
     }
 
     CreateDatabase();
@@ -36,17 +36,31 @@ vector<LogRecord> Dictionary::GetRecords(wstring sentence) const
 
 void Dictionary::AddTranslateResult(wstring sentence, wstring json) const
 {
-    sqlite3_stmt* statement = CreateStatement("INSERT INTO Dictionary(Sentence, Count, Json) VALUES(@Sentence, 1, @Json)");
-    BindValue(statement, L"@Sentence", sentence);
-    BindValue(statement, L"@Json", json);
-    ExecuteNonQuery(statement);
+    try
+    {
+        sqlite3_stmt* statement = CreateStatement("INSERT INTO Dictionary(Sentence, Count, Json) VALUES(@Sentence, 1, @Json)");
+        BindValue(statement, L"@Sentence", sentence);
+        BindValue(statement, L"@Json", json);
+        ExecuteNonQuery(statement);
+    }
+    catch (const SelectedTextTranslateException& error)
+    {
+        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetErrorMessage().c_str());
+    }
 }
 
 void Dictionary::UpdateTranslateResult(wstring sentence) const
 {
-    sqlite3_stmt* statement = CreateStatement("UPDATE Dictionary SET Count = Count + 1 WHERE Sentence = @Sentence");
-    BindValue(statement, L"@Sentence", sentence);
-    ExecuteNonQuery(statement);
+    try
+    {
+        sqlite3_stmt* statement = CreateStatement("UPDATE Dictionary SET Count = Count + 1 WHERE Sentence = @Sentence");
+        BindValue(statement, L"@Sentence", sentence);
+        ExecuteNonQuery(statement);
+    }
+    catch (const SelectedTextTranslateException& error)
+    {
+        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetErrorMessage().c_str());
+    }
 }
 
 vector<LogRecord> Dictionary::GetTopRecords(int topRecordsCount) const
@@ -83,7 +97,7 @@ vector<LogRecord> Dictionary::GetLogRecords(sqlite3_stmt* statement) const
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error getting log records. Error code: %d", result);
-        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(message);
     }
 
     return logRecords;
@@ -97,7 +111,7 @@ sqlite3_stmt* Dictionary::CreateStatement(const char* sqlQuery) const
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error preparing statement. Error code: %d", result);
-        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(message);
     }
 
     return statement;
@@ -111,7 +125,7 @@ void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, wstring value)
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error binding string value. Error code: %d", result);
-        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(message);
     }
 }
 
@@ -123,7 +137,7 @@ void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, int value) con
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error binding int value. Error code: %d", result);
-        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(message);
     }
 }
 
@@ -140,7 +154,7 @@ void Dictionary::ExecuteNonQuery(sqlite3_stmt *statement) const
     if(result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error executing non query. Error code: %d", result);
-        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(message);
     }
 }
 

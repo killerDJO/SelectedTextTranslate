@@ -11,9 +11,9 @@ void ExceptionHelper::ThrowOnWinapiError(void* resultValue, const wchar_t* file,
     }
 }
 
-void ExceptionHelper::ThrowOnWinapiError(DWORD resultValue, const wchar_t* file, unsigned line, bool isFatal)
+void ExceptionHelper::ThrowOnWinapiError(DWORD resultValue, const wchar_t* file, unsigned line, bool isFatal, DWORD invalidValue)
 {
-    if (resultValue == 0)
+    if (resultValue == invalidValue)
     {
         ThrowOnWinapiError(file, line, isFatal);
     }
@@ -34,7 +34,19 @@ void ExceptionHelper::ThrowOnWinapiError(const wchar_t* file, unsigned line, boo
     }
 }
 
-void ExceptionHelper::ThrowFromStdException(exception exception, const wchar_t* file, unsigned int line)
+void ExceptionHelper::ThrowOnGdiPlusError(Status status, const wchar_t* file, unsigned int line, bool isFatal)
 {
-    throw SelectedTextTranslateException(StringUtilities::GetUtf16String(exception.what()), file, line);
+    if(status != Ok)
+    {
+        wstring message = StringUtilities::Format(L"Error calling GDI+ function. Status: %d.", status);
+        
+        if (isFatal)
+        {
+            throw SelectedTextTranslateFatalException(message, file, line);
+        }
+        else
+        {
+            throw SelectedTextTranslateException(message, file, line);
+        }
+    }
 }

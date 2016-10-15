@@ -1,4 +1,5 @@
 #include "View\Framework\RenderingContext.h"
+#include "Helpers\ExceptionHelper.h"
 
 RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider, ScrollProvider* scrollProvider)
 {
@@ -11,20 +12,20 @@ RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextPr
 
 Size RenderingContext::GetTextSize(HDC deviceContext, const wchar_t* text, HFONT font) const
 {
-    SelectObject(deviceContext, font);
+    AssertCriticalWinApiResult(SelectObject(deviceContext, font));
 
     SIZE textSize;
-    GetTextExtentPoint32(deviceContext, text, wcslen(text), &textSize);
+    AssertCriticalWinApiResult(GetTextExtentPoint32(deviceContext, text, wcslen(text), &textSize));
 
     return Size(textSize.cx, textSize.cy);
 }
 
 TEXTMETRIC RenderingContext::GetFontMetrics(HDC deviceContext, HFONT font) const
 {
-    SelectObject(deviceContext, font);
+    AssertCriticalWinApiResult(SelectObject(deviceContext, font));
 
     TEXTMETRIC tm;
-    GetTextMetrics(deviceContext, &tm);
+    AssertCriticalWinApiResult(GetTextMetrics(deviceContext, &tm));
 
     return tm;
 }
@@ -63,6 +64,7 @@ bool RenderingContext::IsRenderingRoot(Window* window) const
 HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic, bool isUnderscored) const
 {
     HDC deviceContext = GetDC(windowHandle);
+    AssertCriticalWinApiResult(deviceContext);
 
     int fontSizeInPixels = 10;
 
@@ -80,20 +82,24 @@ HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, 
     }
 
     long logicalFontSize = -MulDiv(scaleProvider->Scale(fontSizeInPixels), GetDeviceCaps(deviceContext, LOGPIXELSY), 72);
+    ExceptionHelper::ThrowOnWinapiError(logicalFontSize, __WFILE__, __LINE__, true, -1);
 
     int italicValue = isItalic ? 1 : 0;
     int underscoredValue = isUnderscored ? 1 : 0;
 
     HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
+    AssertCriticalWinApiResult(font);
 
-    DeleteDC(deviceContext);
+    AssertCriticalWinApiResult(DeleteDC(deviceContext));
 
     return font;
 }
 
 HBRUSH RenderingContext::CreateCustomBrush(Colors color) const
 {
-    return CreateSolidBrush((COLORREF)color);
+    HBRUSH brush = CreateSolidBrush((COLORREF)color);
+    AssertCriticalWinApiResult(brush);
+    return brush;
 }
 
 RenderingContext::~RenderingContext()

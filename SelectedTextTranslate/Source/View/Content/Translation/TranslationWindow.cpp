@@ -1,4 +1,5 @@
 #include "View\Content\Translation\TranslationWindow.h"
+#include "Helpers\ExceptionHelper.h"
 
 TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
     : ContentWindow(context, descriptor, parentWindow, appController)
@@ -58,7 +59,7 @@ void TranslationWindow::Resize()
     bufferingDeviceContextSize.Height = max(parentSize.Height, bufferingDeviceContextSize.Height);
     deviceContextBuffer->Resize(bufferingDeviceContextSize);
 
-    MoveWindow(windowHandle, position.X, position.Y, windowSize.Width, windowSize.Height, FALSE);
+    AssertCriticalWinApiResult(MoveWindow(windowHandle, position.X, position.Y, windowSize.Width, windowSize.Height, FALSE));
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
     RenderSeparator(renderer, max(contentSize.Width, windowSize.Width));
@@ -77,5 +78,5 @@ void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const
 
 TranslationWindow::~TranslationWindow()
 {
-    DeleteObject(separatorBrush);
+    AssertCriticalWinApiResult(DeleteObject(separatorBrush));
 }

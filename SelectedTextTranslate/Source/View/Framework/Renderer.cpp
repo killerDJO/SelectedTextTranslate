@@ -1,5 +1,6 @@
 #include "View\Framework\Renderer.h"
 #include "Helpers\StringUtilities.h"
+#include "Helpers\ExceptionHelper.h"
 
 Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider, ScrollProvider* scrollProvider)
 {
@@ -18,11 +19,12 @@ Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point p
     // Copy text to prevent preliminary dispose by calling code.
     wchar_t* copiedText = StringUtilities::CopyWideChar(text);
     auto printTextAction = [=](HDC deviceContext) -> void {
-        SelectObject(deviceContext, font);
-        SetTextColor(deviceContext, (COLORREF)color);
+        AssertCriticalWinApiResult(SelectObject(deviceContext, font));
+        ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), __WFILE__, __LINE__, true, CLR_INVALID);
+        ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | TA_LEFT), __WFILE__, __LINE__, true, GDI_ERROR);
 
-        SetTextAlign(deviceContext, TA_BASELINE | TA_LEFT);
-        TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText));
+        AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText)));
+
         delete copiedText;
     };
     renderActions.push_back(printTextAction);
@@ -50,9 +52,9 @@ void Renderer::DrawRect(Rect rect, HBRUSH brush)
     gdiRect.right = scaledRect.GetRight();
     gdiRect.top = scaledRect.Y;
     gdiRect.bottom = scaledRect.GetBottom();
-   
+
     auto drawRectAction = [=](HDC hdc) -> void {
-        FillRect(hdc, &gdiRect, brush);
+        AssertCriticalWinApiResult(FillRect(hdc, &gdiRect, brush));
     };
     renderActions.push_back(drawRectAction);
 
@@ -68,7 +70,7 @@ void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) con
     rect.bottom = deviceContextSize.Height;
     rect.right = deviceContextSize.Width;
 
-    FillRect(deviceContext, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+    AssertCriticalWinApiResult(FillRect(deviceContext, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH)));
 }
 
 int Renderer::GetFontAscent(HFONT font) const

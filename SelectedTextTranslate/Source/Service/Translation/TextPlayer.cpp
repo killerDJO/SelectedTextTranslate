@@ -1,4 +1,5 @@
 #include "Service\Translation\TextPlayer.h"
+#include "Helpers\ExceptionHelper.h"
 
 TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider)
 {
@@ -24,7 +25,7 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 
     textPlayer->logger->Log(L"Start playing sentence '" + text + L"'.");
 
-    wstring responseQuery = L"http://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
+    wstring responseQuery = L"https://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
         + L"&tk=" + textPlayer->translator->GetHash(text);
 
     vector<unsigned char> audio = textPlayer->requestProvider->GetResponse(responseQuery);

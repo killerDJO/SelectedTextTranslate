@@ -1,4 +1,5 @@
 #include "View\Framework\Windows\ChildWindow.h"
+#include "Helpers\ExceptionHelper.h"
 
 ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : Window(context, descriptor)
@@ -25,6 +26,8 @@ void ChildWindow::Initialize()
         NULL,
         context->GetInstance(),
         this);
+
+    AssertCriticalWinApiResult(windowHandle);
 }
 
 Point ChildWindow::GetInitialWindowOffset()
@@ -47,8 +50,8 @@ LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     {
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
-        GetWindowRect(windowHandle, &rcWindow);
-        MoveWindow(windowHandle, pos.x, pos.y, windowSize.Width, windowSize.Height, FALSE);
+        AssertCriticalWinApiResult(GetWindowRect(windowHandle, &rcWindow));
+        AssertCriticalWinApiResult(MoveWindow(windowHandle, pos.x, pos.y, windowSize.Width, windowSize.Height, FALSE));
         position.X = pos.x;
         position.Y = pos.y;
 

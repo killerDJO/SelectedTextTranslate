@@ -1,6 +1,7 @@
 #include "View\Content\Translation\HeaderWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Helpers\ExceptionHelper.h"
 
 HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
 : ContentWindow(context, descriptor, parentWindow, appController)
@@ -91,5 +92,5 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
 
 HeaderWindow::~HeaderWindow()
 {
-    DeleteObject(fontSmallUnderscored);
+    AssertCriticalWinApiResult(DeleteObject(fontSmallUnderscored));
 }

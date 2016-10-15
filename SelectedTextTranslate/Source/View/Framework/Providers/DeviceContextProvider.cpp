@@ -1,4 +1,5 @@
 #include "View\Framework\Providers\DeviceContextProvider.h"
+#include "Helpers\ExceptionHelper.h"
 
 DeviceContextProvider::DeviceContextProvider()
 {
@@ -7,6 +8,7 @@ DeviceContextProvider::DeviceContextProvider()
 HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
 {
     HDC hdc = CreateCompatibleDC(nullptr);
+    AssertCriticalWinApiResult(hdc);
 
     BITMAPINFO i;
     ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
@@ -19,24 +21,28 @@ HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
     i.bmiHeader.biClrUsed = 0;
     i.bmiHeader.biClrImportant = 0;
     VOID *pvBits;
-    HBITMAP bitmap = CreateDIBSection(hdc, &i, DIB_RGB_COLORS, &pvBits, nullptr, 0);
 
-    SelectObject(hdc, bitmap);
+    if(deviceContextSize.Width != 0 && deviceContextSize.Height != 0)
+    {
+        HBITMAP bitmap = CreateDIBSection(hdc, &i, DIB_RGB_COLORS, &pvBits, nullptr, 0);
+        AssertCriticalWinApiResult(bitmap);
 
-    DeleteObject(bitmap);
+        AssertCriticalWinApiResult(SelectObject(hdc, bitmap));
+        AssertCriticalWinApiResult(DeleteObject(bitmap));
+    }
 
     return hdc;
 }
 
 void DeviceContextProvider::ResizeDeviceContext(HDC &deviceContext, Size newDeviceContextSize) const
 {
-    DeleteDC(deviceContext);
+    AssertCriticalWinApiResult(DeleteDC(deviceContext));
     deviceContext = CreateDeviceContext(newDeviceContextSize);
 }
 
-DWORD DeviceContextProvider::CopyDeviceContext(HDC source, HDC target, Size deviceContextSize) const
+void DeviceContextProvider::CopyDeviceContext(HDC source, HDC target, Size deviceContextSize) const
 {
-    return BitBlt(target, 0, 0, deviceContextSize.Width, deviceContextSize.Height, source, 0, 0, SRCCOPY);
+    AssertCriticalWinApiResult(BitBlt(target, 0, 0, deviceContextSize.Width, deviceContextSize.Height, source, 0, 0, SRCCOPY));
 }
 
 DeviceContextProvider::~DeviceContextProvider()

@@ -1,4 +1,5 @@
 #include "Service\Translation\TextExtractor.h"
+#include "Helpers\ExceptionHelper.h"
 
 TextExtractor::TextExtractor()
 {

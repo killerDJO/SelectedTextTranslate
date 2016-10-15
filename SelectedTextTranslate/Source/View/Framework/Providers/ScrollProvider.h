@@ -35,8 +35,6 @@ public:
     int GetCurrentScrollPostion(Window* window, ScrollBars scrollBar) const;
     int GetCurrentScrollOffset(Window* window, ScrollBars scrollBar) const;
 
-    void ResetScrollsPosition(Window* window) const;
-
     bool IsScrollBarVisible(const Window* window, ScrollBars scrollBar) const;
     int GetScrollBarSize(const Window* window, ScrollBars scrollBar) const;
 

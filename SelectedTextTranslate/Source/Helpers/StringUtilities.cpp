@@ -1,4 +1,5 @@
 #include "Helpers\StringUtilities.h"
+#include "Helpers\ExceptionHelper.h"
 
 wstring StringUtilities::GetUtf16String(string text)
 {

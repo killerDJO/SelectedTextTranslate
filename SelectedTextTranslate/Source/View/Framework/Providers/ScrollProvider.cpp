@@ -1,4 +1,5 @@
 #include "View\Framework\Providers\ScrollProvider.h"
+#include "Helpers\ExceptionHelper.h"
 
 ScrollProvider::ScrollProvider()
 {
@@ -93,6 +94,11 @@ void ScrollProvider::InitializeScrollbar(HWND windowHandle, int contentDimension
 
 int ScrollProvider::GetCurrentScrollPostion(Window* window, ScrollBars scrollBar) const
 {
+    if (!IsScrollBarVisible(window, scrollBar))
+    {
+        return 0;
+    }
+
     SCROLLINFO scrollInfo = GetWindowScrollInfo(window, scrollBar);
     return scrollInfo.nPos;
 }
@@ -107,36 +113,15 @@ int ScrollProvider::GetCurrentScrollOffset(Window* window, ScrollBars scrollBar)
     return GetCurrentScrollPostion(window, scrollBar) * GetScrollChar(scrollBar);
 }
 
-void ScrollProvider::ResetScrollsPosition(Window* window) const
-{
-    SCROLLINFO verticalScrollInfo = GetWindowScrollInfo(window, ScrollBars::Vertical);
-    int scrollAmountVertical = verticalScrollInfo.nPos * scrollCharY;
-    
-    SCROLLINFO horizontalScrollInfo = GetWindowScrollInfo(window, ScrollBars::Horizontal);
-    int scrollAmountHorizontal = horizontalScrollInfo.nPos * scrollCharX;
-
-    ScrollWindowEx(
-        window->GetHandle(),
-        scrollAmountHorizontal,
-        scrollAmountVertical,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        SW_SCROLLCHILDREN);
-
-    window->Draw(true);
-}
-
 bool ScrollProvider::IsScrollBarVisible(const Window* window, ScrollBars scrollBar) const
 {
     SCROLLBARINFO scrollBarInfo;
     scrollBarInfo.cbSize = sizeof SCROLLBARINFO;
 
-    GetScrollBarInfo(
+    AssertCriticalWinApiResult(GetScrollBarInfo(
         window->GetHandle(),
         scrollBar == ScrollBars::Vertical ? OBJID_VSCROLL : OBJID_HSCROLL,
-        &scrollBarInfo);
+        &scrollBarInfo));
 
     return (scrollBarInfo.rgstate[0] & STATE_SYSTEM_INVISIBLE) != STATE_SYSTEM_INVISIBLE;
 }
@@ -199,7 +184,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
 {
     scrollInfo.fMask = SIF_POS;
     SetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo, TRUE);
-    GetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo);
+    AssertCriticalWinApiResult(GetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo));
 
     if (scrollInfo.nPos != scrollOffset)
     {
@@ -217,7 +202,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
             scrollAmountHorizontal = scrollAmount;
         }
 
-        ScrollWindowEx(
+        int scrollResult = ScrollWindowEx(
             window->GetHandle(),
             scrollAmountHorizontal,
             scrollAmountVertical,
@@ -226,6 +211,8 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
             nullptr,
             nullptr,
             SW_SCROLLCHILDREN);
+
+        ExceptionHelper::ThrowOnWinapiError(scrollResult, __WFILE__, __LINE__, ERROR);
 
         window->Draw(true);
     }
@@ -236,7 +223,7 @@ SCROLLINFO ScrollProvider::GetWindowScrollInfo(Window* window, ScrollBars scroll
     SCROLLINFO scrollInfo;
     scrollInfo.cbSize = sizeof(scrollInfo);
     scrollInfo.fMask = SIF_ALL;
-    GetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo);
+    AssertCriticalWinApiResult(GetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo));
 
     return scrollInfo;
 }

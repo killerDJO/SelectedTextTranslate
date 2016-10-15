@@ -1,4 +1,5 @@
 #include "View\Content\Base\ContentWindow.h"
+#include "Helpers\ExceptionHelper.h"
 
 ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
     : ChildWindow(context, descriptor, parentWindow)
@@ -35,9 +36,9 @@ Size ContentWindow::RenderContent(Renderer* renderer)
 
 ContentWindow::~ContentWindow()
 {
-    DeleteObject(fontNormal);
-    DeleteObject(fontHeader);
-    DeleteObject(fontItalic);
-    DeleteObject(fontSmall);
-    DeleteObject(grayBrush);
+    AssertCriticalWinApiResult(DeleteObject(fontNormal));
+    AssertCriticalWinApiResult(DeleteObject(fontHeader));
+    AssertCriticalWinApiResult(DeleteObject(fontItalic));
+    AssertCriticalWinApiResult(DeleteObject(fontSmall));
+    AssertCriticalWinApiResult(DeleteObject(grayBrush));
 }

@@ -1,6 +1,7 @@
 #include "View\Framework\Windows\Window.h"
 #include "Exceptions\SelectedTextTranslateFatalException.h"
 #include "Helpers\StringUtilities.h"
+#include "Helpers\ExceptionHelper.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
 {
@@ -34,7 +35,7 @@ void Window::Initialize()
 {
     WNDCLASSEX windowClass = { 0 };
 
-    if (!GetClassInfoEx(context->GetInstance(), className, &windowClass))
+    if(!GetClassInfoEx(context->GetInstance(), className, &windowClass))
     {
         windowClass.hInstance = context->GetInstance();
         windowClass.lpszClassName = className;
@@ -45,10 +46,7 @@ void Window::Initialize()
 
         SpecifyWindowClass(&windowClass);
 
-        if (!RegisterClassEx(&windowClass))
-        {
-            FatalAppExit(0, TEXT("Couldn't register window class!"));
-        }
+        AssertCriticalWinApiResult(RegisterClassEx(&windowClass));
     }
 
     windowState = WindowStates::Initialized;
@@ -145,9 +143,6 @@ void Window::ApplyRenderedState(bool preserveScrolls)
 
 void Window::ApplyWindowPosition(bool preserveScrolls)
 {
-    Point offset = GetInitialWindowOffset();
-    MoveWindow(windowHandle, descriptor.Position.X - offset.X, descriptor.Position.Y - offset.Y, windowSize.Width, windowSize.Height, FALSE);
-
     int verticalScrollPosition = 0;
     int horizontalScrollPosition = 0;
     if (preserveScrolls)
@@ -155,6 +150,9 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
         verticalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Vertical);
         horizontalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Horizontal);
     }
+
+    Point offset = GetInitialWindowOffset();
+    AssertCriticalWinApiResult(MoveWindow(windowHandle, descriptor.Position.X - offset.X, descriptor.Position.Y - offset.Y, windowSize.Width, windowSize.Height, FALSE));
 
     // Important to initialize scroll only after window has been moved
     context->GetScrollProvider()->InitializeScrollbars(
@@ -183,8 +181,9 @@ void Window::Draw(bool drawChildren)
     }
 
     HDC deviceContext = GetDC(windowHandle);
+    AssertCriticalWinApiResult(deviceContext);
     deviceContextBuffer->Render(deviceContext, windowSize);
-    DeleteDC(deviceContext);
+    AssertCriticalWinApiResult(DeleteDC(deviceContext));
 }
 
 void Window::DrawChildWindows()
@@ -259,7 +258,7 @@ Size Window::GetSize() const
 Size Window::GetAvailableClientSize() const
 {
     RECT clientRect;
-    GetClientRect(windowHandle, &clientRect);
+    AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
 
     ScrollProvider* scrollProvider = context->GetScrollProvider();
     return Size(
@@ -344,7 +343,7 @@ LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        BeginPaint(GetHandle(), &ps);
+        AssertCriticalWinApiResult(BeginPaint(GetHandle(), &ps));
         Draw(false);
         EndPaint(GetHandle(), &ps);
         break;
@@ -372,7 +371,7 @@ Window::~Window()
     delete deviceContextBuffer;
     DestroyChildWindows(activeChildWindows);
     DestroyChildWindows(destroyBeforeDrawList);
-    DestroyWindow(windowHandle);
+    AssertCriticalWinApiResult(DestroyWindow(windowHandle));
 
     windowState = WindowStates::Destroyed;
 }

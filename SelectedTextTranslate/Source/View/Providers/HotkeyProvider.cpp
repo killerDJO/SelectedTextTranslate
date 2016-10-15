@@ -1,4 +1,5 @@
 #include "View\Providers\HotkeyProvider.h"
+#include "Helpers\ExceptionHelper.h"
 
 HotkeyProvider::HotkeyProvider()
 {
@@ -18,48 +19,50 @@ void HotkeyProvider::UnregisterHotkeyCallback(int hotkeyId)
     }
 }
 
+void HotkeyProvider::RegisterCustomHotkey(HWND windowHandle, function<void()> pressedCallback, int hotkeyId, UINT modifiers, UINT virtualCode)
+{
+    AssertWinApiResult(RegisterHotKey(windowHandle, hotkeyId, modifiers, virtualCode));
+    RegisterHotkeyCallback(hotkeyId, pressedCallback);
+}
+
+void HotkeyProvider::UnregisterCustomHotkey(HWND windowHandle, int hotkeyId)
+{
+    AssertWinApiResult(UnregisterHotKey(windowHandle, hotkeyId));
+    UnregisterHotkeyCallback(hotkeyId);
+}
+
 void HotkeyProvider::RegisterTranslateHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterHotKey(windowHandle, TranslateHotkeyId, MOD_CONTROL, 0x54/*T*/);
-    RegisterHotkeyCallback(TranslateHotkeyId, pressedCallback);
+    RegisterCustomHotkey(windowHandle, pressedCallback, TranslateHotkeyId, MOD_CONTROL, 0x54/*T*/);
 }
 
 void HotkeyProvider::RegisterPlayTextHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterHotKey(windowHandle, PlayTextHotkeyId, MOD_CONTROL, 0x52/*R*/);
-    RegisterHotkeyCallback(PlayTextHotkeyId, pressedCallback);
+    RegisterCustomHotkey(windowHandle, pressedCallback, PlayTextHotkeyId, MOD_CONTROL, 0x52/*R*/);
 }
 
 void HotkeyProvider::RegisterZoomInHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterHotKey(windowHandle, ZoomInHotkeyPrimaryId, MOD_CONTROL, 0x6B/*Numpad plus*/);
-    RegisterHotKey(windowHandle, ZoomInHotkeySecondaryId, MOD_CONTROL, VK_OEM_PLUS);
-    RegisterHotkeyCallback(ZoomInHotkeyPrimaryId, pressedCallback);
-    RegisterHotkeyCallback(ZoomInHotkeySecondaryId, pressedCallback);
+    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomInHotkeyPrimaryId, MOD_CONTROL, 0x6B/*Numpad plus*/);
+    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomInHotkeySecondaryId, MOD_CONTROL, VK_OEM_PLUS);
 }
 
 void HotkeyProvider::RegisterZoomOutHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterHotKey(windowHandle, ZoomOutHotkeyPrimaryId, MOD_CONTROL, 0x6d/*Numpad minus*/);
-    RegisterHotKey(windowHandle, ZoomOutHotkeySecondaryId, MOD_CONTROL, VK_OEM_MINUS);
-    RegisterHotkeyCallback(ZoomOutHotkeyPrimaryId, pressedCallback);
-    RegisterHotkeyCallback(ZoomOutHotkeySecondaryId, pressedCallback);
+    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomOutHotkeyPrimaryId, MOD_CONTROL, 0x6d/*Numpad minus*/);
+    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomOutHotkeySecondaryId, MOD_CONTROL, VK_OEM_MINUS);
 }
 
 void HotkeyProvider::UnregisterZoomInHotkey(HWND windowHandle)
 {
-    UnregisterHotKey(windowHandle, ZoomInHotkeyPrimaryId);
-    UnregisterHotKey(windowHandle, ZoomInHotkeySecondaryId);
-    UnregisterHotkeyCallback(ZoomInHotkeyPrimaryId);
-    UnregisterHotkeyCallback(ZoomInHotkeySecondaryId);
+    UnregisterCustomHotkey(windowHandle, ZoomInHotkeyPrimaryId);
+    UnregisterCustomHotkey(windowHandle, ZoomInHotkeySecondaryId);
 }
 
 void HotkeyProvider::UnregisterZoomOutHotkey(HWND windowHandle)
 {
-    UnregisterHotKey(windowHandle, ZoomOutHotkeyPrimaryId);
-    UnregisterHotKey(windowHandle, ZoomOutHotkeySecondaryId);
-    UnregisterHotkeyCallback(ZoomOutHotkeyPrimaryId);
-    UnregisterHotkeyCallback(ZoomOutHotkeySecondaryId);
+    UnregisterCustomHotkey(windowHandle, ZoomOutHotkeyPrimaryId);
+    UnregisterCustomHotkey(windowHandle, ZoomOutHotkeySecondaryId);
 }
 
 void HotkeyProvider::ProcessHotkey(DWORD hotkeyId)
