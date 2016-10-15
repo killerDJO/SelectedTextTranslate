@@ -10,5 +10,5 @@ SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring m
 
 wstring SelectedTextTranslateBaseException::GetErrorMessage() const
 {
-    return StringUtilities::Format(L"%ls, at %ls:%d", StringUtilities::GetUtf16String(what()).c_str(), FileName.c_str(), LineNumber);
+    return StringUtilities::Format(L"%ls at %ls:%d", StringUtilities::GetUtf16String(what()).c_str(), FileName.c_str(), LineNumber);
 }

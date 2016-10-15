@@ -1,5 +1,6 @@
 ﻿#include "Service\Translation\Translator.h"
 #include "Helpers\StringUtilities.h"
+#include "Exceptions\SelectedTextTranslateException.h"
 
 using namespace web;
 
@@ -52,8 +53,7 @@ TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDicti
     }
     catch (json::json_exception exception)
     {
-        wstring errorMessage = L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".";
-        logger->Log(errorMessage);
+        throw SelectedTextTranslateException(L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".", __WFILE__, __LINE__);
     }
 
     logger->Log(L"End translating sentence.");
@@ -123,27 +123,20 @@ TranslateResult Translator::ParseJSONResponse(wstring json) const
 {
     TranslateResult result;
 
-    if (json.empty()){
-        wstring errorMessage = L"Error. Unable to parse JSON. JSON value is empty.";
-        
-        logger->Log(errorMessage);
-
-        return result;
+    if (json.empty())
+    {
+        throw SelectedTextTranslateException(L"Error. Unable to parse JSON. JSON value is empty.", __WFILE__, __LINE__);
     }
 
     // Normalize json response
-    Translator::ReplaceAll(json, L",,", L",null,");
-    Translator::ReplaceAll(json, L"[,", L"[null,");
+    ReplaceAll(json, L",,", L",null,");
+    ReplaceAll(json, L"[,", L"[null,");
 
     json::value root = json::value::parse(json);
 
     if (root.is_null())
     {
-        wstring errorMessage = L"Error. Unable to parse JSON. Json value = '" + json + L"'.";
-
-        logger->Log(errorMessage);
-
-        return result;
+        throw SelectedTextTranslateException(StringUtilities::Format(L"Error. Unable to parse JSON. Json value = '%ls'.", json), __WFILE__, __LINE__);
     }
 
     json::array sentences = root[0][0].as_array();
@@ -195,6 +188,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json) const
 
             category.Entries.push_back(entry);
         }
+
         result.TranslateCategories.push_back(category);
     }
 

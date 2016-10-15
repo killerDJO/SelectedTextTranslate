@@ -32,6 +32,8 @@ private:
 
     void ApplyWindowPosition(bool preserveScrolls);
 
+    void TerminateOnException(wstring message) const;
+
 protected:
     HWND windowHandle;
     wchar_t* className;
@@ -54,19 +56,21 @@ protected:
 
     DWORD GetScrollStyle() const;
 
-    virtual void SpecifyWindowClass(WNDCLASSEX* windowClass) = 0;
+    virtual void SpecifyWindowClass(WNDCLASSEX* windowClass);
     virtual Size RenderContent(Renderer* renderer) = 0;
 
     void ApplyRenderedState(bool preserveScrolls);
     virtual Point GetInitialWindowOffset();
 
-    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
     Window(WindowContext* context, WindowDescriptor descriptor);
     virtual ~Window();
 
     HWND GetHandle() const;
+    WindowDescriptor GetDescriptor() const;
 
     Size GetSize() const;
     Size GetAvailableClientSize() const;

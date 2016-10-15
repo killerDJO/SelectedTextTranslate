@@ -10,7 +10,6 @@ HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor de
 void HoverButtonWindow::Initialize()
 {
     ChildWindow::Initialize();
-    SetWindowLongPtr(windowHandle, GWL_WNDPROC, (LONG_PTR)HoverButtonWindow::WndProc);
 
     RenderStatesDeviceContext();
     RenderContent(nullptr);
@@ -29,20 +28,18 @@ Size HoverButtonWindow::RenderContent(Renderer* renderer)
     return windowSize;
 }
 
-LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     TRACKMOUSEEVENT tme;
     tme.cbSize = sizeof(TRACKMOUSEEVENT);
-    tme.hwndTrack = hWnd;
+    tme.hwndTrack = windowHandle;
     tme.dwHoverTime = 10;
-
-    HoverButtonWindow* window = (HoverButtonWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
     switch (message)
     {
 
     case WM_LBUTTONUP:
-        window->clickCallback();
+        clickCallback();
         return TRUE;
 
     case WM_MOUSEMOVE:
@@ -53,11 +50,11 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSEHOVER:
     {
-        if (!window->isHovered)
+        if (!isHovered)
         {
-            window->isHovered = true;
-            window->RenderContent(nullptr);
-            InvalidateRect(hWnd, nullptr, TRUE);
+            isHovered = true;
+            RenderContent(nullptr);
+            InvalidateRect(windowHandle, nullptr, TRUE);
 
             SetCursor(LoadCursor(nullptr, IDC_HAND));
         }
@@ -71,11 +68,11 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     case WM_MOUSELEAVE:
     {
-        if(window->isHovered)
+        if(isHovered)
         {
-            window->isHovered = false;
-            window->RenderContent(nullptr);
-            InvalidateRect(hWnd, nullptr, TRUE);
+            isHovered = false;
+            RenderContent(nullptr);
+            InvalidateRect(windowHandle, nullptr, TRUE);
 
             SetCursor(LoadCursor(nullptr, IDC_ARROW));
 
@@ -87,7 +84,7 @@ LRESULT CALLBACK HoverButtonWindow::WndProc(HWND hWnd, UINT message, WPARAM wPar
 
     }
 
-    return ChildWindow::WndProc(hWnd, message, wParam, lParam);
+    return ChildWindow::WindowProcedure(message, wParam, lParam);
 }
 
 HoverButtonWindow::~HoverButtonWindow()

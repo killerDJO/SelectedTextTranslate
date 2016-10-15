@@ -25,7 +25,8 @@ private:
     void Resize() override;
     Window* GetCurrentView() const;
 
-    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+    LRESULT HandleMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;

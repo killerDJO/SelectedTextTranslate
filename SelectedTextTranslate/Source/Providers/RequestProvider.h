@@ -6,9 +6,6 @@ class RequestProvider
 private:
     Logger* logger;
 
-    void LogRequestException(wstring url, exception exception) const;
-    void LogRequestError(wstring url, wstring message) const;
-
 public:
     RequestProvider(Logger* logger);
     ~RequestProvider();

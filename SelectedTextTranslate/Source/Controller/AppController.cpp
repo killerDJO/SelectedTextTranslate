@@ -83,6 +83,7 @@ void AppController::ShowError()
 {
     applicationView = ApplicationViews::Error;
     mainWindow->Render();
+    mainWindow->Maximize();
 }
 
 void AppController::Exit() const

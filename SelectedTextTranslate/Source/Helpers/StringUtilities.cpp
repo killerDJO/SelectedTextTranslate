@@ -13,10 +13,11 @@ wstring StringUtilities::GetUtf16StringFromChar(const char* text)
     }
 
     int requiredLen = MultiByteToWideChar(CP_UTF8, 0, text, -1, nullptr, 0);
+    AssertCriticalWinApiResult(requiredLen);
 
     wchar_t* buffer = new wchar_t[requiredLen + 1];
 
-    MultiByteToWideChar(CP_UTF8, 0, text, -1, buffer, requiredLen);
+    AssertCriticalWinApiResult(MultiByteToWideChar(CP_UTF8, 0, text, -1, buffer, requiredLen));
 
     wstring result(buffer);
 
@@ -38,10 +39,11 @@ string StringUtilities::GetUtf8StringFromChar(const wchar_t* text)
     }
 
     int requiredLen = WideCharToMultiByte(CP_UTF8, 0, text, -1, nullptr, 0, nullptr, nullptr);
+    AssertCriticalWinApiResult(requiredLen);
 
     char* buffer = new char[requiredLen + 1];
 
-    WideCharToMultiByte(CP_UTF8, 0, text, -1, buffer, requiredLen, nullptr, nullptr);
+    AssertCriticalWinApiResult(WideCharToMultiByte(CP_UTF8, 0, text, -1, buffer, requiredLen, nullptr, nullptr));
 
     string result(buffer);
 

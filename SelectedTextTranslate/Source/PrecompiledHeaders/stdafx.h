@@ -9,6 +9,11 @@
 #define WIDEN(x) WIDEN2(x)
 #define __WFILE__ WIDEN(__FILE__)
 
+#define AssertWinApiResult(__result) ExceptionHelper::ThrowOnWinapiError(__result, __WFILE__, __LINE__, false)
+#define AssertCriticalWinApiResult(__result) ExceptionHelper::ThrowOnWinapiError(__result, __WFILE__, __LINE__, true)
+#define AssertWinApiHandleResult(__result) ExceptionHelper::ThrowOnWinapiError(__result, __WFILE__, __LINE__, false, INVALID_HANDLE_VALUE)
+#define AssertCriticalWinApiHandleResult(__result) ExceptionHelper::ThrowOnWinapiError(__result, __WFILE__, __LINE__, true, INVALID_HANDLE_VALUE)
+
 #define GDIPVER     0x0110
 
 #include <SDKDDKVer.h>
@@ -46,6 +51,7 @@
 #include "gumbo.h"
 
 #include "..\Resources\resource.h"
+#include "Helpers\ExceptionHelper.h"
 
 using namespace std;
 using namespace Gdiplus;

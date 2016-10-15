@@ -1,5 +1,6 @@
 #include "Providers\RequestProvider.h"
 #include "Helpers\StringUtilities.h"
+#include "Exceptions\SelectedTextTranslateException.h"
 
 using namespace web;
 using namespace web::http;
@@ -42,23 +43,23 @@ vector<unsigned char> RequestProvider::GetResponse(wstring url)
                     {
                         return response.extract_vector().get();
                     }
-                    else 
+                    else
                     {
-                        LogRequestError(url, L"Invalid status code: " + to_wstring(statusCode));
+                        throw SelectedTextTranslateException(StringUtilities::Format(L"Invalid status code: %d.", statusCode), __WFILE__, __LINE__);
                     }
                 }
                 catch (const http_exception& e)
                 {
-                    LogRequestException(url, e);
+                    ExceptionHelper::ThrowFromStdException((exception)e, __WFILE__, __LINE__);
                 }
 
                 return vector<unsigned char>();
             })
             .get();
     }
-    catch (const std::exception& e)
+    catch (const exception& e)
     {
-        LogRequestException(url, e);
+        ExceptionHelper::ThrowFromStdException(e, __WFILE__, __LINE__);
         return vector<unsigned char>();
     }
 }
@@ -67,16 +68,6 @@ wstring RequestProvider::EscapeText(wstring text) const
 {
     wstring encodedString = uri::encode_data_string(text);
     return encodedString;
-}
-
-void RequestProvider::LogRequestException(wstring url, exception exception) const
-{
-    LogRequestError(url, L"Exception: " + StringUtilities::GetUtf16String(exception.what()));
-}
-
-void RequestProvider::LogRequestError(wstring url, wstring message) const
-{
-    logger->Log(L"Error requesting URL '" + url + L"'. " + message);
 }
 
 RequestProvider::~RequestProvider()

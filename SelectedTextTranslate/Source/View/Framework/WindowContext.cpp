@@ -5,13 +5,15 @@ WindowContext::WindowContext(
     ScrollProvider* scrollProvider,
     ScaleProvider* scaleProvider,
     DeviceContextProvider* deviceContextProvider,
-    RenderingContext* renderingContext)
+    RenderingContext* renderingContext,
+    Logger* logger)
 {
     this->hInstance = hInstance;
     this->scrollProvider = scrollProvider;
     this->scaleProvider = scaleProvider;
     this->deviceContextProvider = deviceContextProvider;
     this->renderingContext = renderingContext;
+    this->logger = logger;
 }
 
 HINSTANCE WindowContext::GetInstance() const
@@ -37,6 +39,11 @@ DeviceContextProvider* WindowContext::GetDeviceContextProvider() const
 RenderingContext* WindowContext::GetRenderingContext() const
 {
     return renderingContext;
+}
+
+Logger* WindowContext::GetLogger() const
+{
+    return logger;
 }
 
 WindowContext::~WindowContext()

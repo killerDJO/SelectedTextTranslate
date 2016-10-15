@@ -47,6 +47,32 @@ void ScrollProvider::InitializeScrollbars(
     }
 }
 
+void ScrollProvider::ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const
+{
+    if(message == WM_HSCROLL && window->GetDescriptor().OverflowX == OverflowModes::Scroll)
+    {
+        ProcessScroll(window, wParam, lParam, ScrollBars::Horizontal);
+    }
+
+    if (message == WM_VSCROLL && window->GetDescriptor().OverflowY == OverflowModes::Scroll)
+    {
+        ProcessScroll(window, wParam, lParam, ScrollBars::Vertical);
+    }
+
+    if (message == WM_MOUSEWHEEL)
+    {
+        int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+        if (zDelta < 0)
+        {
+            SendMessage(window->GetHandle(), WM_VSCROLL, SB_LINEDOWN, NULL);
+        }
+        else
+        {
+            SendMessage(window->GetHandle(), WM_VSCROLL, SB_LINEUP, NULL);
+        }
+    }
+}
+
 void ScrollProvider::InitializeScrollbar(HWND windowHandle, int contentDimension, int windowDimension, ScrollBars scrollBar, int initialPosition) const
 {
     int scrollChar = GetScrollChar(scrollBar);

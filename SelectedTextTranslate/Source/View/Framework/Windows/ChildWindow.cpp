@@ -27,11 +27,6 @@ void ChildWindow::Initialize()
         this);
 }
 
-void ChildWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
-{
-    windowClass->lpfnWndProc = WndProc;
-}
-
 Point ChildWindow::GetInitialWindowOffset()
 {
     ScrollProvider* scrollProvider = context->GetScrollProvider();
@@ -41,10 +36,8 @@ Point ChildWindow::GetInitialWindowOffset()
     return Point(offsetX, offsetY);
 }
 
-LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    ChildWindow* instance = (ChildWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-
     switch (message)
     {
 
@@ -54,16 +47,16 @@ LRESULT CALLBACK ChildWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
     {
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
-        GetWindowRect(hWnd, &rcWindow);
-        MoveWindow(hWnd, pos.x, pos.y, instance->windowSize.Width, instance->windowSize.Height, FALSE);
-        instance->position.X = pos.x;
-        instance->position.Y = pos.y;
+        GetWindowRect(windowHandle, &rcWindow);
+        MoveWindow(windowHandle, pos.x, pos.y, windowSize.Width, windowSize.Height, FALSE);
+        position.X = pos.x;
+        position.Y = pos.y;
 
         return TRUE;
     }
 
     default:
-        return Window::WndProc(hWnd, message, wParam, lParam);
+        return Window::WindowProcedure(message, wParam, lParam);
     }
 }
 

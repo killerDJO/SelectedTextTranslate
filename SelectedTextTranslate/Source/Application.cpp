@@ -4,7 +4,6 @@
 #include "Service\Dictionary\Dictionary.h"
 #include "Providers\RequestProvider.h"
 #include "View\Content\MainWindow.h"
-#include "Exceptions\SelectedTextTranslateException.h"
 #include "Exceptions\SelectedTextTranslateFatalException.h"
 
 Application::Application()
@@ -34,6 +33,10 @@ int Application::Run(HINSTANCE hInstance) const
     catch (const SelectedTextTranslateFatalException& exception)
     {
         return TerminateOnException(logger, exception.GetErrorMessage());
+    }
+    catch (const exception& exception)
+    {
+        return TerminateOnException(logger, StringUtilities::GetUtf16String(exception.what()));
     }
     catch (...)
     {
@@ -68,7 +71,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         scrollProvider,
         scaleProvider,
         deviceContextProvider,
-        renderingContext);
+        renderingContext,
+        logger);
 
     AppController* appController = new AppController(translator, textPlayer, textExtractor, dictionary);
 
@@ -84,16 +88,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        try
-        {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-        }
-        catch (const SelectedTextTranslateException& error)
-        {
-            logger->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetErrorMessage().c_str());
-            appController->ShowError();
-        }
     }
 
     logger->Log(L"Application shutdown.");

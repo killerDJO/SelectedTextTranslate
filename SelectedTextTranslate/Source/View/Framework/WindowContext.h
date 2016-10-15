@@ -3,6 +3,7 @@
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\RenderingContext.h"
+#include "Logging\Logger.h"
 
 class ScrollProvider;
 class RenderingContext;
@@ -15,6 +16,7 @@ class WindowContext
     ScaleProvider* scaleProvider;
     DeviceContextProvider* deviceContextProvider;
     RenderingContext* renderingContext;
+    Logger* logger;
 
 public:
     WindowContext(
@@ -22,7 +24,8 @@ public:
         ScrollProvider* scrollProvider,
         ScaleProvider* scaleProvider,
         DeviceContextProvider* deviceContextProvider,
-        RenderingContext* renderingContext);
+        RenderingContext* renderingContext,
+        Logger* logger);
     ~WindowContext();
 
     HINSTANCE GetInstance() const;
@@ -30,4 +33,5 @@ public:
     ScaleProvider* GetScaleProvider() const;
     DeviceContextProvider* GetDeviceContextProvider() const;
     RenderingContext* GetRenderingContext() const;
+    Logger* GetLogger() const;
 };

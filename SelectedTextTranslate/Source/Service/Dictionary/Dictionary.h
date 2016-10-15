@@ -13,7 +13,7 @@ private:
     sqlite3_stmt* CreateStatement(const char* sqlQuery) const;
     void BindValue(sqlite3_stmt* statement, wstring name, wstring value) const;
     void BindValue(sqlite3_stmt* statement, wstring name, int value) const;
-    int Dictionary::ExecuteNonQuery(sqlite3_stmt* statement) const;
+    void Dictionary::ExecuteNonQuery(sqlite3_stmt* statement) const;
 
     vector<LogRecord> GetLogRecords(sqlite3_stmt* statement) const;
 

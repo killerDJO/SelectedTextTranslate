@@ -13,7 +13,8 @@ void TextPlayer::PlayText(const wchar_t* text)
     currentTextToPlay = text;
     DWORD threadId;
     HANDLE hThread = CreateThread(nullptr, 0, TextPlayer::Play, this, 0, &threadId);
-    CloseHandle(hThread);
+    AssertWinApiResult(hThread);
+    AssertWinApiResult(CloseHandle(hThread));
 }
 
 DWORD WINAPI TextPlayer::Play(LPVOID arg)
@@ -50,9 +51,11 @@ string TextPlayer::SaveToFile(vector<unsigned char> content) const
 {
     string path = TextPlayer::GetAudioFilePath(".mp3");
     HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    AssertWinApiHandleResult(hFile);
+
     DWORD dwWritten;
-    WriteFile(hFile, &content[0], sizeof(unsigned char) * content.size(), &dwWritten, nullptr);
-    CloseHandle(hFile);
+    AssertWinApiResult(WriteFile(hFile, &content[0], sizeof(unsigned char) * content.size(), &dwWritten, nullptr));
+    AssertWinApiResult(CloseHandle(hFile));
     return path;
 }
 
@@ -60,6 +63,8 @@ string TextPlayer::GetAudioFilePath(string extension) const
 {
     char buffer[MAX_PATH];
     DWORD pathLength = GetTempPathA(MAX_PATH, buffer);
+    AssertWinApiResult(pathLength);
+
     buffer[pathLength] = 0;
     return string(buffer) + string(AUDIO_FILE_NAME) + extension;
 }

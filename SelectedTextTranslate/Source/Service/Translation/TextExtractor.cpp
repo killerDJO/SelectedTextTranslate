@@ -27,24 +27,26 @@ wstring TextExtractor::GetSelectedText() const
     input[3].ki.wVk = input[1].ki.wVk;
     input[3].ki.wScan = input[1].ki.wScan;
 
-    SendInput( key_count, LPINPUT(input), sizeof(INPUT) );
+    AssertWinApiResult(SendInput(key_count, LPINPUT(input), sizeof(INPUT)));
 
     // Waiting for input event
     Sleep(100);
 
-    if(OpenClipboard(nullptr))
+    AssertWinApiResult(OpenClipboard(nullptr));
+
+    HGLOBAL hglb = GetClipboardData(CF_UNICODETEXT);
+    AssertWinApiResult(hglb);
+
+    TCHAR* lpstr = static_cast<TCHAR*>(GlobalLock(hglb));
+    AssertWinApiResult(lpstr);
+
+    if(lpstr)
     {
-        HGLOBAL hglb = GetClipboardData(CF_UNICODETEXT);
-        TCHAR* lpstr = static_cast<TCHAR*>(GlobalLock(hglb));
-
-        if(lpstr)
-        {
-            result = wstring(lpstr);
-        }
-
-        GlobalUnlock(hglb);
-        CloseClipboard();
+        result = wstring(lpstr);
     }
+
+    AssertWinApiResult(GlobalUnlock(hglb));
+    AssertWinApiResult(CloseClipboard());
 
     return result;
 }

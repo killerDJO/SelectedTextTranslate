@@ -1,4 +1,6 @@
 #include "View\Framework\Windows\Window.h"
+#include "Exceptions\SelectedTextTranslateFatalException.h"
+#include "Helpers\StringUtilities.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
 {
@@ -24,9 +26,8 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
     this->className = nullptr;
     this->deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), this->descriptor.WindowSize);
 
-    isVisible = true;
-
-    windowState = WindowStates::New;
+    this->isVisible = true;
+    this->windowState = WindowStates::New;
 }
 
 void Window::Initialize()
@@ -37,7 +38,7 @@ void Window::Initialize()
     {
         windowClass.hInstance = context->GetInstance();
         windowClass.lpszClassName = className;
-        windowClass.lpfnWndProc = WndProc;
+        windowClass.lpfnWndProc = WindowProcedureWrapper;
         windowClass.cbSize = sizeof(WNDCLASSEX);
         windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
         windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -51,6 +52,10 @@ void Window::Initialize()
     }
 
     windowState = WindowStates::Initialized;
+}
+
+void Window::SpecifyWindowClass(WNDCLASSEX* windowClass)
+{
 }
 
 void Window::Render(bool preserveScrolls)
@@ -113,9 +118,10 @@ Size Window::RenderToBuffer()
 
 void Window::ApplyRenderedState(bool preserveScrolls)
 {
-    ApplyWindowPosition(preserveScrolls);
-
+    // Child windows should be destroyed first
     DestroyChildWindows(destroyBeforeDrawList);
+
+    ApplyWindowPosition(preserveScrolls);
 
     // Important to draw child windows first
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
@@ -240,6 +246,11 @@ HWND Window::GetHandle() const
     return windowHandle;
 }
 
+WindowDescriptor Window::GetDescriptor() const
+{
+    return this->descriptor;
+}
+
 Size Window::GetSize() const
 {
     return windowSize;
@@ -281,57 +292,61 @@ bool Window::IsVisible() const
     return isVisible;
 }
 
-LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT Window::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    Window* instance = (Window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+    Window* instance;
 
-    switch (message)
-    {
-
-    case WM_CREATE:
+    if(message == WM_CREATE)
     {
         // Store pointer to the current window class in the GWLP_USERDATA. 'this' must be passed as lpParam in CreateWindow call.
         CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
         instance = (Window*)createstruct->lpCreateParams;
         instance->windowHandle = hWnd;
         SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
-        break;
+    }
+    else
+    {
+        instance = (Window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
     }
 
-    case WM_HSCROLL:
-        if (instance->descriptor.OverflowX == OverflowModes::Scroll)
-        {
-            instance->context->GetScrollProvider()->ProcessScroll(instance, wParam, lParam, ScrollBars::Horizontal);
-        }
-        break;
-
-    case WM_VSCROLL:
-        if (instance->descriptor.OverflowY == OverflowModes::Scroll)
-        {
-            instance->context->GetScrollProvider()->ProcessScroll(instance, wParam, lParam, ScrollBars::Vertical);
-        }
-        break;
-
-    case WM_MOUSEWHEEL:
+    if(instance == nullptr)
     {
-        int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-        if (zDelta < 0)
-        {
-            SendMessage(instance->GetHandle(), WM_VSCROLL, SB_LINEDOWN, NULL);
-        }
-        else
-        {
-            SendMessage(instance->GetHandle(), WM_VSCROLL, SB_LINEUP, NULL);
-        }
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
+
+    try
+    {
+        return instance->WindowProcedure(message, wParam, lParam);
+    }
+    catch (const SelectedTextTranslateFatalException& exception)
+    {
+        instance->TerminateOnException(exception.GetErrorMessage());
+    }
+    catch (const exception& exception)
+    {
+        instance->TerminateOnException(StringUtilities::GetUtf16String(exception.what()));
+    }
+    catch (...)
+    {
+        instance->TerminateOnException(wstring());
+    }
+
+    return -1;
+}
+
+LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+{
+    context->GetScrollProvider()->ProcessScrollMessages(this, message, wParam, lParam);
+
+    switch (message)
+    {
 
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        BeginPaint(instance->GetHandle(), &ps);
-        instance->Draw(false);
-        EndPaint(instance->GetHandle(), &ps);
+        BeginPaint(GetHandle(), &ps);
+        Draw(false);
+        EndPaint(GetHandle(), &ps);
         break;
     }
 
@@ -340,10 +355,16 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
         break;
 
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return DefWindowProc(windowHandle, message, wParam, lParam);
     }
 
     return 0;
+}
+
+void Window::TerminateOnException(wstring message) const
+{
+    context->GetLogger()->LogFormatted(L"Unhandled exception occurred. Message: '%ls'.", message.c_str());
+    FatalAppExit(0, TEXT("Unhandled exception occurred. See log for details."));
 }
 
 Window::~Window()

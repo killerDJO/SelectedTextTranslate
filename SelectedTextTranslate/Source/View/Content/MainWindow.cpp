@@ -1,4 +1,5 @@
 #include "View\Content\MainWindow.h"
+#include "Exceptions\SelectedTextTranslateException.h"
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppController* appController, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider)
     : Window(context, descriptor)
@@ -68,7 +69,6 @@ void MainWindow::CreateViews()
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
-    windowClass->lpfnWndProc = WndProc;
     windowClass->hIcon = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hIconSm = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -180,20 +180,30 @@ Window* MainWindow::GetCurrentView() const
     return errorWindow;
 }
 
-LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    MainWindow* instance = (MainWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-
-    if(instance != nullptr)
+    try
     {
-        instance->trayIconProvider->ProcessTrayIconMessages(instance->notifyIconData, hWnd, message, wParam, lParam);
+        return HandleMessages(message, wParam, lParam);
     }
+    catch (const SelectedTextTranslateException& error)
+    {
+        context->GetLogger()->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetErrorMessage().c_str());
+        appController->ShowError();
+    }
+
+    return 0;
+}
+
+LRESULT MainWindow::HandleMessages( UINT message, WPARAM wParam, LPARAM lParam)
+{
+    trayIconProvider->ProcessTrayIconMessages(notifyIconData, windowHandle, message, wParam, lParam);
 
     switch (message)
     {
 
     case WM_SIZE:
-        instance->Resize();
+        Resize();
         return TRUE;
 
     case WM_SYSCOMMAND:
@@ -202,55 +212,55 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
         {
         case SC_MINIMIZE:
         case SC_CLOSE:
-            instance->Minimize();
+            Minimize();
             return 0;
         }
 
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return DefWindowProc(windowHandle, message, wParam, lParam);
     }
 
     case WM_HOTKEY:
-        instance->hotkeyProvider->ProcessHotkey(wParam);
-        return Window::WndProc(hWnd, message, wParam, lParam);
+        hotkeyProvider->ProcessHotkey(wParam);
+        return Window::WindowProcedure(message, wParam, lParam);
 
     case WM_KILLFOCUS:
     {
         HWND windowWithFocus = GetParent((HWND)wParam);
-        HWND currentWindow = instance->GetHandle();
+        HWND currentWindow = GetHandle();
         if (windowWithFocus != currentWindow)
         {
-            instance->Minimize();
+            Minimize();
         }
         break;
     }
 
     case WM_DESTROY:
     case WM_CLOSE:
-        instance->appController->Exit();
+        appController->Exit();
         break;
 
     case WM_SHOWWINDOW:
     {
         if (wParam == TRUE)
         {
-            instance->hotkeyProvider->RegisterZoomInHotkey(
-                instance->GetHandle(),
-                [=]() -> void { instance->Scale(0.1); });
+            hotkeyProvider->RegisterZoomInHotkey(
+                GetHandle(),
+                [=]() -> void { Scale(0.1); });
 
-            instance->hotkeyProvider->RegisterZoomOutHotkey(
-                instance->GetHandle(),
-                [=]() -> void { instance->Scale(-0.1); });
+            hotkeyProvider->RegisterZoomOutHotkey(
+                GetHandle(),
+                [=]() -> void { Scale(-0.1); });
         }
         else
         {
-            instance->hotkeyProvider->UnregisterZoomInHotkey(instance->GetHandle());
-            instance->hotkeyProvider->UnregisterZoomOutHotkey(instance->GetHandle());
+            hotkeyProvider->UnregisterZoomInHotkey(GetHandle());
+            hotkeyProvider->UnregisterZoomOutHotkey(GetHandle());
         }
         break;
     }
 
     default:
-        return Window::WndProc(hWnd, message, wParam, lParam);
+        return Window::WindowProcedure(message, wParam, lParam);
     }
 
     return 0;

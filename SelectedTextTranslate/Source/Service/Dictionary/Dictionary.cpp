@@ -1,5 +1,6 @@
 #include "Service\Dictionary\Dictionary.h"
 #include "Helpers\StringUtilities.h"
+#include "Exceptions\SelectedTextTranslateException.h"
 
 Dictionary::Dictionary(Logger* logger)
 {
@@ -7,11 +8,11 @@ Dictionary::Dictionary(Logger* logger)
 
     int result = sqlite3_open("dictionary.db", &database);
 
-    if (result) {
-        logger->Log(L"Can't open dictionary.db: " + StringUtilities::GetUtf16String(sqlite3_errmsg(database)));
+    if (result)
+    {
         sqlite3_close(database);
-        // TODO: throw error.
-        return;
+        wstring message = StringUtilities::Format(L"Can't open dictionary.db: %ls", StringUtilities::GetUtf16String(sqlite3_errmsg(database)).c_str());
+        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
     }
 
     CreateDatabase();
@@ -77,7 +78,13 @@ vector<LogRecord> Dictionary::GetLogRecords(sqlite3_stmt* statement) const
         result = sqlite3_step(statement);
     }
 
-    sqlite3_finalize(statement);
+    result = sqlite3_finalize(statement);
+
+    if (result != SQLITE_OK)
+    {
+        wstring message = StringUtilities::Format(L"SQL error getting log records. Error code: %d", result);
+        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+    }
 
     return logRecords;
 }
@@ -89,8 +96,8 @@ sqlite3_stmt* Dictionary::CreateStatement(const char* sqlQuery) const
 
     if (result != SQLITE_OK)
     {
-        logger->Log(L"SQL error preparing statement. Error code: " + to_wstring(result));
-        // TODO: throw
+        wstring message = StringUtilities::Format(L"SQL error preparing statement. Error code: %d", result);
+        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
     }
 
     return statement;
@@ -103,8 +110,8 @@ void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, wstring value)
 
     if (result != SQLITE_OK)
     {
-        logger->Log(L"SQL error binding string value. Error code: " + to_wstring(result));
-        // TODO: throw
+        wstring message = StringUtilities::Format(L"SQL error binding string value. Error code: %d", result);
+        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
     }
 }
 
@@ -115,12 +122,12 @@ void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, int value) con
 
     if (result != SQLITE_OK)
     {
-        logger->Log(L"SQL error binding int value. Error code: " + to_wstring(result));
-        // TODO: throw
+        wstring message = StringUtilities::Format(L"SQL error binding int value. Error code: %d", result);
+        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
     }
 }
 
-int Dictionary::ExecuteNonQuery(sqlite3_stmt *statement) const
+void Dictionary::ExecuteNonQuery(sqlite3_stmt *statement) const
 {
     int result = sqlite3_step(statement);
     while (result != SQLITE_DONE && statement != SQLITE_OK)
@@ -128,7 +135,13 @@ int Dictionary::ExecuteNonQuery(sqlite3_stmt *statement) const
         result = sqlite3_step(statement);
     }
 
-    return sqlite3_finalize(statement);
+    result = sqlite3_finalize(statement);
+
+    if(result != SQLITE_OK)
+    {
+        wstring message = StringUtilities::Format(L"SQL error executing non query. Error code: %d", result);
+        throw SelectedTextTranslateException(message, __WFILE__, __LINE__);
+    }
 }
 
 Dictionary::~Dictionary()

@@ -228,6 +228,9 @@
     <ClCompile Include="Source\Controller\AppController.cpp">
       <Filter>Source\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Helpers\ExceptionHelper.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -378,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="Source\Controller\AppController.h">
       <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\ExceptionHelper.h">
+      <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

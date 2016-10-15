@@ -8,7 +8,7 @@ private:
 
     bool isHovered;
 
-    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 protected:
     HDC hoverStateDeviceContext;

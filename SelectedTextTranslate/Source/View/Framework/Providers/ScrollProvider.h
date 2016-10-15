@@ -17,6 +17,7 @@ private:
 
     SCROLLINFO GetWindowScrollInfo(Window* window, ScrollBars scrollBar) const;
     void SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const;
+    void ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const;
 
 public:
     ScrollProvider();
@@ -28,7 +29,8 @@ public:
         bool showVerticalScroll,
         int initialVerticalScrollPosition = 0,
         int initialHorizontalScrollPostion = 0) const;
-    void ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const;
+
+    void ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const;
 
     int GetCurrentScrollPostion(Window* window, ScrollBars scrollBar) const;
     int GetCurrentScrollOffset(Window* window, ScrollBars scrollBar) const;
