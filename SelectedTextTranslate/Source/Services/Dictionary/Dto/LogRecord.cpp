@@ -1,4 +1,4 @@
-#include "Service\Dictionary\Dto\LogRecord.h"
+#include "Services\Dictionary\Dto\LogRecord.h"
 
 LogRecord::LogRecord(wstring word, int count, wstring json)
 {

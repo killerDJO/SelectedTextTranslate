@@ -1,4 +1,4 @@
-#include "Controller\AppController.h"
+#include "Controllers\AppController.h"
 #include "View\Content\MainWindow.h"
 
 AppController::AppController(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, Dictionary* dictionary)

@@ -1,4 +1,4 @@
-﻿#include "Service\Translation\Translator.h"
+﻿#include "Services\Translation\Translator.h"
 #include "Helpers\StringUtilities.h"
 #include "Exceptions\SelectedTextTranslateException.h"
 #include "Helpers\ExceptionHelper.h"

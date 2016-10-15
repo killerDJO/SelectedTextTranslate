@@ -1,10 +1,10 @@
 #pragma once
-#include "Controller\Enums\ApplicationViews.h"
-#include "Service\Translation\Dto\TranslateResult.h"
-#include "Service\Translation\Translator.h"
-#include "Service\Translation\TextPlayer.h"
-#include "Service\Dictionary\Dictionary.h"
-#include "Service\Translation\TextExtractor.h"
+#include "Controllers\Enums\ApplicationViews.h"
+#include "Services\Translation\Dto\TranslateResult.h"
+#include "Services\Translation\Translator.h"
+#include "Services\Translation\TextPlayer.h"
+#include "Services\Dictionary\Dictionary.h"
+#include "Services\Translation\TextExtractor.h"
 
 class MainWindow;
 

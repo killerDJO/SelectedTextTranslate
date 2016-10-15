@@ -1,4 +1,4 @@
-#include "Service\Translation\Dto\TranslateResult.h"
+#include "Services\Translation\Dto\TranslateResult.h"
 
 TranslateResult::TranslateResult()
 {
@@ -7,13 +7,12 @@ TranslateResult::TranslateResult()
     Sentence.Translit = new wchar_t[0];
     Sentence.Input = new wchar_t[0];
     ErrorMessage = new wchar_t[0];
-    isErrorResult = false;
 }
 
 bool TranslateResult::IsInputCorrected() const
 {
     int compareResult = wcscmp(Sentence.Origin, Sentence.Input);
-    return !isErrorResult && compareResult != 0;
+    return compareResult != 0;
 }
 
 void TranslateResult::Free()

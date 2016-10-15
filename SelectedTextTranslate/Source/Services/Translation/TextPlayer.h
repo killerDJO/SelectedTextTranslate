@@ -1,6 +1,6 @@
 #pragma once
 #include "Providers\RequestProvider.h"
-#include "Service\Translation\Translator.h"
+#include "Services\Translation\Translator.h"
 #include "Logging\Logger.h"
 
 #define AUDIO_FILE_NAME "STT_audio"

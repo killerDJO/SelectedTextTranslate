@@ -1,6 +1,6 @@
 #pragma once
 #include "Logging\Logger.h"
-#include "Service\Dictionary\Dto\LogRecord.h"
+#include "Services\Dictionary\Dto\LogRecord.h"
 
 class Dictionary
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "Service\Translation\Dto\TranslateResultDictionaryEntry.h"
+#include "Services\Translation\Dto\TranslateResultDictionaryEntry.h"
 
 struct TranslateResultDictionary
 {

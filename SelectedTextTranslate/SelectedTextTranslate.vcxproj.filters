@@ -76,24 +76,6 @@
     <Filter Include="Source\View\Content\Error">
       <UniqueIdentifier>{3f187a15-985b-46c2-90c0-7e52221cf50a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Service">
-      <UniqueIdentifier>{34806764-0367-414e-97ea-53e2a8ac7205}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Service\Dictionary">
-      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Service\Dictionary\Dto">
-      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Service\Translation">
-      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Service\Translation\Dto">
-      <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Controller">
-      <UniqueIdentifier>{fcd175ee-cd4e-42fc-803d-39200eb1d6a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Logging">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
     </Filter>
@@ -106,7 +88,25 @@
     <Filter Include="Source\Providers">
       <UniqueIdentifier>{36f26b3b-0088-44dd-a571-4e467b8a59c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Controller\Enums">
+    <Filter Include="Source\Services">
+      <UniqueIdentifier>{34806764-0367-414e-97ea-53e2a8ac7205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services\Dictionary">
+      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services\Dictionary\Dto">
+      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services\Translation">
+      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services\Translation\Dto">
+      <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Controllers">
+      <UniqueIdentifier>{fcd175ee-cd4e-42fc-803d-39200eb1d6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Controllers\Enums">
       <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -189,27 +189,6 @@
     <ClCompile Include="Source\Logging\Logger.cpp">
       <Filter>Source\Logging</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Service\Dictionary\Dto\LogRecord.cpp">
-      <Filter>Source\Service\Dictionary\Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Service\Dictionary\Dictionary.cpp">
-      <Filter>Source\Service\Dictionary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Service\Translation\Dto\TranslateResult.cpp">
-      <Filter>Source\Service\Translation\Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Service\Translation\TextPlayer.cpp">
-      <Filter>Source\Service\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Service\Translation\TranslatePageParser.cpp">
-      <Filter>Source\Service\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Service\Translation\Translator.cpp">
-      <Filter>Source\Service\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Service\Translation\TextExtractor.cpp">
-      <Filter>Source\Service\Translation</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -225,11 +204,32 @@
     <ClCompile Include="Source\Providers\RequestProvider.cpp">
       <Filter>Source\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Controller\AppController.cpp">
-      <Filter>Source\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Helpers\ExceptionHelper.cpp">
       <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Dictionary\Dto\LogRecord.cpp">
+      <Filter>Source\Services\Dictionary\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Dictionary\Dictionary.cpp">
+      <Filter>Source\Services\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResult.cpp">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\TextExtractor.cpp">
+      <Filter>Source\Services\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\TextPlayer.cpp">
+      <Filter>Source\Services\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\TranslatePageParser.cpp">
+      <Filter>Source\Services\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\Translator.cpp">
+      <Filter>Source\Services\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controllers\AppController.cpp">
+      <Filter>Source\Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,39 +331,6 @@
     <ClInclude Include="Source\Logging\Logger.h">
       <Filter>Source\Logging</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Controller\Enums\ApplicationViews.h">
-      <Filter>Source\Controller\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Dictionary\Dto\LogRecord.h">
-      <Filter>Source\Service\Dictionary\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Dictionary\Dictionary.h">
-      <Filter>Source\Service\Dictionary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\Dto\TranslateResult.h">
-      <Filter>Source\Service\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultDictionary.h">
-      <Filter>Source\Service\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultDictionaryEntry.h">
-      <Filter>Source\Service\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultSentence.h">
-      <Filter>Source\Service\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\TextPlayer.h">
-      <Filter>Source\Service\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\TranslatePageParser.h">
-      <Filter>Source\Service\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\Translator.h">
-      <Filter>Source\Service\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Service\Translation\TextExtractor.h">
-      <Filter>Source\Service\Translation</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.h">
       <Filter>Source\Exceptions\Base</Filter>
     </ClInclude>
@@ -379,11 +346,44 @@
     <ClInclude Include="Source\Providers\RequestProvider.h">
       <Filter>Source\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Controller\AppController.h">
-      <Filter>Source\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Helpers\ExceptionHelper.h">
       <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Dictionary\Dto\LogRecord.h">
+      <Filter>Source\Services\Dictionary\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Dictionary\Dictionary.h">
+      <Filter>Source\Services\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResult.h">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultDictionary.h">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultDictionaryEntry.h">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultSentence.h">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\TextExtractor.h">
+      <Filter>Source\Services\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\TextPlayer.h">
+      <Filter>Source\Services\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\TranslatePageParser.h">
+      <Filter>Source\Services\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Translator.h">
+      <Filter>Source\Services\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controllers\Enums\ApplicationViews.h">
+      <Filter>Source\Controllers\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controllers\AppController.h">
+      <Filter>Source\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
-#include "Service\Translation\Dto\TranslateResult.h"
+#include "Services\Translation\Dto\TranslateResult.h"
 
 class TranslateResultWindow : public ContentWindow
 {

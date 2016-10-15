@@ -1,9 +1,9 @@
 #pragma once
-#include "Service\Translation\Dto\TranslateResult.h"
+#include "Services\Translation\Dto\TranslateResult.h"
+#include "Services\Translation\TranslatePageParser.h"
+#include "Services\Dictionary\Dictionary.h"
 #include "Providers\RequestProvider.h"
-#include "Service\Translation\TranslatePageParser.h"
 #include "Logging\Logger.h"
-#include "Service\Dictionary\Dictionary.h"
 
 class Translator
 {

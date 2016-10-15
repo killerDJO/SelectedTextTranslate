@@ -5,7 +5,7 @@
 #include "View\Content\Error\ErrorWindow.h"
 #include "View\Providers\HotkeyProvider.h"
 #include "View\Providers\TrayIconProvider.h"
-#include "Controller\AppController.h"
+#include "Controllers\AppController.h"
 
 class MainWindow : public Window
 {

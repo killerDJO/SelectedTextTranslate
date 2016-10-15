@@ -1,4 +1,4 @@
-#include "Service\Translation\TextPlayer.h"
+#include "Services\Translation\TextPlayer.h"
 #include "Helpers\ExceptionHelper.h"
 
 TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider)

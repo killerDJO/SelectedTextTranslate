@@ -1,5 +1,5 @@
 #pragma once
-#include "Controller\AppController.h"
+#include "Controllers\AppController.h"
 
 class TrayIconProvider
 {
