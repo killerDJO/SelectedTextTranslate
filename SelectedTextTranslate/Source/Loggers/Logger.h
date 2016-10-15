@@ -13,5 +13,5 @@ public:
     Logger();
     ~Logger();
 
-    void Log(wstring record);
+    void Log(wstring record) const;
 };

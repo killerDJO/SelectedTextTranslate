@@ -1,8 +1,8 @@
 #include "TranslateEngine\Translator.h"
 #include "TranslateEngine\TranslatePageParser.h"
 #include "Helpers\RequestProvider.h"
-#include "Windows\MainWindow.h"
-#include "Windows\Framework\Dto\WindowDescriptor.h"
+#include "View\Content\MainWindow.h"
+#include "View\Framework\Dto\WindowDescriptor.h"
 #include "Loggers\Logger.h"
 #include "Dictionary\Dictionary.h"
 

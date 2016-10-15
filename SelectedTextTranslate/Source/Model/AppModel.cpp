@@ -1,5 +1,5 @@
 #include "AppModel.h"
-#include "Windows\MainWindow.h"
+#include "View\Content\MainWindow.h"
 
 AppModel::AppModel(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, Dictionary* dictionary)
 {

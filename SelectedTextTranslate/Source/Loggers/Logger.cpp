@@ -1,4 +1,3 @@
-#include "PrecompiledHeaders\stdafx.h"
 #include "Loggers\Logger.h"
 #include <chrono>
 #include <iomanip>
@@ -8,7 +7,7 @@ Logger::Logger()
     CreateDirectory(L".\\logs", nullptr);
 }
 
-void Logger::Log(wstring record)
+void Logger::Log(wstring record) const
 {
     HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 

@@ -22,26 +22,8 @@
     <Filter Include="Source\Helpers">
       <UniqueIdentifier>{d57738c5-794c-477f-a525-226210be81d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows">
-      <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows">
-      <UniqueIdentifier>{78f06b4d-3990-40a6-a7bf-09dba8eb05e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Entities">
       <UniqueIdentifier>{8ebbfb1e-a750-437d-9e35-7c85c11e79f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Content">
-      <UniqueIdentifier>{537636ef-40f6-455f-9a7e-1df7e17b8159}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Content\Base">
-      <UniqueIdentifier>{3d09291e-4b90-41ff-95ac-b1f681efbb19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Content">
-      <UniqueIdentifier>{921224de-b7af-4c67-a280-7aa7cb14a63f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Content\Base">
-      <UniqueIdentifier>{b75eba6c-5cae-4370-a87e-16715df8b44d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\TranslateEngine">
       <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
@@ -58,18 +40,6 @@
     <Filter Include="Source\Loggers">
       <UniqueIdentifier>{1f13bcd9-830e-4567-b482-4f19e423f3d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Base">
-      <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Framework">
-      <UniqueIdentifier>{95360e94-4027-4e06-b00c-0daa879080ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Framework\Enums">
-      <UniqueIdentifier>{cc90c993-6d3d-42bc-b0fb-107b4a0e4859}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Framework\Dto">
-      <UniqueIdentifier>{97d00024-acb7-455a-97e0-23ebc3bb7c6e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Model">
       <UniqueIdentifier>{3ae07f34-2768-4bb9-8fca-9480c7647ad0}</UniqueIdentifier>
     </Filter>
@@ -82,34 +52,52 @@
     <Filter Include="Source\Dictionary\Dto">
       <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Controls">
-      <UniqueIdentifier>{1ad5c4d7-d432-40b1-a523-6adf151a1482}</UniqueIdentifier>
+    <Filter Include="Source\View">
+      <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Controls\Buttons">
-      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
+    <Filter Include="Source\View\Content">
+      <UniqueIdentifier>{537636ef-40f6-455f-9a7e-1df7e17b8159}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Controls\Buttons\Base">
-      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
+    <Filter Include="Source\View\Content\Base">
+      <UniqueIdentifier>{3d09291e-4b90-41ff-95ac-b1f681efbb19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Framework\Providers">
-      <UniqueIdentifier>{f5798579-2dcd-4072-8913-8bdfb5ade6f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Windows\Content\Translation">
+    <Filter Include="Source\View\Content\Translation">
       <UniqueIdentifier>{0fb3ebea-d276-4722-bee8-9a167ac10542}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Content\Dictionary">
+    <Filter Include="Source\View\Content\Dictionary">
       <UniqueIdentifier>{e67beaf6-ff41-4df5-bd36-648b745610e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Windows\Providers">
+    <Filter Include="Source\View\Framework">
+      <UniqueIdentifier>{95360e94-4027-4e06-b00c-0daa879080ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\Enums">
+      <UniqueIdentifier>{cc90c993-6d3d-42bc-b0fb-107b4a0e4859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\Dto">
+      <UniqueIdentifier>{97d00024-acb7-455a-97e0-23ebc3bb7c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\Providers">
+      <UniqueIdentifier>{f5798579-2dcd-4072-8913-8bdfb5ade6f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Controls">
+      <UniqueIdentifier>{1ad5c4d7-d432-40b1-a523-6adf151a1482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Controls\Buttons">
+      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Controls\Buttons\Base">
+      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Providers">
       <UniqueIdentifier>{eb4a919c-5cee-4fbd-9964-96f98f213f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\Windows">
+      <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\MainWindow.cpp">
-      <Filter>Source\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Source\Helpers\TextExtractor.cpp">
       <Filter>Source\Helpers</Filter>
@@ -129,9 +117,6 @@
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <Filter>Source\PrecompiledSource</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Base\ChildWindow.cpp">
-      <Filter>Source\Windows\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Helpers\StringUtilities.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
@@ -140,18 +125,6 @@
     </ClCompile>
     <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp">
       <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Base\Window.cpp">
-      <Filter>Source\Windows\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\RenderingContext.cpp">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\Renderer.cpp">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\Dto\WindowDescriptor.cpp">
-      <Filter>Source\Windows\Framework\Dto</Filter>
     </ClCompile>
     <ClCompile Include="Source\Model\AppModel.cpp">
       <Filter>Source\Model</Filter>
@@ -162,50 +135,68 @@
     <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp">
       <Filter>Source\Dictionary\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.cpp">
-      <Filter>Source\Windows\Controls\Buttons\Base</Filter>
+    <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp">
+      <Filter>Source\View\Content\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.cpp">
-      <Filter>Source\Windows\Controls\Buttons</Filter>
+    <ClCompile Include="Source\View\Content\Dictionary\DictionaryWindow.cpp">
+      <Filter>Source\View\Content\Dictionary</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.cpp">
-      <Filter>Source\Windows\Controls\Buttons</Filter>
+    <ClCompile Include="Source\View\Content\Translation\HeaderWindow.cpp">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\Providers\ScrollProvider.cpp">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClCompile Include="Source\View\Content\Translation\TranslateResultWindow.cpp">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\Providers\ScaleProvider.cpp">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClCompile Include="Source\View\Content\Translation\TranslationWindow.cpp">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\Providers\DeviceContextProvider.cpp">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClCompile Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.cpp">
+      <Filter>Source\View\Controls\Buttons\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\WindowContext.cpp">
-      <Filter>Source\Windows\Framework</Filter>
+    <ClCompile Include="Source\View\Controls\Buttons\HoverIconButtonWindow.cpp">
+      <Filter>Source\View\Controls\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Content\Base\ContentWindow.cpp">
-      <Filter>Source\Windows\Content\Base</Filter>
+    <ClCompile Include="Source\View\Controls\Buttons\HoverTextButtonWindow.cpp">
+      <Filter>Source\View\Controls\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Content\Dictionary\DictionaryWindow.cpp">
-      <Filter>Source\Windows\Content\Dictionary</Filter>
+    <ClCompile Include="Source\View\Framework\Dto\WindowDescriptor.cpp">
+      <Filter>Source\View\Framework\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Content\Translation\HeaderWindow.cpp">
-      <Filter>Source\Windows\Content\Translation</Filter>
+    <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp">
+      <Filter>Source\View\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Content\Translation\TranslateResultWindow.cpp">
-      <Filter>Source\Windows\Content\Translation</Filter>
+    <ClCompile Include="Source\View\Framework\Providers\ScaleProvider.cpp">
+      <Filter>Source\View\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Content\Translation\TranslationWindow.cpp">
-      <Filter>Source\Windows\Content\Translation</Filter>
+    <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp">
+      <Filter>Source\View\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Framework\DeviceContextBuffer.cpp">
-      <Filter>Source\Windows\Framework</Filter>
+    <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp">
+      <Filter>Source\View\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Providers\HotkeyProvider.cpp">
-      <Filter>Source\Windows\Providers</Filter>
+    <ClCompile Include="Source\View\Framework\Renderer.cpp">
+      <Filter>Source\View\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Windows\Providers\TrayIconProvider.cpp">
-      <Filter>Source\Windows\Providers</Filter>
+    <ClCompile Include="Source\View\Framework\RenderingContext.cpp">
+      <Filter>Source\View\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\WindowContext.cpp">
+      <Filter>Source\View\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp">
+      <Filter>Source\View\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp">
+      <Filter>Source\View\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Windows\ChildWindow.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Windows\Window.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\MainWindow.cpp">
+      <Filter>Source\View\Content</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,9 +205,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Windows\Content\Base\ContentWindow.h">
-      <Filter>Source\Windows\Content\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entities\TranslateResult.h">
       <Filter>Source\Entities</Filter>
     </ClInclude>
@@ -244,12 +232,6 @@
     <ClInclude Include="Source\Helpers\TextExtractor.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\MainWindow.h">
-      <Filter>Source\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Base\ChildWindow.h">
-      <Filter>Source\Windows\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -262,32 +244,11 @@
     <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h">
       <Filter>Source\TranslateEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\RenderingContext.h">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Renderer.h">
-      <Filter>Source\Windows\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Enums\Colors.h">
-      <Filter>Source\Windows\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Enums\FontSizes.h">
-      <Filter>Source\Windows\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Enums\OverflowModes.h">
-      <Filter>Source\Windows\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Dto\WindowDescriptor.h">
-      <Filter>Source\Windows\Framework\Dto</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Model\Enums\ApplicationViews.h">
       <Filter>Source\Model\Enums</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\AppModel.h">
       <Filter>Source\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Enums\ScrollBars.h">
-      <Filter>Source\Windows\Framework\Enums</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dictionary\Dictionary.h">
       <Filter>Source\Dictionary</Filter>
@@ -295,53 +256,83 @@
     <ClInclude Include="Source\Dictionary\Dto\LogRecord.h">
       <Filter>Source\Dictionary\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Controls\Buttons\Base\HoverButtonWindow.h">
-      <Filter>Source\Windows\Controls\Buttons\Base</Filter>
+    <ClInclude Include="Source\View\Content\Base\ContentWindow.h">
+      <Filter>Source\View\Content\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Controls\Buttons\HoverIconButtonWindow.h">
-      <Filter>Source\Windows\Controls\Buttons</Filter>
+    <ClInclude Include="Source\View\Content\Dictionary\DictionaryWindow.h">
+      <Filter>Source\View\Content\Dictionary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Controls\Buttons\HoverTextButtonWindow.h">
-      <Filter>Source\Windows\Controls\Buttons</Filter>
+    <ClInclude Include="Source\View\Content\Translation\HeaderWindow.h">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Providers\ScrollProvider.h">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClInclude Include="Source\View\Content\Translation\TranslateResultWindow.h">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Providers\ScaleProvider.h">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClInclude Include="Source\View\Content\Translation\TranslationWindow.h">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Providers\DeviceContextProvider.h">
-      <Filter>Source\Windows\Framework\Providers</Filter>
+    <ClInclude Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.h">
+      <Filter>Source\View\Controls\Buttons\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\WindowContext.h">
-      <Filter>Source\Windows\Framework</Filter>
+    <ClInclude Include="Source\View\Controls\Buttons\HoverIconButtonWindow.h">
+      <Filter>Source\View\Controls\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Base\Window.h">
-      <Filter>Source\Windows\Base</Filter>
+    <ClInclude Include="Source\View\Controls\Buttons\HoverTextButtonWindow.h">
+      <Filter>Source\View\Controls\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Content\Dictionary\DictionaryWindow.h">
-      <Filter>Source\Windows\Content\Dictionary</Filter>
+    <ClInclude Include="Source\View\Framework\Dto\WindowDescriptor.h">
+      <Filter>Source\View\Framework\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Content\Translation\HeaderWindow.h">
-      <Filter>Source\Windows\Content\Translation</Filter>
+    <ClInclude Include="Source\View\Framework\Enums\Colors.h">
+      <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Content\Translation\TranslateResultWindow.h">
-      <Filter>Source\Windows\Content\Translation</Filter>
+    <ClInclude Include="Source\View\Framework\Enums\FontSizes.h">
+      <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Content\Translation\TranslationWindow.h">
-      <Filter>Source\Windows\Content\Translation</Filter>
+    <ClInclude Include="Source\View\Framework\Enums\OverflowModes.h">
+      <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\DeviceContextBuffer.h">
-      <Filter>Source\Windows\Framework</Filter>
+    <ClInclude Include="Source\View\Framework\Enums\ScrollBars.h">
+      <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Framework\Enums\WindowStates.h">
-      <Filter>Source\Windows\Framework\Enums</Filter>
+    <ClInclude Include="Source\View\Framework\Enums\WindowStates.h">
+      <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Providers\HotkeyProvider.h">
-      <Filter>Source\Windows\Providers</Filter>
+    <ClInclude Include="Source\View\Framework\Providers\DeviceContextProvider.h">
+      <Filter>Source\View\Framework\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Windows\Providers\TrayIconProvider.h">
-      <Filter>Source\Windows\Providers</Filter>
+    <ClInclude Include="Source\View\Framework\Providers\ScaleProvider.h">
+      <Filter>Source\View\Framework\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h">
+      <Filter>Source\View\Framework\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Renderer.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\RenderingContext.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\WindowContext.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Providers\HotkeyProvider.h">
+      <Filter>Source\View\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Providers\TrayIconProvider.h">
+      <Filter>Source\View\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Windows\ChildWindow.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Windows\Window.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\MainWindow.h">
+      <Filter>Source\View\Content</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
