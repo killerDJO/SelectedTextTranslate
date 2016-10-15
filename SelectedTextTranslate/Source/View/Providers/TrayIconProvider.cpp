@@ -1,8 +1,8 @@
 #include "View\Providers\TrayIconProvider.h"
 
-TrayIconProvider::TrayIconProvider(AppModel* appModel)
+TrayIconProvider::TrayIconProvider(AppController* appController)
 {
-    this->appModel = appModel;
+    this->appController = appController;
 
     CreateMenu();
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
@@ -47,7 +47,7 @@ void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HW
     {
         if (lParam == WM_LBUTTONUP)
         {
-            appModel->TranslateSelectedText();
+            appController->TranslateSelectedText();
         }
 
         if (lParam == WM_RBUTTONUP)
@@ -58,15 +58,15 @@ void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HW
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
             if (clicked == MenuExitItemId)
             {
-                appModel->Exit();
+                appController->Exit();
             }
             if (clicked == MenuTranslateItemId)
             {
-                appModel->TranslateSelectedText();
+                appController->TranslateSelectedText();
             }
             if (clicked == MenuDictionaryItemId)
             {
-                appModel->ShowDictionary();
+                appController->ShowDictionary();
             }
         }
     }

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source\Entities">
-      <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Helpers">
       <UniqueIdentifier>{3974d202-4013-43ee-b10e-900c7cc3fd4d}</UniqueIdentifier>
     </Filter>
@@ -26,31 +23,13 @@
       <UniqueIdentifier>{8ebbfb1e-a750-437d-9e35-7c85c11e79f3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\TranslateEngine">
-      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\TranslateEngine">
       <UniqueIdentifier>{5550d246-f9d9-41e2-9665-358023bd6fd7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\PrecompiledSource">
       <UniqueIdentifier>{e1a7bde5-b6e4-4265-844b-1892921145d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Loggers">
-      <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Loggers">
       <UniqueIdentifier>{1f13bcd9-830e-4567-b482-4f19e423f3d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Model">
-      <UniqueIdentifier>{3ae07f34-2768-4bb9-8fca-9480c7647ad0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Model\Enums">
-      <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Dictionary">
-      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Dictionary\Dto">
-      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\View">
       <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
@@ -94,46 +73,52 @@
     <Filter Include="Source\View\Framework\Windows">
       <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Content\Error">
+      <UniqueIdentifier>{3f187a15-985b-46c2-90c0-7e52221cf50a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Service">
+      <UniqueIdentifier>{34806764-0367-414e-97ea-53e2a8ac7205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Service\Dictionary">
+      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Service\Dictionary\Dto">
+      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Service\Translation">
+      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Service\Translation\Dto">
+      <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Controller">
+      <UniqueIdentifier>{fcd175ee-cd4e-42fc-803d-39200eb1d6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Logging">
+      <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Exceptions">
+      <UniqueIdentifier>{8235f4de-6a65-4e7e-9e51-b788cab99ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Exceptions\Base">
+      <UniqueIdentifier>{e7eb027f-e540-4c6f-ba4f-cca2813e1712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Providers">
+      <UniqueIdentifier>{36f26b3b-0088-44dd-a571-4e467b8a59c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Controller\Enums">
+      <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Helpers\TextExtractor.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\Translator.cpp">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Loggers\Logger.cpp">
-      <Filter>Source\Loggers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Entities\TranslateResult.cpp">
-      <Filter>Source\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <Filter>Source\PrecompiledSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Helpers\StringUtilities.cpp">
       <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Helpers\RequestProvider.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Model\AppModel.cpp">
-      <Filter>Source\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dictionary\Dictionary.cpp">
-      <Filter>Source\Dictionary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp">
-      <Filter>Source\Dictionary\Dto</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp">
       <Filter>Source\View\Content\Base</Filter>
@@ -198,6 +183,51 @@
     <ClCompile Include="Source\View\Content\MainWindow.cpp">
       <Filter>Source\View\Content</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Content\Error\ErrorWindow.cpp">
+      <Filter>Source\View\Content\Error</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Logging\Logger.cpp">
+      <Filter>Source\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Dictionary\Dto\LogRecord.cpp">
+      <Filter>Source\Service\Dictionary\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Dictionary\Dictionary.cpp">
+      <Filter>Source\Service\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Translation\Dto\TranslateResult.cpp">
+      <Filter>Source\Service\Translation\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Translation\TextPlayer.cpp">
+      <Filter>Source\Service\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Translation\TranslatePageParser.cpp">
+      <Filter>Source\Service\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Translation\Translator.cpp">
+      <Filter>Source\Service\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Service\Translation\TextExtractor.cpp">
+      <Filter>Source\Service\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
+      <Filter>Source\Exceptions\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Exceptions\SelectedTextTranslateFatalException.cpp">
+      <Filter>Source\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Exceptions\SelectedTextTranslateException.cpp">
+      <Filter>Source\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Providers\RequestProvider.cpp">
+      <Filter>Source\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\AppController.cpp">
+      <Filter>Source\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -205,56 +235,14 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Entities\TranslateResult.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Entities\TranslateResultDictionary.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Entities\TranslateResultDictionaryEntry.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Entities\TranslateResultSentence.h">
-      <Filter>Source\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Loggers\Logger.h">
-      <Filter>Source\Loggers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PrecompiledHeaders\stdafx.h">
       <Filter>Source\PrecompiledSource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TranslateEngine\TextPlayer.h">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TranslateEngine\Translator.h">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Helpers\TextExtractor.h">
-      <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source\Helpers\StringUtilities.h">
       <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Helpers\RequestProvider.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h">
-      <Filter>Source\TranslateEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\Enums\ApplicationViews.h">
-      <Filter>Source\Model\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\AppModel.h">
-      <Filter>Source\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dictionary\Dictionary.h">
-      <Filter>Source\Dictionary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dictionary\Dto\LogRecord.h">
-      <Filter>Source\Dictionary\Dto</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Base\ContentWindow.h">
       <Filter>Source\View\Content\Base</Filter>
@@ -333,6 +321,63 @@
     </ClInclude>
     <ClInclude Include="Source\View\Content\MainWindow.h">
       <Filter>Source\View\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Error\ErrorWindow.h">
+      <Filter>Source\View\Content\Error</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Logging\Logger.h">
+      <Filter>Source\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\Enums\ApplicationViews.h">
+      <Filter>Source\Controller\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Dictionary\Dto\LogRecord.h">
+      <Filter>Source\Service\Dictionary\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Dictionary\Dictionary.h">
+      <Filter>Source\Service\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResult.h">
+      <Filter>Source\Service\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultDictionary.h">
+      <Filter>Source\Service\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultDictionaryEntry.h">
+      <Filter>Source\Service\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultSentence.h">
+      <Filter>Source\Service\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\TextPlayer.h">
+      <Filter>Source\Service\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\TranslatePageParser.h">
+      <Filter>Source\Service\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\Translator.h">
+      <Filter>Source\Service\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Service\Translation\TextExtractor.h">
+      <Filter>Source\Service\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.h">
+      <Filter>Source\Exceptions\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Exceptions\SelectedTextTranslateException.h">
+      <Filter>Source\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Exceptions\SelectedTextTranslateFatalException.h">
+      <Filter>Source\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Providers\RequestProvider.h">
+      <Filter>Source\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\AppController.h">
+      <Filter>Source\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

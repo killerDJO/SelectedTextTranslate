@@ -1,14 +1,14 @@
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 
-DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
-    : ContentWindow(context, descriptor, parentWindow, appModel)
+DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
+    : ContentWindow(context, descriptor, parentWindow, appController)
 {
 }
 
 void DictionaryWindow::ShowFullTranslation(int dictionaryIndex) const
 {
-    appModel->TranslateWordFromDictionary(dictionaryIndex);
+    appController->TranslateWordFromDictionary(dictionaryIndex);
 }
 
 Size DictionaryWindow::RenderContent(Renderer* renderer)
@@ -16,7 +16,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    vector<LogRecord> records = appModel->GetDictionaryRecords();
+    vector<LogRecord> records = appController->GetDictionaryRecords();
     int normalFontAscent = renderer->GetFontAscent(fontNormal);
     int curY = paddingY / 2 + normalFontAscent;
 

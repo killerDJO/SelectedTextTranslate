@@ -1,9 +1,9 @@
 #include "View\Content\Base\ContentWindow.h"
 
-ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
+ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
     : ChildWindow(context, descriptor, parentWindow)
 {
-    this->appModel = appModel;
+    this->appController = appController;
 
     lineHeight = 20;
     paddingX = 15;

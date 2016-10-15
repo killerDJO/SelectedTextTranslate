@@ -5,6 +5,10 @@
 
 #define roundToInt(x) int(round(x))
 
+#define WIDEN2(x) L ## x
+#define WIDEN(x) WIDEN2(x)
+#define __WFILE__ WIDEN(__FILE__)
+
 #define GDIPVER     0x0110
 
 #include <SDKDDKVer.h>

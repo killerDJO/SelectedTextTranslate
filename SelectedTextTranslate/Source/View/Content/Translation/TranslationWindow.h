@@ -19,7 +19,7 @@ protected:
     void Resize() override;
 
 public:
-    TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
+    TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController);
     ~TranslationWindow() override;
 
     void Initialize() override;

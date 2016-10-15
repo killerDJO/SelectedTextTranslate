@@ -57,3 +57,33 @@ wchar_t* StringUtilities::CopyWideChar(wstring text)
     wcscpy_s(result, len + 1, text.c_str());
     return result;
 }
+
+wstring StringUtilities::Format(const wstring format, ...) {
+    va_list args;
+
+    va_start(args, format);
+    wstring result = Format(format, args);
+    va_end(args);
+
+    return result;
+}
+
+wstring StringUtilities::Format(const wstring format, va_list args) {
+    int final_n, n = (int)format.size() * 2; /* Reserve two times as much as the length of the format */
+    std::wstring str;
+    std::unique_ptr<wchar_t[]> formatted;
+
+    while (1) {
+        formatted.reset(new wchar_t[n]); /* Wrap the plain char array into the unique_ptr */
+        wcscpy(&formatted[0], format.c_str());
+
+        final_n = _vsnwprintf(&formatted[0], n, format.c_str(), args);
+
+        if (final_n < 0 || final_n >= n)
+            n += abs(final_n - n + 1);
+        else
+            break;
+    }
+
+    return wstring(formatted.get());
+}

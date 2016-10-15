@@ -10,6 +10,6 @@ private:
     void ShowFullTranslation(int dictionaryIndex) const;
 
 public:
-    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
+    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController);
     ~DictionaryWindow() override;
 };

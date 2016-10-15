@@ -1,8 +1,8 @@
 ﻿#include "View\Content\Translation\TranslateResultWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
-: ContentWindow(context, descriptor, parentWindow, appModel)
+TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
+: ContentWindow(context, descriptor, parentWindow, appController)
 {
     this->fontUnderscored = nullptr;
 }
@@ -16,7 +16,7 @@ void TranslateResultWindow::Initialize()
 
 void TranslateResultWindow::ExpandDictionary(int index) const
 {
-    appModel->ToggleTranslateResultDictionary(index);
+    appController->ToggleTranslateResultDictionary(index);
 }
 
 Size TranslateResultWindow::RenderContent(Renderer* renderer)
@@ -24,7 +24,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    TranslateResult translateResult = appModel->GetCurrentTranslateResult();
+    TranslateResult translateResult = appController->GetCurrentTranslateResult();
 
     int curY = lineHeight;
 

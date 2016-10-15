@@ -10,4 +10,7 @@ public:
     static string GetUtf8StringFromChar(const wchar_t* text);
 
     static wchar_t*  CopyWideChar(wstring text);
+
+    static wstring Format(const wstring format, ...);
+    static wstring Format(const wstring format, va_list args);
 };

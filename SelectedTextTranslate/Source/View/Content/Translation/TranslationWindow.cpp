@@ -1,7 +1,7 @@
 #include "View\Content\Translation\TranslationWindow.h"
 
-TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
-    : ContentWindow(context, descriptor, parentWindow, appModel)
+TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
+    : ContentWindow(context, descriptor, parentWindow, appController)
 {
     separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
     headerWindow = nullptr;
@@ -17,7 +17,7 @@ void TranslationWindow::Initialize()
         Size(0, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(context, headerWindowDescriptor, this, appModel);
+    headerWindow = new HeaderWindow(context, headerWindowDescriptor, this, appController);
     AddChildWindow(headerWindow);
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
@@ -25,7 +25,7 @@ void TranslationWindow::Initialize()
         Size(0, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, this, appModel);
+    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, this, appController);
     AddChildWindow(translateResultWindow);
 }
 

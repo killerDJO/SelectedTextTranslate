@@ -1,5 +1,5 @@
 #pragma once
-#include "Model\AppModel.h"
+#include "Controller\AppController.h"
 
 class TrayIconProvider
 {
@@ -14,12 +14,12 @@ class TrayIconProvider
     UINT WM_TASKBARCREATED;
     HMENU menu;
 
-    AppModel* appModel;
+    AppController* appController;
 
     void CreateMenu();
 
 public:
-    TrayIconProvider(AppModel* appModel);
+    TrayIconProvider(AppController* appController);
     ~TrayIconProvider();
 
     NOTIFYICONDATA CreateTrayIcon(HINSTANCE instance, HWND windowHandle) const;

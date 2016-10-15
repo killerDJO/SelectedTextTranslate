@@ -1,6 +1,6 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
-#include "Entities\TranslateResult.h"
+#include "Service\Translation\Dto\TranslateResult.h"
 
 class TranslateResultWindow : public ContentWindow
 {
@@ -14,7 +14,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel);
+    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController);
     ~TranslateResultWindow() override;
 
     void Initialize() override;

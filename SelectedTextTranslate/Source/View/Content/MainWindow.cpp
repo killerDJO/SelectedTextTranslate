@@ -1,9 +1,9 @@
 #include "View\Content\MainWindow.h"
 
-MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider)
+MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppController* appController, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider)
     : Window(context, descriptor)
 {
-    this->appModel = appModel;
+    this->appController = appController;
     this->hotkeyProvider = hotkeyProvider;
     this->trayIconProvider = trayIconProvider;
 
@@ -11,6 +11,7 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppM
 
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
+    this->errorWindow = nullptr;
 }
 
 void MainWindow::Initialize()
@@ -31,8 +32,8 @@ void MainWindow::Initialize()
         context->GetInstance(),
         this);
 
-    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appModel->TranslateSelectedText(); });
-    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appModel->PlaySelectedText(); });
+    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appController->TranslateSelectedText(); });
+    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appController->PlaySelectedText(); });
 
     notifyIconData = trayIconProvider->CreateTrayIcon(context->GetInstance(), windowHandle);
 
@@ -52,14 +53,17 @@ void MainWindow::CreateViews()
         OverflowModes::Stretch,
         false);
 
-    translationWindow = new TranslationWindow(context, windowDescriptor, this, appModel);
-    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this, appModel);
+    translationWindow = new TranslationWindow(context, windowDescriptor, this, appController);
+    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this, appController);
+    errorWindow = new ErrorWindow(context, windowDescriptor, this, appController);
 
     translationWindow->Hide();
     dictionaryWindow->Hide();
+    errorWindow->Hide();
 
     AddChildWindow(translationWindow);
     AddChildWindow(dictionaryWindow);
+    AddChildWindow(errorWindow);
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -162,14 +166,18 @@ void MainWindow::Resize()
 
 Window* MainWindow::GetCurrentView() const
 {
-    if (appModel->GetCurrentApplicationView() == ApplicactionViews::TranslateResult)
+    ApplicationViews currentView = appController->GetCurrentApplicationView();
+    if (currentView == ApplicationViews::TranslateResult)
     {
         return translationWindow;
     }
-    else
+
+    if(currentView == ApplicationViews::Dictionary)
     {
         return dictionaryWindow;
     }
+
+    return errorWindow;
 }
 
 LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -218,7 +226,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
     case WM_DESTROY:
     case WM_CLOSE:
-        instance->appModel->Exit();
+        instance->appController->Exit();
         break;
 
     case WM_SHOWWINDOW:

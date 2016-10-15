@@ -14,35 +14,40 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
+    <ClCompile Include="Source\Exceptions\SelectedTextTranslateFatalException.cpp" />
+    <ClCompile Include="Source\Exceptions\SelectedTextTranslateException.cpp" />
+    <ClCompile Include="Source\View\Content\Error\ErrorWindow.cpp" />
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp" />
     <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScaleProvider.cpp" />
-    <ClCompile Include="Source\Dictionary\Dto\LogRecord.cpp" />
+    <ClCompile Include="Source\Service\Dictionary\Dto\LogRecord.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\WindowDescriptor.cpp" />
     <ClCompile Include="Source\View\Framework\Renderer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp" />
     <ClCompile Include="Source\View\Framework\RenderingContext.cpp" />
-    <ClCompile Include="Source\Model\AppModel.cpp" />
-    <ClCompile Include="Source\Entities\TranslateResult.cpp" />
-    <ClCompile Include="Source\Dictionary\Dictionary.cpp" />
-    <ClCompile Include="Source\Loggers\Logger.cpp" />
-    <ClCompile Include="Source\TranslateEngine\TranslatePageParser.cpp" />
+    <ClCompile Include="Source\Controller\AppController.cpp" />
+    <ClCompile Include="Source\Service\Translation\Dto\TranslateResult.cpp" />
+    <ClCompile Include="Source\Service\Dictionary\Dictionary.cpp" />
+    <ClCompile Include="Source\Logging\Logger.cpp" />
+    <ClCompile Include="Source\Service\Translation\TranslatePageParser.cpp" />
     <ClCompile Include="Source\View\Framework\Windows\ChildWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\HoverIconButtonWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\HoverTextButtonWindow.cpp" />
     <ClCompile Include="Source\View\Content\Dictionary\DictionaryWindow.cpp" />
-    <ClCompile Include="Source\Helpers\RequestProvider.cpp" />
-    <ClCompile Include="Source\Helpers\TextExtractor.cpp" />
+    <ClCompile Include="Source\Providers\RequestProvider.cpp" />
+    <ClCompile Include="Source\Service\Translation\TextExtractor.cpp" />
     <ClCompile Include="Source\Helpers\StringUtilities.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\TranslateEngine\TextPlayer.cpp" />
-    <ClCompile Include="Source\TranslateEngine\Translator.cpp" />
+    <ClCompile Include="Source\Service\Translation\TextPlayer.cpp" />
+    <ClCompile Include="Source\Service\Translation\Translator.cpp" />
     <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\HeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\TranslateResultWindow.cpp" />
@@ -53,12 +58,17 @@
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.h" />
+    <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\Exceptions\SelectedTextTranslateFatalException.h" />
+    <ClInclude Include="Source\Exceptions\SelectedTextTranslateException.h" />
+    <ClInclude Include="Source\View\Content\Error\ErrorWindow.h" />
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h" />
     <ClInclude Include="Source\View\Framework\Enums\WindowStates.h" />
     <ClInclude Include="Source\View\Framework\Providers\DeviceContextProvider.h" />
     <ClInclude Include="Source\View\Framework\Providers\ScaleProvider.h" />
-    <ClInclude Include="Source\Model\Enums\ApplicationViews.h" />
+    <ClInclude Include="Source\Controller\Enums\ApplicationViews.h" />
     <ClInclude Include="Source\View\Framework\Enums\OverflowModes.h" />
     <ClInclude Include="Source\View\Framework\Enums\ScrollBars.h" />
     <ClInclude Include="Source\View\Framework\Renderer.h" />
@@ -66,22 +76,22 @@
     <ClInclude Include="Source\View\Framework\Enums\FontSizes.h" />
     <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h" />
     <ClInclude Include="Source\View\Framework\RenderingContext.h" />
-    <ClInclude Include="Source\Model\AppModel.h" />
+    <ClInclude Include="Source\Controller\AppController.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Source\Dictionary\Dto\LogRecord.h" />
-    <ClInclude Include="Source\Entities\TranslateResult.h" />
-    <ClInclude Include="Source\Entities\TranslateResultDictionary.h" />
-    <ClInclude Include="Source\Entities\TranslateResultDictionaryEntry.h" />
-    <ClInclude Include="Source\Entities\TranslateResultSentence.h" />
-    <ClInclude Include="Source\Helpers\RequestProvider.h" />
-    <ClInclude Include="Source\Helpers\TextExtractor.h" />
+    <ClInclude Include="Source\Service\Dictionary\Dto\LogRecord.h" />
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResult.h" />
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultDictionary.h" />
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultDictionaryEntry.h" />
+    <ClInclude Include="Source\Service\Translation\Dto\TranslateResultSentence.h" />
+    <ClInclude Include="Source\Providers\RequestProvider.h" />
+    <ClInclude Include="Source\Service\Translation\TextExtractor.h" />
     <ClInclude Include="Source\Helpers\StringUtilities.h" />
-    <ClInclude Include="Source\Dictionary\Dictionary.h" />
-    <ClInclude Include="Source\Loggers\Logger.h" />
+    <ClInclude Include="Source\Service\Dictionary\Dictionary.h" />
+    <ClInclude Include="Source\Logging\Logger.h" />
     <ClInclude Include="Source\PrecompiledHeaders\stdafx.h" />
-    <ClInclude Include="Source\TranslateEngine\TranslatePageParser.h" />
-    <ClInclude Include="Source\TranslateEngine\TextPlayer.h" />
-    <ClInclude Include="Source\TranslateEngine\Translator.h" />
+    <ClInclude Include="Source\Service\Translation\TranslatePageParser.h" />
+    <ClInclude Include="Source\Service\Translation\TextPlayer.h" />
+    <ClInclude Include="Source\Service\Translation\Translator.h" />
     <ClInclude Include="Source\View\Framework\Windows\ChildWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\HoverIconButtonWindow.h" />

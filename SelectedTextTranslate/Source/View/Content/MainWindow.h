@@ -2,19 +2,21 @@
 #include "View\Framework\Windows\Window.h"
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Content\Translation\TranslationWindow.h"
+#include "View\Content\Error\ErrorWindow.h"
 #include "View\Providers\HotkeyProvider.h"
 #include "View\Providers\TrayIconProvider.h"
-#include "Model\AppModel.h"
+#include "Controller\AppController.h"
 
 class MainWindow : public Window
 {
 private:
-    AppModel* appModel;
+    AppController* appController;
     HotkeyProvider* hotkeyProvider;
     TrayIconProvider* trayIconProvider;
 
     TranslationWindow* translationWindow;
     DictionaryWindow* dictionaryWindow;
+    ErrorWindow* errorWindow;
     NOTIFYICONDATA notifyIconData;
 
     void CreateViews();
@@ -30,7 +32,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainWindow(WindowContext* context, WindowDescriptor descriptor, AppModel* appModel, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider);
+    MainWindow(WindowContext* context, WindowDescriptor descriptor, AppController* appController, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider);
     ~MainWindow();
 
     void Initialize() override;

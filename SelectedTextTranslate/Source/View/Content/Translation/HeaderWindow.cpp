@@ -2,15 +2,15 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppModel* appModel)
-: ContentWindow(context, descriptor, parentWindow, appModel)
+HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
+: ContentWindow(context, descriptor, parentWindow, appController)
 {
     fontSmallUnderscored = nullptr;
 }
 
 void HeaderWindow::PlayText() const
 {
-    appModel->PlayCurrentText();
+    appController->PlayCurrentText();
 }
 
 void HeaderWindow::Initialize()
@@ -25,26 +25,12 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    TranslateResult translateResult = appModel->GetCurrentTranslateResult();
+    TranslateResult translateResult = appController->GetCurrentTranslateResult();
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     int curY = lineHeight;
 
-    const wchar_t* headerText;
-    const wchar_t* subHeaderText;
-
-    if (translateResult.IsErrorResult())
-    {
-        headerText = L"[Error translating sentence]";
-        subHeaderText = translateResult.ErrorMessage;
-    }
-    else
-    {
-        headerText = translateResult.Sentence.Translation;
-        subHeaderText = translateResult.Sentence.Origin;
-    }
-
-    renderer->PrintText(headerText, fontHeader, Colors::Black, Point(paddingX, curY));
+    renderer->PrintText(translateResult.Sentence.Translation, fontHeader, Colors::Black, Point(paddingX, curY));
 
     curY += lineHeight;
 
@@ -60,7 +46,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     AddChildWindow(audioButton);
 
     Point originLintBottomRight = renderer->PrintText(
-        subHeaderText,
+        translateResult.Sentence.Origin,
         fontSmall,
         Colors::Gray,
         Point(paddingX + imageSize + 2, curY));
