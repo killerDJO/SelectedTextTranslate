@@ -13,6 +13,7 @@ class TrayIconProvider
 
     UINT WM_TASKBARCREATED;
     HMENU menu;
+    NOTIFYICONDATA notifyIconData;
 
     AppController* appController;
 
@@ -22,8 +23,10 @@ public:
     TrayIconProvider(AppController* appController);
     ~TrayIconProvider();
 
-    NOTIFYICONDATA CreateTrayIcon(HINSTANCE instance, HWND windowHandle) const;
-    void DestroyTrayIcon(NOTIFYICONDATA notifyIconData) const;
+    void CreateTrayIcon(HWND windowHandle, HINSTANCE instance);
+    void DestroyTrayIcon();
 
-    void ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam) const;
+    void ShowErrorMessage(wstring message);
+
+    void ProcessTrayIconMessages(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 };

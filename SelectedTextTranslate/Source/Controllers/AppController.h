@@ -7,6 +7,7 @@
 #include "Services\Translation\TextExtractor.h"
 
 class MainWindow;
+class TextPlayer;
 
 class AppController
 {
@@ -40,7 +41,7 @@ public:
     void ShowDictionary();
     void TranslateWordFromDictionary(int wordInDictionaryIndex);
 
-    void ShowError();
+    void ShowError(wstring message);
 
     void Exit() const;
 };

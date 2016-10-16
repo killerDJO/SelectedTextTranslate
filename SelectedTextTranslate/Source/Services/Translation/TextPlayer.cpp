@@ -21,31 +21,42 @@ void TextPlayer::PlayText(const wchar_t* text)
 DWORD WINAPI TextPlayer::Play(LPVOID arg)
 {
     TextPlayer* textPlayer = (TextPlayer*)arg;
-    wstring text = wstring(textPlayer->currentTextToPlay);
+    try
+    {
+        ExceptionHelper::SetupStructuredExceptionsTranslation();
 
-    textPlayer->logger->Log(L"Start playing sentence '" + text + L"'.");
+        wstring text = wstring(textPlayer->currentTextToPlay);
 
-    wstring responseQuery = L"https://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
-        + L"&tk=" + textPlayer->translator->GetHash(text);
+        textPlayer->logger->Log(L"Start playing sentence '" + text + L"'.");
 
-    vector<unsigned char> audio = textPlayer->requestProvider->GetResponse(responseQuery);
+        wstring responseQuery = L"https://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
+            + L"&tk=" + textPlayer->translator->GetHash(text);
 
-    string filePath = textPlayer->SaveToFile(audio);
+        vector<unsigned char> audio = textPlayer->requestProvider->GetResponse(responseQuery);
 
-    audio.clear();
+        string filePath = textPlayer->SaveToFile(audio);
 
-    string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
-    mciSendStringA(openFileCommand.c_str(), nullptr, 0, nullptr);
+        audio.clear();
 
-    string playAudioCommand = "play " + string(AUDIO_FILE_NAME) + " wait";
-    mciSendStringA(playAudioCommand.c_str(), nullptr, 0, nullptr);
+        string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
+        mciSendStringA(openFileCommand.c_str(), nullptr, 0, nullptr);
 
-    string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
-    mciSendStringA(closeAudioCommand.c_str(), nullptr, 0, nullptr);
+        string playAudioCommand = "play " + string(AUDIO_FILE_NAME) + " wait";
+        mciSendStringA(playAudioCommand.c_str(), nullptr, 0, nullptr);
 
-    textPlayer->logger->Log(L"End playing sentence.");
+        string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
+        mciSendStringA(closeAudioCommand.c_str(), nullptr, 0, nullptr);
 
-    return 0;
+        textPlayer->logger->Log(L"End playing sentence.");
+
+        return 0;
+    }
+    catch(...)
+    {
+        wstring currentExceptionMessage = ExceptionHelper::GetCurrentExceptionMessage();
+        textPlayer->logger->LogFormatted(L"Error playing sentence: %ls", currentExceptionMessage.c_str());
+        return -1;
+    }
 }
 
 string TextPlayer::SaveToFile(vector<unsigned char> content) const

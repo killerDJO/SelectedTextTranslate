@@ -19,17 +19,8 @@
     <Filter Include="Source\Helpers">
       <UniqueIdentifier>{d57738c5-794c-477f-a525-226210be81d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Entities">
-      <UniqueIdentifier>{8ebbfb1e-a750-437d-9e35-7c85c11e79f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\TranslateEngine">
-      <UniqueIdentifier>{5550d246-f9d9-41e2-9665-358023bd6fd7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\PrecompiledSource">
       <UniqueIdentifier>{e1a7bde5-b6e4-4265-844b-1892921145d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Loggers">
-      <UniqueIdentifier>{1f13bcd9-830e-4567-b482-4f19e423f3d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\View">
       <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
@@ -72,9 +63,6 @@
     </Filter>
     <Filter Include="Source\View\Framework\Windows">
       <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Content\Error">
-      <UniqueIdentifier>{3f187a15-985b-46c2-90c0-7e52221cf50a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Logging">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
@@ -183,9 +171,6 @@
     <ClCompile Include="Source\View\Content\MainWindow.cpp">
       <Filter>Source\View\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Error\ErrorWindow.cpp">
-      <Filter>Source\View\Content\Error</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Logging\Logger.cpp">
       <Filter>Source\Logging</Filter>
     </ClCompile>
@@ -230,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="Source\Controllers\AppController.cpp">
       <Filter>Source\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Providers\ErrorStateProvider.cpp">
+      <Filter>Source\View\Providers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,9 +313,6 @@
     <ClInclude Include="Source\View\Content\MainWindow.h">
       <Filter>Source\View\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Error\ErrorWindow.h">
-      <Filter>Source\View\Content\Error</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Logging\Logger.h">
       <Filter>Source\Logging</Filter>
     </ClInclude>
@@ -384,6 +369,9 @@
     </ClInclude>
     <ClInclude Include="Source\Controllers\AppController.h">
       <Filter>Source\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Providers\ErrorStateProvider.h">
+      <Filter>Source\View\Providers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

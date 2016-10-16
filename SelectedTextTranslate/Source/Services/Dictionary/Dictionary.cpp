@@ -45,7 +45,7 @@ void Dictionary::AddTranslateResult(wstring sentence, wstring json) const
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetErrorMessage().c_str());
+        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
     }
 }
 
@@ -59,7 +59,7 @@ void Dictionary::UpdateTranslateResult(wstring sentence) const
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetErrorMessage().c_str());
+        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
     }
 }
 

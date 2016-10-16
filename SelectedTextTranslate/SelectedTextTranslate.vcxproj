@@ -14,12 +14,12 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Providers\ErrorStateProvider.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
     <ClCompile Include="Source\Exceptions\SelectedTextTranslateFatalException.cpp" />
     <ClCompile Include="Source\Exceptions\SelectedTextTranslateException.cpp" />
     <ClCompile Include="Source\Helpers\ExceptionHelper.cpp" />
-    <ClCompile Include="Source\View\Content\Error\ErrorWindow.cpp" />
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp" />
     <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp" />
@@ -59,12 +59,12 @@
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Providers\ErrorStateProvider.h" />
     <ClInclude Include="Source\Helpers\ExceptionHelper.h" />
     <ClInclude Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Exceptions\SelectedTextTranslateFatalException.h" />
     <ClInclude Include="Source\Exceptions\SelectedTextTranslateException.h" />
-    <ClInclude Include="Source\View\Content\Error\ErrorWindow.h" />
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h" />
     <ClInclude Include="Source\View\Framework\Enums\WindowStates.h" />
@@ -184,6 +184,7 @@
       <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -210,6 +211,7 @@
       <BrowseInformation>true</BrowseInformation>
       <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

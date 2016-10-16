@@ -21,31 +21,37 @@ void TrayIconProvider::CreateMenu()
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuExitItemId, TEXT("Exit")));
 }
 
-NOTIFYICONDATA TrayIconProvider::CreateTrayIcon(HINSTANCE instance, HWND windowHandle) const
+void TrayIconProvider::CreateTrayIcon(HWND windowHandle, HINSTANCE instance)
 {
-    NOTIFYICONDATA notifyIconData;
     memset(&notifyIconData, 0, sizeof(NOTIFYICONDATA));
 
     notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
-
     notifyIconData.hWnd = windowHandle;
     notifyIconData.uID = TrayIconId;
-    notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    notifyIconData.uVersion = NOTIFYICON_VERSION_4;
+    notifyIconData.uFlags = NIF_ICON | NIF_TIP | NIF_INFO | NIF_MESSAGE;
     notifyIconData.uCallbackMessage = WM_TRAYICON;
     notifyIconData.hIcon = LoadIcon(instance, MAKEINTRESOURCE(IDI_APP_ICON));
-    wcscpy_s(notifyIconData.szTip, TEXT("Selected text translate.."));
+    wcscpy_s(notifyIconData.szTip, L"Selected text translate..");
 
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
-
-    return notifyIconData;
 }
 
-void TrayIconProvider::DestroyTrayIcon(NOTIFYICONDATA notifyIconData) const
+void TrayIconProvider::DestroyTrayIcon()
 {
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_DELETE, &notifyIconData));
 }
 
-void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam) const
+void TrayIconProvider::ShowErrorMessage(wstring message)
+{
+    wcscpy_s(notifyIconData.szInfoTitle, L"An error occurred");
+    wcscpy_s(notifyIconData.szInfo, message.c_str());
+    notifyIconData.dwInfoFlags = NIIF_ERROR;
+
+    AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));
+}
+
+void TrayIconProvider::ProcessTrayIconMessages(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if(message == WM_TRAYICON)
     {
@@ -60,7 +66,6 @@ void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HW
             AssertWinApiResult(GetCursorPos(&curPoint));
             SetForegroundWindow(windowHandle);
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
-            AssertWinApiResult(clicked);
             if (clicked == MenuExitItemId)
             {
                 appController->Exit();
@@ -84,4 +89,5 @@ void TrayIconProvider::ProcessTrayIconMessages(NOTIFYICONDATA notifyIconData, HW
 
 TrayIconProvider::~TrayIconProvider()
 {
+    DestroyTrayIcon();
 }

@@ -3,6 +3,7 @@
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\RenderingContext.h"
+#include "View\Providers\ErrorStateProvider.h"
 #include "Logging\Logger.h"
 
 class ScrollProvider;
@@ -15,6 +16,7 @@ class WindowContext
     ScrollProvider* scrollProvider;
     ScaleProvider* scaleProvider;
     DeviceContextProvider* deviceContextProvider;
+    ErrorStateProvider* errorStateProvider;
     RenderingContext* renderingContext;
     Logger* logger;
 
@@ -24,6 +26,7 @@ public:
         ScrollProvider* scrollProvider,
         ScaleProvider* scaleProvider,
         DeviceContextProvider* deviceContextProvider,
+        ErrorStateProvider* errorStateProvider,
         RenderingContext* renderingContext,
         Logger* logger);
     ~WindowContext();
@@ -32,6 +35,7 @@ public:
     ScrollProvider* GetScrollProvider() const;
     ScaleProvider* GetScaleProvider() const;
     DeviceContextProvider* GetDeviceContextProvider() const;
+    ErrorStateProvider* GetErrorStateProvider() const;
     RenderingContext* GetRenderingContext() const;
     Logger* GetLogger() const;
 };

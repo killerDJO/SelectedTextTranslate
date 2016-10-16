@@ -4,7 +4,7 @@
 #include "Services\Dictionary\Dictionary.h"
 #include "Providers\RequestProvider.h"
 #include "View\Content\MainWindow.h"
-#include "Exceptions\SelectedTextTranslateFatalException.h"
+#include "Helpers\ExceptionHelper.h"
 
 Application::Application()
 {
@@ -28,19 +28,13 @@ int Application::Run(HINSTANCE hInstance) const
     int result;
     try
     {
+        ExceptionHelper::SetupStructuredExceptionsTranslation();
         result = BootstrapApplication(logger, hInstance);
-    }
-    catch (const SelectedTextTranslateFatalException& exception)
-    {
-        return TerminateOnException(logger, exception.GetErrorMessage());
-    }
-    catch (const exception& exception)
-    {
-        return TerminateOnException(logger, StringUtilities::GetUtf16String(exception.what()));
     }
     catch (...)
     {
-        return TerminateOnException(logger, wstring());
+        ExceptionHelper::TerminateOnException(logger);
+        return -1;
     }
 
     delete logger;
@@ -66,18 +60,22 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     DeviceContextProvider* deviceContextProvider = new DeviceContextProvider();
     ScrollProvider* scrollProvider = new ScrollProvider();
     RenderingContext* renderingContext = new RenderingContext(scaleProvider, deviceContextProvider, scrollProvider);
-    WindowContext* windowContext = new WindowContext(
-        hInstance,
-        scrollProvider,
-        scaleProvider,
-        deviceContextProvider,
-        renderingContext,
-        logger);
 
     AppController* appController = new AppController(translator, textPlayer, textExtractor, dictionary);
 
     HotkeyProvider* hotkeyProvider = new HotkeyProvider();
     TrayIconProvider* trayIconProvider = new TrayIconProvider(appController);
+    ErrorStateProvider* errorStateProvider = new ErrorStateProvider(appController);
+
+    WindowContext* windowContext = new WindowContext(
+        hInstance,
+        scrollProvider,
+        scaleProvider,
+        deviceContextProvider,
+        errorStateProvider,
+        renderingContext,
+        logger);
+
     MainWindow* mainWindow = new MainWindow(windowContext, GetMainWindowDescriptor(scaleProvider), appController, hotkeyProvider, trayIconProvider);
     appController->SetMainWindow(mainWindow);
 
@@ -88,8 +86,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
 
     logger->Log(L"Application shutdown.");
@@ -108,6 +106,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     delete deviceContextProvider;
     delete hotkeyProvider;
     delete trayIconProvider;
+    delete errorStateProvider;
 
     return msg.wParam;
 }
@@ -133,13 +132,6 @@ WindowDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvid
         false);
 
     return descriptor;
-}
-
-int Application::TerminateOnException(Logger* logger, wstring message) const
-{
-    logger->LogFormatted(L"Unhandled exception occurred. Message: '%ls'.", message.c_str());
-    FatalAppExit(0, TEXT("Unhandled exception occurred. See log for details."));
-    return -1;
 }
 
 Application::~Application()

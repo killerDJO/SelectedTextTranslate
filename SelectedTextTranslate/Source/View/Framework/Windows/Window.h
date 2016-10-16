@@ -32,8 +32,6 @@ private:
 
     void ApplyWindowPosition(bool preserveScrolls);
 
-    void TerminateOnException(wstring message) const;
-
 protected:
     HWND windowHandle;
     wchar_t* className;

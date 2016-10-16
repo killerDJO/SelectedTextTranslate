@@ -8,7 +8,6 @@ class Application
 private:
     int BootstrapApplication(Logger* logger, HINSTANCE hInstance) const;
     WindowDescriptor GetMainWindowDescriptor(ScaleProvider* scaleProvider) const;
-    int TerminateOnException(Logger* logger, wstring message) const;
 
 public:
     Application();

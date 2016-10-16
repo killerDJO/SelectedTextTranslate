@@ -2,7 +2,6 @@
 #include "View\Framework\Windows\Window.h"
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Content\Translation\TranslationWindow.h"
-#include "View\Content\Error\ErrorWindow.h"
 #include "View\Providers\HotkeyProvider.h"
 #include "View\Providers\TrayIconProvider.h"
 #include "Controllers\AppController.h"
@@ -16,8 +15,6 @@ private:
 
     TranslationWindow* translationWindow;
     DictionaryWindow* dictionaryWindow;
-    ErrorWindow* errorWindow;
-    NOTIFYICONDATA notifyIconData;
 
     void CreateViews();
 
@@ -26,7 +23,6 @@ private:
     Window* GetCurrentView() const;
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
-    LRESULT HandleMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
@@ -40,4 +36,5 @@ public:
 
     void Minimize();
     void Maximize();
+    void ShowError(wstring message);
 };

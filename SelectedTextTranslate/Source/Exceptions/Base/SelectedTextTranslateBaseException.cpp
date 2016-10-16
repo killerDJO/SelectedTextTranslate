@@ -8,7 +8,12 @@ SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring m
     this->LineNumber = line;
 }
 
-wstring SelectedTextTranslateBaseException::GetErrorMessage() const
+wstring SelectedTextTranslateBaseException::GetFullErrorMessage() const
 {
     return StringUtilities::Format(L"%ls at %ls:%d", StringUtilities::GetUtf16String(what()).c_str(), FileName.c_str(), LineNumber);
+}
+
+wstring SelectedTextTranslateBaseException::GetDisplayErrorMessage() const
+{
+    return StringUtilities::GetUtf16String(what());
 }

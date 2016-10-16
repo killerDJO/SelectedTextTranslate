@@ -1,6 +1,4 @@
 #include "View\Framework\Windows\Window.h"
-#include "Exceptions\SelectedTextTranslateFatalException.h"
-#include "Helpers\StringUtilities.h"
 #include "Helpers\ExceptionHelper.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
@@ -315,19 +313,17 @@ LRESULT Window::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, L
 
     try
     {
+        ExceptionHelper::SetupStructuredExceptionsTranslation();
         return instance->WindowProcedure(message, wParam, lParam);
     }
-    catch (const SelectedTextTranslateFatalException& exception)
+    catch (const SelectedTextTranslateException& error)
     {
-        instance->TerminateOnException(exception.GetErrorMessage());
-    }
-    catch (const exception& exception)
-    {
-        instance->TerminateOnException(StringUtilities::GetUtf16String(exception.what()));
+        instance->context->GetLogger()->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetFullErrorMessage().c_str());
+        instance->context->GetErrorStateProvider()->ShowError(error.GetDisplayErrorMessage());
     }
     catch (...)
     {
-        instance->TerminateOnException(wstring());
+        ExceptionHelper::TerminateOnException(instance->context->GetLogger());
     }
 
     return -1;
@@ -358,12 +354,6 @@ LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     return 0;
-}
-
-void Window::TerminateOnException(wstring message) const
-{
-    context->GetLogger()->LogFormatted(L"Unhandled exception occurred. Message: '%ls'.", message.c_str());
-    FatalAppExit(0, TEXT("Unhandled exception occurred. See log for details."));
 }
 
 Window::~Window()

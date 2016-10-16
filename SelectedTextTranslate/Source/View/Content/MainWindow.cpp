@@ -13,7 +13,6 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppC
 
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
-    this->errorWindow = nullptr;
 }
 
 void MainWindow::Initialize()
@@ -38,7 +37,7 @@ void MainWindow::Initialize()
     hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appController->TranslateSelectedText(); });
     hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appController->PlaySelectedText(); });
 
-    notifyIconData = trayIconProvider->CreateTrayIcon(context->GetInstance(), windowHandle);
+    trayIconProvider->CreateTrayIcon(windowHandle, context->GetInstance());
 
     CreateViews();
 
@@ -58,15 +57,12 @@ void MainWindow::CreateViews()
 
     translationWindow = new TranslationWindow(context, windowDescriptor, this, appController);
     dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this, appController);
-    errorWindow = new ErrorWindow(context, windowDescriptor, this, appController);
 
     translationWindow->Hide();
     dictionaryWindow->Hide();
-    errorWindow->Hide();
 
     AddChildWindow(translationWindow);
     AddChildWindow(dictionaryWindow);
-    AddChildWindow(errorWindow);
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -95,6 +91,12 @@ void MainWindow::Maximize()
     ShowWindow(windowHandle, SW_SHOW);
     SwitchToThisWindow(windowHandle, TRUE);
     Show();
+}
+
+void MainWindow::ShowError(wstring message)
+{
+    this->Minimize();
+    this->trayIconProvider->ShowErrorMessage(message);
 }
 
 Size MainWindow::RenderContent(Renderer* renderer)
@@ -186,27 +188,12 @@ Window* MainWindow::GetCurrentView() const
         return dictionaryWindow;
     }
 
-    return errorWindow;
+    ThrowSelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", currentView));
 }
 
 LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    try
-    {
-        return HandleMessages(message, wParam, lParam);
-    }
-    catch (const SelectedTextTranslateException& error)
-    {
-        context->GetLogger()->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetErrorMessage().c_str());
-        appController->ShowError();
-    }
-
-    return 0;
-}
-
-LRESULT MainWindow::HandleMessages( UINT message, WPARAM wParam, LPARAM lParam)
-{
-    trayIconProvider->ProcessTrayIconMessages(notifyIconData, windowHandle, message, wParam, lParam);
+    this->trayIconProvider->ProcessTrayIconMessages(windowHandle, message, wParam, lParam);
 
     switch (message)
     {
@@ -277,5 +264,4 @@ LRESULT MainWindow::HandleMessages( UINT message, WPARAM wParam, LPARAM lParam)
 
 MainWindow::~MainWindow()
 {
-    trayIconProvider->DestroyTrayIcon(notifyIconData);
 }

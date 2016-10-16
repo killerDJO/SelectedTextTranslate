@@ -79,11 +79,10 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
     mainWindow->Render();
 }
 
-void AppController::ShowError()
+void AppController::ShowError(wstring message)
 {
     applicationView = ApplicationViews::Error;
-    mainWindow->Render();
-    mainWindow->Maximize();
+    mainWindow->ShowError(message);
 }
 
 void AppController::Exit() const

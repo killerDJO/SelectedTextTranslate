@@ -9,5 +9,6 @@ private:
 public:
     SelectedTextTranslateBaseException(wstring message, const wchar_t* file, unsigned int line);
 
-    wstring GetErrorMessage() const;
+    wstring GetFullErrorMessage() const;
+    wstring GetDisplayErrorMessage() const;
 };

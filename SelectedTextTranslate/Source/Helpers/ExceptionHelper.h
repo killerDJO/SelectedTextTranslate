@@ -1,4 +1,5 @@
 #pragma once
+#include "Logging\Logger.h"
 #include "Exceptions\SelectedTextTranslateFatalException.h"
 #include "Exceptions\SelectedTextTranslateException.h"
 
@@ -19,10 +20,18 @@
 
 class ExceptionHelper
 {
+private:
+    static void TranslatorFunction(unsigned int, EXCEPTION_POINTERS * eps);
+
 public:
     static void ThrowOnWinapiError(const wchar_t* file, unsigned int line, bool isFatal = true);
     static void ThrowOnWinapiError(void* resultValue, const wchar_t* file, unsigned int line, bool isFatal, void* invalidValue = nullptr);
     static void ThrowOnWinapiError(DWORD resultValue, const wchar_t* file, unsigned int line, bool isFatal, DWORD invalidValue = 0);
 
     static void ThrowOnGdiPlusError(Status status, const wchar_t* file, unsigned int line, bool isFatal = true);
+
+    static wstring GetCurrentExceptionMessage();
+    static void SetupStructuredExceptionsTranslation();
+
+    static void TerminateOnException(Logger* logger);
 };
