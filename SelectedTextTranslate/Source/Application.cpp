@@ -51,8 +51,8 @@ int Application::Run(HINSTANCE hInstance)
 
 int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance)
 {
-    TrayIconProvider* trayIconProvider = RegisterComponent(new TrayIconProvider(logger, hInstance));
     HotkeyProvider* hotkeyProvider = RegisterComponent(new HotkeyProvider());
+    TrayIconProvider* trayIconProvider = RegisterComponent(new TrayIconProvider(logger, hotkeyProvider, hInstance));
 
     DictionaryService* dictionarySerivce = RegisterComponent(new DictionaryService(logger));
     TextExtractor* textExtractor = RegisterComponent(new TextExtractor());
@@ -80,7 +80,6 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance)
     AppController* appController = RegisterComponent(new AppController(
         mainWindow,
         trayIconProvider,
-        hotkeyProvider,
         translationService,
         textPlayer,
         textExtractor,

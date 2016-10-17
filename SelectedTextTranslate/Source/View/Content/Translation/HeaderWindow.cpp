@@ -19,6 +19,8 @@ void HeaderWindow::Initialize()
 
 void HeaderWindow::SetModel(TranslateResult translateResult)
 {
+    AssertWindowInitialized(windowState);
+
     this->translateResult = translateResult;
 }
 

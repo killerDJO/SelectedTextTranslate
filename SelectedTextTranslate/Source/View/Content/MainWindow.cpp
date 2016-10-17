@@ -85,12 +85,16 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 void MainWindow::Minimize()
 {
+    AssertWindowInitialized(windowState);
+
     ShowWindow(windowHandle, SW_HIDE);
     Hide();
 }
 
 void MainWindow::Maximize()
 {
+    AssertWindowInitialized(windowState);
+
     ShowWindow(windowHandle, SW_SHOW);
     SwitchToThisWindow(windowHandle, TRUE);
     Show();
@@ -98,18 +102,24 @@ void MainWindow::Maximize()
 
 void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
 {
+    AssertWindowInitialized(windowState);
+
     this->translateResult = translateResult;
     this->translationWindow->SetModel(translateResult);
 }
 
 void MainWindow::SetDictionaryModel(vector<LogRecord> dictionaryRecords)
 {
+    AssertWindowInitialized(windowState);
+
     this->dictionaryRecords = dictionaryRecords;
     this->dictionaryWindow->SetModel(dictionaryRecords);
 }
 
 void MainWindow::SetCurrentView(ApplicationViews applicationView)
 {
+    AssertWindowInitialized(windowState);
+
     this->currentView = applicationView;
 }
 

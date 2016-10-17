@@ -14,7 +14,6 @@ private:
     DictionaryService* dictionaryService;
 
     TranslateResult ParseJSONResponse(wstring json) const;
-    void ReplaceAll(wstring &str, const wstring &search, const wstring &replace) const;
 
 public:
     TranslationService(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser, DictionaryService* dictionary);

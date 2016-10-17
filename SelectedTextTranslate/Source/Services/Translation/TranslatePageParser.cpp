@@ -51,10 +51,10 @@ void TranslatePageParser::UpateTkkIfNeccessary()
         duk_eval_string(ctx, "TKK");
         const char* result = duk_get_string(ctx, -1);
 
-        vector<string> parts = Split(result, '.');
+        vector<wstring> parts = StringUtilities::Split(StringUtilities::GetUtf16StringFromChar(result), '.');
 
-        tkk1 = atoll(parts[0].c_str());
-        tkk2 = atoll(parts[1].c_str());
+        tkk1 = _wtoll(parts[0].c_str());
+        tkk2 = _wtoll(parts[1].c_str());
 
         logger->Log(L"TKK has been extracted. New values: Tkk1 = " + to_wstring(tkk1) + L", Tkk2 = " + to_wstring(tkk2) + L".");
 
@@ -96,19 +96,6 @@ string TranslatePageParser::SearchScriptTag(GumboNode* node) const
     }
 
     return "";
-}
-
-vector<string> TranslatePageParser::Split(const string &s, char delim) const
-{
-    vector<string> elems;
-
-    stringstream ss(s);
-    string item;
-    while (getline(ss, item, delim))
-    {
-        elems.push_back(item);
-    }
-    return elems;
 }
 
 TranslatePageParser::~TranslatePageParser()

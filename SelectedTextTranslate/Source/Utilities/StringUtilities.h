@@ -13,4 +13,7 @@ public:
 
     static wstring Format(const wstring format, ...);
     static wstring Format(const wstring format, va_list args);
+
+    static vector<wstring> Split(const wstring &s, wchar_t delim);
+    static void ReplaceAll(wstring &str, const wstring &search, const wstring &replace);
 };

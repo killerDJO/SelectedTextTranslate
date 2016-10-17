@@ -37,6 +37,8 @@ void Window::Initialize()
 
 void Window::Render(bool preserveScrolls)
 {
+    AssertWindowInitialized(windowState);
+
     RenderingContext* renderingContext = context->GetRenderingContext();
     renderingContext->BeginRender(this);
 
@@ -152,6 +154,8 @@ Point Window::GetInitialWindowOffset()
 
 void Window::Draw(bool drawChildren)
 {
+    AssertWindowInitialized(windowState);
+
     if (drawChildren)
     {
         // Important to draw child windows before drawing parent window.

@@ -9,6 +9,8 @@ DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor desc
 
 void DictionaryWindow::SetModel(vector<LogRecord> dictionaryRecords)
 {
+    AssertWindowInitialized(windowState);
+
     this->dictionaryRecords = dictionaryRecords;
 }
 

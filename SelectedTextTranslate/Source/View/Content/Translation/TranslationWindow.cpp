@@ -36,6 +36,8 @@ void TranslationWindow::Initialize()
 
 void TranslationWindow::SetModel(TranslateResult translateResult) const
 {
+    AssertWindowInitialized(windowState);
+
     this->headerWindow->SetModel(translateResult);
     this->translateResultWindow->SetModel(translateResult);
 }

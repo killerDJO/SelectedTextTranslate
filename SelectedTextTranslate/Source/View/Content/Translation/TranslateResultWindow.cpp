@@ -18,6 +18,8 @@ void TranslateResultWindow::Initialize()
 
 void TranslateResultWindow::SetModel(TranslateResult translateResult)
 {
+    AssertWindowInitialized(windowState);
+
     this->translateResult = translateResult;
 }
 

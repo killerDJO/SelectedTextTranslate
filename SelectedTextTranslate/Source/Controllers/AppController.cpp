@@ -3,7 +3,6 @@
 AppController::AppController(
     MainWindow* mainWindow,
     TrayIconProvider* trayIconProvider,
-    HotkeyProvider* hotkeyProvider,
     TranslationService* translator,
     TextPlayer* textPlayer,
     TextExtractor* textExtractor,
@@ -15,7 +14,6 @@ AppController::AppController(
     this->textExtractor = textExtractor;
     this->dictionary = dictionary;
     this->trayIconProvider = trayIconProvider;
-    this->hotkeyProvider = hotkeyProvider;
 }
 
 void AppController::Initialize()
@@ -24,12 +22,10 @@ void AppController::Initialize()
     mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultDictionary, this, placeholders::_1));
     mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
 
-    trayIconProvider->SetExitCallback(bind(&AppController::Exit, this));
-    trayIconProvider->SetShowDictionaryCallback(bind(&AppController::ShowDictionary, this));
-    trayIconProvider->SetTranslateSelectedTextCallback(bind(&AppController::TranslateSelectedText, this));
-
-    hotkeyProvider->RegisterTranslateHotkey(trayIconProvider->GetHandle(), bind(&AppController::TranslateSelectedText, this));
-    hotkeyProvider->RegisterPlayTextHotkey(trayIconProvider->GetHandle(), bind(&AppController::PlaySelectedText, this));
+    trayIconProvider->OnExit.Subscribe(bind(&AppController::Exit, this));
+    trayIconProvider->OnPlaySelectedText.Subscribe(bind(&AppController::PlaySelectedText, this));
+    trayIconProvider->OnShowDictionary.Subscribe(bind(&AppController::ShowDictionary, this));
+    trayIconProvider->OnTranslateSelectedText.Subscribe(bind(&AppController::TranslateSelectedText, this));
 }
 
 void AppController::TranslateSelectedText()

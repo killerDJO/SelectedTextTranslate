@@ -13,7 +13,6 @@ private:
     time_t lastTkkRequestTime;
 
     void UpateTkkIfNeccessary();
-    vector<string> Split(const string &s, char delim) const;
     string SearchScriptTag(GumboNode* node) const;
 
 public:

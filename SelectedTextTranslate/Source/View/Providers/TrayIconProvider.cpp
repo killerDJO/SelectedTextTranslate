@@ -1,17 +1,16 @@
 #include "View\Providers\TrayIconProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TrayIconProvider::TrayIconProvider(Logger* logger, HINSTANCE instance)
+TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance)
     : NativeWindowHolder(instance), ErrorHandler(logger)
 {
     this->className = L"STT_TRAY";
     this->windowHandle = nullptr;
     this->menu = nullptr;
+    this->WM_TASKBARCREATED = 0;
 
     this->logger = logger;
-
-    WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
-    AssertWinApiResult(WM_TASKBARCREATED);
+    this->hotkeyProvider = hotkeyProvider;
 }
 
 void TrayIconProvider::Initialize()
@@ -19,6 +18,18 @@ void TrayIconProvider::Initialize()
     NativeWindowHolder::Initialize();
     windowHandle = CreateWindow(className, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, this);
     AssertCriticalWinApiResult(windowHandle);
+
+    WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
+    AssertWinApiResult(WM_TASKBARCREATED);
+
+    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [this]() -> void
+    {
+        return OnTranslateSelectedText.Notify();
+    });
+    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [this]() -> void
+    {
+        return OnPlaySelectedText.Notify();
+    });
 
     CreateMenu();
     CreateTrayIcon();
@@ -93,7 +104,7 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
     {
         if (lParam == WM_LBUTTONUP)
         {
-            translateSelectedTextCallback();
+            OnTranslateSelectedText.Notify();
         }
 
         if (lParam == WM_RBUTTONUP)
@@ -104,15 +115,15 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
             if (clicked == MenuExitItemId)
             {
-                exitCallback();
+                OnExit.Notify();
             }
             if (clicked == MenuTranslateItemId)
             {
-                translateSelectedTextCallback();
+                OnTranslateSelectedText.Notify();
             }
             if (clicked == MenuDictionaryItemId)
             {
-                showDictionaryCallback();
+                OnShowDictionary.Notify();
             }
         }
 
@@ -125,22 +136,12 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
         return 0;
     }
 
+    if (message == WM_HOTKEY)
+    {
+        hotkeyProvider->ProcessHotkey(wParam);
+    }
+
     return NativeWindowHolder::WindowProcedure(message, wParam, lParam);
-}
-
-void TrayIconProvider::SetExitCallback(function<void()> exitCallback)
-{
-    this->exitCallback = exitCallback;
-}
-
-void TrayIconProvider::SetTranslateSelectedTextCallback(function<void()> translateSelectedTextCallback)
-{
-    this->translateSelectedTextCallback = translateSelectedTextCallback;
-}
-
-void TrayIconProvider::SetShowDictionaryCallback(function<void()> showDictionaryCallback)
-{
-    this->showDictionaryCallback = showDictionaryCallback;
 }
 
 TrayIconProvider::~TrayIconProvider()

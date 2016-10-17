@@ -90,3 +90,28 @@ wstring StringUtilities::Format(const wstring format, va_list args) {
 
     return wstring(formatted.get());
 }
+
+vector<wstring> StringUtilities::Split(const wstring &s, wchar_t delim)
+{
+    vector<wstring> elems;
+
+    wstringstream ss(s);
+    wstring item;
+    while (getline(ss, item, delim))
+    {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+void StringUtilities::ReplaceAll(wstring &str, const wstring &search, const wstring &replace)
+{
+    for (size_t pos = 0;; pos += replace.length() - 1)
+    {
+        pos = str.find(search, pos);
+        if (pos == string::npos) break;
+
+        str.erase(pos, search.length());
+        str.insert(pos, replace);
+    }
+}

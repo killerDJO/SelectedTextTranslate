@@ -33,7 +33,7 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool upd
     else
     {
         wstring hash = GetHash(sentence);
-        wstring translateURL = L"https://translate.googlefaf.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk="
+        wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk="
             + hash
             + L"&q=" + requestProvider->EscapeText(sentence);
 
@@ -130,8 +130,8 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
     }
 
     // Normalize json response
-    ReplaceAll(json, L",,", L",null,");
-    ReplaceAll(json, L"[,", L"[null,");
+    StringUtilities::ReplaceAll(json, L",,", L",null,");
+    StringUtilities::ReplaceAll(json, L"[,", L"[null,");
 
     json::value root = json::value::parse(json);
 
@@ -194,18 +194,6 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
     }
 
     return result;
-}
-
-void TranslationService::ReplaceAll(wstring &str, const wstring &search, const wstring &replace) const
-{
-    for (size_t pos = 0;; pos += replace.length() - 1)
-    {
-        pos = str.find(search, pos);
-        if (pos == string::npos) break;
-
-        str.erase(pos, search.length());
-        str.insert(pos, replace);
-    }
 }
 
 TranslationService::~TranslationService()

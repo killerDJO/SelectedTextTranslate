@@ -1,5 +1,6 @@
 #pragma once
 #include "View\Framework\Windows\NativeWindowHolder.h"
+#include "View\Providers\HotkeyProvider.h"
 #include "Infrastructure\Logging\Logger.h"
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
 
@@ -17,11 +18,8 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     HMENU menu;
     NOTIFYICONDATA notifyIconData;
 
-    function<void()> exitCallback;
-    function<void()> translateSelectedTextCallback;
-    function<void()> showDictionaryCallback;
-
     Logger* logger;
+    HotkeyProvider* hotkeyProvider;
 
     void CreateMenu();
     void DestroyTrayIcon();
@@ -31,14 +29,15 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    TrayIconProvider(Logger* logger, HINSTANCE instance);
+    TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance);
     ~TrayIconProvider() override;
 
     void Initialize() override;
 
     void ShowError(wstring message) override;
 
-    void SetExitCallback(function<void()> exitCallback);
-    void SetTranslateSelectedTextCallback(function<void()> translateSelectedTextCallback);
-    void SetShowDictionaryCallback(function<void()> showDictionaryCallback);
+    Subscribeable<> OnExit;
+    Subscribeable<> OnPlaySelectedText;
+    Subscribeable<> OnTranslateSelectedText;
+    Subscribeable<> OnShowDictionary;;
 };

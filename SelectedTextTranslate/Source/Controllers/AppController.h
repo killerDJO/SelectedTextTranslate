@@ -19,13 +19,11 @@ private:
     DictionaryService* dictionary;
 
     TrayIconProvider* trayIconProvider;
-    HotkeyProvider* hotkeyProvider;
 
 public:
     AppController(
         MainWindow* mainWindow,
         TrayIconProvider* trayIconProvider,
-        HotkeyProvider* hotkeyProvider,
         TranslationService* translator,
         TextPlayer* textPlayer,
         TextExtractor* textExtractor,
