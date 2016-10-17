@@ -1,8 +1,8 @@
-#include "Services\Dictionary\Dictionary.h"
+#include "Services\Dictionary\DictionaryService.h"
 #include "Utilities\StringUtilities.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-Dictionary::Dictionary(Logger* logger)
+DictionaryService::DictionaryService(Logger* logger)
 {
     this->logger = logger;
 
@@ -18,13 +18,13 @@ Dictionary::Dictionary(Logger* logger)
     CreateDatabase();
 }
 
-void Dictionary::CreateDatabase() const
+void DictionaryService::CreateDatabase() const
 {
     ExecuteNonQuery(CreateStatement("CREATE TABLE IF NOT EXISTS  Dictionary(Sentence TEXT PRIMARY KEY, Count INTEGER, Json TEXT)"));
     ExecuteNonQuery(CreateStatement("CREATE INDEX IF NOT EXISTS IX_Dictionary_Count on Dictionary(Count)"));
 }
 
-vector<LogRecord> Dictionary::GetRecords(wstring sentence) const
+vector<LogRecord> DictionaryService::GetRecords(wstring sentence) const
 {
     sqlite3_stmt* statement = CreateStatement("SELECT Sentence, Count, Json FROM Dictionary WHERE Sentence=@Sentence");
     BindValue(statement, L"@Sentence", sentence);
@@ -34,7 +34,7 @@ vector<LogRecord> Dictionary::GetRecords(wstring sentence) const
     return logRecords;
 }
 
-void Dictionary::AddTranslateResult(wstring sentence, wstring json) const
+void DictionaryService::AddTranslateResult(wstring sentence, wstring json) const
 {
     try
     {
@@ -49,7 +49,7 @@ void Dictionary::AddTranslateResult(wstring sentence, wstring json) const
     }
 }
 
-void Dictionary::UpdateTranslateResult(wstring sentence) const
+void DictionaryService::UpdateTranslateResult(wstring sentence) const
 {
     try
     {
@@ -63,7 +63,7 @@ void Dictionary::UpdateTranslateResult(wstring sentence) const
     }
 }
 
-vector<LogRecord> Dictionary::GetTopRecords(int topRecordsCount) const
+vector<LogRecord> DictionaryService::GetTopRecords(int topRecordsCount) const
 {
     sqlite3_stmt* statement = CreateStatement("SELECT Sentence, Count, Json FROM Dictionary ORDER BY Count DESC LIMIT @Limit");
     BindValue(statement, L"@Limit", topRecordsCount);
@@ -71,7 +71,7 @@ vector<LogRecord> Dictionary::GetTopRecords(int topRecordsCount) const
     return GetLogRecords(statement);
 }
 
-vector<LogRecord> Dictionary::GetLogRecords(sqlite3_stmt* statement) const
+vector<LogRecord> DictionaryService::GetLogRecords(sqlite3_stmt* statement) const
 {
     vector<LogRecord> logRecords;
 
@@ -103,7 +103,7 @@ vector<LogRecord> Dictionary::GetLogRecords(sqlite3_stmt* statement) const
     return logRecords;
 }
 
-sqlite3_stmt* Dictionary::CreateStatement(const char* sqlQuery) const
+sqlite3_stmt* DictionaryService::CreateStatement(const char* sqlQuery) const
 {
     sqlite3_stmt *statement = nullptr;
     int result = sqlite3_prepare_v2(database, sqlQuery, -1, &statement, nullptr);
@@ -117,7 +117,7 @@ sqlite3_stmt* Dictionary::CreateStatement(const char* sqlQuery) const
     return statement;
 }
 
-void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, wstring value) const
+void DictionaryService::BindValue(sqlite3_stmt* statement, wstring name, wstring value) const
 {
     int index = sqlite3_bind_parameter_index(statement, StringUtilities::GetUtf8String(name).c_str());
     int result = sqlite3_bind_text(statement, index, StringUtilities::GetUtf8String(value).c_str(), -1, SQLITE_TRANSIENT);
@@ -129,7 +129,7 @@ void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, wstring value)
     }
 }
 
-void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, int value) const
+void DictionaryService::BindValue(sqlite3_stmt* statement, wstring name, int value) const
 {
     int index = sqlite3_bind_parameter_index(statement, StringUtilities::GetUtf8String(name).c_str());
     int result = sqlite3_bind_int(statement, index, value);
@@ -141,7 +141,7 @@ void Dictionary::BindValue(sqlite3_stmt* statement, wstring name, int value) con
     }
 }
 
-void Dictionary::ExecuteNonQuery(sqlite3_stmt *statement) const
+void DictionaryService::ExecuteNonQuery(sqlite3_stmt *statement) const
 {
     int result = sqlite3_step(statement);
     while (result != SQLITE_DONE && statement != SQLITE_OK)
@@ -158,7 +158,7 @@ void Dictionary::ExecuteNonQuery(sqlite3_stmt *statement) const
     }
 }
 
-Dictionary::~Dictionary()
+DictionaryService::~DictionaryService()
 {
     sqlite3_close(database);
 }

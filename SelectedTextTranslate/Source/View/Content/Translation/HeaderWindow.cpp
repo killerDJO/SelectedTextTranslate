@@ -1,7 +1,7 @@
 #include "View\Content\Translation\HeaderWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ContentWindow(context, descriptor, parentWindow)

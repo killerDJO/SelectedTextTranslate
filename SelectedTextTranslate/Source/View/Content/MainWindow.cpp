@@ -1,5 +1,5 @@
 #include "View\Content\MainWindow.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider)
     : Window(context, descriptor)

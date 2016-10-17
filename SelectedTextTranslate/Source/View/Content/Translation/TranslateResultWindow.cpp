@@ -1,6 +1,6 @@
 ﻿#include "View\Content\Translation\TranslateResultWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
 : ContentWindow(context, descriptor, parentWindow)

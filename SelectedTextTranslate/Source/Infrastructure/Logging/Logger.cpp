@@ -1,4 +1,4 @@
-#include "Logging\Logger.h"
+#include "Infrastructure\Logging\Logger.h"
 #include "Utilities\StringUtilities.h"
 #include <chrono>
 #include <iomanip>

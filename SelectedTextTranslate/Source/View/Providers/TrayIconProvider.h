@@ -1,9 +1,9 @@
 #pragma once
-#include "View\Framework\Windows\WindowHolder.h"
-#include "Logging\Logger.h"
-#include "ErrorHandling\ErrorHandler.h"
+#include "View\Framework\Windows\NativeWindowHolder.h"
+#include "Infrastructure\Logging\Logger.h"
+#include "Infrastructure\ErrorHandling\ErrorHandler.h"
 
-class TrayIconProvider : public WindowHolder, public ErrorHandler
+class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
 {
     const UINT WM_TRAYICON = WM_USER + 1;
 

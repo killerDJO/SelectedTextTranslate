@@ -1,10 +1,10 @@
 #include "Application.h"
-#include "Services\Translation\Translator.h"
+#include "Services\Translation\TranslationService.h"
 #include "Services\Translation\TranslatePageParser.h"
-#include "Services\Dictionary\Dictionary.h"
+#include "Services\Dictionary\DictionaryService.h"
 #include "Providers\RequestProvider.h"
 #include "View\Content\MainWindow.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Controllers\AppController.h"
 
 Application::Application()
@@ -54,12 +54,12 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance)
     TrayIconProvider* trayIconProvider = RegisterComponent(new TrayIconProvider(logger, hInstance));
     HotkeyProvider* hotkeyProvider = RegisterComponent(new HotkeyProvider());
 
-    Dictionary* dictionary = RegisterComponent(new Dictionary(logger));
+    DictionaryService* dictionarySerivce = RegisterComponent(new DictionaryService(logger));
     TextExtractor* textExtractor = RegisterComponent(new TextExtractor());
     RequestProvider* requestProvider = RegisterComponent(new RequestProvider(logger));
     TranslatePageParser* translatePageParser = RegisterComponent(new TranslatePageParser(logger, requestProvider));
-    Translator* translator = RegisterComponent(new Translator(logger, requestProvider, translatePageParser, dictionary));
-    TextPlayer* textPlayer = RegisterComponent(new TextPlayer(logger, translator, requestProvider, trayIconProvider));
+    TranslationService* translationService = RegisterComponent(new TranslationService(logger, requestProvider, translatePageParser, dictionarySerivce));
+    TextPlayer* textPlayer = RegisterComponent(new TextPlayer(logger, translationService, requestProvider, trayIconProvider));
 
     ScaleProvider* scaleProvider = RegisterComponent(new ScaleProvider());
     DeviceContextProvider* deviceContextProvider = RegisterComponent(new DeviceContextProvider());
@@ -81,10 +81,10 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance)
         mainWindow,
         trayIconProvider,
         hotkeyProvider,
-        translator,
+        translationService,
         textPlayer,
         textExtractor,
-        dictionary));
+        dictionarySerivce));
 
     trayIconProvider->Initialize();
     mainWindow->Initialize();

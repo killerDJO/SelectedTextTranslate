@@ -1,7 +1,7 @@
 #include "Providers\RequestProvider.h"
 #include "Utilities\StringUtilities.h"
-#include "ErrorHandling\Exceptions\SelectedTextTranslateException.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 using namespace web;
 using namespace web::http;

@@ -1,5 +1,5 @@
 #include "View\Framework\Providers\ScaleProvider.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 ScaleProvider::ScaleProvider()
 {

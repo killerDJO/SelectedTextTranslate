@@ -1,7 +1,7 @@
 #pragma once
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Providers\ScaleProvider.h"
-#include "Logging\Logger.h"
+#include "Infrastructure\Logging\Logger.h"
 
 class Application
 {

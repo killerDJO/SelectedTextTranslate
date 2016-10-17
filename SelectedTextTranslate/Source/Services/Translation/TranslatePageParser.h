@@ -1,6 +1,6 @@
 #pragma once
 #include "Providers\RequestProvider.h"
-#include "Logging\Logger.h"
+#include "Infrastructure\Logging\Logger.h"
 
 class TranslatePageParser
 {

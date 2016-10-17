@@ -1,5 +1,5 @@
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ChildWindow(context, descriptor, parentWindow)

@@ -1,8 +1,8 @@
 #include "View\Framework\Windows\Window.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
-    : WindowHolder(context->GetInstance())
+    : NativeWindowHolder(context->GetInstance())
 {
     if (descriptor.AutoScale)
     {
@@ -31,7 +31,7 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
 
 void Window::Initialize()
 {
-    WindowHolder::Initialize();
+    NativeWindowHolder::Initialize();
     windowState = WindowStates::Initialized;
 }
 

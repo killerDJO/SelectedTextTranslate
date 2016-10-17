@@ -1,5 +1,5 @@
 #pragma once
-#include "Logging\Logger.h"
+#include "Infrastructure\Logging\Logger.h"
 
 class RequestProvider
 {

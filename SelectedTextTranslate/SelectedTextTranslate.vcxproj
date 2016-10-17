@@ -14,13 +14,13 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ErrorHandling\ErrorHandler.cpp" />
-    <ClCompile Include="Source\View\Framework\Windows\WindowHolder.cpp" />
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
+    <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp" />
     <ClCompile Include="Source\Application.cpp" />
-    <ClCompile Include="Source\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
-    <ClCompile Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
-    <ClCompile Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
-    <ClCompile Include="Source\ErrorHandling\ExceptionHelper.cpp" />
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.cpp" />
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp" />
     <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp" />
@@ -32,8 +32,8 @@
     <ClCompile Include="Source\View\Framework\RenderingContext.cpp" />
     <ClCompile Include="Source\Controllers\AppController.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResult.cpp" />
-    <ClCompile Include="Source\Services\Dictionary\Dictionary.cpp" />
-    <ClCompile Include="Source\Logging\Logger.cpp" />
+    <ClCompile Include="Source\Services\Dictionary\DictionaryService.cpp" />
+    <ClCompile Include="Source\Infrastructure\Logging\Logger.cpp" />
     <ClCompile Include="Source\Services\Translation\TranslatePageParser.cpp" />
     <ClCompile Include="Source\View\Framework\Windows\ChildWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.cpp" />
@@ -44,12 +44,12 @@
     <ClCompile Include="Source\Services\Translation\TextExtractor.cpp" />
     <ClCompile Include="Source\Utilities\StringUtilities.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
+    <ClCompile Include="PrecompiledHeaders\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Services\Translation\TextPlayer.cpp" />
-    <ClCompile Include="Source\Services\Translation\Translator.cpp" />
+    <ClCompile Include="Source\Services\Translation\TranslationService.cpp" />
     <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\HeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\TranslateResultWindow.cpp" />
@@ -60,13 +60,13 @@
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\View\Framework\Windows\WindowHolder.h" />
-    <ClInclude Include="Source\ErrorHandling\ErrorHandler.h" />
-    <ClInclude Include="Source\ErrorHandling\ExceptionHelper.h" />
-    <ClInclude Include="Source\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
+    <ClInclude Include="Source\View\Framework\Windows\NativeWindowHolder.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\ErrorHandler.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
-    <ClInclude Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h" />
     <ClInclude Include="Source\View\Framework\Enums\WindowStates.h" />
@@ -90,12 +90,12 @@
     <ClInclude Include="Source\Providers\RequestProvider.h" />
     <ClInclude Include="Source\Services\Translation\TextExtractor.h" />
     <ClInclude Include="Source\Utilities\StringUtilities.h" />
-    <ClInclude Include="Source\Services\Dictionary\Dictionary.h" />
-    <ClInclude Include="Source\Logging\Logger.h" />
-    <ClInclude Include="Source\PrecompiledHeaders\stdafx.h" />
+    <ClInclude Include="Source\Services\Dictionary\DictionaryService.h" />
+    <ClInclude Include="Source\Infrastructure\Logging\Logger.h" />
+    <ClInclude Include="PrecompiledHeaders\stdafx.h" />
     <ClInclude Include="Source\Services\Translation\TranslatePageParser.h" />
     <ClInclude Include="Source\Services\Translation\TextPlayer.h" />
-    <ClInclude Include="Source\Services\Translation\Translator.h" />
+    <ClInclude Include="Source\Services\Translation\TranslationService.h" />
     <ClInclude Include="Source\View\Framework\Windows\ChildWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\HoverIconButtonWindow.h" />
@@ -166,14 +166,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>.\Source;$(IncludePath)</IncludePath>
+    <IncludePath>.\Source;.\PrecompiledHeaders;$(IncludePath)</IncludePath>
     <OutDir>Build\$(Configuration)\</OutDir>
     <IntDir>Intermediate\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\Source;$(IncludePath)</IncludePath>
+    <IncludePath>.\Source;.\PrecompiledHeaders;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>Build\$(Configuration)\</OutDir>
     <IntDir>Intermediate\$(Configuration)\</IntDir>
@@ -184,9 +184,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
@@ -210,10 +210,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>PrecompiledHeaders\stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
       <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>PrecompiledHeaders\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>

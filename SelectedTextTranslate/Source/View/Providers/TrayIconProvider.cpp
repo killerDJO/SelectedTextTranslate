@@ -1,8 +1,8 @@
 #include "View\Providers\TrayIconProvider.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TrayIconProvider::TrayIconProvider(Logger* logger, HINSTANCE instance)
-    : WindowHolder(instance), ErrorHandler(logger)
+    : NativeWindowHolder(instance), ErrorHandler(logger)
 {
     this->className = L"STT_TRAY";
     this->windowHandle = nullptr;
@@ -16,7 +16,7 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HINSTANCE instance)
 
 void TrayIconProvider::Initialize()
 {
-    WindowHolder::Initialize();
+    NativeWindowHolder::Initialize();
     windowHandle = CreateWindow(className, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, this);
     AssertCriticalWinApiResult(windowHandle);
 
@@ -125,7 +125,7 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
         return 0;
     }
 
-    return WindowHolder::WindowProcedure(message, wParam, lParam);
+    return NativeWindowHolder::WindowProcedure(message, wParam, lParam);
 }
 
 void TrayIconProvider::SetExitCallback(function<void()> exitCallback)

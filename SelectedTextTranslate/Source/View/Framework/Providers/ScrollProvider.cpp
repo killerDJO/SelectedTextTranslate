@@ -1,5 +1,5 @@
 #include "View\Framework\Providers\ScrollProvider.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 ScrollProvider::ScrollProvider()
 {

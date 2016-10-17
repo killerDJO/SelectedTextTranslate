@@ -1,7 +1,7 @@
 #include "Services\Translation\TranslatePageParser.h"
-#include "ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Utilities\StringUtilities.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TranslatePageParser::TranslatePageParser(Logger* logger, RequestProvider* requestProvider)
 {

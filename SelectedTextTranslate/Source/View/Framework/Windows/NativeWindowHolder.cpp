@@ -1,7 +1,7 @@
-#include "View\Framework\Windows\WindowHolder.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "View\Framework\Windows\NativeWindowHolder.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-WindowHolder::WindowHolder(HINSTANCE instance)
+NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
 {
     this->instance = instance;
 
@@ -9,7 +9,7 @@ WindowHolder::WindowHolder(HINSTANCE instance)
     this->className = nullptr;
 }
 
-void WindowHolder::Initialize()
+void NativeWindowHolder::Initialize()
 {
     WNDCLASSEX windowClass = { 0 };
 
@@ -28,30 +28,30 @@ void WindowHolder::Initialize()
     }
 }
 
-void WindowHolder::SpecifyWindowClass(WNDCLASSEX* windowClass)
+void NativeWindowHolder::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
 }
 
-HWND WindowHolder::GetHandle() const
+HWND NativeWindowHolder::GetHandle() const
 {
     return windowHandle;
 }
 
-LRESULT WindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT NativeWindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    WindowHolder* instance;
+    NativeWindowHolder* instance;
 
     if (message == WM_CREATE)
     {
         // Store pointer to the current window class in the GWLP_USERDATA. 'this' must be passed as lpParam in CreateWindow call.
         CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
-        instance = (WindowHolder*)createstruct->lpCreateParams;
+        instance = (NativeWindowHolder*)createstruct->lpCreateParams;
         instance->windowHandle = hWnd;
         SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
     }
     else
     {
-        instance = (WindowHolder*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        instance = (NativeWindowHolder*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
     }
 
     if (instance == nullptr)
@@ -62,17 +62,17 @@ LRESULT WindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wPa
     return instance->ExecuteWindowProcedure(message, wParam, lParam);
 }
 
-LRESULT WindowHolder::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT NativeWindowHolder::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     return WindowProcedure(message, wParam, lParam);
 }
 
-LRESULT WindowHolder::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT NativeWindowHolder::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     return DefWindowProc(windowHandle, message, wParam, lParam);
 }
 
-WindowHolder::~WindowHolder()
+NativeWindowHolder::~NativeWindowHolder()
 {
     AssertCriticalWinApiResult(DestroyWindow(windowHandle));
 }

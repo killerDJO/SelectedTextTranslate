@@ -1,8 +1,8 @@
 #pragma once
 #include "Services\Translation\Dto\TranslateResult.h"
-#include "Services\Translation\Translator.h"
+#include "Services\Translation\TranslationService.h"
 #include "Services\Translation\TextPlayer.h"
-#include "Services\Dictionary\Dictionary.h"
+#include "Services\Dictionary\DictionaryService.h"
 #include "Services\Translation\TextExtractor.h"
 #include "View\Content\MainWindow.h"
 #include "View\Providers\TrayIconProvider.h"
@@ -14,9 +14,9 @@ private:
 
     TextExtractor* textExtractor;
     MainWindow* mainWindow;
-    Translator* translator;
+    TranslationService* translationService;
     TextPlayer* textPlayer;
-    Dictionary* dictionary;
+    DictionaryService* dictionary;
 
     TrayIconProvider* trayIconProvider;
     HotkeyProvider* hotkeyProvider;
@@ -26,10 +26,10 @@ public:
         MainWindow* mainWindow,
         TrayIconProvider* trayIconProvider,
         HotkeyProvider* hotkeyProvider,
-        Translator* translator,
+        TranslationService* translator,
         TextPlayer* textPlayer,
         TextExtractor* textExtractor,
-        Dictionary* dictionary);
+        DictionaryService* dictionaryService);
     ~AppController();
 
     void Initialize();

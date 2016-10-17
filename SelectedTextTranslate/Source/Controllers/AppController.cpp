@@ -4,14 +4,14 @@ AppController::AppController(
     MainWindow* mainWindow,
     TrayIconProvider* trayIconProvider,
     HotkeyProvider* hotkeyProvider,
-    Translator* translator,
+    TranslationService* translator,
     TextPlayer* textPlayer,
     TextExtractor* textExtractor,
-    Dictionary* dictionary)
+    DictionaryService* dictionary)
 {
     this->mainWindow = mainWindow;
     this->textPlayer = textPlayer;
-    this->translator = translator;
+    this->translationService = translator;
     this->textExtractor = textExtractor;
     this->dictionary = dictionary;
     this->trayIconProvider = trayIconProvider;
@@ -36,7 +36,7 @@ void AppController::TranslateSelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
 
-    translateResult = translator->TranslateSentence(selectedText, true);
+    translateResult = translationService->TranslateSentence(selectedText, true);
 
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);
@@ -55,7 +55,7 @@ void AppController::ToggleTranslateResultDictionary(int translateResultDictionar
 void AppController::PlaySelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
-    translateResult = translator->TranslateSentence(selectedText, false);
+    translateResult = translationService->TranslateSentence(selectedText, false);
     textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
@@ -78,7 +78,7 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
     vector<LogRecord> logRecords = dictionary->GetTopRecords(200);
     LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
 
-    translateResult = translator->TranslateSentence(logRecordToTranslate.Word, false);
+    translateResult = translationService->TranslateSentence(logRecordToTranslate.Word, false);
     
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);

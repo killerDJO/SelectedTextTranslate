@@ -1,23 +1,23 @@
-﻿#include "Services\Translation\Translator.h"
+﻿#include "Services\Translation\TranslationService.h"
 #include "Utilities\StringUtilities.h"
-#include "ErrorHandling\Exceptions\SelectedTextTranslateException.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 using namespace web;
 
-Translator::Translator(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser, Dictionary* dictionary)
+TranslationService::TranslationService(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser, DictionaryService* dictionary)
 {
     this->requestProvider = requestProvider;
     this->translatePageParser = translatePageParser;
     this->logger = logger;
-    this->dictionary = dictionary;
+    this->dictionaryService = dictionary;
 }
 
-TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDictionary) const
+TranslateResult TranslationService::TranslateSentence(wstring sentence, bool updateDictionary) const
 {
     logger->Log(L"Start translating sentence '" + sentence + L"'.");
 
-    vector<LogRecord> dictionaryRecords = dictionary->GetRecords(sentence);
+    vector<LogRecord> dictionaryRecords = dictionaryService->GetRecords(sentence);
 
     wstring translatorResponse;
 
@@ -27,7 +27,7 @@ TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDicti
 
         if (updateDictionary)
         {
-            dictionary->UpdateTranslateResult(sentence);
+            dictionaryService->UpdateTranslateResult(sentence);
         }
     }
     else
@@ -41,7 +41,7 @@ TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDicti
 
         if (updateDictionary)
         {
-            dictionary->AddTranslateResult(sentence, translatorResponse);
+            dictionaryService->AddTranslateResult(sentence, translatorResponse);
         }
     }
 
@@ -63,7 +63,7 @@ TranslateResult Translator::TranslateSentence(wstring sentence, bool updateDicti
 }
 
 // Grabbed from google minified JS code
-wstring Translator::GetHash(wstring sentence) const
+wstring TranslationService::GetHash(wstring sentence) const
 {
     string utf8Sentence = StringUtilities::GetUtf8String(sentence);
     const char* bytes = utf8Sentence.c_str();
@@ -120,7 +120,7 @@ wstring Translator::GetHash(wstring sentence) const
 //		],		
 //	]
 //]
-TranslateResult Translator::ParseJSONResponse(wstring json) const
+TranslateResult TranslationService::ParseJSONResponse(wstring json) const
 {
     TranslateResult result;
 
@@ -196,7 +196,7 @@ TranslateResult Translator::ParseJSONResponse(wstring json) const
     return result;
 }
 
-void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &replace) const
+void TranslationService::ReplaceAll(wstring &str, const wstring &search, const wstring &replace) const
 {
     for (size_t pos = 0;; pos += replace.length() - 1)
     {
@@ -208,6 +208,6 @@ void Translator::ReplaceAll(wstring &str, const wstring &search, const wstring &
     }
 }
 
-Translator::~Translator()
+TranslationService::~TranslationService()
 {
 }

@@ -3,8 +3,8 @@
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\RenderingContext.h"
-#include "ErrorHandling\ErrorHandler.h"
-#include "Logging\Logger.h"
+#include "Infrastructure\ErrorHandling\ErrorHandler.h"
+#include "Infrastructure\Logging\Logger.h"
 
 class ScrollProvider;
 class RenderingContext;

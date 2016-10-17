@@ -1,6 +1,6 @@
 #pragma once
 
-class WindowHolder
+class NativeWindowHolder
 {
 protected:
     HINSTANCE instance;
@@ -14,8 +14,8 @@ protected:
     virtual LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-    WindowHolder(HINSTANCE instance);
-    virtual ~WindowHolder();
+    NativeWindowHolder(HINSTANCE instance);
+    virtual ~NativeWindowHolder();
 
     virtual void Initialize();
 

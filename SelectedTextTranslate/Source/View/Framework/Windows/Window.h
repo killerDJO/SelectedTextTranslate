@@ -3,7 +3,7 @@
 #include "View\Framework\DeviceContextBuffer.h"
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
-#include "View\Framework\Windows\WindowHolder.h"
+#include "View\Framework\Windows\NativeWindowHolder.h"
 
 class WindowContext;
 class Renderer;
@@ -21,7 +21,7 @@ class Renderer;
 /// 1. Content is rendered, dimensions/position changed and child windows created / rendered.
 /// 2. Window moved, scroll initialized, child window and window itself drawn.
 /// </summary>
-class Window : public WindowHolder
+class Window : public NativeWindowHolder
 {
 private:
     vector<Window*> destroyBeforeDrawList;

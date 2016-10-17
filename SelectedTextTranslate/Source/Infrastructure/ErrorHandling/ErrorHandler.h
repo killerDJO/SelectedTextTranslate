@@ -1,5 +1,5 @@
 #pragma once
-#include "Logging\Logger.h"
+#include "Infrastructure\Logging\Logger.h"
 #include "Utilities\Subscribeable.h"
 
 class ErrorHandler

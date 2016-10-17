@@ -1,5 +1,5 @@
 #include "View\Content\Base\ContentWindow.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ChildWindow(context, descriptor, parentWindow)

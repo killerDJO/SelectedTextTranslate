@@ -1,5 +1,5 @@
-#include "ErrorHandling\ErrorHandler.h"
-#include "ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\ErrorHandler.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 ErrorHandler::ErrorHandler(Logger* logger)
 {

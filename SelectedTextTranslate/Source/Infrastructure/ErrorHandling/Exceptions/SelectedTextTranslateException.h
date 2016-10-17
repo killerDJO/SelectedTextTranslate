@@ -1,5 +1,5 @@
 #pragma once
-#include "ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h"
+#include "Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h"
 
 class SelectedTextTranslateException : public SelectedTextTranslateBaseException
 {

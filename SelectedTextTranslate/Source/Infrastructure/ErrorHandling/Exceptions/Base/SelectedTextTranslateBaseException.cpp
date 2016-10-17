@@ -1,4 +1,4 @@
-#include "ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h"
+#include "Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h"
 #include "Utilities\StringUtilities.h"
 
 SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring message, const wchar_t* file, unsigned int line)
