@@ -4,13 +4,15 @@
 #include "Services\Dictionary\Dictionary.h"
 #include "Providers\RequestProvider.h"
 #include "View\Content\MainWindow.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
+#include "Controllers\AppController.h"
 
 Application::Application()
 {
+    components = vector<void*>();
 }
 
-int Application::Run(HINSTANCE hInstance) const
+int Application::Run(HINSTANCE hInstance)
 {
     HANDLE mutex = CreateMutex(nullptr, FALSE, _T("Selected text translate"));
     if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -47,39 +49,46 @@ int Application::Run(HINSTANCE hInstance) const
     return result;
 }
 
-int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
+int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance)
 {
-    Dictionary* dictionary = new Dictionary(logger);
-    TextExtractor* textExtractor = new TextExtractor();
-    RequestProvider* requestProvider = new RequestProvider(logger);
-    TranslatePageParser* translatePageParser = new TranslatePageParser(logger, requestProvider);
-    Translator* translator = new Translator(logger, requestProvider, translatePageParser, dictionary);
-    TextPlayer* textPlayer = new TextPlayer(logger, translator, requestProvider);
+    TrayIconProvider* trayIconProvider = RegisterComponent(new TrayIconProvider(logger, hInstance));
+    HotkeyProvider* hotkeyProvider = RegisterComponent(new HotkeyProvider());
 
-    ScaleProvider* scaleProvider = new ScaleProvider();
-    DeviceContextProvider* deviceContextProvider = new DeviceContextProvider();
-    ScrollProvider* scrollProvider = new ScrollProvider();
-    RenderingContext* renderingContext = new RenderingContext(scaleProvider, deviceContextProvider, scrollProvider);
+    Dictionary* dictionary = RegisterComponent(new Dictionary(logger));
+    TextExtractor* textExtractor = RegisterComponent(new TextExtractor());
+    RequestProvider* requestProvider = RegisterComponent(new RequestProvider(logger));
+    TranslatePageParser* translatePageParser = RegisterComponent(new TranslatePageParser(logger, requestProvider));
+    Translator* translator = RegisterComponent(new Translator(logger, requestProvider, translatePageParser, dictionary));
+    TextPlayer* textPlayer = RegisterComponent(new TextPlayer(logger, translator, requestProvider, trayIconProvider));
 
-    AppController* appController = new AppController(translator, textPlayer, textExtractor, dictionary);
+    ScaleProvider* scaleProvider = RegisterComponent(new ScaleProvider());
+    DeviceContextProvider* deviceContextProvider = RegisterComponent(new DeviceContextProvider());
+    ScrollProvider* scrollProvider = RegisterComponent(new ScrollProvider());
+    RenderingContext* renderingContext = RegisterComponent(new RenderingContext(scaleProvider, deviceContextProvider, scrollProvider));
 
-    HotkeyProvider* hotkeyProvider = new HotkeyProvider();
-    TrayIconProvider* trayIconProvider = new TrayIconProvider(appController);
-    ErrorStateProvider* errorStateProvider = new ErrorStateProvider(appController);
-
-    WindowContext* windowContext = new WindowContext(
+    WindowContext* windowContext = RegisterComponent(new WindowContext(
         hInstance,
         scrollProvider,
         scaleProvider,
         deviceContextProvider,
-        errorStateProvider,
+        trayIconProvider,
         renderingContext,
-        logger);
+        logger));
 
-    MainWindow* mainWindow = new MainWindow(windowContext, GetMainWindowDescriptor(scaleProvider), appController, hotkeyProvider, trayIconProvider);
-    appController->SetMainWindow(mainWindow);
+    MainWindow* mainWindow = RegisterComponent(new MainWindow(windowContext, GetMainWindowDescriptor(scaleProvider), hotkeyProvider));
 
+    AppController* appController = RegisterComponent(new AppController(
+        mainWindow,
+        trayIconProvider,
+        hotkeyProvider,
+        translator,
+        textPlayer,
+        textExtractor,
+        dictionary));
+
+    trayIconProvider->Initialize();
     mainWindow->Initialize();
+    appController->Initialize();
 
     logger->Log(L"Application initialized.");
 
@@ -92,21 +101,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
 
     logger->Log(L"Application shutdown.");
 
-    delete dictionary;
-    delete textExtractor;
-    delete requestProvider;
-    delete translatePageParser;
-    delete translator;
-    delete appController;
-    delete textPlayer;
-    delete mainWindow;
-    delete renderingContext;
-    delete scrollProvider;
-    delete scaleProvider;
-    delete deviceContextProvider;
-    delete hotkeyProvider;
-    delete trayIconProvider;
-    delete errorStateProvider;
+    DestroyComponents();
 
     return msg.wParam;
 }
@@ -132,6 +127,21 @@ WindowDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvid
         false);
 
     return descriptor;
+}
+
+template <typename TComponent>
+TComponent* Application::RegisterComponent(TComponent* component)
+{
+    components.push_back(component);
+    return component;
+}
+
+void Application::DestroyComponents()
+{
+    for(size_t i = 0; i < components.size(); ++i)
+    {
+        delete components[i];
+    }
 }
 
 Application::~Application()

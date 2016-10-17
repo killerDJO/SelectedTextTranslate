@@ -5,7 +5,7 @@ WindowContext::WindowContext(
     ScrollProvider* scrollProvider,
     ScaleProvider* scaleProvider,
     DeviceContextProvider* deviceContextProvider,
-    ErrorStateProvider* errorStateProvider,
+    ErrorHandler* errorHandler,
     RenderingContext* renderingContext,
     Logger* logger)
 {
@@ -14,7 +14,7 @@ WindowContext::WindowContext(
     this->scaleProvider = scaleProvider;
     this->deviceContextProvider = deviceContextProvider;
     this->renderingContext = renderingContext;
-    this->errorStateProvider = errorStateProvider;
+    this->errorHandler = errorHandler;
     this->logger = logger;
 }
 
@@ -38,9 +38,9 @@ DeviceContextProvider* WindowContext::GetDeviceContextProvider() const
     return deviceContextProvider;
 }
 
-ErrorStateProvider* WindowContext::GetErrorStateProvider() const
+ErrorHandler* WindowContext::GetErrorHandler() const
 {
-    return errorStateProvider;
+    return errorHandler;
 }
 
 RenderingContext* WindowContext::GetRenderingContext() const

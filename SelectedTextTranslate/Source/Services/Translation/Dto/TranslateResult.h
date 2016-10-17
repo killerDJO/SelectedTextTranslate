@@ -1,7 +1,7 @@
 #pragma once
 #include "Services\Translation\Dto\TranslateResultDictionary.h"
 #include "Services\Translation\Dto\TranslateResultSentence.h"
-#include "Helpers\StringUtilities.h"
+#include "Utilities\StringUtilities.h"
 
 class TranslateResult
 {

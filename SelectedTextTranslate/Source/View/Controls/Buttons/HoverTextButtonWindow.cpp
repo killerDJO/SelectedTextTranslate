@@ -1,7 +1,7 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text, function<void()> clickCallback)
-    : HoverButtonWindow(context, descriptor, parentWindow, clickCallback)
+HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text)
+    : HoverButtonWindow(context, descriptor, parentWindow)
 {
     this->font = font;
     this->normalColor = normalColor;

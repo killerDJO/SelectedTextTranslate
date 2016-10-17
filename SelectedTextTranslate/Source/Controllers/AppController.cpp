@@ -1,35 +1,35 @@
 #include "Controllers\AppController.h"
-#include "View\Content\MainWindow.h"
 
-AppController::AppController(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, Dictionary* dictionary)
+AppController::AppController(
+    MainWindow* mainWindow,
+    TrayIconProvider* trayIconProvider,
+    HotkeyProvider* hotkeyProvider,
+    Translator* translator,
+    TextPlayer* textPlayer,
+    TextExtractor* textExtractor,
+    Dictionary* dictionary)
 {
     this->mainWindow = mainWindow;
     this->textPlayer = textPlayer;
     this->translator = translator;
     this->textExtractor = textExtractor;
     this->dictionary = dictionary;
-
-    this->applicationView = ApplicationViews::Hidden;
+    this->trayIconProvider = trayIconProvider;
+    this->hotkeyProvider = hotkeyProvider;
 }
 
-void AppController::SetMainWindow(MainWindow* mainWindow)
+void AppController::Initialize()
 {
-    this->mainWindow = mainWindow;
-}
+    mainWindow->OnPlayText.Subscribe(bind(&AppController::PlayCurrentText, this));
+    mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultDictionary, this, placeholders::_1));
+    mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
 
-ApplicationViews AppController::GetCurrentApplicationView() const
-{
-    return applicationView;
-}
+    trayIconProvider->SetExitCallback(bind(&AppController::Exit, this));
+    trayIconProvider->SetShowDictionaryCallback(bind(&AppController::ShowDictionary, this));
+    trayIconProvider->SetTranslateSelectedTextCallback(bind(&AppController::TranslateSelectedText, this));
 
-vector<LogRecord> AppController::GetDictionaryRecords() const
-{
-    return dictionary->GetTopRecords(200);
-}
-
-TranslateResult AppController::GetCurrentTranslateResult() const
-{
-    return translateResult;
+    hotkeyProvider->RegisterTranslateHotkey(trayIconProvider->GetHandle(), bind(&AppController::TranslateSelectedText, this));
+    hotkeyProvider->RegisterPlayTextHotkey(trayIconProvider->GetHandle(), bind(&AppController::PlaySelectedText, this));
 }
 
 void AppController::TranslateSelectedText()
@@ -37,7 +37,9 @@ void AppController::TranslateSelectedText()
     wstring selectedText = textExtractor->GetSelectedText();
 
     translateResult = translator->TranslateSentence(selectedText, true);
-    applicationView = ApplicationViews::TranslateResult;
+
+    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
+    mainWindow->SetTranslateResultModel(translateResult);
 
     mainWindow->Render();
     mainWindow->Maximize();
@@ -46,7 +48,7 @@ void AppController::TranslateSelectedText()
 void AppController::ToggleTranslateResultDictionary(int translateResultDictionaryIndex)
 {
     translateResult.TranslateCategories[translateResultDictionaryIndex].IsExtendedList ^= true;
-    applicationView = ApplicationViews::TranslateResult;
+    mainWindow->SetTranslateResultModel(translateResult);
     mainWindow->Render(true);
 }
 
@@ -62,9 +64,11 @@ void AppController::PlayCurrentText() const
     textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
-void AppController::ShowDictionary()
+void AppController::ShowDictionary() const
 {
-    applicationView = ApplicationViews::Dictionary;
+    mainWindow->SetCurrentView(ApplicationViews::Dictionary);
+    mainWindow->SetDictionaryModel(dictionary->GetTopRecords(200));
+
     mainWindow->Render();
     mainWindow->Maximize();
 }
@@ -75,14 +79,11 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
     LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
 
     translateResult = translator->TranslateSentence(logRecordToTranslate.Word, false);
-    applicationView = ApplicationViews::TranslateResult;
-    mainWindow->Render();
-}
+    
+    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
+    mainWindow->SetTranslateResultModel(translateResult);
 
-void AppController::ShowError(wstring message)
-{
-    applicationView = ApplicationViews::Error;
-    mainWindow->ShowError(message);
+    mainWindow->Render();
 }
 
 void AppController::Exit() const

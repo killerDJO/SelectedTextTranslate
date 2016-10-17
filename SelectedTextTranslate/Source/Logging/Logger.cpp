@@ -1,5 +1,5 @@
 #include "Logging\Logger.h"
-#include "Helpers\StringUtilities.h"
+#include "Utilities\StringUtilities.h"
 #include <chrono>
 #include <iomanip>
 

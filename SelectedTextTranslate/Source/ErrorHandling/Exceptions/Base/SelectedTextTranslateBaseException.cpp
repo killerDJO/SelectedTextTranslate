@@ -1,5 +1,5 @@
-#include "Exceptions\Base\SelectedTextTranslateBaseException.h"
-#include "Helpers\StringUtilities.h"
+#include "ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h"
+#include "Utilities\StringUtilities.h"
 
 SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring message, const wchar_t* file, unsigned int line)
     : runtime_error(StringUtilities::GetUtf8String(message))

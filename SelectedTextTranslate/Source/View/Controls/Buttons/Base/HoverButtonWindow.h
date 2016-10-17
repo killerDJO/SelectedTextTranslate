@@ -1,11 +1,10 @@
 #pragma once
 #include "View\Framework\Windows\ChildWindow.h"
+#include "Utilities\Subscribeable.h"
 
 class HoverButtonWindow : public ChildWindow
 {
 private:
-    function<void()> clickCallback;
-
     bool isHovered;
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -19,8 +18,10 @@ protected:
     virtual void RenderStatesDeviceContext() = 0;
 
 public:
-    HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, function<void()> clickCallback);
+    HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
     virtual ~HoverButtonWindow();
+
+    Subscribeable<> OnClick;
 
     void Initialize() override;
 };

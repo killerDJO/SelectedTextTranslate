@@ -3,6 +3,7 @@
 #include "View\Framework\DeviceContextBuffer.h"
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
+#include "View\Framework\Windows\WindowHolder.h"
 
 class WindowContext;
 class Renderer;
@@ -20,7 +21,7 @@ class Renderer;
 /// 1. Content is rendered, dimensions/position changed and child windows created / rendered.
 /// 2. Window moved, scroll initialized, child window and window itself drawn.
 /// </summary>
-class Window
+class Window : public WindowHolder
 {
 private:
     vector<Window*> destroyBeforeDrawList;
@@ -33,9 +34,6 @@ private:
     void ApplyWindowPosition(bool preserveScrolls);
 
 protected:
-    HWND windowHandle;
-    wchar_t* className;
-
     WindowDescriptor descriptor;
     Size windowSize;
     Size contentSize;
@@ -54,20 +52,18 @@ protected:
 
     DWORD GetScrollStyle() const;
 
-    virtual void SpecifyWindowClass(WNDCLASSEX* windowClass);
     virtual Size RenderContent(Renderer* renderer) = 0;
 
     void ApplyRenderedState(bool preserveScrolls);
     virtual Point GetInitialWindowOffset();
 
-    static LRESULT CALLBACK WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam);
+    LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
     Window(WindowContext* context, WindowDescriptor descriptor);
-    virtual ~Window();
+    ~Window() override;
 
-    HWND GetHandle() const;
     WindowDescriptor GetDescriptor() const;
 
     Size GetSize() const;
@@ -83,6 +79,6 @@ public:
     void Render(bool preserveVerticalScroll = false);
     void Draw(bool drawChildren = false);
 
-    virtual void Initialize();
+    void Initialize() override;
     virtual void Resize();
 };

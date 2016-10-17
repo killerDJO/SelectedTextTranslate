@@ -30,6 +30,7 @@
 #include <commctrl.h>
 #include <regex>
 #include <sstream>
+#include <functional>
 
 #include <cpprest\json.h>
 #include <cpprest\http_client.h>

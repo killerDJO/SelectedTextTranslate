@@ -17,6 +17,6 @@ protected:
     void RenderStatesDeviceContext() override;
 
 public:
-    HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback);
+    HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource);
     ~HoverIconButtonWindow();
 };

@@ -1,5 +1,5 @@
 #include "View\Framework\Providers\DeviceContextProvider.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
 DeviceContextProvider::DeviceContextProvider()
 {

@@ -1,11 +1,12 @@
 #include "Services\Translation\TextPlayer.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider)
+TextPlayer::TextPlayer(Logger* logger, Translator* translator, RequestProvider* requestProvider, ErrorHandler* errorHandler)
 {
     this->translator = translator;
     this->requestProvider = requestProvider;
     this->logger = logger;
+    this->errorHandler = errorHandler;
     this->currentTextToPlay = nullptr;
 }
 
@@ -55,6 +56,7 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
     {
         wstring currentExceptionMessage = ExceptionHelper::GetCurrentExceptionMessage();
         textPlayer->logger->LogFormatted(L"Error playing sentence: %ls", currentExceptionMessage.c_str());
+        textPlayer->errorHandler->ShowError(currentExceptionMessage);
         return -1;
     }
 }

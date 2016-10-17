@@ -1,19 +1,16 @@
 #pragma once
-#include "Controllers\Enums\ApplicationViews.h"
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Services\Translation\Translator.h"
 #include "Services\Translation\TextPlayer.h"
 #include "Services\Dictionary\Dictionary.h"
 #include "Services\Translation\TextExtractor.h"
-
-class MainWindow;
-class TextPlayer;
+#include "View\Content\MainWindow.h"
+#include "View\Providers\TrayIconProvider.h"
 
 class AppController
 {
 private:
     TranslateResult translateResult;
-    ApplicationViews applicationView;
 
     TextExtractor* textExtractor;
     MainWindow* mainWindow;
@@ -21,16 +18,21 @@ private:
     TextPlayer* textPlayer;
     Dictionary* dictionary;
 
+    TrayIconProvider* trayIconProvider;
+    HotkeyProvider* hotkeyProvider;
+
 public:
-    AppController(Translator* translator, TextPlayer* textPlayer, TextExtractor* textExtractor, Dictionary* dictionary);
+    AppController(
+        MainWindow* mainWindow,
+        TrayIconProvider* trayIconProvider,
+        HotkeyProvider* hotkeyProvider,
+        Translator* translator,
+        TextPlayer* textPlayer,
+        TextExtractor* textExtractor,
+        Dictionary* dictionary);
     ~AppController();
 
-    void SetMainWindow(MainWindow* mainWindow);
-
-    ApplicationViews GetCurrentApplicationView() const;
-
-    vector<LogRecord> GetDictionaryRecords() const;
-    TranslateResult GetCurrentTranslateResult() const;
+    void Initialize();
 
     void TranslateSelectedText();
     void ToggleTranslateResultDictionary(int translateResultDictionaryIndex);
@@ -38,10 +40,8 @@ public:
     void PlaySelectedText();
     void PlayCurrentText() const;
 
-    void ShowDictionary();
+    void ShowDictionary() const;
     void TranslateWordFromDictionary(int wordInDictionaryIndex);
-
-    void ShowError(wstring message);
 
     void Exit() const;
 };

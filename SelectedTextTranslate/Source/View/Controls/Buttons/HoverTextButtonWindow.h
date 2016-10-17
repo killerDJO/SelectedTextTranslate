@@ -22,7 +22,6 @@ public:
         HFONT font,
         Colors normalColor,
         Colors hoverColor,
-        wstring text,
-        function<void()> clickCallback);
+        wstring text);
     ~HoverTextButtonWindow();
 };

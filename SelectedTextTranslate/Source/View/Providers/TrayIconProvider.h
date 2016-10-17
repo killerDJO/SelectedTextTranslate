@@ -1,7 +1,9 @@
 #pragma once
-#include "Controllers\AppController.h"
+#include "View\Framework\Windows\WindowHolder.h"
+#include "Logging\Logger.h"
+#include "ErrorHandling\ErrorHandler.h"
 
-class TrayIconProvider
+class TrayIconProvider : public WindowHolder, public ErrorHandler
 {
     const UINT WM_TRAYICON = WM_USER + 1;
 
@@ -15,18 +17,28 @@ class TrayIconProvider
     HMENU menu;
     NOTIFYICONDATA notifyIconData;
 
-    AppController* appController;
+    function<void()> exitCallback;
+    function<void()> translateSelectedTextCallback;
+    function<void()> showDictionaryCallback;
+
+    Logger* logger;
 
     void CreateMenu();
+    void DestroyTrayIcon();
+    void CreateTrayIcon();
+
+    LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    TrayIconProvider(AppController* appController);
-    ~TrayIconProvider();
+    TrayIconProvider(Logger* logger, HINSTANCE instance);
+    ~TrayIconProvider() override;
 
-    void CreateTrayIcon(HWND windowHandle, HINSTANCE instance);
-    void DestroyTrayIcon();
+    void Initialize() override;
 
-    void ShowErrorMessage(wstring message);
+    void ShowError(wstring message) override;
 
-    void ProcessTrayIconMessages(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
+    void SetExitCallback(function<void()> exitCallback);
+    void SetTranslateSelectedTextCallback(function<void()> translateSelectedTextCallback);
+    void SetShowDictionaryCallback(function<void()> showDictionaryCallback);
 };

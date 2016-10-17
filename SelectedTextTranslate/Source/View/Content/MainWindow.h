@@ -3,24 +3,26 @@
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Content\Translation\TranslationWindow.h"
 #include "View\Providers\HotkeyProvider.h"
-#include "View\Providers\TrayIconProvider.h"
-#include "Controllers\AppController.h"
+#include "Controllers\Enums\ApplicationViews.h"
 
 class MainWindow : public Window
 {
 private:
-    AppController* appController;
     HotkeyProvider* hotkeyProvider;
-    TrayIconProvider* trayIconProvider;
 
     TranslationWindow* translationWindow;
     DictionaryWindow* dictionaryWindow;
+
+    ApplicationViews currentView;
+
+    TranslateResult translateResult;
+    vector<LogRecord> dictionaryRecords;
 
     void CreateViews();
 
     void Scale(double scaleFactorAjustment);
     void Resize() override;
-    Window* GetCurrentView() const;
+    Window* GetWindowToShow() const;
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
@@ -29,12 +31,19 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainWindow(WindowContext* context, WindowDescriptor descriptor, AppController* appController, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider);
+    MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider);
     ~MainWindow();
+
+    Subscribeable<> OnPlayText;
+    Subscribeable<int> OnExpandTranslationResult;
+    Subscribeable<int> OnShowTranslation;
 
     void Initialize() override;
 
     void Minimize();
     void Maximize();
-    void ShowError(wstring message);
+
+    void SetCurrentView(ApplicationViews applicationView);
+    void SetTranslateResultModel(TranslateResult translateResult);
+    void SetDictionaryModel(vector<LogRecord> dictionaryRecords);
 };

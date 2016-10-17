@@ -4,6 +4,5 @@ enum class ApplicationViews
 {
     Hidden = 0,
     TranslateResult = 1,
-    Dictionary = 2,
-    Error = 3
+    Dictionary = 2
 };

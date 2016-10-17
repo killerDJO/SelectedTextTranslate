@@ -1,5 +1,5 @@
 #include "View\Providers\HotkeyProvider.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
 HotkeyProvider::HotkeyProvider()
 {

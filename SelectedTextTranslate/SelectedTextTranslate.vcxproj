@@ -14,12 +14,13 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\View\Providers\ErrorStateProvider.cpp" />
+    <ClCompile Include="Source\ErrorHandling\ErrorHandler.cpp" />
+    <ClCompile Include="Source\View\Framework\Windows\WindowHolder.cpp" />
     <ClCompile Include="Source\Application.cpp" />
-    <ClCompile Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
-    <ClCompile Include="Source\Exceptions\SelectedTextTranslateFatalException.cpp" />
-    <ClCompile Include="Source\Exceptions\SelectedTextTranslateException.cpp" />
-    <ClCompile Include="Source\Helpers\ExceptionHelper.cpp" />
+    <ClCompile Include="Source\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
+    <ClCompile Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
+    <ClCompile Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
+    <ClCompile Include="Source\ErrorHandling\ExceptionHelper.cpp" />
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp" />
     <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp" />
@@ -41,7 +42,7 @@
     <ClCompile Include="Source\View\Content\Dictionary\DictionaryWindow.cpp" />
     <ClCompile Include="Source\Providers\RequestProvider.cpp" />
     <ClCompile Include="Source\Services\Translation\TextExtractor.cpp" />
-    <ClCompile Include="Source\Helpers\StringUtilities.cpp" />
+    <ClCompile Include="Source\Utilities\StringUtilities.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -59,12 +60,13 @@
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\View\Providers\ErrorStateProvider.h" />
-    <ClInclude Include="Source\Helpers\ExceptionHelper.h" />
-    <ClInclude Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.h" />
+    <ClInclude Include="Source\View\Framework\Windows\WindowHolder.h" />
+    <ClInclude Include="Source\ErrorHandling\ErrorHandler.h" />
+    <ClInclude Include="Source\ErrorHandling\ExceptionHelper.h" />
+    <ClInclude Include="Source\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\Exceptions\SelectedTextTranslateFatalException.h" />
-    <ClInclude Include="Source\Exceptions\SelectedTextTranslateException.h" />
+    <ClInclude Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
+    <ClInclude Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h" />
     <ClInclude Include="Source\View\Framework\Enums\WindowStates.h" />
@@ -87,7 +89,7 @@
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResultSentence.h" />
     <ClInclude Include="Source\Providers\RequestProvider.h" />
     <ClInclude Include="Source\Services\Translation\TextExtractor.h" />
-    <ClInclude Include="Source\Helpers\StringUtilities.h" />
+    <ClInclude Include="Source\Utilities\StringUtilities.h" />
     <ClInclude Include="Source\Services\Dictionary\Dictionary.h" />
     <ClInclude Include="Source\Logging\Logger.h" />
     <ClInclude Include="Source\PrecompiledHeaders\stdafx.h" />
@@ -108,6 +110,7 @@
     <ClInclude Include="Source\View\Framework\WindowContext.h" />
     <ClInclude Include="Source\View\Content\Translation\TranslationWindow.h" />
     <ClInclude Include="Source\View\Providers\TrayIconProvider.h" />
+    <ClInclude Include="Source\Utilities\Subscribeable.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

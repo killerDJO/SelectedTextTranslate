@@ -1,7 +1,7 @@
 #pragma once
 #include "Logging\Logger.h"
-#include "Exceptions\SelectedTextTranslateFatalException.h"
-#include "Exceptions\SelectedTextTranslateException.h"
+#include "ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 
 #define WIDEN2(x) L ## x
 #define WIDEN(x) WIDEN2(x)

@@ -1,11 +1,14 @@
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, function<void()> clickCallback)
-    : ChildWindow(context, descriptor, parentWindow), hoverStateDeviceContext(nullptr), normalStateDeviceContext(nullptr)
+HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
+    : ChildWindow(context, descriptor, parentWindow)
 {
-    this->clickCallback = clickCallback;
+    this->OnClick = Subscribeable<>();
     this->isHovered = false;
+
+    this->hoverStateDeviceContext = nullptr;
+    this->normalStateDeviceContext = nullptr;
 }
 
 void HoverButtonWindow::Initialize()
@@ -40,7 +43,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
     {
 
     case WM_LBUTTONUP:
-        clickCallback();
+        OnClick.Notify();
         return TRUE;
 
     case WM_MOUSEMOVE:

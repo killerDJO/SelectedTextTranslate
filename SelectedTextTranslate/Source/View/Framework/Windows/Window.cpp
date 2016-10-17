@@ -1,7 +1,8 @@
 #include "View\Framework\Windows\Window.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
+    : WindowHolder(context->GetInstance())
 {
     if (descriptor.AutoScale)
     {
@@ -21,7 +22,6 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
     this->activeChildWindows = vector<Window*>();
     this->destroyBeforeDrawList = vector<Window*>();
 
-    this->windowHandle = nullptr;
     this->className = nullptr;
     this->deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), this->descriptor.WindowSize);
 
@@ -31,27 +31,8 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
 
 void Window::Initialize()
 {
-    WNDCLASSEX windowClass = { 0 };
-
-    if(!GetClassInfoEx(context->GetInstance(), className, &windowClass))
-    {
-        windowClass.hInstance = context->GetInstance();
-        windowClass.lpszClassName = className;
-        windowClass.lpfnWndProc = WindowProcedureWrapper;
-        windowClass.cbSize = sizeof(WNDCLASSEX);
-        windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-        windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-
-        SpecifyWindowClass(&windowClass);
-
-        AssertCriticalWinApiResult(RegisterClassEx(&windowClass));
-    }
-
+    WindowHolder::Initialize();
     windowState = WindowStates::Initialized;
-}
-
-void Window::SpecifyWindowClass(WNDCLASSEX* windowClass)
-{
 }
 
 void Window::Render(bool preserveScrolls)
@@ -238,11 +219,6 @@ DWORD Window::GetScrollStyle() const
     return scrollStyle;
 }
 
-HWND Window::GetHandle() const
-{
-    return windowHandle;
-}
-
 WindowDescriptor Window::GetDescriptor() const
 {
     return this->descriptor;
@@ -289,41 +265,21 @@ bool Window::IsVisible() const
     return isVisible;
 }
 
-LRESULT Window::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT Window::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    Window* instance;
-
-    if(message == WM_CREATE)
-    {
-        // Store pointer to the current window class in the GWLP_USERDATA. 'this' must be passed as lpParam in CreateWindow call.
-        CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
-        instance = (Window*)createstruct->lpCreateParams;
-        instance->windowHandle = hWnd;
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
-    }
-    else
-    {
-        instance = (Window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-    }
-
-    if(instance == nullptr)
-    {
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-
     try
     {
         ExceptionHelper::SetupStructuredExceptionsTranslation();
-        return instance->WindowProcedure(message, wParam, lParam);
+        return WindowProcedure(message, wParam, lParam);
     }
     catch (const SelectedTextTranslateException& error)
     {
-        instance->context->GetLogger()->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetFullErrorMessage().c_str());
-        instance->context->GetErrorStateProvider()->ShowError(error.GetDisplayErrorMessage());
+        context->GetLogger()->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetFullErrorMessage().c_str());
+        context->GetErrorHandler()->ShowError(error.GetDisplayErrorMessage());
     }
     catch (...)
     {
-        ExceptionHelper::TerminateOnException(instance->context->GetLogger());
+        context->GetErrorHandler()->HandleFatalException();
     }
 
     return -1;
@@ -361,7 +317,6 @@ Window::~Window()
     delete deviceContextBuffer;
     DestroyChildWindows(activeChildWindows);
     DestroyChildWindows(destroyBeforeDrawList);
-    AssertCriticalWinApiResult(DestroyWindow(windowHandle));
 
     windowState = WindowStates::Destroyed;
 }

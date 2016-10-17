@@ -1,7 +1,7 @@
-#include "Helpers\ExceptionHelper.h"
-#include "Helpers\StringUtilities.h"
-#include "Exceptions\SelectedTextTranslateFatalException.h"
-#include "Exceptions\SelectedTextTranslateException.h"
+#include "ErrorHandling\ExceptionHelper.h"
+#include "ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Utilities\StringUtilities.h"
 
 void ExceptionHelper::ThrowOnWinapiError(void* resultValue, const wchar_t* file, unsigned int line, bool isFatal, void* invalidValue)
 {
@@ -10,7 +10,6 @@ void ExceptionHelper::ThrowOnWinapiError(void* resultValue, const wchar_t* file,
         ThrowOnWinapiError(file, line, isFatal);
     }
 }
-
 
 void ExceptionHelper::ThrowOnWinapiError(DWORD resultValue, const wchar_t* file, unsigned int line, bool isFatal, DWORD invalidValue)
 {

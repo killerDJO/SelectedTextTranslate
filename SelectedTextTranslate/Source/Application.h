@@ -6,12 +6,18 @@
 class Application
 {
 private:
-    int BootstrapApplication(Logger* logger, HINSTANCE hInstance) const;
+    vector<void*> components;
+
+    int BootstrapApplication(Logger* logger, HINSTANCE hInstance);
     WindowDescriptor GetMainWindowDescriptor(ScaleProvider* scaleProvider) const;
+
+    template<typename TComponent>
+    TComponent* RegisterComponent(TComponent* component);
+    void DestroyComponents();
 
 public:
     Application();
     ~Application();
 
-    int Run(HINSTANCE hInstance) const;
+    int Run(HINSTANCE hInstance);
 };

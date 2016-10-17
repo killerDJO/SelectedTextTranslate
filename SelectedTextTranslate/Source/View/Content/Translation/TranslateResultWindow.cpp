@@ -1,11 +1,12 @@
 ﻿#include "View\Content\Translation\TranslateResultWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
-: ContentWindow(context, descriptor, parentWindow, appController)
+TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
+: ContentWindow(context, descriptor, parentWindow)
 {
     this->fontUnderscored = nullptr;
+    this->OnExpandTranslationResult = Subscribeable<int>();
 }
 
 void TranslateResultWindow::Initialize()
@@ -15,17 +16,15 @@ void TranslateResultWindow::Initialize()
     fontUnderscored = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small, false, true);
 }
 
-void TranslateResultWindow::ExpandDictionary(int index) const
+void TranslateResultWindow::SetModel(TranslateResult translateResult)
 {
-    appController->ToggleTranslateResultDictionary(index);
+    this->translateResult = translateResult;
 }
 
 Size TranslateResultWindow::RenderContent(Renderer* renderer)
 {
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
-
-    TranslateResult translateResult = appController->GetCurrentTranslateResult();
 
     int curY = lineHeight;
 
@@ -136,8 +135,12 @@ int TranslateResultWindow::CreateExpandButton(
             fontUnderscored,
             Colors::Gray,
             Colors::Black,
-            text,
-            bind(&TranslateResultWindow::ExpandDictionary, this, categoryIndex));
+            text);
+
+        expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
+        {
+            return OnExpandTranslationResult.Notify(categoryIndex);
+        });
 
         AddChildWindow(expandButton);
 

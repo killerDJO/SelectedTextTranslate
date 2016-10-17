@@ -1,11 +1,10 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
-#include "Exceptions\SelectedTextTranslateFatalException.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, function<void()> clickCallback)
-    : HoverButtonWindow(context, descriptor, parentWindow, clickCallback)
+HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource)
+    : HoverButtonWindow(context, descriptor, parentWindow)
 {
     this->normalIconResource = normalIconResource;
     this->hoverIconResource = hoverIconResource;
@@ -83,7 +82,7 @@ Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) cons
     }
     else
     {
-        throw SelectedTextTranslateFatalException(L"Unable to CreateStreamOnHGlobal", __WFILE__, __LINE__);
+        ThrowSelectedTextTranslateException(L"Unable to CreateStreamOnHGlobal");
     }
 
     GlobalUnlock(globalBuffer);

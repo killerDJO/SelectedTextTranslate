@@ -1,10 +1,12 @@
 #include "View\Content\Translation\TranslationWindow.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
-    : ContentWindow(context, descriptor, parentWindow, appController)
+TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
+    : ContentWindow(context, descriptor, parentWindow)
 {
     separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+    OnPlayText = Subscribeable<>();
+    OnExpandTranslationResult = Subscribeable<int>();
     headerWindow = nullptr;
     translateResultWindow = nullptr;
 }
@@ -18,7 +20,8 @@ void TranslationWindow::Initialize()
         Size(0, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(context, headerWindowDescriptor, this, appController);
+    headerWindow = new HeaderWindow(context, headerWindowDescriptor, this);
+    headerWindow->OnPlayText.Subscribe(&OnPlayText);
     AddChildWindow(headerWindow);
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
@@ -26,8 +29,15 @@ void TranslationWindow::Initialize()
         Size(0, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, this, appController);
+    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, this);
+    translateResultWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
     AddChildWindow(translateResultWindow);
+}
+
+void TranslationWindow::SetModel(TranslateResult translateResult) const
+{
+    this->headerWindow->SetModel(translateResult);
+    this->translateResultWindow->SetModel(translateResult);
 }
 
 Size TranslationWindow::RenderContent(Renderer* renderer)

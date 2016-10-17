@@ -1,6 +1,5 @@
 #pragma once
 #include "View\Framework\Windows\ChildWindow.h"
-#include "Controllers\AppController.h"
 
 class ContentWindow : public ChildWindow
 {
@@ -16,12 +15,10 @@ protected:
 
     HBRUSH grayBrush;
 
-    AppController* appController;
-
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController);
+    ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
     ~ContentWindow() override;
 
     void Initialize() override;

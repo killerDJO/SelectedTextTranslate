@@ -14,9 +14,6 @@
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Source\Helpers">
-      <UniqueIdentifier>{3974d202-4013-43ee-b10e-900c7cc3fd4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Helpers">
       <UniqueIdentifier>{d57738c5-794c-477f-a525-226210be81d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\PrecompiledSource">
@@ -67,12 +64,6 @@
     <Filter Include="Source\Logging">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Exceptions">
-      <UniqueIdentifier>{8235f4de-6a65-4e7e-9e51-b788cab99ba8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Exceptions\Base">
-      <UniqueIdentifier>{e7eb027f-e540-4c6f-ba4f-cca2813e1712}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Providers">
       <UniqueIdentifier>{36f26b3b-0088-44dd-a571-4e467b8a59c5}</UniqueIdentifier>
     </Filter>
@@ -97,6 +88,18 @@
     <Filter Include="Source\Controllers\Enums">
       <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ErrorHandling">
+      <UniqueIdentifier>{8235f4de-6a65-4e7e-9e51-b788cab99ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ErrorHandling\Exceptions">
+      <UniqueIdentifier>{f62700e4-21f6-47e4-9a31-8abe4cc1ef67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ErrorHandling\Exceptions\Base">
+      <UniqueIdentifier>{e7eb027f-e540-4c6f-ba4f-cca2813e1712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utilities">
+      <UniqueIdentifier>{3974d202-4013-43ee-b10e-900c7cc3fd4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -104,9 +107,6 @@
     </ClCompile>
     <ClCompile Include="Source\PrecompiledHeaders\stdafx.cpp">
       <Filter>Source\PrecompiledSource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Helpers\StringUtilities.cpp">
-      <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp">
       <Filter>Source\View\Content\Base</Filter>
@@ -159,9 +159,6 @@
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp">
       <Filter>Source\View\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp">
-      <Filter>Source\View\Providers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Framework\Windows\ChildWindow.cpp">
       <Filter>Source\View\Framework\Windows</Filter>
     </ClCompile>
@@ -177,20 +174,8 @@
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
-      <Filter>Source\Exceptions\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Exceptions\SelectedTextTranslateFatalException.cpp">
-      <Filter>Source\Exceptions</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Exceptions\SelectedTextTranslateException.cpp">
-      <Filter>Source\Exceptions</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Providers\RequestProvider.cpp">
       <Filter>Source\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Helpers\ExceptionHelper.cpp">
-      <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Services\Dictionary\Dto\LogRecord.cpp">
       <Filter>Source\Services\Dictionary\Dto</Filter>
@@ -216,8 +201,29 @@
     <ClCompile Include="Source\Controllers\AppController.cpp">
       <Filter>Source\Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Providers\ErrorStateProvider.cpp">
+    <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp">
       <Filter>Source\View\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Windows\WindowHolder.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
+      <Filter>Source\ErrorHandling\Exceptions\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\StringUtilities.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp">
+      <Filter>Source\ErrorHandling\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp">
+      <Filter>Source\ErrorHandling\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ErrorHandling\ExceptionHelper.cpp">
+      <Filter>Source\ErrorHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ErrorHandling\ErrorHandler.cpp">
+      <Filter>Source\ErrorHandling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -231,9 +237,6 @@
     </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Helpers\StringUtilities.h">
-      <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Base\ContentWindow.h">
       <Filter>Source\View\Content\Base</Filter>
@@ -301,9 +304,6 @@
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h">
       <Filter>Source\View\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Providers\TrayIconProvider.h">
-      <Filter>Source\View\Providers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\Windows\ChildWindow.h">
       <Filter>Source\View\Framework\Windows</Filter>
     </ClInclude>
@@ -316,23 +316,8 @@
     <ClInclude Include="Source\Logging\Logger.h">
       <Filter>Source\Logging</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Exceptions\Base\SelectedTextTranslateBaseException.h">
-      <Filter>Source\Exceptions\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Exceptions\SelectedTextTranslateException.h">
-      <Filter>Source\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Exceptions\SelectedTextTranslateFatalException.h">
-      <Filter>Source\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Providers\RequestProvider.h">
       <Filter>Source\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Helpers\ExceptionHelper.h">
-      <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Services\Dictionary\Dto\LogRecord.h">
       <Filter>Source\Services\Dictionary\Dto</Filter>
@@ -370,8 +355,35 @@
     <ClInclude Include="Source\Controllers\AppController.h">
       <Filter>Source\Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Providers\ErrorStateProvider.h">
+    <ClInclude Include="Source\View\Providers\TrayIconProvider.h">
       <Filter>Source\View\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Windows\WindowHolder.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h">
+      <Filter>Source\ErrorHandling\Exceptions\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\StringUtilities.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateException.h">
+      <Filter>Source\ErrorHandling\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h">
+      <Filter>Source\ErrorHandling\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ErrorHandling\ExceptionHelper.h">
+      <Filter>Source\ErrorHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ErrorHandling\ErrorHandler.h">
+      <Filter>Source\ErrorHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\Subscribeable.h">
+      <Filter>Source\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

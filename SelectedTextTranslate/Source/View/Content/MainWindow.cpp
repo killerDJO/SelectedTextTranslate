@@ -1,18 +1,20 @@
 #include "View\Content\MainWindow.h"
-#include "Exceptions\SelectedTextTranslateException.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, AppController* appController, HotkeyProvider* hotkeyProvider, TrayIconProvider* trayIconProvider)
+MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider)
     : Window(context, descriptor)
 {
-    this->appController = appController;
     this->hotkeyProvider = hotkeyProvider;
-    this->trayIconProvider = trayIconProvider;
 
     this->className = L"STT_MAIN";
+    this->currentView = ApplicationViews::Hidden;
 
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
+
+    OnPlayText = Subscribeable<>();
+    OnExpandTranslationResult = Subscribeable<int>();
+    OnShowTranslation = Subscribeable<int>();
 }
 
 void MainWindow::Initialize()
@@ -34,14 +36,11 @@ void MainWindow::Initialize()
         this);
     AssertCriticalWinApiResult(windowHandle);
 
-    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [&]() -> void { appController->TranslateSelectedText(); });
-    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [&]() -> void { appController->PlaySelectedText(); });
-
-    trayIconProvider->CreateTrayIcon(windowHandle, context->GetInstance());
-
     CreateViews();
 
     Minimize();
+
+    context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainWindow::Minimize, this));
 }
 
 void MainWindow::CreateViews()
@@ -55,14 +54,18 @@ void MainWindow::CreateViews()
         OverflowModes::Stretch,
         false);
 
-    translationWindow = new TranslationWindow(context, windowDescriptor, this, appController);
-    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this, appController);
-
-    translationWindow->Hide();
-    dictionaryWindow->Hide();
-
+    translationWindow = new TranslationWindow(context, windowDescriptor, this);
     AddChildWindow(translationWindow);
+    translationWindow->OnPlayText.Subscribe(&OnPlayText);
+    translationWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
+    translationWindow->Hide();
+    translationWindow->SetModel(translateResult);
+
+    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this);
+    dictionaryWindow->OnShowTranslation.Subscribe(&OnShowTranslation);
     AddChildWindow(dictionaryWindow);
+    dictionaryWindow->Hide();
+    dictionaryWindow->SetModel(dictionaryRecords);
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -93,10 +96,21 @@ void MainWindow::Maximize()
     Show();
 }
 
-void MainWindow::ShowError(wstring message)
+void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
 {
-    this->Minimize();
-    this->trayIconProvider->ShowErrorMessage(message);
+    this->translateResult = translateResult;
+    this->translationWindow->SetModel(translateResult);
+}
+
+void MainWindow::SetDictionaryModel(vector<LogRecord> dictionaryRecords)
+{
+    this->dictionaryRecords = dictionaryRecords;
+    this->dictionaryWindow->SetModel(dictionaryRecords);
+}
+
+void MainWindow::SetCurrentView(ApplicationViews applicationView)
+{
+    this->currentView = applicationView;
 }
 
 Size MainWindow::RenderContent(Renderer* renderer)
@@ -106,7 +120,7 @@ Size MainWindow::RenderContent(Renderer* renderer)
         activeChildWindows[i]->Hide();
     }
 
-    Window* currentView = GetCurrentView();
+    Window* currentView = GetWindowToShow();
 
     currentView->Render();
     currentView->Show();
@@ -169,15 +183,14 @@ void MainWindow::Resize()
         activeChildWindows[i]->Resize();
     }
 
-    Window* currentView = GetCurrentView();
-    contentSize = currentView->GetContentSize();
+    Window* currentWindow = GetWindowToShow();
+    contentSize = currentWindow->GetContentSize();
 
     ApplyRenderedState(true);
 }
 
-Window* MainWindow::GetCurrentView() const
+Window* MainWindow::GetWindowToShow() const
 {
-    ApplicationViews currentView = appController->GetCurrentApplicationView();
     if (currentView == ApplicationViews::TranslateResult)
     {
         return translationWindow;
@@ -193,8 +206,6 @@ Window* MainWindow::GetCurrentView() const
 
 LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    this->trayIconProvider->ProcessTrayIconMessages(windowHandle, message, wParam, lParam);
-
     switch (message)
     {
 
@@ -229,11 +240,6 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
-
-    case WM_DESTROY:
-    case WM_CLOSE:
-        appController->Exit();
-        break;
 
     case WM_SHOWWINDOW:
     {

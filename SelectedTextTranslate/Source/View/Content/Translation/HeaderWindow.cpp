@@ -1,17 +1,13 @@
 #include "View\Content\Translation\HeaderWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
-: ContentWindow(context, descriptor, parentWindow, appController)
+HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
+    : ContentWindow(context, descriptor, parentWindow)
 {
     fontSmallUnderscored = nullptr;
-}
-
-void HeaderWindow::PlayText() const
-{
-    appController->PlayCurrentText();
+    OnPlayText = Subscribeable<>();
 }
 
 void HeaderWindow::Initialize()
@@ -21,12 +17,15 @@ void HeaderWindow::Initialize()
     fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small, false, true);
 }
 
+void HeaderWindow::SetModel(TranslateResult translateResult)
+{
+    this->translateResult = translateResult;
+}
+
 Size HeaderWindow::RenderContent(Renderer* renderer)
 {
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
-
-    TranslateResult translateResult = appController->GetCurrentTranslateResult();
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     int curY = lineHeight;
@@ -41,8 +40,8 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
         WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize)),
         this,
         IDR_AUDIO_INACTIVE,
-        IDR_AUDIO,
-        bind(&HeaderWindow::PlayText, this));
+        IDR_AUDIO);
+    audioButton->OnClick.Subscribe(&OnPlayText);
 
     AddChildWindow(audioButton);
 
@@ -78,8 +77,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         fontSmallUnderscored,
         Colors::Gray,
         Colors::Black,
-        originalInput,
-        bind(&HeaderWindow::PlayText, this));
+        originalInput);
 
     AddChildWindow(forceTranslationButton);
 

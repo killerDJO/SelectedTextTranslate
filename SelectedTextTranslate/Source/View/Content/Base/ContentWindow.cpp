@@ -1,11 +1,9 @@
 #include "View\Content\Base\ContentWindow.h"
-#include "Helpers\ExceptionHelper.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
-ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, AppController* appController)
+ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ChildWindow(context, descriptor, parentWindow)
 {
-    this->appController = appController;
-
     lineHeight = 20;
     paddingX = 15;
     paddingY = 15;

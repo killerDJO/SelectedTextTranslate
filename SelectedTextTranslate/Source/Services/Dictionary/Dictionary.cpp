@@ -1,6 +1,6 @@
 #include "Services\Dictionary\Dictionary.h"
-#include "Helpers\StringUtilities.h"
-#include "Helpers\ExceptionHelper.h"
+#include "Utilities\StringUtilities.h"
+#include "ErrorHandling\ExceptionHelper.h"
 
 Dictionary::Dictionary(Logger* logger)
 {
