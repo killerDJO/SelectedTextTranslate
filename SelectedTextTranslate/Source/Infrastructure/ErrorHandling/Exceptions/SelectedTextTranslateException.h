@@ -4,5 +4,5 @@
 class SelectedTextTranslateException : public SelectedTextTranslateBaseException
 {
 public:
-    SelectedTextTranslateException(wstring message, const wchar_t* file, unsigned int line);
+    SelectedTextTranslateException(wstring message);
 };

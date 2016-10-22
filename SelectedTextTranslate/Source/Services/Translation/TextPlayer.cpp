@@ -1,5 +1,7 @@
 #include "Services\Translation\TextPlayer.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 
 TextPlayer::TextPlayer(Logger* logger, TranslationService* translationService, RequestProvider* requestProvider, ErrorHandler* errorHandler)
 {
@@ -52,13 +54,16 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 
         return 0;
     }
+    catch (const SelectedTextTranslateBaseException& error)
+    {
+        ExceptionHelper::HandleNonFatalException(textPlayer->logger, textPlayer->errorHandler, L"Error playing sentence.", error);
+    }
     catch(...)
     {
-        wstring currentExceptionMessage = ExceptionHelper::GetCurrentExceptionMessage();
-        textPlayer->logger->LogFormatted(L"Error playing sentence: %ls", currentExceptionMessage.c_str());
-        textPlayer->errorHandler->ShowError(currentExceptionMessage);
-        return -1;
+        ExceptionHelper::HandleNonFatalException(textPlayer->logger, textPlayer->errorHandler, L"Error playing sentence.");
     }
+
+    return -1;
 }
 
 string TextPlayer::SaveToFile(vector<unsigned char> content) const

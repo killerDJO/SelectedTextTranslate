@@ -72,21 +72,19 @@ wstring StringUtilities::Format(const wstring format, ...) {
 }
 
 wstring StringUtilities::Format(const wstring format, va_list args) {
-    int final_n, n = (int)format.size() * 2; /* Reserve two times as much as the length of the format */
-    std::wstring str;
-    std::unique_ptr<wchar_t[]> formatted;
+    size_t requiredLength = format.length();
+    unique_ptr<wchar_t[]> formatted;
+    int truncationResult;
 
-    while (1) {
-        formatted.reset(new wchar_t[n]); /* Wrap the plain char array into the unique_ptr */
-        wcscpy(&formatted[0], format.c_str());
+    do
+    {
+        requiredLength = requiredLength * 2;
+        formatted.reset(new wchar_t[requiredLength]);
+        wcscpy_s(&formatted[0], requiredLength, format.c_str());
 
-        final_n = _vsnwprintf(&formatted[0], n, format.c_str(), args);
-
-        if (final_n < 0 || final_n >= n)
-            n += abs(final_n - n + 1);
-        else
-            break;
+        truncationResult = _vsnwprintf_s(&formatted[0], requiredLength, _TRUNCATE, format.c_str(), args);
     }
+    while (truncationResult == -1);
 
     return wstring(formatted.get());
 }

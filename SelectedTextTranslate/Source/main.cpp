@@ -10,7 +10,7 @@ void AttachConsole()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR args, int iCmdShow)
 {
-    // AttachConsole();
+    //AttachConsole();
 
     Application application;
     return application.Run(hInstance);

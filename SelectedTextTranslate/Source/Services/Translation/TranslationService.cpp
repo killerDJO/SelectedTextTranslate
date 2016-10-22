@@ -1,7 +1,6 @@
 ﻿#include "Services\Translation\TranslationService.h"
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 using namespace web;
 
@@ -54,7 +53,7 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool upd
     }
     catch (json::json_exception exception)
     {
-        throw SelectedTextTranslateException(L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".", __WFILE__, __LINE__);
+        throw SelectedTextTranslateException(L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".");
     }
 
     logger->Log(L"End translating sentence.");
@@ -126,7 +125,7 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
 
     if (json.empty())
     {
-        throw SelectedTextTranslateException(L"Error. Unable to parse JSON. JSON value is empty.", __WFILE__, __LINE__);
+        throw SelectedTextTranslateException(L"Error. Unable to parse JSON. JSON value is empty.");
     }
 
     // Normalize json response
@@ -137,7 +136,7 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
 
     if (root.is_null())
     {
-        throw SelectedTextTranslateException(StringUtilities::Format(L"Error. Unable to parse JSON. Json value = '%ls'.", json), __WFILE__, __LINE__);
+        throw SelectedTextTranslateException(StringUtilities::Format(L"Error. Unable to parse JSON. Json value = '%ls'.", json));
     }
 
     json::array sentences = root[0][0].as_array();

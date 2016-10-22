@@ -1,5 +1,7 @@
 #include "View\Providers\TrayIconProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Utilities\StringUtilities.h"
 
 TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance)
     : NativeWindowHolder(instance), ErrorHandler(logger)
@@ -87,8 +89,7 @@ LRESULT TrayIconProvider::ExecuteWindowProcedure(UINT message, WPARAM wParam, LP
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetFullErrorMessage().c_str());
-        ShowError(error.GetDisplayErrorMessage());
+        ExceptionHelper::HandleNonFatalException(logger, this, L"Error occurred.", error);
     }
     catch (...)
     {

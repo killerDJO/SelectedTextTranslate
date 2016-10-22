@@ -4,9 +4,9 @@
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
 #include "View\Framework\Windows\NativeWindowHolder.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-#define AssertWindowInitialized(state) if(state == WindowStates::New) { ThrowSelectedTextTranslateFatalException(L"Window has not been initialized."); }
+#define AssertWindowInitialized(state) if(state == WindowStates::New) { throw SelectedTextTranslateFatalException(L"Window has not been initialized."); }
 
 class WindowContext;
 class Renderer;

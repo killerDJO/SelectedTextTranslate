@@ -82,7 +82,7 @@ HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, 
     }
 
     long logicalFontSize = -MulDiv(scaleProvider->Scale(fontSizeInPixels), GetDeviceCaps(deviceContext, LOGPIXELSY), 72);
-    ExceptionHelper::ThrowOnWinapiError(logicalFontSize, __WFILE__, __LINE__, true, -1);
+    ExceptionHelper::ThrowOnWinapiError(logicalFontSize, true, -1);
 
     int italicValue = isItalic ? 1 : 0;
     int underscoredValue = isUnderscored ? 1 : 0;

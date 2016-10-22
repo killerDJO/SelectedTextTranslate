@@ -15,10 +15,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
-    <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp" />
-    <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\StackProvider.cpp" />
+    <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp" />
+    <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.cpp" />
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp" />
@@ -60,12 +61,13 @@
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h" />
     <ClInclude Include="Source\View\Framework\Windows\NativeWindowHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ErrorHandler.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.h" />
-    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h" />
     <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h" />
@@ -132,6 +134,9 @@
     <ProjectReference Include="..\Libs\sqlite\sqlite.vcxproj">
       <Project>{8a2c4663-754d-49c7-9947-882c2bbc52a7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Libs\StackWalker\StackWalker.vcxproj">
+      <Project>{b055ade7-5b2d-40ce-a363-206d1fa7bdd1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}</ProjectGuid>
@@ -185,13 +190,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;..\libs\StackWalker</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies);Winmm.lib;Comctl32.lib;Gdiplus.lib;</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -212,13 +217,14 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;..\libs\StackWalker</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <ExceptionHandling>Async</ExceptionHandling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>%(AdditionalDependencies);Winmm.lib;Comctl32.lib;Gdiplus.lib;</AdditionalDependencies>

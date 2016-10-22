@@ -1,5 +1,6 @@
 #include "View\Content\MainWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider)
     : Window(context, descriptor)
@@ -211,7 +212,7 @@ Window* MainWindow::GetWindowToShow() const
         return dictionaryWindow;
     }
 
-    ThrowSelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", currentView));
+    throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", currentView));
 }
 
 LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)

@@ -1,5 +1,6 @@
 #include "View\Framework\Windows\Window.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
     : NativeWindowHolder(context->GetInstance())
@@ -278,8 +279,7 @@ LRESULT Window::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lPara
     }
     catch (const SelectedTextTranslateException& error)
     {
-        context->GetLogger()->LogFormatted(L"Error occurred. Message: '%ls'.", error.GetFullErrorMessage().c_str());
-        context->GetErrorHandler()->ShowError(error.GetDisplayErrorMessage());
+        ExceptionHelper::HandleNonFatalException(context->GetLogger(), context->GetErrorHandler(), L"Error occurred.", error);
     }
     catch (...)
     {
@@ -295,22 +295,21 @@ LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
     switch (message)
     {
+        case WM_PAINT:
+        {
+            PAINTSTRUCT ps;
+            AssertCriticalWinApiResult(BeginPaint(GetHandle(), &ps));
+            Draw(false);
+            EndPaint(GetHandle(), &ps);
+            break;
+        }
 
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        AssertCriticalWinApiResult(BeginPaint(GetHandle(), &ps));
-        Draw(false);
-        EndPaint(GetHandle(), &ps);
-        break;
-    }
+        // Prevent of the background erase reduces flickering before Draw.
+        case WM_ERASEBKGND:
+            break;
 
-    // Prevent of the background erase reduces flickering before Draw.
-    case WM_ERASEBKGND:
-        break;
-
-    default:
-        return DefWindowProc(windowHandle, message, wParam, lParam);
+        default:
+            return DefWindowProc(windowHandle, message, wParam, lParam);
     }
 
     return 0;

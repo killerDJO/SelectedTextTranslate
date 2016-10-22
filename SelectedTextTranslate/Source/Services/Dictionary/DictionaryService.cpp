@@ -1,5 +1,6 @@
 #include "Services\Dictionary\DictionaryService.h"
 #include "Utilities\StringUtilities.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 DictionaryService::DictionaryService(Logger* logger)
@@ -12,7 +13,7 @@ DictionaryService::DictionaryService(Logger* logger)
     {
         sqlite3_close(database);
         wstring message = StringUtilities::Format(L"Can't open dictionary.db: %ls", StringUtilities::GetUtf16String(sqlite3_errmsg(database)).c_str());
-        ThrowSelectedTextTranslateException(message);
+        throw SelectedTextTranslateException(message);
     }
 
     CreateDatabase();
@@ -45,7 +46,7 @@ void DictionaryService::AddTranslateResult(wstring sentence, wstring json) const
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetDisplayErrorMessage().c_str());
     }
 }
 
@@ -59,7 +60,7 @@ void DictionaryService::UpdateTranslateResult(wstring sentence) const
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetDisplayErrorMessage().c_str());
     }
 }
 
@@ -97,7 +98,7 @@ vector<LogRecord> DictionaryService::GetLogRecords(sqlite3_stmt* statement) cons
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error getting log records. Error code: %d", result);
-        ThrowSelectedTextTranslateException(message);
+        throw SelectedTextTranslateException(message);
     }
 
     return logRecords;
@@ -111,7 +112,7 @@ sqlite3_stmt* DictionaryService::CreateStatement(const char* sqlQuery) const
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error preparing statement. Error code: %d", result);
-        ThrowSelectedTextTranslateException(message);
+        throw SelectedTextTranslateException(message);
     }
 
     return statement;
@@ -125,7 +126,7 @@ void DictionaryService::BindValue(sqlite3_stmt* statement, wstring name, wstring
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error binding string value. Error code: %d", result);
-        ThrowSelectedTextTranslateException(message);
+        throw SelectedTextTranslateException(message);
     }
 }
 
@@ -137,7 +138,7 @@ void DictionaryService::BindValue(sqlite3_stmt* statement, wstring name, int val
     if (result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error binding int value. Error code: %d", result);
-        ThrowSelectedTextTranslateException(message);
+        throw SelectedTextTranslateException(message);
     }
 }
 
@@ -154,7 +155,7 @@ void DictionaryService::ExecuteNonQuery(sqlite3_stmt *statement) const
     if(result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error executing non query. Error code: %d", result);
-        ThrowSelectedTextTranslateException(message);
+        throw SelectedTextTranslateException(message);
     }
 }
 

@@ -1,7 +1,6 @@
 #include "Services\Translation\TranslatePageParser.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Utilities\StringUtilities.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TranslatePageParser::TranslatePageParser(Logger* logger, RequestProvider* requestProvider)
 {
@@ -42,7 +41,7 @@ void TranslatePageParser::UpateTkkIfNeccessary()
 
         if (scriptContent == "")
         {
-            throw SelectedTextTranslateException(L"Error. Unable to find script with TKK eval.", __WFILE__, __LINE__);
+            throw SelectedTextTranslateException(L"Error. Unable to find script with TKK eval.");
         }
 
         duk_context *ctx = duk_create_heap_default();

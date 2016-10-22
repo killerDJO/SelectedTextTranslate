@@ -46,12 +46,12 @@ vector<unsigned char> RequestProvider::GetResponse(wstring url)
                     }
                     else
                     {
-                        ThrowSelectedTextTranslateException(StringUtilities::Format(L"Invalid status code: %d.", statusCode));
+                        throw SelectedTextTranslateException(StringUtilities::Format(L"Invalid status code: %d.", statusCode));
                     }
                 }
                 catch (const http_exception& e)
                 {
-                    ThrowSelectedTextTranslateException(StringUtilities::GetUtf16StringFromChar(e.what()));
+                    throw SelectedTextTranslateException(StringUtilities::GetUtf16StringFromChar(e.what()));
                 }
 
                 return vector<unsigned char>();
@@ -60,7 +60,7 @@ vector<unsigned char> RequestProvider::GetResponse(wstring url)
     }
     catch (const exception& e)
     {
-        ThrowSelectedTextTranslateException(StringUtilities::GetUtf16StringFromChar(e.what()));
+        throw SelectedTextTranslateException(StringUtilities::GetUtf16StringFromChar(e.what()));
     }
 }
 

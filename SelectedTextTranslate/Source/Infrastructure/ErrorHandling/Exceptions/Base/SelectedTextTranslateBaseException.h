@@ -3,13 +3,11 @@
 class SelectedTextTranslateBaseException : public runtime_error
 {
 private:
-    wstring FileName;
-    int LineNumber;
-
-    wstring GetShortFileName(wstring fileName) const;
+    wstring callStack;
 
 public:
-    SelectedTextTranslateBaseException(wstring message, const wchar_t* file, unsigned int line);
+    SelectedTextTranslateBaseException(wstring message);
+    ~SelectedTextTranslateBaseException();
 
     wstring GetFullErrorMessage() const;
     wstring GetDisplayErrorMessage() const;

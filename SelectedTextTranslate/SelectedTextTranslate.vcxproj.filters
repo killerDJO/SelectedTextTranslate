@@ -201,13 +201,7 @@
     <ClCompile Include="Source\Infrastructure\Logging\Logger.cpp">
       <Filter>Source\Infrastructure\Logging</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
-      <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp">
-      <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
     </ClCompile>
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp">
@@ -224,6 +218,15 @@
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp">
       <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
+      <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp">
+      <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Infrastructure\ErrorHandling\StackProvider.cpp">
+      <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,13 +364,7 @@
     <ClInclude Include="Source\Infrastructure\Logging\Logger.h">
       <Filter>Source\Infrastructure\Logging</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h">
-      <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h">
-      <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
     </ClInclude>
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ErrorHandler.h">
@@ -384,6 +381,15 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\Windows\NativeWindowHolder.h">
       <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h">
+      <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h">
+      <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h">
+      <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

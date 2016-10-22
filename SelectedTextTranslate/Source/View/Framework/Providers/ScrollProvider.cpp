@@ -212,7 +212,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
             nullptr,
             SW_SCROLLCHILDREN);
 
-        ExceptionHelper::ThrowOnWinapiError(scrollResult, __WFILE__, __LINE__, ERROR);
+        ExceptionHelper::ThrowOnWinapiError(scrollResult, ERROR);
 
         window->Draw(true);
     }

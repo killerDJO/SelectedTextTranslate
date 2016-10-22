@@ -1,16 +1,21 @@
 #include "Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h"
+#include "Infrastructure\ErrorHandling\StackProvider.h"
 #include "Utilities\StringUtilities.h"
 
-SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring message, const wchar_t* file, unsigned int line)
+SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring message)
     : runtime_error(StringUtilities::GetUtf8String(message))
 {
-    this->FileName = GetShortFileName(wstring(file));
-    this->LineNumber = line;
+    StackProvider stackProvider;
+    vector<wstring> callStackRecords = stackProvider.GetCallStack();
+    for(size_t i = 2; i < callStackRecords.size(); ++i)
+    {
+        callStack += callStackRecords[i];
+    }
 }
 
 wstring SelectedTextTranslateBaseException::GetFullErrorMessage() const
 {
-    return StringUtilities::Format(L"%ls at %ls:%d", StringUtilities::GetUtf16String(what()).c_str(), FileName.c_str(), LineNumber);
+    return StringUtilities::Format(L"\tException message: '%ls'.\n\tCall stack:\n%ls", GetDisplayErrorMessage().c_str(), callStack.c_str());
 }
 
 wstring SelectedTextTranslateBaseException::GetDisplayErrorMessage() const
@@ -18,14 +23,6 @@ wstring SelectedTextTranslateBaseException::GetDisplayErrorMessage() const
     return StringUtilities::GetUtf16String(what());
 }
 
-wstring SelectedTextTranslateBaseException::GetShortFileName(wstring fileName) const
+SelectedTextTranslateBaseException::~SelectedTextTranslateBaseException()
 {
-    vector<wstring> fileNameParts = StringUtilities::Split(fileName, L'\\');
-    
-    if(fileNameParts.size() == 0)
-    {
-        return fileName;
-    }
-    
-    return fileNameParts[fileNameParts.size() - 1];
 }

@@ -20,8 +20,8 @@ Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point p
     wchar_t* copiedText = StringUtilities::CopyWideChar(text);
     auto printTextAction = [=](HDC deviceContext) -> void {
         AssertCriticalWinApiResult(SelectObject(deviceContext, font));
-        ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), __WFILE__, __LINE__, true, CLR_INVALID);
-        ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | TA_LEFT), __WFILE__, __LINE__, true, GDI_ERROR);
+        ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), true, CLR_INVALID);
+        ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | TA_LEFT), true, GDI_ERROR);
 
         AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText)));
 
