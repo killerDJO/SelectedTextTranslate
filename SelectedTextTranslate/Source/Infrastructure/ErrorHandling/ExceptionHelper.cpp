@@ -71,11 +71,11 @@ wstring ExceptionHelper::GetCurrentExceptionMessage()
     }
     catch (const exception& exception)
     {
-        exceptionMessage = StringUtilities::Format(L"Exception message: '%ls'", exception.what());
+        exceptionMessage = StringUtilities::Format(L"\tException message: '%hs'", exception.what());
     }
     catch (...)
     {
-        exceptionMessage = L"Unknown exception occurred.";
+        exceptionMessage = L"\tUnknown exception occurred.";
     }
 
     return exceptionMessage;
