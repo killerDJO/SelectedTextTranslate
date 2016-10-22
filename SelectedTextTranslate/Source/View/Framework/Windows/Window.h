@@ -4,9 +4,6 @@
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
 #include "View\Framework\Windows\NativeWindowHolder.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-
-#define AssertWindowInitialized(state) if(state == WindowStates::New) { throw SelectedTextTranslateFatalException(L"Window has not been initialized."); }
 
 class WindowContext;
 class Renderer;
@@ -46,6 +43,8 @@ protected:
 
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+
+    void AssertWindowInitialized() const;
 
 public:
     Window(WindowContext* context, WindowDescriptor descriptor);

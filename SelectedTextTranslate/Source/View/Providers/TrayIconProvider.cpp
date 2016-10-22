@@ -71,8 +71,10 @@ void TrayIconProvider::DestroyTrayIcon()
 
 void TrayIconProvider::ShowError(wstring message)
 {
+    wstring truncatedMessage = message.substr(0, min(255, message.length()));
+
     wcscpy_s(notifyIconData.szInfoTitle, L"An error occurred");
-    wcscpy_s(notifyIconData.szInfo, message.c_str());
+    wcscpy_s(notifyIconData.szInfo, truncatedMessage.c_str());
     notifyIconData.dwInfoFlags = NIIF_ERROR;
 
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));

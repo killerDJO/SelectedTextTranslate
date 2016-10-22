@@ -1,6 +1,8 @@
 #include "View\Content\MainWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "Utilities\StringUtilities.h"
+#include <Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h>
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider)
     : Window(context, descriptor)
@@ -13,9 +15,9 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, Hotk
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
 
-    OnPlayText = Subscribeable<>();
-    OnExpandTranslationResult = Subscribeable<int>();
-    OnShowTranslation = Subscribeable<int>();
+    this->OnPlayText = Subscribeable<>();
+    this->OnExpandTranslationResult = Subscribeable<int>();
+    this->OnShowTranslation = Subscribeable<int>();
 }
 
 void MainWindow::Initialize()
@@ -86,7 +88,7 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 void MainWindow::Minimize()
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     ShowWindow(windowHandle, SW_HIDE);
     Hide();
@@ -94,7 +96,7 @@ void MainWindow::Minimize()
 
 void MainWindow::Maximize()
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     ShowWindow(windowHandle, SW_SHOW);
     SwitchToThisWindow(windowHandle, TRUE);
@@ -103,7 +105,7 @@ void MainWindow::Maximize()
 
 void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     this->translateResult = translateResult;
     this->translationWindow->SetModel(translateResult);
@@ -111,7 +113,7 @@ void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
 
 void MainWindow::SetDictionaryModel(vector<LogRecord> dictionaryRecords)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     this->dictionaryRecords = dictionaryRecords;
     this->dictionaryWindow->SetModel(dictionaryRecords);
@@ -119,9 +121,9 @@ void MainWindow::SetDictionaryModel(vector<LogRecord> dictionaryRecords)
 
 void MainWindow::SetCurrentView(ApplicationViews applicationView)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
-    this->currentView = applicationView;
+    currentView = applicationView;
 }
 
 Size MainWindow::RenderContent(Renderer* renderer)
@@ -219,61 +221,60 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+        case WM_SIZE:
+            Resize();
+            return TRUE;
 
-    case WM_SIZE:
-        Resize();
-        return TRUE;
-
-    case WM_SYSCOMMAND:
-    {
-        switch (wParam & 0xfff0)
+        case WM_SYSCOMMAND:
         {
-        case SC_MINIMIZE:
-        case SC_CLOSE:
-            Minimize();
-            return 0;
+            switch (wParam & 0xfff0)
+            {
+                case SC_MINIMIZE:
+                case SC_CLOSE:
+                    Minimize();
+                    return 0;
+            }
+
+            return DefWindowProc(windowHandle, message, wParam, lParam);
         }
 
-        return DefWindowProc(windowHandle, message, wParam, lParam);
-    }
+        case WM_HOTKEY:
+            hotkeyProvider->ProcessHotkey(wParam);
+            return Window::WindowProcedure(message, wParam, lParam);
 
-    case WM_HOTKEY:
-        hotkeyProvider->ProcessHotkey(wParam);
-        return Window::WindowProcedure(message, wParam, lParam);
-
-    case WM_KILLFOCUS:
-    {
-        HWND windowWithFocus = GetParent((HWND)wParam);
-        HWND currentWindow = GetHandle();
-        if (windowWithFocus != currentWindow)
+        case WM_KILLFOCUS:
         {
-            Minimize();
+            HWND windowWithFocus = GetParent((HWND)wParam);
+            HWND currentWindow = GetHandle();
+            if (windowWithFocus != currentWindow)
+            {
+                Minimize();
+            }
+            break;
         }
-        break;
-    }
 
-    case WM_SHOWWINDOW:
-    {
-        if (wParam == TRUE)
+        case WM_SHOWWINDOW:
         {
-            hotkeyProvider->RegisterZoomInHotkey(
-                GetHandle(),
-                [=]() -> void { Scale(0.1); });
+            if (wParam == TRUE)
+            {
+                hotkeyProvider->RegisterZoomInHotkey(
+                    GetHandle(),
+                    [=]() -> void { Scale(0.1); });
 
-            hotkeyProvider->RegisterZoomOutHotkey(
-                GetHandle(),
-                [=]() -> void { Scale(-0.1); });
+                hotkeyProvider->RegisterZoomOutHotkey(
+                    GetHandle(),
+                    [=]() -> void { Scale(-0.1); });
+            }
+            else
+            {
+                hotkeyProvider->UnregisterZoomInHotkey(GetHandle());
+                hotkeyProvider->UnregisterZoomOutHotkey(GetHandle());
+            }
+            break;
         }
-        else
-        {
-            hotkeyProvider->UnregisterZoomInHotkey(GetHandle());
-            hotkeyProvider->UnregisterZoomOutHotkey(GetHandle());
-        }
-        break;
-    }
 
-    default:
-        return Window::WindowProcedure(message, wParam, lParam);
+        default:
+            return Window::WindowProcedure(message, wParam, lParam);
     }
 
     return 0;

@@ -4,11 +4,13 @@
 TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ContentWindow(context, descriptor, parentWindow)
 {
-    separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
-    OnPlayText = Subscribeable<>();
-    OnExpandTranslationResult = Subscribeable<int>();
-    headerWindow = nullptr;
-    translateResultWindow = nullptr;
+    this->separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+
+    this->OnPlayText = Subscribeable<>();
+    this->OnExpandTranslationResult = Subscribeable<int>();
+
+    this->headerWindow = nullptr;
+    this->translateResultWindow = nullptr;
 }
 
 void TranslationWindow::Initialize()
@@ -36,7 +38,7 @@ void TranslationWindow::Initialize()
 
 void TranslationWindow::SetModel(TranslateResult translateResult) const
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     this->headerWindow->SetModel(translateResult);
     this->translateResultWindow->SetModel(translateResult);

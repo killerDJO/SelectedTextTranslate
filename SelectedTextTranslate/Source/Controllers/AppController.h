@@ -2,8 +2,8 @@
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Services\Translation\TranslationService.h"
 #include "Services\Translation\TextPlayer.h"
-#include "Services\Dictionary\DictionaryService.h"
 #include "Services\Translation\TextExtractor.h"
+#include "Services\Dictionary\DictionaryService.h"
 #include "View\Content\MainWindow.h"
 #include "View\Providers\TrayIconProvider.h"
 

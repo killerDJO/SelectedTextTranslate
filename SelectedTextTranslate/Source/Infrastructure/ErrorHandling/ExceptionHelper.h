@@ -15,6 +15,7 @@ class ExceptionHelper
 {
 private:
     static void TranslatorFunction(unsigned int, EXCEPTION_POINTERS * eps);
+    static wstring GetCurrentExceptionMessage();
 
 public:
     static void ThrowOnWinapiError(bool isFatal = true);
@@ -23,7 +24,6 @@ public:
 
     static void ThrowOnGdiPlusError(Status status, bool isFatal = true);
 
-    static wstring GetCurrentExceptionMessage();
     static void SetupStructuredExceptionsTranslation();
 
     static void HandleNonFatalException(Logger* logger, ErrorHandler* errorHandler, wstring message, const SelectedTextTranslateBaseException& exception);

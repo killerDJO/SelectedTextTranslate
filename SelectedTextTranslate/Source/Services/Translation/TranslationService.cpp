@@ -1,6 +1,6 @@
 ﻿#include "Services\Translation\TranslationService.h"
-#include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Utilities\StringUtilities.h"
 
 using namespace web;
 
@@ -102,22 +102,22 @@ wstring TranslationService::GetHash(wstring sentence) const
 
 // Relevant response has the following format
 //[
-//	[
-//		["<translation>", "<original text>"],
-//		[null, null, "<translit>"]
-//	],
-//	[
-//		[
-//			"<part_of_speech>", 
-//			[<irrelevant>],
-//			[
-//				["<variant_1>", ["<reverse_translation_1>", "<reverse_translation_2>", ..], null, <score>],
-//				....
-//			], 
-//			"<base_form>", 
-//			<irrelevant>
-//		],		
-//	]
+//  [
+//      ["<translation>", "<original text>"],
+//      [null, null, "<translit>"]
+//  ],
+//  [
+//      [
+//          "<part_of_speech>",
+//          [<irrelevant>],
+//          [
+//              ["<variant_1>", ["<reverse_translation_1>", "<reverse_translation_2>", ..], null, <score>],
+//              ....
+//          ],
+//          "<base_form>",
+//          <irrelevant>
+//      ],
+//  ]
 //]
 TranslateResult TranslationService::ParseJSONResponse(wstring json) const
 {

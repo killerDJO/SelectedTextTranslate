@@ -6,8 +6,8 @@
 HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ContentWindow(context, descriptor, parentWindow)
 {
-    fontSmallUnderscored = nullptr;
-    OnPlayText = Subscribeable<>();
+    this->fontSmallUnderscored = nullptr;
+    this->OnPlayText = Subscribeable<>();
 }
 
 void HeaderWindow::Initialize()
@@ -19,7 +19,7 @@ void HeaderWindow::Initialize()
 
 void HeaderWindow::SetModel(TranslateResult translateResult)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     this->translateResult = translateResult;
 }

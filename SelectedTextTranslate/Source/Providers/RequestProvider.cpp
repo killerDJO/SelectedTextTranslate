@@ -1,11 +1,11 @@
 #include "Providers\RequestProvider.h"
-#include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Utilities\StringUtilities.h"
 
 using namespace web;
-using namespace web::http;
-using namespace web::http::client;
+using namespace http;
+using namespace client;
 
 RequestProvider::RequestProvider(Logger* logger)
 {

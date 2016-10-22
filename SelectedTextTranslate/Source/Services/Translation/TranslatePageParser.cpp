@@ -77,7 +77,7 @@ string TranslatePageParser::SearchScriptTag(GumboNode* node) const
     {
         string scriptContent = static_cast<GumboNode*>(node->v.element.children.data[0])->v.text.text;
 
-        if (scriptContent.find("TKK=") != std::string::npos)
+        if (scriptContent.find("TKK=") != string::npos)
         {
             return scriptContent;
         }

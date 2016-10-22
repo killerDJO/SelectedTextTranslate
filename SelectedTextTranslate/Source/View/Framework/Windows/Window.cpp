@@ -1,6 +1,7 @@
 #include "View\Framework\Windows\Window.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
     : NativeWindowHolder(context->GetInstance())
@@ -38,7 +39,7 @@ void Window::Initialize()
 
 void Window::Render(bool preserveScrolls)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     RenderingContext* renderingContext = context->GetRenderingContext();
     renderingContext->BeginRender(this);
@@ -155,7 +156,7 @@ Point Window::GetInitialWindowOffset()
 
 void Window::Draw(bool drawChildren)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     if (drawChildren)
     {
@@ -313,6 +314,14 @@ LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     return 0;
+}
+
+void Window::AssertWindowInitialized() const
+{
+    if (windowState == WindowStates::New)
+    {
+        throw SelectedTextTranslateFatalException(L"Window has not been initialized.");
+    }
 }
 
 Window::~Window()

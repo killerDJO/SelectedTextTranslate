@@ -92,7 +92,9 @@
 // If VC7 and later, then use the shipped 'dbghelp.h'-file
 #pragma pack(push,8)
 #if _MSC_VER >= 1300
+#pragma warning(push, 0)
 #include <dbghelp.h>
+#pragma warning(pop)
 #else
 // inline the important dbghelp.h-declarations...
 typedef enum {

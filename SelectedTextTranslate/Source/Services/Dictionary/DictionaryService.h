@@ -23,6 +23,7 @@ public:
 
     void UpdateTranslateResult(wstring sentence) const;
     void AddTranslateResult(wstring sentence, wstring json) const;
+
     vector<LogRecord> GetTopRecords(int topRecordsCount) const;
     vector<LogRecord> GetRecords(wstring sentence) const;
 };

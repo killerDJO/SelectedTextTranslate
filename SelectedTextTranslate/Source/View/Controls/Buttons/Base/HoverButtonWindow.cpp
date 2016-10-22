@@ -42,49 +42,49 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
     switch (message)
     {
 
-    case WM_LBUTTONUP:
-        OnClick.Notify();
-        return TRUE;
+        case WM_LBUTTONUP:
+            OnClick.Notify();
+            return TRUE;
 
-    case WM_MOUSEMOVE:
-        tme.dwFlags = TME_HOVER | TME_LEAVE;
-        AssertCriticalWinApiResult(TrackMouseEvent(&tme));
-
-        return TRUE;
-
-    case WM_MOUSEHOVER:
-    {
-        if (!isHovered)
-        {
-            isHovered = true;
-            RenderContent(nullptr);
-            InvalidateRect(windowHandle, nullptr, TRUE);
-
-            SetCursor(LoadCursor(nullptr, IDC_HAND));
-        }
-
-        break;
-    }
-
-
-    case WM_SETCURSOR:
-        return TRUE;
-
-    case WM_MOUSELEAVE:
-    {
-        if(isHovered)
-        {
-            isHovered = false;
-            RenderContent(nullptr);
-            InvalidateRect(windowHandle, nullptr, TRUE);
-
-            SetCursor(LoadCursor(nullptr, IDC_ARROW));
+        case WM_MOUSEMOVE:
+            tme.dwFlags = TME_HOVER | TME_LEAVE;
+            AssertCriticalWinApiResult(TrackMouseEvent(&tme));
 
             return TRUE;
+
+        case WM_MOUSEHOVER:
+        {
+            if (!isHovered)
+            {
+                isHovered = true;
+                RenderContent(nullptr);
+                InvalidateRect(windowHandle, nullptr, TRUE);
+
+                SetCursor(LoadCursor(nullptr, IDC_HAND));
+            }
+
+            break;
         }
 
-        break;
-    }
+
+        case WM_SETCURSOR:
+            return TRUE;
+
+        case WM_MOUSELEAVE:
+        {
+            if(isHovered)
+            {
+                isHovered = false;
+                RenderContent(nullptr);
+                InvalidateRect(windowHandle, nullptr, TRUE);
+
+                SetCursor(LoadCursor(nullptr, IDC_ARROW));
+
+                return TRUE;
+            }
+
+            break;
+        }
 
     }
 

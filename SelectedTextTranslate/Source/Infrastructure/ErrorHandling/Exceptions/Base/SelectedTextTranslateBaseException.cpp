@@ -7,6 +7,7 @@ SelectedTextTranslateBaseException::SelectedTextTranslateBaseException(wstring m
 {
     StackProvider stackProvider;
     vector<wstring> callStackRecords = stackProvider.GetCallStack();
+
     for(size_t i = 2; i < callStackRecords.size(); ++i)
     {
         callStack += callStackRecords[i];

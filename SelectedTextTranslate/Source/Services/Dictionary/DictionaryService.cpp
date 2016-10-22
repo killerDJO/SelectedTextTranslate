@@ -1,7 +1,7 @@
 #include "Services\Dictionary\DictionaryService.h"
-#include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Utilities\StringUtilities.h"
 
 DictionaryService::DictionaryService(Logger* logger)
 {
@@ -16,7 +16,14 @@ DictionaryService::DictionaryService(Logger* logger)
         throw SelectedTextTranslateException(message);
     }
 
-    CreateDatabase();
+    try
+    {
+        CreateDatabase();
+    }
+    catch (const SelectedTextTranslateException& error)
+    {
+        logger->LogFormatted(L"Error creating database. Message: '%ls'.", error.GetFullErrorMessage().c_str());
+    }
 }
 
 void DictionaryService::CreateDatabase() const
@@ -46,7 +53,7 @@ void DictionaryService::AddTranslateResult(wstring sentence, wstring json) const
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetDisplayErrorMessage().c_str());
+        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
     }
 }
 
@@ -60,7 +67,7 @@ void DictionaryService::UpdateTranslateResult(wstring sentence) const
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetDisplayErrorMessage().c_str());
+        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
     }
 }
 
@@ -152,7 +159,7 @@ void DictionaryService::ExecuteNonQuery(sqlite3_stmt *statement) const
 
     result = sqlite3_finalize(statement);
 
-    if(result != SQLITE_OK)
+    if(true || result != SQLITE_OK)
     {
         wstring message = StringUtilities::Format(L"SQL error executing non query. Error code: %d", result);
         throw SelectedTextTranslateException(message);

@@ -4,7 +4,7 @@
 ErrorHandler::ErrorHandler(Logger* logger)
 {
     this->logger = logger;
-    OnErrorShow = Subscribeable<>();
+    this->OnErrorShow = Subscribeable<>();
 }
 
 void ErrorHandler::HandleFatalException()

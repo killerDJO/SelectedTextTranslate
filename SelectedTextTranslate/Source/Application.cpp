@@ -1,11 +1,11 @@
 #include "Application.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Controllers\AppController.h"
 #include "Services\Translation\TranslationService.h"
 #include "Services\Translation\TranslatePageParser.h"
 #include "Services\Dictionary\DictionaryService.h"
 #include "Providers\RequestProvider.h"
 #include "View\Content\MainWindow.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "Controllers\AppController.h"
 
 Application::Application()
 {

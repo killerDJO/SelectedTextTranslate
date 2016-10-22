@@ -13,7 +13,7 @@ struct WindowDescriptor
     bool AutoScale;
 
     static WindowDescriptor CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale = true);
-   
+
     static WindowDescriptor CreateFixedWindowDescriptor(Point position, Size windowSize);
     static WindowDescriptor CreateStretchWindowDescriptor(Point position);
 

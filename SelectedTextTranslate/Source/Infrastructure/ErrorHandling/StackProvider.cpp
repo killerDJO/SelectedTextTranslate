@@ -1,6 +1,9 @@
 #include "Infrastructure\ErrorHandling\StackProvider.h"
 #include "Utilities\StringUtilities.h"
+
+#pragma warning(push, 0)
 #include <dbghelp.h>
+#pragma warning(pop)
 
 StackProvider::StackProvider()
 {

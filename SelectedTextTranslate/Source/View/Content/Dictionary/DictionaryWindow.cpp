@@ -4,12 +4,12 @@
 DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ContentWindow(context, descriptor, parentWindow)
 {
-    OnShowTranslation = Subscribeable<int>();
+    this->OnShowTranslation = Subscribeable<int>();
 }
 
 void DictionaryWindow::SetModel(vector<LogRecord> dictionaryRecords)
 {
-    AssertWindowInitialized(windowState);
+    AssertWindowInitialized();
 
     this->dictionaryRecords = dictionaryRecords;
 }

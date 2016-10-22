@@ -1,7 +1,7 @@
 #pragma once
 #include "View\Framework\RenderingContext.h"
-#include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\DeviceContextBuffer.h"
+#include "View\Framework\Providers\DeviceContextProvider.h"
 
 class RenderingContext;
 class ScrollProvider;
