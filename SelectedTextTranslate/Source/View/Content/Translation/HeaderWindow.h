@@ -11,6 +11,8 @@ private:
     TranslateResult translateResult;
 
     void PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
+    void PrintSuggestion(wstring suggestion, int curY, Point originLineBottomRight, Renderer* renderer);
+    void PrintHeaderAction(wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback, int curY, Point originLineBottomRight, Renderer* renderer);
 
 protected:
     Size RenderContent(Renderer* renderer) override;
@@ -21,6 +23,7 @@ public:
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
+    Subscribeable<> OnTranslateSuggestion;
 
     void Initialize() override;
 

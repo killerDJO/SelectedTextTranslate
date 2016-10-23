@@ -20,6 +20,7 @@ void AppController::Initialize()
 {
     mainWindow->OnPlayText.Subscribe(bind(&AppController::PlayCurrentText, this));
     mainWindow->OnForceTranslation.Subscribe(bind(&AppController::ForceTranslateCurrentText, this));
+    mainWindow->OnTranslateSuggestion.Subscribe(bind(&AppController::TranslateSuggestion, this));
     mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultDictionary, this, placeholders::_1));
     mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
 
@@ -45,6 +46,15 @@ void AppController::TranslateSelectedText()
 void AppController::ForceTranslateCurrentText()
 {
     translateResult = translationService->TranslateSentence(translateResult.Sentence.Input, true, true);
+
+    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
+    mainWindow->SetTranslateResultModel(translateResult);
+    mainWindow->Render();
+}
+
+void AppController::TranslateSuggestion()
+{
+    translateResult = translationService->TranslateSentence(translateResult.Sentence.Suggestion, true, false);
 
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);

@@ -6,4 +6,5 @@ struct TranslateResultSentence
     wstring Origin;
     wstring Translit;
     wstring Input;
+    wstring Suggestion;
 };

@@ -8,6 +8,7 @@ TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor de
 
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
+    this->OnTranslateSuggestion = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
 
     this->headerWindow = nullptr;
@@ -25,6 +26,7 @@ void TranslationWindow::Initialize()
         OverflowModes::Fixed);
     headerWindow = new HeaderWindow(context, headerWindowDescriptor, this);
     headerWindow->OnPlayText.Subscribe(&OnPlayText);
+    headerWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     headerWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
     AddChildWindow(headerWindow);
 

@@ -36,6 +36,7 @@ public:
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
+    Subscribeable<> OnTranslateSuggestion;
     Subscribeable<int> OnExpandTranslationResult;
     Subscribeable<int> OnShowTranslation;
 

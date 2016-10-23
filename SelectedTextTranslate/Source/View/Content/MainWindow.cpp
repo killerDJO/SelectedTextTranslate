@@ -16,6 +16,7 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, Hotk
 
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
+    this->OnTranslateSuggestion = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
     this->OnShowTranslation = Subscribeable<int>();
 }
@@ -62,6 +63,7 @@ void MainWindow::CreateViews()
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
     translationWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
+    translationWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     translationWindow->Hide();
     translationWindow->SetModel(translateResult);
 

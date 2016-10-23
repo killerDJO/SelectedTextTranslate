@@ -2,6 +2,7 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Utilities\StringUtilities.h"
 
 HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
     : ContentWindow(context, descriptor, parentWindow)
@@ -9,6 +10,7 @@ HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, 
     this->fontSmallUnderscored = nullptr;
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
+    this->OnTranslateSuggestion = Subscribeable<>();
 }
 
 void HeaderWindow::Initialize()
@@ -58,6 +60,10 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     {
         PrintInputCorrectionWarning(translateResult.Sentence.Input, curY, originLintBottomRight, renderer);
     }
+    else if(!translateResult.Sentence.Suggestion.empty())
+    {
+        PrintSuggestion(translateResult.Sentence.Suggestion, curY, originLintBottomRight, renderer);
+    }
 
     renderer->IncreaseWidth(paddingX);
 
@@ -66,22 +72,32 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
 
 void HeaderWindow::PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLintBottomRight, Renderer* renderer)
 {
-    originLintBottomRight = renderer->PrintText(
-        L" (corrected from ",
+    PrintHeaderAction(L"corrected from", originalInput, &OnForceTranslation, curY, originLintBottomRight, renderer);
+}
+
+void HeaderWindow::PrintSuggestion(wstring suggestion, int curY, Point originLintBottomRight, Renderer* renderer)
+{
+    PrintHeaderAction(L"maybe you meant", suggestion, &OnTranslateSuggestion, curY, originLintBottomRight, renderer);
+}
+
+void HeaderWindow::PrintHeaderAction(wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback, int curY, Point originLineBottomRight, Renderer* renderer)
+{
+    originLineBottomRight = renderer->PrintText(
+        StringUtilities::Format(L" (%ls ", actionDescription.c_str()),
         fontSmall,
         Colors::Gray,
-        Point(originLintBottomRight.X + 1, curY));
+        Point(originLineBottomRight.X + 1, curY));
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
         context,
-        WindowDescriptor::CreateStretchWindowDescriptor(Point(originLintBottomRight.X, curY - smallFontAscent)),
+        WindowDescriptor::CreateStretchWindowDescriptor(Point(originLineBottomRight.X, curY - smallFontAscent)),
         this,
         fontSmallUnderscored,
         Colors::Gray,
         Colors::Black,
-        originalInput);
-    forceTranslationButton->OnClick.Subscribe(&OnForceTranslation);
+        actionText);
+    forceTranslationButton->OnClick.Subscribe(actionCallback);
 
     AddChildWindow(forceTranslationButton);
 
@@ -89,7 +105,7 @@ void HeaderWindow::PrintInputCorrectionWarning(wstring originalInput, int curY, 
         L")",
         fontSmall,
         Colors::Gray,
-        Point(originLintBottomRight.X + context->GetScaleProvider()->Downscale(forceTranslationButton->GetSize().Width), curY));
+        Point(originLineBottomRight.X + context->GetScaleProvider()->Downscale(forceTranslationButton->GetSize().Width), curY));
 }
 
 HeaderWindow::~HeaderWindow()

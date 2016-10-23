@@ -26,6 +26,7 @@ public:
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
+    Subscribeable<> OnTranslateSuggestion;
     Subscribeable<int> OnExpandTranslationResult;
 
     void SetModel(TranslateResult translateResult) const;

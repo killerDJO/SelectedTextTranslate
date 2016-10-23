@@ -137,7 +137,13 @@ wstring TranslationService::GetHash(wstring sentence) const
 //          "<base_form>",
 //          <irrelevant>
 //      ],
-//  ]
+//  ],
+//  <irrelevant>,
+//  <irrelevant>,
+//  <irrelevant>,
+//  <irrelevant>,
+//  <irrelevant>,
+//  [<irrelevant>, <suggestion>, <irrelevant>, null, null, <irrelevant>],
 //]
 TranslateResult TranslationService::ParseJSONResponse(wstring json) const
 {
@@ -210,6 +216,12 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
         }
 
         result.TranslateCategories.push_back(category);
+    }
+
+    if(!root[7].is_null())
+    {
+        json::array suggestionHolder = root[7].as_array();
+        result.Sentence.Suggestion = StringUtilities::CopyWideChar(suggestionHolder[1].as_string());
     }
 
     return result;
