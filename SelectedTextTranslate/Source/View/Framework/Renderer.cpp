@@ -12,7 +12,7 @@ Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* de
     renderActions = vector<function<void(HDC)>>();
 }
 
-Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point position)
+Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position)
 {
     Point scaledPosition = scaleProvider->Scale(position);
 
@@ -29,7 +29,7 @@ Point Renderer::PrintText(const wchar_t* text, HFONT font, Colors color, Point p
     };
     renderActions.push_back(printTextAction);
 
-    Size textSize = renderingContext->GetTextSize(emptyDeviceContext, text, font);
+    Size textSize = renderingContext->GetTextSize(emptyDeviceContext, text.c_str(), font);
 
     originalSize.Width = max(originalSize.Width, scaledPosition.X + textSize.Width);
     originalSize.Height = max(originalSize.Height, scaledPosition.Y + textSize.Height);

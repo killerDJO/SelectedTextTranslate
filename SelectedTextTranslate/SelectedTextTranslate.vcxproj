@@ -59,6 +59,7 @@
     <ClCompile Include="Source\View\Framework\WindowContext.cpp" />
     <ClCompile Include="Source\View\Content\Translation\TranslationWindow.cpp" />
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
+    <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Source\View\Content\Translation\TranslationWindow.h" />
     <ClInclude Include="Source\View\Providers\TrayIconProvider.h" />
     <ClInclude Include="Source\Utilities\Subscribeable.h" />
+    <ClInclude Include="Source\Providers\SqliteProvider.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

@@ -54,7 +54,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance)
     HotkeyProvider* hotkeyProvider = RegisterComponent(new HotkeyProvider());
     TrayIconProvider* trayIconProvider = RegisterComponent(new TrayIconProvider(logger, hotkeyProvider, hInstance));
 
-    DictionaryService* dictionarySerivce = RegisterComponent(new DictionaryService(logger));
+    SqliteProvider* sqliteProvider = RegisterComponent(new SqliteProvider());
+    DictionaryService* dictionarySerivce = RegisterComponent(new DictionaryService(logger, sqliteProvider));
     TextExtractor* textExtractor = RegisterComponent(new TextExtractor());
     RequestProvider* requestProvider = RegisterComponent(new RequestProvider(logger));
     TranslatePageParser* translatePageParser = RegisterComponent(new TranslatePageParser(logger, requestProvider));

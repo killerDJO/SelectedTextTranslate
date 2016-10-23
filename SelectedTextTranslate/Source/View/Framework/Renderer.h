@@ -24,7 +24,7 @@ public:
     Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider, ScrollProvider* scrollProvider);
     ~Renderer();
 
-    Point PrintText(const wchar_t* text, HFONT font, Colors color, Point position);
+    Point PrintText(const wstring text, HFONT font, Colors color, Point position);
     void DrawRect(Rect rect, HBRUSH brush);
 
     int GetFontAscent(HFONT font) const;

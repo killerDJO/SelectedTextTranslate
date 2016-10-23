@@ -10,7 +10,7 @@ private:
 
     TranslateResult translateResult;
 
-    void PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
+    void PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
 
 protected:
     Size RenderContent(Renderer* renderer) override;
@@ -20,6 +20,7 @@ public:
     ~HeaderWindow() override;
 
     Subscribeable<> OnPlayText;
+    Subscribeable<> OnForceTranslation;
 
     void Initialize() override;
 

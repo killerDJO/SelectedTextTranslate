@@ -228,6 +228,9 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Providers\SqliteProvider.cpp">
+      <Filter>Source\Providers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -390,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Providers\SqliteProvider.h">
+      <Filter>Source\Providers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

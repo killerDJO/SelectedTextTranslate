@@ -33,6 +33,7 @@ public:
     void Initialize();
 
     void TranslateSelectedText();
+    void ForceTranslateCurrentText();
     void ToggleTranslateResultDictionary(int translateResultDictionaryIndex);
 
     void PlaySelectedText();

@@ -31,6 +31,7 @@
 #include <regex>
 #include <sstream>
 #include <functional>
+#include <cctype>
 
 #include <cpprest\json.h>
 #include <cpprest\http_client.h>

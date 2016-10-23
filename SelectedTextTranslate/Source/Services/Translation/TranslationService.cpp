@@ -12,44 +12,19 @@ TranslationService::TranslationService(Logger* logger, RequestProvider* requestP
     this->dictionaryService = dictionary;
 }
 
-TranslateResult TranslationService::TranslateSentence(wstring sentence, bool updateDictionary) const
+TranslateResult TranslationService::TranslateSentence(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const
 {
-    logger->Log(L"Start translating sentence '" + sentence + L"'.");
+    wstring trimmedSentence = StringUtilities::Trim(sentence);
+    logger->Log(L"Start translating sentence '" + trimmedSentence + L"'.");
 
-    vector<LogRecord> dictionaryRecords = dictionaryService->GetRecords(sentence);
-
-    wstring translatorResponse;
-
-    if(dictionaryRecords.size() != 0)
-    {
-        translatorResponse = dictionaryRecords[0].Json;
-
-        if (updateDictionary)
-        {
-            dictionaryService->UpdateTranslateResult(sentence);
-        }
-    }
-    else
-    {
-        wstring hash = GetHash(sentence);
-        wstring translateURL = L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk="
-            + hash
-            + L"&q=" + requestProvider->EscapeText(sentence);
-
-        translatorResponse = requestProvider->GetStringResponse(translateURL);
-
-        if (updateDictionary)
-        {
-            dictionaryService->AddTranslateResult(sentence, translatorResponse);
-        }
-    }
+    wstring translatorResponse = GetTranslatorResponse(trimmedSentence, incrementTranslationsCount, forceTranslation);
 
     TranslateResult result;
 
     try
     {
         result = ParseJSONResponse(translatorResponse);
-        result.Sentence.Input = StringUtilities::CopyWideChar(sentence);
+        result.Sentence.Input = StringUtilities::CopyWideChar(trimmedSentence);
     }
     catch (json::json_exception exception)
     {
@@ -59,6 +34,51 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool upd
     logger->Log(L"End translating sentence.");
 
     return result;
+}
+
+wstring TranslationService::GetTranslatorResponse(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const
+{
+    wstring translatorResponse;
+
+    LogRecord cachedRecord;
+    if(dictionaryService->TryGetCachedRecord(sentence, forceTranslation, cachedRecord))
+    {
+        time_t currentTime = time(nullptr);
+
+        if(currentTime - cachedRecord.UpdatedDate > DictionaryRefreshInterval)
+        {
+            translatorResponse = SendTranslationRequest(sentence, forceTranslation);
+            dictionaryService->UpdateTranslateResult(sentence, translatorResponse, forceTranslation);
+        }
+        else
+        {
+            translatorResponse = cachedRecord.Json;
+        }
+    }
+    else
+    {
+        translatorResponse = SendTranslationRequest(sentence, forceTranslation);
+        dictionaryService->AddTranslateResult(sentence, translatorResponse, forceTranslation);
+    }
+
+    if (incrementTranslationsCount)
+    {
+        dictionaryService->IncrementTranslationsCount(sentence, forceTranslation);
+    }
+
+    return translatorResponse;
+}
+
+wstring TranslationService::SendTranslationRequest(wstring sentence, bool forceTranslation) const
+{
+    wstring hash = GetHash(sentence);
+    wstring translateURL = StringUtilities::Format(
+        L"https://translate.google.com/translate_a/single?client=t&sl=en&tl=ru&hl=ru&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=%ls&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=bh&ssel=0&tsel=0&kc=1&tco=2&tk=%ls&q=%ls",
+        forceTranslation ? L"qc" : L"qca",
+        hash.c_str(),
+        requestProvider->EscapeText(sentence).c_str());
+
+    return requestProvider->GetStringResponse(translateURL);
 }
 
 // Grabbed from google minified JS code

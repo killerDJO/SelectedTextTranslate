@@ -113,3 +113,20 @@ void StringUtilities::ReplaceAll(wstring &str, const wstring &search, const wstr
         str.insert(pos, replace);
     }
 }
+
+wstring StringUtilities::LeftTrim(wstring str)
+{
+    str.erase(str.begin(), find_if(str.begin(), str.end(), not1(std::ptr_fun<int, int>(std::isspace))));
+    return str;
+}
+
+wstring StringUtilities::RightTrim(wstring str)
+{
+    str.erase(find_if(str.rbegin(), str.rend(), not1(std::ptr_fun<int, int>(std::isspace))).base(), str.end());
+    return str;
+}
+
+wstring StringUtilities::Trim(wstring str)
+{
+    return LeftTrim(RightTrim(str));
+}

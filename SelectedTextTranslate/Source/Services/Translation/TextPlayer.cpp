@@ -1,7 +1,6 @@
 #include "Services\Translation\TextPlayer.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 
 TextPlayer::TextPlayer(Logger* logger, TranslationService* translationService, RequestProvider* requestProvider, ErrorHandler* errorHandler)
 {
@@ -9,10 +8,9 @@ TextPlayer::TextPlayer(Logger* logger, TranslationService* translationService, R
     this->requestProvider = requestProvider;
     this->logger = logger;
     this->errorHandler = errorHandler;
-    this->currentTextToPlay = nullptr;
 }
 
-void TextPlayer::PlayText(const wchar_t* text)
+void TextPlayer::PlayText(wstring text)
 {
     currentTextToPlay = text;
     DWORD threadId;

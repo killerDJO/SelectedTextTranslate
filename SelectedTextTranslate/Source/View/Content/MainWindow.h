@@ -35,6 +35,7 @@ public:
     ~MainWindow();
 
     Subscribeable<> OnPlayText;
+    Subscribeable<> OnForceTranslation;
     Subscribeable<int> OnExpandTranslationResult;
     Subscribeable<int> OnShowTranslation;
 

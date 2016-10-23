@@ -8,6 +8,7 @@ HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, 
 {
     this->fontSmallUnderscored = nullptr;
     this->OnPlayText = Subscribeable<>();
+    this->OnForceTranslation = Subscribeable<>();
 }
 
 void HeaderWindow::Initialize()
@@ -63,7 +64,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     return renderer->GetScaledSize();
 }
 
-void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int curY, Point originLintBottomRight, Renderer* renderer)
+void HeaderWindow::PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLintBottomRight, Renderer* renderer)
 {
     originLintBottomRight = renderer->PrintText(
         L" (corrected from ",
@@ -80,6 +81,7 @@ void HeaderWindow::PrintInputCorrectionWarning(const wchar_t* originalInput, int
         Colors::Gray,
         Colors::Black,
         originalInput);
+    forceTranslationButton->OnClick.Subscribe(&OnForceTranslation);
 
     AddChildWindow(forceTranslationButton);
 

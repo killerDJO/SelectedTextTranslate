@@ -2,7 +2,6 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
-#include <Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h>
 
 MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider)
     : Window(context, descriptor)
@@ -16,6 +15,7 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, Hotk
     this->translationWindow = nullptr;
 
     this->OnPlayText = Subscribeable<>();
+    this->OnForceTranslation = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
     this->OnShowTranslation = Subscribeable<int>();
 }
@@ -60,6 +60,7 @@ void MainWindow::CreateViews()
     translationWindow = new TranslationWindow(context, windowDescriptor, this);
     AddChildWindow(translationWindow);
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
+    translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
     translationWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
     translationWindow->Hide();
     translationWindow->SetModel(translateResult);

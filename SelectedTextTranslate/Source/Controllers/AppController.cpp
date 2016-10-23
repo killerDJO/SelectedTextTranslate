@@ -19,6 +19,7 @@ AppController::AppController(
 void AppController::Initialize()
 {
     mainWindow->OnPlayText.Subscribe(bind(&AppController::PlayCurrentText, this));
+    mainWindow->OnForceTranslation.Subscribe(bind(&AppController::ForceTranslateCurrentText, this));
     mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultDictionary, this, placeholders::_1));
     mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
 
@@ -32,13 +33,22 @@ void AppController::TranslateSelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
 
-    translateResult = translationService->TranslateSentence(selectedText, true);
+    translateResult = translationService->TranslateSentence(selectedText, true, false);
 
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);
 
     mainWindow->Render();
     mainWindow->Maximize();
+}
+
+void AppController::ForceTranslateCurrentText()
+{
+    translateResult = translationService->TranslateSentence(translateResult.Sentence.Input, true, true);
+
+    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
+    mainWindow->SetTranslateResultModel(translateResult);
+    mainWindow->Render();
 }
 
 void AppController::ToggleTranslateResultDictionary(int translateResultDictionaryIndex)
@@ -51,7 +61,7 @@ void AppController::ToggleTranslateResultDictionary(int translateResultDictionar
 void AppController::PlaySelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
-    translateResult = translationService->TranslateSentence(selectedText, false);
+    translateResult = translationService->TranslateSentence(selectedText, false, false);
     textPlayer->PlayText(translateResult.Sentence.Origin);
 }
 
@@ -74,7 +84,7 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
     vector<LogRecord> logRecords = dictionary->GetTopRecords(200);
     LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
 
-    translateResult = translationService->TranslateSentence(logRecordToTranslate.Word, false);
+    translateResult = translationService->TranslateSentence(logRecordToTranslate.Word, false, false);
     
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);

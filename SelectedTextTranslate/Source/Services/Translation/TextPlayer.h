@@ -9,7 +9,7 @@
 class TextPlayer
 {
 private:
-    const wchar_t* currentTextToPlay;
+    wstring currentTextToPlay;
 
     TranslationService* translationService;
     RequestProvider* requestProvider;
@@ -25,5 +25,5 @@ public:
     TextPlayer(Logger* logger, TranslationService* translator, RequestProvider* requestProvider, ErrorHandler* errorHandler);
     ~TextPlayer();
 
-    void PlayText(const wchar_t* text);
+    void PlayText(wstring text);
 };

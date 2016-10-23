@@ -3,18 +3,12 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Utilities\StringUtilities.h"
 
-DictionaryService::DictionaryService(Logger* logger)
+DictionaryService::DictionaryService(Logger* logger, SqliteProvider* sqliteProvider)
 {
     this->logger = logger;
+    this->sqliteProvider = sqliteProvider;
 
-    int result = sqlite3_open("dictionary.db", &database);
-
-    if (result)
-    {
-        sqlite3_close(database);
-        wstring message = StringUtilities::Format(L"Can't open dictionary.db: %ls", StringUtilities::GetUtf16String(sqlite3_errmsg(database)).c_str());
-        throw SelectedTextTranslateException(message);
-    }
+    this->database = sqliteProvider->OpenDatabase(L"dictionary.db");
 
     try
     {
@@ -22,148 +16,132 @@ DictionaryService::DictionaryService(Logger* logger)
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error creating database. Message: '%ls'.", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(L"Error creating database.\n%ls", error.GetFullErrorMessage().c_str());
     }
 }
 
 void DictionaryService::CreateDatabase() const
 {
-    ExecuteNonQuery(CreateStatement("CREATE TABLE IF NOT EXISTS  Dictionary(Sentence TEXT PRIMARY KEY, Count INTEGER, Json TEXT)"));
-    ExecuteNonQuery(CreateStatement("CREATE INDEX IF NOT EXISTS IX_Dictionary_Count on Dictionary(Count)"));
+    sqliteProvider->ExecuteNonQuery(sqliteProvider->CreateStatement(database, "CREATE TABLE IF NOT EXISTS Dictionary(Sentence TEXT, IsForcedTranslation BOOLEAN, Count INTEGER, Json TEXT, CreatedDate INTEGER, UpdatedDate INTEGER, IsActive BOOLEAN, PRIMARY KEY (Sentence, IsForcedTranslation))"));
+    sqliteProvider->ExecuteNonQuery(sqliteProvider->CreateStatement(database, "CREATE INDEX IF NOT EXISTS IX_Dictionary_Count on Dictionary(Count)"));
 }
 
-vector<LogRecord> DictionaryService::GetRecords(wstring sentence) const
+bool DictionaryService::TryGetCachedRecord(wstring sentence, bool isForcedTranslation, LogRecord& logRecord) const
 {
-    sqlite3_stmt* statement = CreateStatement("SELECT Sentence, Count, Json FROM Dictionary WHERE Sentence=@Sentence");
-    BindValue(statement, L"@Sentence", sentence);
+    sqlite3_stmt* statement = sqliteProvider->CreateStatement(
+        database,
+        "SELECT Sentence, Count, Json, IsForcedTranslation, CreatedDate, UpdatedDate, IsActive FROM Dictionary WHERE Sentence=@Sentence AND IsForcedTranslation = @IsForcedTranslation");
+    sqliteProvider->BindValue(statement, L"@Sentence", sentence);
+    sqliteProvider->BindValue(statement, L"@IsForcedTranslation", isForcedTranslation ? 1 : 0);
 
     vector<LogRecord> logRecords = GetLogRecords(statement);
 
-    return logRecords;
-}
+    if(logRecords.size() == 0)
+    {
+        return false;
+    }
 
-void DictionaryService::AddTranslateResult(wstring sentence, wstring json) const
-{
-    try
-    {
-        sqlite3_stmt* statement = CreateStatement("INSERT INTO Dictionary(Sentence, Count, Json) VALUES(@Sentence, 1, @Json)");
-        BindValue(statement, L"@Sentence", sentence);
-        BindValue(statement, L"@Json", json);
-        ExecuteNonQuery(statement);
-    }
-    catch (const SelectedTextTranslateException& error)
-    {
-        logger->LogFormatted(L"Error occurred during AddTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
-    }
-}
-
-void DictionaryService::UpdateTranslateResult(wstring sentence) const
-{
-    try
-    {
-        sqlite3_stmt* statement = CreateStatement("UPDATE Dictionary SET Count = Count + 1 WHERE Sentence = @Sentence");
-        BindValue(statement, L"@Sentence", sentence);
-        ExecuteNonQuery(statement);
-    }
-    catch (const SelectedTextTranslateException& error)
-    {
-        logger->LogFormatted(L"Error occurred during UpdateTranslateResult. Message: '%ls'.", error.GetFullErrorMessage().c_str());
-    }
+    logRecord = logRecords[0];
+    return true;
 }
 
 vector<LogRecord> DictionaryService::GetTopRecords(int topRecordsCount) const
 {
-    sqlite3_stmt* statement = CreateStatement("SELECT Sentence, Count, Json FROM Dictionary ORDER BY Count DESC LIMIT @Limit");
-    BindValue(statement, L"@Limit", topRecordsCount);
+    sqlite3_stmt* statement = sqliteProvider->CreateStatement(
+        database,
+        "SELECT Sentence, Count, Json, IsForcedTranslation, CreatedDate, UpdatedDate, IsActive FROM Dictionary WHERE IsForcedTranslation = 0 ORDER BY Count DESC LIMIT @Limit");
+    sqliteProvider->BindValue(statement, L"@Limit", topRecordsCount);
 
     return GetLogRecords(statement);
+}
+
+void DictionaryService::AddTranslateResult(wstring sentence, wstring json, bool isForcedTranslation) const
+{
+    try
+    {
+        time_t currentTime = time(nullptr);
+
+        sqlite3_stmt* statement = sqliteProvider->CreateStatement(
+            database,
+            "INSERT INTO Dictionary(Sentence, Count, Json, IsForcedTranslation, CreatedDate, UpdatedDate, IsActive) VALUES(@Sentence, 0, @Json, @IsForcedTranslation, @CreatedDate, @UpdatedDate, 1)");
+        sqliteProvider->BindValue(statement, L"@Sentence", sentence);
+        sqliteProvider->BindValue(statement, L"@Json", json);
+        sqliteProvider->BindValue(statement, L"@IsForcedTranslation", isForcedTranslation ? 1 : 0);
+        sqliteProvider->BindValue(statement, L"@CreatedDate", (long long)currentTime);
+        sqliteProvider->BindValue(statement, L"@UpdatedDate", (long long)currentTime);
+        sqliteProvider->ExecuteNonQuery(statement);
+    }
+    catch (const SelectedTextTranslateException& error)
+    {
+        logger->LogFormatted(L"Error occurred during AddTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
+    }
+}
+
+void DictionaryService::UpdateTranslateResult(wstring sentence, wstring json, bool isForcedTranslation) const
+{
+    try
+    {
+        time_t currentTime = time(nullptr);
+
+        sqlite3_stmt* statement = sqliteProvider->CreateStatement(
+            database,
+            "UPDATE Dictionary SET Json = @Json, UpdatedDate = @UpdatedDate WHERE Sentence = @Sentence AND IsForcedTranslation = @IsForcedTranslation");
+        sqliteProvider->BindValue(statement, L"@Sentence", sentence);
+        sqliteProvider->BindValue(statement, L"@Json", json);
+        sqliteProvider->BindValue(statement, L"@IsForcedTranslation", isForcedTranslation ? 1 : 0);
+        sqliteProvider->BindValue(statement, L"@UpdatedDate", (long long)currentTime);
+        sqliteProvider->ExecuteNonQuery(statement);
+    }
+    catch (const SelectedTextTranslateException& error)
+    {
+        logger->LogFormatted(L"Error occurred during UpdateTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
+    }
+}
+
+void DictionaryService::IncrementTranslationsCount(wstring sentence, bool isForcedTranslation) const
+{
+    try
+    {
+        sqlite3_stmt* statement = sqliteProvider->CreateStatement(
+            database,
+            "UPDATE Dictionary SET Count = Count + 1 WHERE Sentence = @Sentence AND IsForcedTranslation = @IsForcedTranslation");
+        sqliteProvider->BindValue(statement, L"@Sentence", sentence);
+        sqliteProvider->BindValue(statement, L"@IsForcedTranslation", isForcedTranslation ? 1 : 0);
+        sqliteProvider->ExecuteNonQuery(statement);
+    }
+    catch (const SelectedTextTranslateException& error)
+    {
+        logger->LogFormatted(L"Error occurred during UpdateTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
+    }
 }
 
 vector<LogRecord> DictionaryService::GetLogRecords(sqlite3_stmt* statement) const
 {
     vector<LogRecord> logRecords;
 
-    int result = sqlite3_step(statement);
-    while (result != SQLITE_DONE && result != SQLITE_OK)
+    sqliteProvider->ExecuteReader(statement, [&](map<wstring, int> columnsIndexes) -> void
     {
-        const unsigned char * word = sqlite3_column_text(statement, 0);
-        int count = sqlite3_column_int(statement, 1);
-        const unsigned char * json = sqlite3_column_text(statement, 2);
+        const unsigned char* word = sqlite3_column_text(statement, columnsIndexes[L"Sentence"]);
+        int count = sqlite3_column_int(statement, columnsIndexes[L"Count"]);
+        const unsigned char* json = sqlite3_column_text(statement, columnsIndexes[L"Json"]);
+        int isForcedTranslation = sqlite3_column_int(statement, columnsIndexes[L"IsForcedTranslation"]);
+        time_t createdDate = sqlite3_column_int64(statement, columnsIndexes[L"CreatedDate"]);
+        time_t updatedDate = sqlite3_column_int64(statement, columnsIndexes[L"UpdatedDate"]);
+        int isActive = sqlite3_column_int(statement, columnsIndexes[L"IsActive"]);
 
         LogRecord logRecord(
             StringUtilities::GetUtf16StringFromChar((char*)word),
+            isForcedTranslation == 1,
             count,
-            StringUtilities::GetUtf16StringFromChar((char*)json));
+            StringUtilities::GetUtf16StringFromChar((char*)json),
+            createdDate,
+            updatedDate,
+            isActive == 1);
 
         logRecords.push_back(logRecord);
-
-        result = sqlite3_step(statement);
-    }
-
-    result = sqlite3_finalize(statement);
-
-    if (result != SQLITE_OK)
-    {
-        wstring message = StringUtilities::Format(L"SQL error getting log records. Error code: %d", result);
-        throw SelectedTextTranslateException(message);
-    }
+    });
 
     return logRecords;
-}
-
-sqlite3_stmt* DictionaryService::CreateStatement(const char* sqlQuery) const
-{
-    sqlite3_stmt *statement = nullptr;
-    int result = sqlite3_prepare_v2(database, sqlQuery, -1, &statement, nullptr);
-
-    if (result != SQLITE_OK)
-    {
-        wstring message = StringUtilities::Format(L"SQL error preparing statement. Error code: %d", result);
-        throw SelectedTextTranslateException(message);
-    }
-
-    return statement;
-}
-
-void DictionaryService::BindValue(sqlite3_stmt* statement, wstring name, wstring value) const
-{
-    int index = sqlite3_bind_parameter_index(statement, StringUtilities::GetUtf8String(name).c_str());
-    int result = sqlite3_bind_text(statement, index, StringUtilities::GetUtf8String(value).c_str(), -1, SQLITE_TRANSIENT);
-
-    if (result != SQLITE_OK)
-    {
-        wstring message = StringUtilities::Format(L"SQL error binding string value. Error code: %d", result);
-        throw SelectedTextTranslateException(message);
-    }
-}
-
-void DictionaryService::BindValue(sqlite3_stmt* statement, wstring name, int value) const
-{
-    int index = sqlite3_bind_parameter_index(statement, StringUtilities::GetUtf8String(name).c_str());
-    int result = sqlite3_bind_int(statement, index, value);
-
-    if (result != SQLITE_OK)
-    {
-        wstring message = StringUtilities::Format(L"SQL error binding int value. Error code: %d", result);
-        throw SelectedTextTranslateException(message);
-    }
-}
-
-void DictionaryService::ExecuteNonQuery(sqlite3_stmt *statement) const
-{
-    int result = sqlite3_step(statement);
-    while (result != SQLITE_DONE && statement != SQLITE_OK)
-    {
-        result = sqlite3_step(statement);
-    }
-
-    result = sqlite3_finalize(statement);
-
-    if(true || result != SQLITE_OK)
-    {
-        wstring message = StringUtilities::Format(L"SQL error executing non query. Error code: %d", result);
-        throw SelectedTextTranslateException(message);
-    }
 }
 
 DictionaryService::~DictionaryService()

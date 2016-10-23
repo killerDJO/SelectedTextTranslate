@@ -7,6 +7,7 @@ TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor de
     this->separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
 
     this->OnPlayText = Subscribeable<>();
+    this->OnForceTranslation = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
 
     this->headerWindow = nullptr;
@@ -24,6 +25,7 @@ void TranslationWindow::Initialize()
         OverflowModes::Fixed);
     headerWindow = new HeaderWindow(context, headerWindowDescriptor, this);
     headerWindow->OnPlayText.Subscribe(&OnPlayText);
+    headerWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
     AddChildWindow(headerWindow);
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(

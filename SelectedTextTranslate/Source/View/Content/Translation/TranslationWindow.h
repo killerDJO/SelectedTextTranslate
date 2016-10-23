@@ -25,6 +25,7 @@ public:
     void Initialize() override;
 
     Subscribeable<> OnPlayText;
+    Subscribeable<> OnForceTranslation;
     Subscribeable<int> OnExpandTranslationResult;
 
     void SetModel(TranslateResult translateResult) const;

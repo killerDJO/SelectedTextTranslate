@@ -16,4 +16,8 @@ public:
 
     static vector<wstring> Split(const wstring &s, wchar_t delim);
     static void ReplaceAll(wstring &str, const wstring &search, const wstring &replace);
+
+    static wstring LeftTrim(wstring str);
+    static wstring RightTrim(wstring str);
+    static wstring Trim(wstring str);
 };

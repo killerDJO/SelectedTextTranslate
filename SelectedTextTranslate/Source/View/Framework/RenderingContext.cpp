@@ -10,12 +10,12 @@ RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextPr
     this->renderingRoot = nullptr;
 }
 
-Size RenderingContext::GetTextSize(HDC deviceContext, const wchar_t* text, HFONT font) const
+Size RenderingContext::GetTextSize(HDC deviceContext, wstring text, HFONT font) const
 {
     AssertCriticalWinApiResult(SelectObject(deviceContext, font));
 
     SIZE textSize;
-    AssertCriticalWinApiResult(GetTextExtentPoint32(deviceContext, text, wcslen(text), &textSize));
+    AssertCriticalWinApiResult(GetTextExtentPoint32(deviceContext, text.c_str(), text.length(), &textSize));
 
     return Size(textSize.cx, textSize.cy);
 }

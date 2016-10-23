@@ -8,11 +8,7 @@ public:
     TranslateResultSentence Sentence;
     vector<TranslateResultDictionary> TranslateCategories;
 
-    wchar_t* ErrorMessage;
-
     TranslateResult();
 
     bool IsInputCorrected() const;
-
-    void Free();
 };
