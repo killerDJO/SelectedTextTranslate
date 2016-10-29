@@ -88,19 +88,19 @@ void ExceptionHelper::SetupStructuredExceptionsTranslation()
 
 void ExceptionHelper::HandleNonFatalException(Logger* logger, ErrorHandler* errorHandler, wstring message, const SelectedTextTranslateBaseException& exception)
 {
-    logger->LogFormatted(L"%ls\n%ls", message.c_str(), exception.GetFullErrorMessage().c_str());
+    logger->LogFormatted(LogLevels::Error, L"%ls\n%ls", message.c_str(), exception.GetFullErrorMessage().c_str());
     errorHandler->ShowError(exception.GetDisplayErrorMessage());
 }
 
 void ExceptionHelper::HandleNonFatalException(Logger* logger, ErrorHandler* errorHandler, wstring message)
 {
-    logger->LogFormatted(L"%ls\n%ls", message.c_str(), GetCurrentExceptionMessage().c_str());
+    logger->LogFormatted(LogLevels::Error, L"%ls\n%ls", message.c_str(), GetCurrentExceptionMessage().c_str());
     errorHandler->ShowError(message);
 }
 
 void ExceptionHelper::TerminateOnException(Logger* logger)
 {
-    logger->LogFormatted(L"Unhandled exception occurred.\n%ls", GetCurrentExceptionMessage().c_str());
+    logger->LogFormatted(LogLevels::Fatal, L"Unhandled exception occurred.\n%ls", GetCurrentExceptionMessage().c_str());
     FatalAppExit(0, L"Unhandled exception occurred. See logs for details.");
 }
 

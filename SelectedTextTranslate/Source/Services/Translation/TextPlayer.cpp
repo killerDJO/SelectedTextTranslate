@@ -28,7 +28,7 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
 
         wstring text = wstring(textPlayer->currentTextToPlay);
 
-        textPlayer->logger->Log(L"Start playing sentence '" + text + L"'.");
+        textPlayer->logger->Log(LogLevels::Trace, L"Start playing sentence '" + text + L"'.");
 
         wstring responseQuery = L"https://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
             + L"&tk=" + textPlayer->translationService->GetHash(text);
@@ -48,7 +48,7 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
         string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
         mciSendStringA(closeAudioCommand.c_str(), nullptr, 0, nullptr);
 
-        textPlayer->logger->Log(L"End playing sentence.");
+        textPlayer->logger->Log(LogLevels::Trace, L"End playing sentence.");
 
         return 0;
     }

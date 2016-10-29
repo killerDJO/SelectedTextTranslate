@@ -6,5 +6,7 @@ enum class Colors
 
     Black = RGB(0, 0, 0),
 
-    LightGray = RGB(170, 170, 170)
+    LightGray = RGB(170, 170, 170),
+
+    Disabled = RGB(230, 230, 230)
 };

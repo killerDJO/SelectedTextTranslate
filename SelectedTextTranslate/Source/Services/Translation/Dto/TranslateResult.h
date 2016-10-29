@@ -5,6 +5,7 @@
 class TranslateResult
 {
 public:
+    bool IsEmptyResult;
     TranslateResultSentence Sentence;
     vector<TranslateResultDictionary> TranslateCategories;
 

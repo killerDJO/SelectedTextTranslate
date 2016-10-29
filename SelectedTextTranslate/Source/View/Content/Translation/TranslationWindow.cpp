@@ -5,7 +5,7 @@ TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor de
     : ContentWindow(context, descriptor, parentWindow)
 {
     this->separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
-
+    this->disabledBackgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Disabled);
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
     this->OnTranslateSuggestion = Subscribeable<>();
@@ -40,10 +40,11 @@ void TranslationWindow::Initialize()
     AddChildWindow(translateResultWindow);
 }
 
-void TranslationWindow::SetModel(TranslateResult translateResult) const
+void TranslationWindow::SetModel(TranslateResult translateResult)
 {
     AssertWindowInitialized();
 
+    this->translateResult = translateResult;
     this->headerWindow->SetModel(translateResult);
     this->translateResultWindow->SetModel(translateResult);
 }
@@ -53,11 +54,28 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
 
     headerWindow->Render();
-    translateResultWindow->Render();
 
     Size contentSize;
-    contentSize.Width = max(headerWindow->GetSize().Width, translateResultWindow->GetSize().Width);
-    contentSize.Height = headerWindow->GetSize().Height + translateResultWindow->GetSize().Height;
+
+    if (translateResult.IsEmptyResult)
+    {
+        translateResultWindow->Hide();
+
+        Size backgroundSize = Size(
+            max(parentWindow->GetSize().Width, headerWindow->GetSize().Width),
+            parentWindow->GetSize().Height - headerHeight);
+        renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), disabledBackgroundBrush);
+
+        contentSize = headerWindow->GetSize();
+    }
+    else
+    {
+        translateResultWindow->Show();
+        translateResultWindow->Render();
+
+        contentSize.Width = max(headerWindow->GetSize().Width, translateResultWindow->GetSize().Width);
+        contentSize.Height = headerWindow->GetSize().Height + translateResultWindow->GetSize().Height;
+    }
 
     RenderSeparator(renderer, max(windowSize.Width, contentSize.Width));
 
@@ -80,7 +98,14 @@ void TranslationWindow::Resize()
     AssertCriticalWinApiResult(MoveWindow(windowHandle, position.X, position.Y, windowSize.Width, windowSize.Height, FALSE));
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+
+    if(translateResult.IsEmptyResult)
+    {
+        renderer->DrawRect(Rect(0, headerHeight, windowSize.Width, windowSize.Height - headerHeight), disabledBackgroundBrush);
+    }
+
     RenderSeparator(renderer, max(contentSize.Width, windowSize.Width));
+
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 

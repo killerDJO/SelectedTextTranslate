@@ -36,7 +36,13 @@ wstring TextExtractor::GetSelectedText() const
     AssertWinApiResult(OpenClipboard(nullptr));
 
     HGLOBAL hglb = GetClipboardData(CF_UNICODETEXT);
-    AssertWinApiResult(hglb);
+
+    AssertWinApiResult(CloseClipboard());
+
+    if(hglb == nullptr)
+    {
+        return wstring();
+    }
 
     TCHAR* lpstr = static_cast<TCHAR*>(GlobalLock(hglb));
     AssertWinApiResult(lpstr);
@@ -47,7 +53,6 @@ wstring TextExtractor::GetSelectedText() const
     }
 
     AssertWinApiResult(GlobalUnlock(hglb));
-    AssertWinApiResult(CloseClipboard());
 
     return result;
 }

@@ -24,7 +24,7 @@ int Application::Run(HINSTANCE hInstance) const
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
     Logger* logger = new Logger();
-    logger->Log(L"Application start.");
+    logger->Log(LogLevels::Trace, L"Application start.");
 
     int result;
     try
@@ -89,7 +89,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     mainWindow.Initialize();
     appController.Initialize();
 
-    logger->Log(L"Application initialized.");
+    logger->Log(LogLevels::Trace, L"Application initialized.");
 
     MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))
@@ -98,7 +98,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         DispatchMessage(&msg);
     }
 
-    logger->Log(L"Application shutdown.");
+    logger->Log(LogLevels::Trace, L"Application shutdown.");
 
     return msg.wParam;
 }

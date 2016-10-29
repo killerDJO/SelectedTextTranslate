@@ -14,12 +14,18 @@ TranslationService::TranslationService(Logger* logger, RequestProvider* requestP
 
 TranslateResult TranslationService::TranslateSentence(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const
 {
+    TranslateResult result;
     wstring trimmedSentence = StringUtilities::Trim(sentence);
-    logger->Log(L"Start translating sentence '" + trimmedSentence + L"'.");
+
+    if(trimmedSentence.empty())
+    {
+        result.IsEmptyResult = true;
+        return result;
+    }
+
+    logger->Log(LogLevels::Trace, L"Start translating sentence '" + trimmedSentence + L"'.");
 
     wstring translatorResponse = GetTranslatorResponse(trimmedSentence, incrementTranslationsCount, forceTranslation);
-
-    TranslateResult result;
 
     try
     {
@@ -31,7 +37,7 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool inc
         throw SelectedTextTranslateException(L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".");
     }
 
-    logger->Log(L"End translating sentence.");
+    logger->Log(LogLevels::Trace, L"End translating sentence.");
 
     return result;
 }

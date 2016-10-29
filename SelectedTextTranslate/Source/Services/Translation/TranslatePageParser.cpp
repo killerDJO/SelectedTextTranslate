@@ -31,7 +31,7 @@ void TranslatePageParser::UpateTkkIfNeccessary()
 
     if (lastTkkRequestTime == -1 || timev - lastTkkRequestTime > 60 * 60)
     {
-        logger->Log(L"Start requesting TKK.");
+        logger->Log(LogLevels::Trace, L"Start requesting TKK.");
 
         wstring translatePageURL = L"https://translate.google.com";
         wstring translatePageMarkup = requestProvider->GetStringResponse(translatePageURL);
@@ -55,13 +55,13 @@ void TranslatePageParser::UpateTkkIfNeccessary()
         tkk1 = _wtoll(parts[0].c_str());
         tkk2 = _wtoll(parts[1].c_str());
 
-        logger->Log(L"TKK has been extracted. New values: Tkk1 = " + to_wstring(tkk1) + L", Tkk2 = " + to_wstring(tkk2) + L".");
+        logger->Log(LogLevels::Trace, L"TKK has been extracted. New values: Tkk1 = " + to_wstring(tkk1) + L", Tkk2 = " + to_wstring(tkk2) + L".");
 
         duk_destroy_heap(ctx);
 
         lastTkkRequestTime = timev;
 
-        logger->Log(L"End requesting TKK.");
+        logger->Log(LogLevels::Trace, L"End requesting TKK.");
     }
 }
 

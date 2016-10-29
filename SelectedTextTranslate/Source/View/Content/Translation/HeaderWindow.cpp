@@ -32,6 +32,18 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
+    if(!translateResult.IsEmptyResult)
+    {
+        return RenderTranslationResult(renderer);
+    }
+    else
+    {
+        return RenderEmptyResult(renderer);
+    }
+}
+
+Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
+{
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     int curY = lineHeight;
 
@@ -60,12 +72,22 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     {
         PrintInputCorrectionWarning(translateResult.Sentence.Input, curY, originLintBottomRight, renderer);
     }
-    else if(!translateResult.Sentence.Suggestion.empty())
+    else if (!translateResult.Sentence.Suggestion.empty())
     {
         PrintSuggestion(translateResult.Sentence.Suggestion, curY, originLintBottomRight, renderer);
     }
 
     renderer->IncreaseWidth(paddingX);
+
+    return renderer->GetScaledSize();
+}
+
+Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
+{
+    int fontHeight = renderer->GetFontStrokeHeight(fontHeader);
+    int curY = context->GetScaleProvider()->Downscale(windowSize.Height / 2) + fontHeight / 2;
+
+    renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, Point(paddingX, curY));
 
     return renderer->GetScaledSize();
 }

@@ -8,9 +8,12 @@ class TranslationWindow : public ContentWindow
 private:
     const int headerHeight = 50;
     HBRUSH separatorBrush;
+    HBRUSH disabledBackgroundBrush;
 
     HeaderWindow* headerWindow;
     TranslateResultWindow* translateResultWindow;
+
+    TranslateResult translateResult;
 
     void RenderSeparator(Renderer* renderer, int width) const;
 
@@ -29,5 +32,5 @@ public:
     Subscribeable<> OnTranslateSuggestion;
     Subscribeable<int> OnExpandTranslationResult;
 
-    void SetModel(TranslateResult translateResult) const;
+    void SetModel(TranslateResult translateResult);
 };

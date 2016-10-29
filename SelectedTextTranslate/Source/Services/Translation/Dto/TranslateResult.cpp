@@ -3,6 +3,7 @@
 
 TranslateResult::TranslateResult()
 {
+    IsEmptyResult = false;
 }
 
 bool TranslateResult::IsInputCorrected() const

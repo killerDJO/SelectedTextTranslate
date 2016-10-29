@@ -14,6 +14,9 @@ private:
     void PrintSuggestion(wstring suggestion, int curY, Point originLineBottomRight, Renderer* renderer);
     void PrintHeaderAction(wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback, int curY, Point originLineBottomRight, Renderer* renderer);
 
+    Size RenderTranslationResult(Renderer* renderer);
+    Size RenderEmptyResult(Renderer* renderer) const;
+
 protected:
     Size RenderContent(Renderer* renderer) override;
 

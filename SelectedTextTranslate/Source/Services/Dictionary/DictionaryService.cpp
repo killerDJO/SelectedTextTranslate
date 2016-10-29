@@ -16,7 +16,7 @@ DictionaryService::DictionaryService(Logger* logger, SqliteProvider* sqliteProvi
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error creating database.\n%ls", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(LogLevels::Error, L"Error creating database.\n%ls", error.GetFullErrorMessage().c_str());
     }
 }
 
@@ -73,7 +73,7 @@ void DictionaryService::AddTranslateResult(wstring sentence, wstring json, bool 
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during AddTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(LogLevels::Error, L"Error occurred during AddTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
     }
 }
 
@@ -94,7 +94,7 @@ void DictionaryService::UpdateTranslateResult(wstring sentence, wstring json, bo
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during UpdateTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(LogLevels::Error, L"Error occurred during UpdateTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
     }
 }
 
@@ -111,7 +111,7 @@ void DictionaryService::IncrementTranslationsCount(wstring sentence, bool isForc
     }
     catch (const SelectedTextTranslateException& error)
     {
-        logger->LogFormatted(L"Error occurred during UpdateTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
+        logger->LogFormatted(LogLevels::Error, L"Error occurred during UpdateTranslateResult.\n%ls", error.GetFullErrorMessage().c_str());
     }
 }
 

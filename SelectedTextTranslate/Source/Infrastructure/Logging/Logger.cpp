@@ -6,9 +6,14 @@
 Logger::Logger()
 {
     CreateDirectory(L".\\logs", nullptr);
+
+    this->logLevelsDisplayMap = map<LogLevels, wstring>();
+    this->logLevelsDisplayMap[LogLevels::Trace] = L"TRACE";
+    this->logLevelsDisplayMap[LogLevels::Error] = L"ERROR";
+    this->logLevelsDisplayMap[LogLevels::Fatal] = L"FATAL";
 }
 
-void Logger::Log(wstring record) const
+void Logger::Log(LogLevels logLevel, wstring record)
 {
     HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -17,20 +22,24 @@ void Logger::Log(wstring record) const
         return;
     }
 
-    record = GetCurrentDateTime() + L" " + record + L"\r\n";
+    wstring message = StringUtilities::Format(
+        L"%ls; %ls; %ls\r\n",
+        GetCurrentDateTime().c_str(),
+        logLevelsDisplayMap[logLevel].c_str(),
+        record.c_str());
 
     DWORD nWritten;
-    const wchar_t* buffer = record.c_str();
+    const wchar_t* buffer = message.c_str();
     WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, nullptr);
 
     CloseHandle(hFile);
 }
 
-void Logger::LogFormatted(wstring format, ...) const
+void Logger::LogFormatted(LogLevels logLevel, wstring format, ...)
 {
     va_list args;
     va_start(args, format);
-    Log(StringUtilities::Format(format, args));
+    Log(logLevel, StringUtilities::Format(format, args));
     va_end(args);
 }
 
@@ -39,7 +48,7 @@ wstring Logger::GetLogFileName() const
     wstring currentDate = GetCurrentDate();
     wstring computerName = GetLocalComputerName();
 
-    wstring fullFileName = L"logs\\" + wstring(currentDate.begin(), currentDate.end()) + L"_" + computerName + L"_trace.txt";
+    wstring fullFileName = L"logs\\" + wstring(currentDate.begin(), currentDate.end()) + L"_" + computerName + L"_log.txt";
 
     return fullFileName;
 }
