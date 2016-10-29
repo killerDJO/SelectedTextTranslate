@@ -30,31 +30,31 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
 
     int curY = lineHeight;
 
-    for (size_t i = 0; i < translateResult.TranslateCategories.size(); ++i)
+    for (size_t i = 0; i < translateResult.GetTranslateCategories().size(); ++i)
     {
-        TranslateResultDictionary category = translateResult.TranslateCategories[i];
+        TranslateResultCategory category = translateResult.GetTranslateCategories()[i];
 
         // Draw category header
-        Point baseFormBottomRight = renderer->PrintText(category.BaseForm, fontNormal, Colors::Black, Point(paddingX, curY));
+        Point baseFormBottomRight = renderer->PrintText(category.GetBaseForm(), fontNormal, Colors::Black, Point(paddingX, curY));
 
-        wstring partOfSpeech = L" - " + wstring(category.PartOfSpeech);
+        wstring partOfSpeech = L" - " + wstring(category.GetPartOfSpeech());
         renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, Point(baseFormBottomRight.X + 1, curY));
 
-        vector<TranslateResultDictionaryEntry> showedEntries(0);
-        if (category.IsExtendedList)
+        vector<TranslateResultCategoryEntry> showedEntries(0);
+        if (category.IsExtendedList())
         {
-            showedEntries = category.Entries;
+            showedEntries = category.GetEntries();
         }
         else
         {
-            for (size_t j = 0; j < category.Entries.size(); ++j)
+            for (size_t j = 0; j < category.GetEntries().size(); ++j)
             {
-                if (category.Entries[j].Score < 0.003 && j >= 7)
+                if (category.GetEntries()[j].GetScore() < 0.003 && j >= 7)
                 {
                     continue;
                 }
 
-                showedEntries.push_back(category.Entries[j]);
+                showedEntries.push_back(category.GetEntries()[j]);
             }
         }
 
@@ -63,17 +63,17 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
         {
             curY += lineHeight;
 
-            TranslateResultDictionaryEntry entry = category.Entries[j];
-            Point wordBottomRight = renderer->PrintText(entry.Word, fontNormal, Colors::Black, Point(paddingX * 3, curY));
+            TranslateResultCategoryEntry entry = category.GetEntries()[j];
+            Point wordBottomRight = renderer->PrintText(entry.GetWord(), fontNormal, Colors::Black, Point(paddingX * 3, curY));
 
             // Draw reverse translation
-            if (entry.ReverseTranslation.size() != 0)
+            if (entry.GetReverseTranslations().size() != 0)
             {
                 wordBottomRight = renderer->PrintText(L" - ", fontNormal, Colors::Gray, Point(wordBottomRight.X + 2, curY));
-                for (size_t k = 0; k < entry.ReverseTranslation.size(); ++k)
+                for (size_t k = 0; k < entry.GetReverseTranslations().size(); ++k)
                 {
-                    wstring text = wstring(entry.ReverseTranslation[k]);
-                    if (k != entry.ReverseTranslation.size() - 1)
+                    wstring text = wstring(entry.GetReverseTranslations()[k]);
+                    if (k != entry.GetReverseTranslations().size() - 1)
                     {
                         text += L", ";
                     }
@@ -81,7 +81,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
                 }
             }
 
-            int k = entry.Score >= 0.05 ? 0 : (entry.Score >= 0.0025 ? 1 : 2);
+            int k = entry.GetScore() >= 0.05 ? 0 : (entry.GetScore() >= 0.0025 ? 1 : 2);
             int rateUnit = 8;
             int strokeHeight = renderer->GetFontStrokeHeight(fontNormal);
 
@@ -106,18 +106,18 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
 }
 
 int TranslateResultWindow::CreateExpandButton(
-    TranslateResultDictionary category,
+    TranslateResultCategory category,
     int categoryIndex,
     int showedCount,
     int curY,
     Renderer* renderer)
 {
-    DWORD hiddenCount = category.Entries.size() - showedCount;
+    DWORD hiddenCount = category.GetEntries().size() - showedCount;
 
-    if (category.IsExtendedList || hiddenCount > 0) {
+    if (category.IsExtendedList() || hiddenCount > 0) {
         wstring text;
 
-        if (!category.IsExtendedList) {
+        if (!category.IsExtendedList()) {
             if (hiddenCount == 1) {
                 text = L"show " + to_wstring(hiddenCount) + L" more result";
             }

@@ -16,7 +16,7 @@ private:
     ApplicationViews currentView;
 
     TranslateResult translateResult;
-    vector<LogRecord> dictionaryRecords;
+    vector<DictionaryRecord> dictionaryRecords;
 
     void CreateViews();
 
@@ -47,5 +47,5 @@ public:
 
     void SetCurrentView(ApplicationViews applicationView);
     void SetTranslateResultModel(TranslateResult translateResult);
-    void SetDictionaryModel(vector<LogRecord> dictionaryRecords);
+    void SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords);
 };

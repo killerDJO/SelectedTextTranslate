@@ -171,9 +171,6 @@
     <ClCompile Include="Source\Providers\RequestProvider.cpp">
       <Filter>Source\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Dictionary\Dto\LogRecord.cpp">
-      <Filter>Source\Services\Dictionary\Dto</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResult.cpp">
       <Filter>Source\Services\Translation\Dto</Filter>
     </ClCompile>
@@ -230,6 +227,18 @@
     </ClCompile>
     <ClCompile Include="Source\Providers\SqliteProvider.cpp">
       <Filter>Source\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp">
+      <Filter>Source\Services\Dictionary\Dto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,16 +328,7 @@
     <ClInclude Include="Source\Providers\RequestProvider.h">
       <Filter>Source\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Dictionary\Dto\LogRecord.h">
-      <Filter>Source\Services\Dictionary\Dto</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResult.h">
-      <Filter>Source\Services\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultDictionary.h">
-      <Filter>Source\Services\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultDictionaryEntry.h">
       <Filter>Source\Services\Translation\Dto</Filter>
     </ClInclude>
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResultSentence.h">
@@ -396,6 +396,15 @@
     </ClInclude>
     <ClInclude Include="Source\Providers\SqliteProvider.h">
       <Filter>Source\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategory.h">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.h">
+      <Filter>Source\Services\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h">
+      <Filter>Source\Services\Dictionary\Dto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

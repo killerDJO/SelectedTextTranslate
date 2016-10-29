@@ -43,10 +43,10 @@ Point ScaleProvider::Scale(Point point) const
 WindowDescriptor ScaleProvider::Scale(WindowDescriptor windowDescriptor) const
 {
     return WindowDescriptor::CreateWindowDescriptor(
-        Scale(windowDescriptor.Position),
-        Scale(windowDescriptor.WindowSize),
-        windowDescriptor.OverflowX,
-        windowDescriptor.OverflowY
+        Scale(windowDescriptor.GetPosition()),
+        Scale(windowDescriptor.GetWindowSize()),
+        windowDescriptor.GetOverflowX(),
+        windowDescriptor.GetOverflowY()
     );
 }
 

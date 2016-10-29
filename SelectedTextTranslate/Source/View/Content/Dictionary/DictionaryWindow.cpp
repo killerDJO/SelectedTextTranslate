@@ -7,7 +7,7 @@ DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor desc
     this->OnShowTranslation = Subscribeable<int>();
 }
 
-void DictionaryWindow::SetModel(vector<LogRecord> dictionaryRecords)
+void DictionaryWindow::SetModel(vector<DictionaryRecord> dictionaryRecords)
 {
     AssertWindowInitialized();
 
@@ -31,9 +31,9 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
 
     for (size_t i = 0; i < countToShow; ++i)
     {
-        LogRecord record = dictionaryRecords[i];
-        Point lineBottomRight = renderer->PrintText(record.Word.c_str(), fontNormal, Colors::Black, Point(paddingX * 2 + 4, curY));
-        renderer->PrintText(wstring(L" (" + to_wstring(record.Count) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
+        DictionaryRecord record = dictionaryRecords[i];
+        Point lineBottomRight = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, Point(paddingX * 2 + 4, curY));
+        renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
             context,

@@ -26,7 +26,7 @@ void DictionaryService::CreateDatabase() const
     sqliteProvider->ExecuteNonQuery(sqliteProvider->CreateStatement(database, "CREATE INDEX IF NOT EXISTS IX_Dictionary_Count on Dictionary(Count)"));
 }
 
-bool DictionaryService::TryGetCachedRecord(wstring sentence, bool isForcedTranslation, LogRecord& logRecord) const
+bool DictionaryService::TryGetCachedRecord(wstring sentence, bool isForcedTranslation, DictionaryRecord& logRecord) const
 {
     sqlite3_stmt* statement = sqliteProvider->CreateStatement(
         database,
@@ -34,7 +34,7 @@ bool DictionaryService::TryGetCachedRecord(wstring sentence, bool isForcedTransl
     sqliteProvider->BindValue(statement, L"@Sentence", sentence);
     sqliteProvider->BindValue(statement, L"@IsForcedTranslation", isForcedTranslation ? 1 : 0);
 
-    vector<LogRecord> logRecords = GetLogRecords(statement);
+    vector<DictionaryRecord> logRecords = GetLogRecords(statement);
 
     if(logRecords.size() == 0)
     {
@@ -45,7 +45,7 @@ bool DictionaryService::TryGetCachedRecord(wstring sentence, bool isForcedTransl
     return true;
 }
 
-vector<LogRecord> DictionaryService::GetTopRecords(int topRecordsCount) const
+vector<DictionaryRecord> DictionaryService::GetTopRecords(int topRecordsCount) const
 {
     sqlite3_stmt* statement = sqliteProvider->CreateStatement(
         database,
@@ -115,9 +115,9 @@ void DictionaryService::IncrementTranslationsCount(wstring sentence, bool isForc
     }
 }
 
-vector<LogRecord> DictionaryService::GetLogRecords(sqlite3_stmt* statement) const
+vector<DictionaryRecord> DictionaryService::GetLogRecords(sqlite3_stmt* statement) const
 {
-    vector<LogRecord> logRecords;
+    vector<DictionaryRecord> logRecords;
 
     sqliteProvider->ExecuteReader(statement, [&](map<wstring, int> columnsIndexes) -> void
     {
@@ -129,7 +129,7 @@ vector<LogRecord> DictionaryService::GetLogRecords(sqlite3_stmt* statement) cons
         time_t updatedDate = sqlite3_column_int64(statement, columnsIndexes[L"UpdatedDate"]);
         int isActive = sqlite3_column_int(statement, columnsIndexes[L"IsActive"]);
 
-        LogRecord logRecord(
+        DictionaryRecord logRecord(
             StringUtilities::GetUtf16StringFromChar((char*)word),
             isForcedTranslation == 1,
             count,

@@ -32,7 +32,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    if(!translateResult.IsEmptyResult)
+    if(!translateResult.IsEmptyResult())
     {
         return RenderTranslationResult(renderer);
     }
@@ -47,7 +47,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     int curY = lineHeight;
 
-    renderer->PrintText(translateResult.Sentence.Translation, fontHeader, Colors::Black, Point(paddingX, curY));
+    renderer->PrintText(translateResult.GetSentence().GetTranslation(), fontHeader, Colors::Black, Point(paddingX, curY));
 
     curY += lineHeight;
 
@@ -63,18 +63,18 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     AddChildWindow(audioButton);
 
     Point originLintBottomRight = renderer->PrintText(
-        translateResult.Sentence.Origin,
+        translateResult.GetSentence().GetOrigin(),
         fontSmall,
         Colors::Gray,
         Point(paddingX + imageSize + 2, curY));
 
     if (translateResult.IsInputCorrected())
     {
-        PrintInputCorrectionWarning(translateResult.Sentence.Input, curY, originLintBottomRight, renderer);
+        PrintInputCorrectionWarning(translateResult.GetSentence().GetInput(), curY, originLintBottomRight, renderer);
     }
-    else if (!translateResult.Sentence.Suggestion.empty())
+    else if (!translateResult.GetSentence().GetSuggestion().empty())
     {
-        PrintSuggestion(translateResult.Sentence.Suggestion, curY, originLintBottomRight, renderer);
+        PrintSuggestion(translateResult.GetSentence().GetSuggestion(), curY, originLintBottomRight, renderer);
     }
 
     renderer->IncreaseWidth(paddingX);

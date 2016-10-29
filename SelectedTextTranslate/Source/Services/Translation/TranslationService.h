@@ -5,6 +5,8 @@
 #include "Services\Translation\TranslatePageParser.h"
 #include "Services\Dictionary\DictionaryService.h"
 
+using namespace web;
+
 class TranslationService
 {
 private:
@@ -15,7 +17,10 @@ private:
     Logger* logger;
     DictionaryService* dictionaryService;
 
-    TranslateResult ParseJSONResponse(wstring json) const;
+    TranslateResult ParseJSONResponse(wstring json, wstring input) const;
+    TranslateResultSentence ParseTranslateResultSentence(json::value root, wstring input) const;
+    vector<TranslateResultCategory> ParseTranslateCategories(json::value root) const;
+
     wstring GetTranslatorResponse(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const;
     wstring SendTranslationRequest(wstring sentence, bool forceTranslation) const;
 

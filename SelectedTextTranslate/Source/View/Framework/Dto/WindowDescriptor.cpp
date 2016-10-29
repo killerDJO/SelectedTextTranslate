@@ -2,24 +2,24 @@
 
 WindowDescriptor::WindowDescriptor()
 {
-    Position = Point(0, 0);
-    WindowSize = Size(0, 0);
+    this->position = Point(0, 0);
+    this->windowSize = Size(0, 0);
 
-    OverflowX = OverflowModes::Fixed;
-    OverflowY = OverflowModes::Fixed;
+    this->overflowX = OverflowModes::Fixed;
+    this->overflowY = OverflowModes::Fixed;
 
-    AutoScale = false;
+    this->autoScale = false;
 }
 
 WindowDescriptor::WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale)
 {
-    Position = position;
-    WindowSize = windowSize;
+    this->position = position;
+    this->windowSize = windowSize;
 
-    OverflowY = overflowY;
-    OverflowX = overflowX;
+    this->overflowY = overflowY;
+    this->overflowX = overflowX;
 
-    AutoScale = autoScale;
+    this->autoScale = autoScale;
 }
 
 WindowDescriptor WindowDescriptor::CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale)
@@ -35,4 +35,43 @@ WindowDescriptor WindowDescriptor::CreateFixedWindowDescriptor(Point position, S
 WindowDescriptor WindowDescriptor::CreateStretchWindowDescriptor(Point position)
 {
     return WindowDescriptor(position, Size(0, 0), OverflowModes::Stretch, OverflowModes::Stretch);
+}
+
+Point WindowDescriptor::GetPosition() const
+{
+    return position;
+}
+
+Size WindowDescriptor::GetWindowSize() const
+{
+    return windowSize;
+}
+
+OverflowModes WindowDescriptor::GetOverflowY() const
+{
+    return overflowY;
+}
+
+OverflowModes WindowDescriptor::GetOverflowX() const
+{
+    return overflowX;
+}
+
+bool WindowDescriptor::IsAutoScaleEnabled() const
+{
+    return autoScale;
+}
+
+void WindowDescriptor::SetPosition(Point position)
+{
+    this->position = position;
+}
+
+void WindowDescriptor::SetWindowSize(Size windowSize)
+{
+    this->windowSize = windowSize;
+}
+
+WindowDescriptor::~WindowDescriptor()
+{
 }

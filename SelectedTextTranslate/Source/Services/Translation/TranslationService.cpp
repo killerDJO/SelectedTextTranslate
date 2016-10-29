@@ -2,8 +2,6 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Utilities\StringUtilities.h"
 
-using namespace web;
-
 TranslationService::TranslationService(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser, DictionaryService* dictionary)
 {
     this->requestProvider = requestProvider;
@@ -14,23 +12,21 @@ TranslationService::TranslationService(Logger* logger, RequestProvider* requestP
 
 TranslateResult TranslationService::TranslateSentence(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const
 {
-    TranslateResult result;
     wstring trimmedSentence = StringUtilities::Trim(sentence);
 
     if(trimmedSentence.empty())
     {
-        result.IsEmptyResult = true;
-        return result;
+        return TranslateResult();
     }
 
     logger->Log(LogLevels::Trace, L"Start translating sentence '" + trimmedSentence + L"'.");
 
     wstring translatorResponse = GetTranslatorResponse(trimmedSentence, incrementTranslationsCount, forceTranslation);
 
+    TranslateResult result;
     try
     {
-        result = ParseJSONResponse(translatorResponse);
-        result.Sentence.Input = StringUtilities::CopyWideChar(trimmedSentence);
+        result = ParseJSONResponse(translatorResponse, trimmedSentence);
     }
     catch (json::json_exception exception)
     {
@@ -46,19 +42,19 @@ wstring TranslationService::GetTranslatorResponse(wstring sentence, bool increme
 {
     wstring translatorResponse;
 
-    LogRecord cachedRecord;
+    DictionaryRecord cachedRecord;
     if(dictionaryService->TryGetCachedRecord(sentence, forceTranslation, cachedRecord))
     {
         time_t currentTime = time(nullptr);
 
-        if(currentTime - cachedRecord.UpdatedDate > DictionaryRefreshInterval)
+        if(currentTime - cachedRecord.GetUpdatedDate() > DictionaryRefreshInterval)
         {
             translatorResponse = SendTranslationRequest(sentence, forceTranslation);
             dictionaryService->UpdateTranslateResult(sentence, translatorResponse, forceTranslation);
         }
         else
         {
-            translatorResponse = cachedRecord.Json;
+            translatorResponse = cachedRecord.GetJson();
         }
     }
     else
@@ -151,10 +147,8 @@ wstring TranslationService::GetHash(wstring sentence) const
 //  <irrelevant>,
 //  [<irrelevant>, <suggestion>, <irrelevant>, null, null, <irrelevant>],
 //]
-TranslateResult TranslationService::ParseJSONResponse(wstring json) const
+TranslateResult TranslationService::ParseJSONResponse(wstring json, wstring input) const
 {
-    TranslateResult result;
-
     if (json.empty())
     {
         throw SelectedTextTranslateException(L"Error. Unable to parse JSON. JSON value is empty.");
@@ -171,39 +165,62 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
         throw SelectedTextTranslateException(StringUtilities::Format(L"Error. Unable to parse JSON. Json value = '%ls'.", json));
     }
 
+    TranslateResultSentence sentence = ParseTranslateResultSentence(root, input);
+
+    if (!root[1].is_array())
+    {
+        return TranslateResult(sentence, vector<TranslateResultCategory>());
+    }
+
+    vector<TranslateResultCategory> categories = ParseTranslateCategories(root);
+
+    return TranslateResult(sentence, categories);
+}
+
+TranslateResultSentence TranslationService::ParseTranslateResultSentence(json::value root, wstring input) const
+{
+    wstring translation;
+    wstring origin;
     json::array sentences = root[0][0].as_array();
     if (sentences.size() > 0)
     {
-        result.Sentence.Translation = StringUtilities::CopyWideChar(sentences[0].as_string());
-        result.Sentence.Origin = StringUtilities::CopyWideChar(sentences[1].as_string());
+        translation = sentences[0].as_string();
+        origin = sentences[1].as_string();
     }
 
-    if (!root[1].is_array()) {
-        return result;
+    wstring suggestion;
+    if (!root[7].is_null())
+    {
+        json::array suggestionHolder = root[7].as_array();
+        suggestion = suggestionHolder[1].as_string();
     }
+
+    return TranslateResultSentence(translation, origin, input, suggestion);
+}
+
+vector<TranslateResultCategory> TranslationService::ParseTranslateCategories(json::value root) const
+{
+    vector<TranslateResultCategory> categories;
 
     json::array dict = root[1].as_array();
 
     for (size_t i = 0; i < dict.size(); ++i)
     {
-        TranslateResultDictionary category;
+        wstring partOfSpeech = dict[i][0].as_string();
+        wstring baseForm = dict[i][3].as_string();
 
-        category.IsExtendedList = false;
-        category.PartOfSpeech = StringUtilities::CopyWideChar(dict[i][0].as_string());
-        category.BaseForm = StringUtilities::CopyWideChar(dict[i][3].as_string());
-
-        if (!dict[i][2].is_array()) 
+        if (!dict[i][2].is_array())
         {
             continue;
         }
 
+        vector<TranslateResultCategoryEntry> translateResultDictionaryEntries;
         json::array entries = dict[i][2].as_array();
         for (size_t j = 0; j < entries.size(); ++j)
         {
-            TranslateResultDictionaryEntry entry;
-            entry.Word = StringUtilities::CopyWideChar(entries[j][0].as_string());
+            wstring word = entries[j][0].as_string();
 
-            entry.Score = entries[j][3].is_double()
+            double score = entries[j][3].is_double()
                 ? entries[j][3].as_double()
                 : 0;
 
@@ -212,25 +229,20 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json) const
                 continue;
             }
 
-            json::array reverseTranslations = entries[j][1].as_array();
-            for (size_t k = 0; k < reverseTranslations.size(); ++k)
+            vector<wstring> reverseTransltions;
+            json::array reverseTranslationsJson = entries[j][1].as_array();
+            for (size_t k = 0; k < reverseTranslationsJson.size(); ++k)
             {
-                entry.ReverseTranslation.push_back(StringUtilities::CopyWideChar(reverseTranslations[k].as_string()));
+                reverseTransltions.push_back(reverseTranslationsJson[k].as_string());
             }
 
-            category.Entries.push_back(entry);
+            translateResultDictionaryEntries.push_back(TranslateResultCategoryEntry(word, reverseTransltions, score));
         }
 
-        result.TranslateCategories.push_back(category);
+        categories.push_back(TranslateResultCategory(partOfSpeech, baseForm, false, translateResultDictionaryEntries));
     }
 
-    if(!root[7].is_null())
-    {
-        json::array suggestionHolder = root[7].as_array();
-        result.Sentence.Suggestion = StringUtilities::CopyWideChar(suggestionHolder[1].as_string());
-    }
-
-    return result;
+    return categories;
 }
 
 TranslationService::~TranslationService()

@@ -18,6 +18,9 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\StackProvider.cpp" />
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp" />
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
+    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
     <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
@@ -26,7 +29,7 @@
     <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScaleProvider.cpp" />
-    <ClCompile Include="Source\Services\Dictionary\Dto\LogRecord.cpp" />
+    <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\WindowDescriptor.cpp" />
     <ClCompile Include="Source\View\Framework\Renderer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp" />
@@ -85,10 +88,10 @@
     <ClInclude Include="Source\View\Framework\RenderingContext.h" />
     <ClInclude Include="Source\Controllers\AppController.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Source\Services\Dictionary\Dto\LogRecord.h" />
+    <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h" />
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResult.h" />
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultDictionary.h" />
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultDictionaryEntry.h" />
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategory.h" />
+    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.h" />
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResultSentence.h" />
     <ClInclude Include="Source\Providers\RequestProvider.h" />
     <ClInclude Include="Source\Services\Translation\TextExtractor.h" />

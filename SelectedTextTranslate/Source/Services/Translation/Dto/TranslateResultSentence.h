@@ -1,10 +1,20 @@
 #pragma once
 
-struct TranslateResultSentence
+class TranslateResultSentence
 {
-    wstring Translation;
-    wstring Origin;
-    wstring Translit;
-    wstring Input;
-    wstring Suggestion;
+private:
+    wstring translation;
+    wstring origin;
+    wstring input;
+    wstring suggestion;
+
+public:
+    TranslateResultSentence(wstring translation, wstring origin, wstring input, wstring suggestion);
+    TranslateResultSentence();
+    ~TranslateResultSentence();
+
+    wstring GetTranslation() const;
+    wstring GetOrigin() const;
+    wstring GetInput() const;
+    wstring GetSuggestion() const;
 };

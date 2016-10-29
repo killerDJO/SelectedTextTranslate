@@ -21,7 +21,7 @@ void AppController::Initialize()
     mainWindow->OnPlayText.Subscribe(bind(&AppController::PlayCurrentText, this));
     mainWindow->OnForceTranslation.Subscribe(bind(&AppController::ForceTranslateCurrentText, this));
     mainWindow->OnTranslateSuggestion.Subscribe(bind(&AppController::TranslateSuggestion, this));
-    mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultDictionary, this, placeholders::_1));
+    mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultCategory, this, placeholders::_1));
     mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
 
     trayIconProvider->OnExit.Subscribe(bind(&AppController::Exit, this));
@@ -45,7 +45,7 @@ void AppController::TranslateSelectedText()
 
 void AppController::ForceTranslateCurrentText()
 {
-    translateResult = translationService->TranslateSentence(translateResult.Sentence.Input, true, true);
+    translateResult = translationService->TranslateSentence(translateResult.GetSentence().GetInput(), true, true);
 
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);
@@ -54,16 +54,16 @@ void AppController::ForceTranslateCurrentText()
 
 void AppController::TranslateSuggestion()
 {
-    translateResult = translationService->TranslateSentence(translateResult.Sentence.Suggestion, true, false);
+    translateResult = translationService->TranslateSentence(translateResult.GetSentence().GetSuggestion(), true, false);
 
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);
     mainWindow->Render();
 }
 
-void AppController::ToggleTranslateResultDictionary(int translateResultDictionaryIndex)
+void AppController::ToggleTranslateResultCategory(int translateResultCategoryIndex)
 {
-    translateResult.TranslateCategories[translateResultDictionaryIndex].IsExtendedList ^= true;
+    translateResult.ToggleCategory(translateResultCategoryIndex);
     mainWindow->SetTranslateResultModel(translateResult);
     mainWindow->Render(true);
 }
@@ -72,12 +72,12 @@ void AppController::PlaySelectedText()
 {
     wstring selectedText = textExtractor->GetSelectedText();
     translateResult = translationService->TranslateSentence(selectedText, false, false);
-    textPlayer->PlayText(translateResult.Sentence.Origin);
+    textPlayer->PlayText(translateResult.GetSentence().GetOrigin());
 }
 
 void AppController::PlayCurrentText() const
 {
-    textPlayer->PlayText(translateResult.Sentence.Origin);
+    textPlayer->PlayText(translateResult.GetSentence().GetOrigin());
 }
 
 void AppController::ShowDictionary() const
@@ -91,10 +91,10 @@ void AppController::ShowDictionary() const
 
 void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
 {
-    vector<LogRecord> logRecords = dictionary->GetTopRecords(200);
-    LogRecord logRecordToTranslate = logRecords[wordInDictionaryIndex];
+    vector<DictionaryRecord> dictionaryRecords = dictionary->GetTopRecords(200);
+    DictionaryRecord recordToTranslate = dictionaryRecords[wordInDictionaryIndex];
 
-    translateResult = translationService->TranslateSentence(logRecordToTranslate.Word, false, false);
+    translateResult = translationService->TranslateSentence(recordToTranslate.GetWord(), false, false);
     
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);

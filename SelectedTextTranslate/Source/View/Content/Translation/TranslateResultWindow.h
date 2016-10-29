@@ -10,7 +10,7 @@ private:
 
     TranslateResult translateResult;
 
-    int CreateExpandButton(TranslateResultDictionary category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
+    int CreateExpandButton(TranslateResultCategory category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
 
 protected:
     Size RenderContent(Renderer* renderer) override;

@@ -30,10 +30,10 @@ void MainWindow::Initialize()
         className,
         nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        descriptor.Position.X,
-        descriptor.Position.Y,
-        descriptor.WindowSize.Width,
-        descriptor.WindowSize.Height,
+        descriptor.GetPosition().X,
+        descriptor.GetPosition().Y,
+        descriptor.GetWindowSize().Width,
+        descriptor.GetWindowSize().Height,
         nullptr,
         nullptr,
         context->GetInstance(),
@@ -114,7 +114,7 @@ void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
     this->translationWindow->SetModel(translateResult);
 }
 
-void MainWindow::SetDictionaryModel(vector<LogRecord> dictionaryRecords)
+void MainWindow::SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords)
 {
     AssertWindowInitialized();
 
@@ -146,16 +146,16 @@ Size MainWindow::RenderContent(Renderer* renderer)
 
 void MainWindow::Scale(double scaleFactorAdjustment)
 {
-    int scaledWidth = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Width, scaleFactorAdjustment);
-    int scaledHeight = context->GetScaleProvider()->Rescale(descriptor.WindowSize.Height, scaleFactorAdjustment);
+    int scaledWidth = context->GetScaleProvider()->Rescale(descriptor.GetWindowSize().Width, scaleFactorAdjustment);
+    int scaledHeight = context->GetScaleProvider()->Rescale(descriptor.GetWindowSize().Height, scaleFactorAdjustment);
 
-    descriptor.Position.X -= scaledWidth - descriptor.WindowSize.Width;
-    descriptor.Position.Y -= scaledHeight - descriptor.WindowSize.Height;
-    position.X = descriptor.Position.X;
-    position.Y = descriptor.Position.Y;
+    position.X = descriptor.GetPosition().X - scaledWidth + descriptor.GetWindowSize().Width;
+    position.Y = descriptor.GetPosition().Y - scaledHeight + descriptor.GetWindowSize().Height;
+    descriptor.SetPosition(position);
 
-    windowSize.Width = descriptor.WindowSize.Width = scaledWidth;
-    windowSize.Height = descriptor.WindowSize.Height = scaledHeight;
+    windowSize.Width = scaledWidth;
+    windowSize.Height =  scaledHeight;
+    descriptor.SetWindowSize(windowSize);
 
     context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAdjustment);
 
@@ -177,15 +177,18 @@ void MainWindow::Resize()
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 
-    if(descriptor.WindowSize.Width == newWidth && descriptor.WindowSize.Height == newHeight)
+    if(descriptor.GetWindowSize().Width == newWidth && descriptor.GetWindowSize().Height == newHeight)
     {
         return;
     }
 
-    descriptor.WindowSize.Width = windowSize.Width = newWidth;
-    descriptor.WindowSize.Height = windowSize.Height = newHeight;
-    position.X = descriptor.Position.X = windowRect.left;
-    position.Y = descriptor.Position.Y = windowRect.top;
+    windowSize.Width = newWidth;
+    windowSize.Height = newHeight;
+    descriptor.SetWindowSize(windowSize);
+
+    position.X = windowRect.left;
+    position.Y = windowRect.top;
+    descriptor.SetPosition(position);
 
     deviceContextBuffer->Resize(windowSize);
 

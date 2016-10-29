@@ -57,7 +57,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
 
     Size contentSize;
 
-    if (translateResult.IsEmptyResult)
+    if (translateResult.IsEmptyResult())
     {
         translateResultWindow->Hide();
 
@@ -85,7 +85,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
 void TranslationWindow::Resize()
 {
     Size parentSize = parentWindow->GetSize();
-    descriptor.WindowSize = parentSize;
+    descriptor.SetWindowSize(parentSize);
 
     windowSize.Width = max(parentSize.Width, windowSize.Width);
     windowSize.Height = max(parentSize.Height, windowSize.Height);
@@ -99,7 +99,7 @@ void TranslationWindow::Resize()
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    if(translateResult.IsEmptyResult)
+    if(translateResult.IsEmptyResult())
     {
         renderer->DrawRect(Rect(0, headerHeight, windowSize.Width, windowSize.Height - headerHeight), disabledBackgroundBrush);
     }

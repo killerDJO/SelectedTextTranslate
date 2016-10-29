@@ -1,6 +1,6 @@
 #pragma once
 #include "Infrastructure\Logging\Logger.h"
-#include "Services\Dictionary\Dto\LogRecord.h"
+#include "Services\Dictionary\Dto\DictionaryRecord.h"
 #include "Providers\SqliteProvider.h"
 
 class DictionaryService
@@ -13,7 +13,7 @@ private:
 
     void CreateDatabase() const;
 
-    vector<LogRecord> GetLogRecords(sqlite3_stmt* statement) const;
+    vector<DictionaryRecord> GetLogRecords(sqlite3_stmt* statement) const;
     
 public:
     DictionaryService(Logger* logger, SqliteProvider* sqliteProvider);
@@ -24,6 +24,6 @@ public:
     void UpdateTranslateResult(wstring sentence, wstring json, bool isForcedTranslation) const;
     void AddTranslateResult(wstring sentence, wstring json, bool isForcedTranslation) const;
 
-    vector<LogRecord> GetTopRecords(int topRecordsCount) const;
-    bool TryGetCachedRecord(wstring sentence, bool isForcedTranslation, LogRecord& record) const;
+    vector<DictionaryRecord> GetTopRecords(int topRecordsCount) const;
+    bool TryGetCachedRecord(wstring sentence, bool isForcedTranslation, DictionaryRecord& record) const;
 };

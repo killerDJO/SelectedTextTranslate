@@ -1,22 +1,33 @@
 #pragma once
 #include "View\Framework\Enums\OverflowModes.h"
 
-struct WindowDescriptor
+class WindowDescriptor
 {
-    Point Position;
+private:
+    Point position;
 
-    Size WindowSize;
+    Size windowSize;
 
-    OverflowModes OverflowY;
-    OverflowModes OverflowX;
+    OverflowModes overflowY;
+    OverflowModes overflowX;
 
-    bool AutoScale;
+    bool autoScale;
+
+public:
+    WindowDescriptor();
+    WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale = true);
+    ~WindowDescriptor();
 
     static WindowDescriptor CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale = true);
-
     static WindowDescriptor CreateFixedWindowDescriptor(Point position, Size windowSize);
     static WindowDescriptor CreateStretchWindowDescriptor(Point position);
 
-    WindowDescriptor();
-    WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale = true);
+    Point GetPosition() const;
+    Size GetWindowSize() const;
+    OverflowModes GetOverflowY() const;
+    OverflowModes GetOverflowX() const;
+    bool IsAutoScaleEnabled() const;
+
+    void SetPosition(Point position);
+    void SetWindowSize(Size windowSize);
 };

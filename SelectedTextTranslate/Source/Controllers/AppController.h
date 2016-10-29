@@ -35,7 +35,7 @@ public:
     void TranslateSelectedText();
     void ForceTranslateCurrentText();
     void TranslateSuggestion();
-    void ToggleTranslateResultDictionary(int translateResultDictionaryIndex);
+    void ToggleTranslateResultCategory(int translateResultDictionaryIndex);
 
     void PlaySelectedText();
     void PlayCurrentText() const;

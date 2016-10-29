@@ -50,12 +50,12 @@ void ScrollProvider::InitializeScrollbars(
 
 void ScrollProvider::ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const
 {
-    if(message == WM_HSCROLL && window->GetDescriptor().OverflowX == OverflowModes::Scroll)
+    if(message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll)
     {
         ProcessScroll(window, wParam, lParam, ScrollBars::Horizontal);
     }
 
-    if (message == WM_VSCROLL && window->GetDescriptor().OverflowY == OverflowModes::Scroll)
+    if (message == WM_VSCROLL && window->GetDescriptor().GetOverflowY() == OverflowModes::Scroll)
     {
         ProcessScroll(window, wParam, lParam, ScrollBars::Vertical);
     }

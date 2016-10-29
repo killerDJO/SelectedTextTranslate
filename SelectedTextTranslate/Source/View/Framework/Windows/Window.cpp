@@ -6,7 +6,7 @@
 Window::Window(WindowContext* context, WindowDescriptor descriptor)
     : NativeWindowHolder(context->GetInstance())
 {
-    if (descriptor.AutoScale)
+    if (descriptor.IsAutoScaleEnabled())
     {
         this->descriptor = context->GetScaleProvider()->Scale(descriptor);
     }
@@ -17,15 +17,15 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
 
     this->context = context;
 
-    this->windowSize = this->descriptor.WindowSize;
-    this->position = this->descriptor.Position;
+    this->windowSize = this->descriptor.GetWindowSize();
+    this->position = this->descriptor.GetPosition();
     this->contentSize = Size(0, 0);
 
     this->activeChildWindows = vector<Window*>();
     this->destroyBeforeDrawList = vector<Window*>();
 
     this->className = nullptr;
-    this->deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), this->descriptor.WindowSize);
+    this->deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), this->descriptor.GetWindowSize());
 
     this->isVisible = true;
     this->windowState = WindowStates::New;
@@ -47,14 +47,14 @@ void Window::Render(bool preserveScrolls)
     windowState = WindowStates::Rendering;
 
     contentSize = RenderToBuffer();
-    windowSize = descriptor.WindowSize;
+    windowSize = descriptor.GetWindowSize();
 
-    if (descriptor.OverflowX == OverflowModes::Stretch && contentSize.Width > descriptor.WindowSize.Width)
+    if (descriptor.GetOverflowX() == OverflowModes::Stretch && contentSize.Width > descriptor.GetWindowSize().Width)
     {
         windowSize.Width = contentSize.Width;
     }
 
-    if (descriptor.OverflowY == OverflowModes::Stretch && contentSize.Height > descriptor.WindowSize.Height)
+    if (descriptor.GetOverflowY() == OverflowModes::Stretch && contentSize.Height > descriptor.GetWindowSize().Height)
     {
         windowSize.Height = contentSize.Height;
     }
@@ -76,10 +76,10 @@ Size Window::RenderToBuffer()
     Size renderedSize = RenderContent(renderer);
 
     Size deviceContextBufferSize = deviceContextBuffer->GetSize();
-    int requiredDcWidth = descriptor.OverflowX != OverflowModes::Fixed && renderedSize.Width > deviceContextBufferSize.Width
+    int requiredDcWidth = descriptor.GetOverflowX() != OverflowModes::Fixed && renderedSize.Width > deviceContextBufferSize.Width
         ? renderedSize.Width
         : deviceContextBufferSize.Width;
-    int requiredDcHeight = descriptor.OverflowY != OverflowModes::Fixed && renderedSize.Height > deviceContextBufferSize.Height
+    int requiredDcHeight = descriptor.GetOverflowY() != OverflowModes::Fixed && renderedSize.Height > deviceContextBufferSize.Height
         ? renderedSize.Height
         : deviceContextBufferSize.Height;
 
@@ -135,13 +135,13 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
     }
 
     Point offset = GetInitialWindowOffset();
-    AssertCriticalWinApiResult(MoveWindow(windowHandle, descriptor.Position.X - offset.X, descriptor.Position.Y - offset.Y, windowSize.Width, windowSize.Height, FALSE));
+    AssertCriticalWinApiResult(MoveWindow(windowHandle, descriptor.GetPosition().X - offset.X, descriptor.GetPosition().Y - offset.Y, windowSize.Width, windowSize.Height, FALSE));
 
     // Important to initialize scroll only after window has been moved
     context->GetScrollProvider()->InitializeScrollbars(
         this,
-        descriptor.OverflowX == OverflowModes::Scroll,
-        descriptor.OverflowY == OverflowModes::Scroll,
+        descriptor.GetOverflowX() == OverflowModes::Scroll,
+        descriptor.GetOverflowY() == OverflowModes::Scroll,
         verticalScrollPosition,
         horizontalScrollPosition);
 
@@ -212,12 +212,12 @@ DWORD Window::GetScrollStyle() const
 {
     int scrollStyle = 0;
 
-    if (descriptor.OverflowX == OverflowModes::Scroll)
+    if (descriptor.GetOverflowX() == OverflowModes::Scroll)
     {
         scrollStyle |= WS_HSCROLL;
     }
 
-    if (descriptor.OverflowY == OverflowModes::Scroll)
+    if (descriptor.GetOverflowY() == OverflowModes::Scroll)
     {
         scrollStyle |= WS_VSCROLL;
     }

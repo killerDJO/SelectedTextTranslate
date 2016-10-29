@@ -1,12 +1,12 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
-#include "Services\Dictionary\Dto\LogRecord.h"
+#include "Services\Dictionary\Dto\DictionaryRecord.h"
 #include "Utilities\Subscribeable.h"
 
 class DictionaryWindow : public ContentWindow
 {
 private:
-    vector<LogRecord> dictionaryRecords;
+    vector<DictionaryRecord> dictionaryRecords;
 
 protected:
     Size RenderContent(Renderer* renderer) override;
@@ -17,5 +17,5 @@ public:
 
     Subscribeable<int> OnShowTranslation;
 
-    void SetModel(vector<LogRecord> dictionaryRecords);
+    void SetModel(vector<DictionaryRecord> dictionaryRecords);
 };
