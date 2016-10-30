@@ -1,12 +1,12 @@
 #include "View\Content\Base\ContentWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-    : ChildWindow(context, descriptor, parentWindow)
+ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+    : ChildWindow(context, descriptor, name, parentWindow)
 {
-    lineHeight = 20;
-    paddingX = 15;
-    paddingY = 15;
+    this->lineHeight = 20;
+    this->paddingX = 15;
+    this->paddingY = 15;
 
     this->fontNormal = nullptr;
     this->fontHeader = nullptr;

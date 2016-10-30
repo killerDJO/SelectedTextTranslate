@@ -3,7 +3,7 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-Window::Window(WindowContext* context, WindowDescriptor descriptor)
+Window::Window(WindowContext* context, WindowDescriptor descriptor, wstring name)
     : NativeWindowHolder(context->GetInstance())
 {
     if (descriptor.IsAutoScaleEnabled())
@@ -16,6 +16,7 @@ Window::Window(WindowContext* context, WindowDescriptor descriptor)
     }
 
     this->context = context;
+    this->name = name;
 
     this->windowSize = this->descriptor.GetWindowSize();
     this->position = this->descriptor.GetPosition();
@@ -254,6 +255,11 @@ Size Window::GetContentSize() const
 Point Window::GetPosition() const
 {
     return position;
+}
+
+wstring Window::GetName() const
+{
+    return name;
 }
 
 void Window::Show()

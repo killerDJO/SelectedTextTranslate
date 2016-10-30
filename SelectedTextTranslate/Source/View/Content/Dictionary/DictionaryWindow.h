@@ -12,7 +12,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
+    DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
     ~DictionaryWindow() override;
 
     Subscribeable<int> OnShowTranslation;

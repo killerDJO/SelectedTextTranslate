@@ -18,6 +18,7 @@ public:
     HoverTextButtonWindow(
         WindowContext* context,
         WindowDescriptor descriptor,
+        wstring name,
         Window* parentWindow,
         HFONT font,
         Colors normalColor,

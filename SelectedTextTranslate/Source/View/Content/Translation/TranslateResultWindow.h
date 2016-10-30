@@ -16,7 +16,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
+    TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
     ~TranslateResultWindow() override;
 
     Subscribeable<int> OnExpandTranslationResult;

@@ -2,8 +2,8 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-: ContentWindow(context, descriptor, parentWindow)
+TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+: ContentWindow(context, descriptor, name, parentWindow)
 {
     this->fontUnderscored = nullptr;
     this->OnExpandTranslationResult = Subscribeable<int>();
@@ -30,9 +30,11 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
 
     int curY = lineHeight;
 
-    for (size_t i = 0; i < translateResult.GetTranslateCategories().size(); ++i)
+    vector<TranslateResultCategory> translateCategories = translateResult.GetTranslateCategories();
+    for (size_t i = 0; i < translateCategories.size(); ++i)
     {
-        TranslateResultCategory category = translateResult.GetTranslateCategories()[i];
+        TranslateResultCategory category = translateCategories[i];
+        vector<TranslateResultCategoryEntry> categoryEntries = category.GetEntries();
 
         // Draw category header
         Point baseFormBottomRight = renderer->PrintText(category.GetBaseForm(), fontNormal, Colors::Black, Point(paddingX, curY));
@@ -43,18 +45,18 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
         vector<TranslateResultCategoryEntry> showedEntries(0);
         if (category.IsExtendedList())
         {
-            showedEntries = category.GetEntries();
+            showedEntries = categoryEntries;
         }
         else
         {
-            for (size_t j = 0; j < category.GetEntries().size(); ++j)
+            for (size_t j = 0; j < categoryEntries.size(); ++j)
             {
-                if (category.GetEntries()[j].GetScore() < 0.003 && j >= 7)
+                if (categoryEntries[j].GetScore() < 0.003 && j >= 7)
                 {
                     continue;
                 }
 
-                showedEntries.push_back(category.GetEntries()[j]);
+                showedEntries.push_back(categoryEntries[j]);
             }
         }
 
@@ -63,17 +65,18 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
         {
             curY += lineHeight;
 
-            TranslateResultCategoryEntry entry = category.GetEntries()[j];
+            TranslateResultCategoryEntry entry = showedEntries[j];
             Point wordBottomRight = renderer->PrintText(entry.GetWord(), fontNormal, Colors::Black, Point(paddingX * 3, curY));
 
             // Draw reverse translation
-            if (entry.GetReverseTranslations().size() != 0)
+            vector<wstring> reverseTranslations = entry.GetReverseTranslations();
+            if (reverseTranslations.size() != 0)
             {
                 wordBottomRight = renderer->PrintText(L" - ", fontNormal, Colors::Gray, Point(wordBottomRight.X + 2, curY));
-                for (size_t k = 0; k < entry.GetReverseTranslations().size(); ++k)
+                for (size_t k = 0; k < reverseTranslations.size(); ++k)
                 {
-                    wstring text = wstring(entry.GetReverseTranslations()[k]);
-                    if (k != entry.GetReverseTranslations().size() - 1)
+                    wstring text = wstring(reverseTranslations[k]);
+                    if (k != reverseTranslations.size() - 1)
                     {
                         text += L", ";
                     }
@@ -133,6 +136,7 @@ int TranslateResultWindow::CreateExpandButton(
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
             context,
             WindowDescriptor::CreateStretchWindowDescriptor(Point(paddingX * 3, curY + 7)),
+            L"ExpandTranslateResultButtonWindow",
             this,
             fontUnderscored,
             Colors::Gray,
@@ -141,6 +145,7 @@ int TranslateResultWindow::CreateExpandButton(
 
         expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
         {
+            context->GetLogger()->Log(LogLevels::Trace, L"expand clicked");
             return OnExpandTranslationResult.Notify(categoryIndex);
         });
 

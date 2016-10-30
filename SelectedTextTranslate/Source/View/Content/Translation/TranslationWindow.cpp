@@ -1,8 +1,8 @@
 #include "View\Content\Translation\TranslationWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-    : ContentWindow(context, descriptor, parentWindow)
+TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+    : ContentWindow(context, descriptor, name, parentWindow)
 {
     this->separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
     this->disabledBackgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Disabled);
@@ -24,7 +24,7 @@ void TranslationWindow::Initialize()
         Size(0, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
-    headerWindow = new HeaderWindow(context, headerWindowDescriptor, this);
+    headerWindow = new HeaderWindow(context, headerWindowDescriptor, L"HeaderWindow", this);
     headerWindow->OnPlayText.Subscribe(&OnPlayText);
     headerWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     headerWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
@@ -35,7 +35,7 @@ void TranslationWindow::Initialize()
         Size(0, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, this);
+    translateResultWindow = new TranslateResultWindow(context, translateResultWindowDescriptor, L"TranslateResultWindow", this);
     translateResultWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
     AddChildWindow(translateResultWindow);
 }

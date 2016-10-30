@@ -1,8 +1,8 @@
 #include "View\Framework\Windows\ChildWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-    : Window(context, descriptor)
+ChildWindow::ChildWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+    : Window(context, descriptor, name)
 {
     this->parentWindow = parentWindow;
 

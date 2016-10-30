@@ -107,6 +107,7 @@ void DictionaryService::IncrementTranslationsCount(wstring sentence, bool isForc
             "UPDATE Dictionary SET Count = Count + 1 WHERE Sentence = @Sentence AND IsForcedTranslation = @IsForcedTranslation");
         sqliteProvider->BindValue(statement, L"@Sentence", sentence);
         sqliteProvider->BindValue(statement, L"@IsForcedTranslation", isForcedTranslation ? 1 : 0);
+
         sqliteProvider->ExecuteNonQuery(statement);
     }
     catch (const SelectedTextTranslateException& error)

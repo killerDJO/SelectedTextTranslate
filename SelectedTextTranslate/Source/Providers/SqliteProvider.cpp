@@ -14,11 +14,27 @@ sqlite3* SqliteProvider::OpenDatabase(wstring databaseName) const
     if (result)
     {
         sqlite3_close(database);
-        wstring message = StringUtilities::Format(L"Can't open $ls: %ls", databaseName.c_str(), StringUtilities::GetUtf16String(sqlite3_errmsg(database)).c_str());
+        wstring message = StringUtilities::Format(L"Can't open %ls: %ls", databaseName.c_str(), StringUtilities::GetUtf16String(sqlite3_errmsg(database)).c_str());
         throw SelectedTextTranslateException(message);
     }
 
+    ApplyPragmaStatement(database, "PRAGMA synchronous = OFF");
+    ApplyPragmaStatement(database, "PRAGMA journal_mode = MEMORY");
+
     return database;
+}
+
+void SqliteProvider::ApplyPragmaStatement(sqlite3* database, string statement) const
+{
+    char* errorMessage;
+    sqlite3_exec(database, statement.c_str(), nullptr, nullptr, &errorMessage);
+
+    if(errorMessage != nullptr)
+    {
+        wstring message = StringUtilities::Format(L"Unable to apply PRAGMA statement. Error: %hs", errorMessage);
+        sqlite3_free(errorMessage);
+        throw SelectedTextTranslateException(message);
+    }
 }
 
 sqlite3_stmt* SqliteProvider::CreateStatement(sqlite3* database, const char* sqlQuery) const

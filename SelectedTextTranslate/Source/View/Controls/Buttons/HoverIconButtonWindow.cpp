@@ -4,8 +4,8 @@
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource)
-    : HoverButtonWindow(context, descriptor, parentWindow)
+HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource)
+    : HoverButtonWindow(context, descriptor, name, parentWindow)
 {
     this->normalIconResource = normalIconResource;
     this->hoverIconResource = hoverIconResource;

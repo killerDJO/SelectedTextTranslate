@@ -18,7 +18,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ContentWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
+    ContentWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
     ~ContentWindow() override;
 
     void Initialize() override;

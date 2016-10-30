@@ -14,6 +14,7 @@ Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* de
 
 Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position)
 {
+    //return Point(0, 0);
     Point scaledPosition = scaleProvider->Scale(position);
 
     // Copy text to prevent preliminary dispose by calling code.

@@ -1,8 +1,8 @@
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 
-DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-    : ContentWindow(context, descriptor, parentWindow)
+DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+    : ContentWindow(context, descriptor, name, parentWindow)
 {
     this->OnShowTranslation = Subscribeable<int>();
 }
@@ -38,6 +38,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
             context,
             WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16)),
+            L"TranslateDictionaryItemWindow",
             this,
             IDR_TRANSLATE_INACTIVE,
             IDR_TRANSLATE);

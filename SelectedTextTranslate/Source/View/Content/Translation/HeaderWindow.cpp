@@ -4,8 +4,8 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Utilities\StringUtilities.h"
 
-HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-    : ContentWindow(context, descriptor, parentWindow)
+HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+    : ContentWindow(context, descriptor, name, parentWindow)
 {
     this->fontSmallUnderscored = nullptr;
     this->OnPlayText = Subscribeable<>();
@@ -47,7 +47,8 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     int curY = lineHeight;
 
-    renderer->PrintText(translateResult.GetSentence().GetTranslation(), fontHeader, Colors::Black, Point(paddingX, curY));
+    TranslateResultSentence sentence = translateResult.GetSentence();
+    renderer->PrintText(sentence.GetTranslation(), fontHeader, Colors::Black, Point(paddingX, curY));
 
     curY += lineHeight;
 
@@ -55,6 +56,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
         context,
         WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize)),
+        L"PlayTextIconButtonWindow",
         this,
         IDR_AUDIO_INACTIVE,
         IDR_AUDIO);
@@ -63,18 +65,18 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     AddChildWindow(audioButton);
 
     Point originLintBottomRight = renderer->PrintText(
-        translateResult.GetSentence().GetOrigin(),
+        sentence.GetOrigin(),
         fontSmall,
         Colors::Gray,
         Point(paddingX + imageSize + 2, curY));
 
     if (translateResult.IsInputCorrected())
     {
-        PrintInputCorrectionWarning(translateResult.GetSentence().GetInput(), curY, originLintBottomRight, renderer);
+        PrintInputCorrectionWarning(sentence.GetInput(), curY, originLintBottomRight, renderer);
     }
-    else if (!translateResult.GetSentence().GetSuggestion().empty())
+    else if (!sentence.GetSuggestion().empty())
     {
-        PrintSuggestion(translateResult.GetSentence().GetSuggestion(), curY, originLintBottomRight, renderer);
+        PrintSuggestion(sentence.GetSuggestion(), curY, originLintBottomRight, renderer);
     }
 
     renderer->IncreaseWidth(paddingX);
@@ -114,6 +116,7 @@ void HeaderWindow::PrintHeaderAction(wstring actionDescription, wstring actionTe
     HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
         context,
         WindowDescriptor::CreateStretchWindowDescriptor(Point(originLineBottomRight.X, curY - smallFontAscent)),
+        L"HeaderActionButtonWindow",
         this,
         fontSmallUnderscored,
         Colors::Gray,

@@ -33,6 +33,8 @@
 #include <functional>
 #include <cctype>
 
+#include <concurrent_queue.h>
+
 #include <cpprest\json.h>
 #include <cpprest\http_client.h>
 

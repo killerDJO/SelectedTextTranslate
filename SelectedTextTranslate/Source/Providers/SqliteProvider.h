@@ -1,6 +1,9 @@
 #pragma once
 class SqliteProvider
 {
+private:
+    void ApplyPragmaStatement(sqlite3* database, string statement) const;
+
 public:
     SqliteProvider();
     ~SqliteProvider();

@@ -1,8 +1,8 @@
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow)
-    : ChildWindow(context, descriptor, parentWindow)
+HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
+    : ChildWindow(context, descriptor, name, parentWindow)
 {
     this->OnClick = Subscribeable<>();
     this->isHovered = false;

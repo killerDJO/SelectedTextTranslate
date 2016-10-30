@@ -3,8 +3,8 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
 
-MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, HotkeyProvider* hotkeyProvider)
-    : Window(context, descriptor)
+MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, HotkeyProvider* hotkeyProvider)
+    : Window(context, descriptor, name)
 {
     this->hotkeyProvider = hotkeyProvider;
 
@@ -58,7 +58,7 @@ void MainWindow::CreateViews()
         OverflowModes::Stretch,
         false);
 
-    translationWindow = new TranslationWindow(context, windowDescriptor, this);
+    translationWindow = new TranslationWindow(context, windowDescriptor, L"TranslationWindow", this);
     AddChildWindow(translationWindow);
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
@@ -67,7 +67,7 @@ void MainWindow::CreateViews()
     translationWindow->Hide();
     translationWindow->SetModel(translateResult);
 
-    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, this);
+    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, L"DictionaryWindow", this);
     dictionaryWindow->OnShowTranslation.Subscribe(&OnShowTranslation);
     AddChildWindow(dictionaryWindow);
     dictionaryWindow->Hide();

@@ -21,7 +21,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HeaderWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
+    HeaderWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
     ~HeaderWindow() override;
 
     Subscribeable<> OnPlayText;

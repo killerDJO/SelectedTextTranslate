@@ -44,7 +44,6 @@ TranslateResult TranslationService::GetTranslatorResponse(wstring sentence, bool
     if(dictionaryService->TryGetCachedRecord(sentence, forceTranslation, cachedRecord))
     {
         time_t currentTime = time(nullptr);
-
         if(currentTime - cachedRecord.GetUpdatedDate() > DictionaryRefreshInterval)
         {
             result = SendRequestAndParse(

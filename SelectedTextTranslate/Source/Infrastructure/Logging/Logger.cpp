@@ -1,5 +1,6 @@
 #include "Infrastructure\Logging\Logger.h"
 #include "Utilities\StringUtilities.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include <chrono>
 #include <iomanip>
 
@@ -11,9 +12,28 @@ Logger::Logger()
     this->logLevelsDisplayMap[LogLevels::Trace] = L"TRACE";
     this->logLevelsDisplayMap[LogLevels::Error] = L"ERROR";
     this->logLevelsDisplayMap[LogLevels::Fatal] = L"FATAL";
+
+    HANDLE hThread = CreateThread(nullptr, 0, Logger::WriterThread, this, 0, &writerThreadId);
+    AssertWinApiResult(hThread);
+    AssertWinApiResult(CloseHandle(hThread));
 }
 
-void Logger::Log(LogLevels logLevel, wstring record)
+DWORD Logger::WriterThread(LPVOID arg)
+{
+    Logger* logger = (Logger*)arg;
+    MSG msg;
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        if(msg.message == logger->WriterRecordsMessage)
+        {
+            logger->WriteRecords();
+        }
+    }
+
+    return 0;
+}
+
+void Logger::WriteRecords()
 {
     HANDLE hFile = CreateFile(GetLogFileName().c_str(), FILE_APPEND_DATA, 0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -22,17 +42,27 @@ void Logger::Log(LogLevels logLevel, wstring record)
         return;
     }
 
+    wstring message;
+    while(loggingQueue.try_pop(message))
+    {
+        DWORD nWritten;
+        const wchar_t* buffer = message.c_str();
+        WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, nullptr);
+    }
+
+    CloseHandle(hFile);
+}
+
+void Logger::Log(LogLevels logLevel, wstring record)
+{
     wstring message = StringUtilities::Format(
         L"%ls; %ls; %ls\r\n",
         GetCurrentDateTime().c_str(),
         logLevelsDisplayMap[logLevel].c_str(),
         record.c_str());
 
-    DWORD nWritten;
-    const wchar_t* buffer = message.c_str();
-    WriteFile(hFile, buffer, wcslen(buffer) * sizeof(wchar_t), &nWritten, nullptr);
-
-    CloseHandle(hFile);
+    loggingQueue.push(message);
+    PostThreadMessageA(writerThreadId, WriterRecordsMessage, 0, 0);
 }
 
 void Logger::LogFormatted(LogLevels logLevel, wstring format, ...)

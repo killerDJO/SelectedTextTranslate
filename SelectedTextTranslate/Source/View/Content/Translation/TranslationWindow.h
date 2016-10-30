@@ -22,7 +22,7 @@ protected:
     void Resize() override;
 
 public:
-    TranslationWindow(WindowContext* context, WindowDescriptor descriptor, Window* parentWindow);
+    TranslationWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
     ~TranslationWindow() override;
 
     void Initialize() override;
