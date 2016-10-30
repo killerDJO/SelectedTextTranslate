@@ -21,12 +21,10 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool inc
 
     logger->Log(LogLevels::Trace, L"Start translating sentence '" + trimmedSentence + L"'.");
 
-    wstring translatorResponse = GetTranslatorResponse(trimmedSentence, incrementTranslationsCount, forceTranslation);
-
     TranslateResult result;
     try
     {
-        result = ParseJSONResponse(translatorResponse, trimmedSentence);
+        result = GetTranslatorResponse(trimmedSentence, incrementTranslationsCount, forceTranslation);
     }
     catch (json::json_exception exception)
     {
@@ -38,9 +36,9 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool inc
     return result;
 }
 
-wstring TranslationService::GetTranslatorResponse(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const
+TranslateResult TranslationService::GetTranslatorResponse(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const
 {
-    wstring translatorResponse;
+    TranslateResult result;
 
     DictionaryRecord cachedRecord;
     if(dictionaryService->TryGetCachedRecord(sentence, forceTranslation, cachedRecord))
@@ -49,18 +47,22 @@ wstring TranslationService::GetTranslatorResponse(wstring sentence, bool increme
 
         if(currentTime - cachedRecord.GetUpdatedDate() > DictionaryRefreshInterval)
         {
-            translatorResponse = SendTranslationRequest(sentence, forceTranslation);
-            dictionaryService->UpdateTranslateResult(sentence, translatorResponse, forceTranslation);
+            result = SendRequestAndParse(
+                sentence,
+                forceTranslation,
+                bind(&DictionaryService::UpdateTranslateResult, dictionaryService, placeholders::_1, placeholders::_2, placeholders::_3));
         }
         else
         {
-            translatorResponse = cachedRecord.GetJson();
+            result = TranslateResult::ParseFromJson(cachedRecord.GetJson());
         }
     }
     else
     {
-        translatorResponse = SendTranslationRequest(sentence, forceTranslation);
-        dictionaryService->AddTranslateResult(sentence, translatorResponse, forceTranslation);
+        result = SendRequestAndParse(
+            sentence,
+            forceTranslation,
+            bind(&DictionaryService::AddTranslateResult, dictionaryService, placeholders::_1, placeholders::_2, placeholders::_3));
     }
 
     if (incrementTranslationsCount)
@@ -68,7 +70,17 @@ wstring TranslationService::GetTranslatorResponse(wstring sentence, bool increme
         dictionaryService->IncrementTranslationsCount(sentence, forceTranslation);
     }
 
-    return translatorResponse;
+    return result;
+}
+
+TranslateResult TranslationService::SendRequestAndParse(wstring sentence, bool forceTranslation, function<void(wstring, wstring, bool)> dictionaryAction) const
+{
+    wstring translatorResponse = SendTranslationRequest(sentence, forceTranslation);
+    TranslateResult result = ParseJSONResponse(translatorResponse, sentence);
+
+    dictionaryAction(sentence, TranslateResult::SerializeToJson(result), forceTranslation);
+
+    return result;
 }
 
 wstring TranslationService::SendTranslationRequest(wstring sentence, bool forceTranslation) const

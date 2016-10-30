@@ -21,7 +21,8 @@ private:
     TranslateResultSentence ParseTranslateResultSentence(json::value root, wstring input) const;
     vector<TranslateResultCategory> ParseTranslateCategories(json::value root) const;
 
-    wstring GetTranslatorResponse(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const;
+    TranslateResult GetTranslatorResponse(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const;
+    TranslateResult SendRequestAndParse(wstring sentence, bool forceTranslation, function<void(wstring, wstring, bool)> dictionaryAction) const;
     wstring SendTranslationRequest(wstring sentence, bool forceTranslation) const;
 
 public:

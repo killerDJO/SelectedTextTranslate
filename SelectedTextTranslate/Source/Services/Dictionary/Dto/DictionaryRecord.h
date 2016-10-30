@@ -1,4 +1,5 @@
 #pragma once
+#include "Services\Translation\\Dto\TranslateResult.h"
 
 class DictionaryRecord
 {
