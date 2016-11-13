@@ -102,6 +102,13 @@ HBRUSH RenderingContext::CreateCustomBrush(Colors color) const
     return brush;
 }
 
+HPEN RenderingContext::CreateCustomPen(Colors color, int strokeWidth) const
+{
+    HPEN pen = CreatePen(PS_SOLID, scaleProvider->Scale(strokeWidth), (COLORREF)color);
+    AssertCriticalWinApiResult(pen);
+    return pen;
+}
+
 RenderingContext::~RenderingContext()
 {
 }

@@ -23,8 +23,9 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvide
 void TrayIconProvider::Initialize()
 {
     NativeWindowHolder::Initialize();
-    windowHandle = CreateWindow(className, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, this);
+    windowHandle = CreateWindow(className, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, nullptr);
     AssertCriticalWinApiResult(windowHandle);
+    SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
     AssertWinApiResult(WM_TASKBARCREATED);

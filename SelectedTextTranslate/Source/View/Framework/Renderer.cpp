@@ -9,7 +9,8 @@ Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* de
     this->scaleProvider = scaleProvider;
     this->scrollProvider = scrollProvider;
     this->originalSize = Size(0, 0);
-    renderActions = vector<function<void(HDC)>>();
+    this->backgroundBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    this->renderActions = vector<function<void(HDC)>>();
 }
 
 Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position)
@@ -23,6 +24,7 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
         AssertCriticalWinApiResult(SelectObject(deviceContext, font));
         ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), true, CLR_INVALID);
         ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | TA_LEFT), true, GDI_ERROR);
+        SetBkMode(deviceContext, TRANSPARENT);
 
         AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText)));
 
@@ -44,7 +46,7 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
     return result;
 }
 
-void Renderer::DrawRect(Rect rect, HBRUSH brush)
+void Renderer::DrawFilledRect(Rect rect, HBRUSH brush)
 {
     Rect scaledRect = scaleProvider->Scale(rect);
 
@@ -63,6 +65,30 @@ void Renderer::DrawRect(Rect rect, HBRUSH brush)
     originalSize.Height = max(originalSize.Height, scaledRect.Height);
 }
 
+void Renderer::DrawRect(Rect rect, HPEN pen, HBRUSH brush)
+{
+    Rect scaledRect = scaleProvider->Scale(rect);
+    auto drawRectAction = [=](HDC hdc) -> void {
+        AssertCriticalWinApiResult(SelectObject(hdc, pen));
+
+        if(brush != nullptr)
+        {
+            AssertCriticalWinApiResult(SelectObject(hdc, brush));
+        }
+
+        AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.X, scaledRect.Y, scaledRect.GetRight(), scaledRect.GetBottom()));
+    };
+    renderActions.push_back(drawRectAction);
+
+    originalSize.Width = max(originalSize.Width, scaledRect.Width);
+    originalSize.Height = max(originalSize.Height, scaledRect.Height);
+}
+
+void Renderer::SetBackground(HBRUSH backgroundBrush)
+{
+    this->backgroundBrush = backgroundBrush;
+}
+
 void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const
 {
     RECT rect;
@@ -71,7 +97,7 @@ void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) con
     rect.bottom = deviceContextSize.Height;
     rect.right = deviceContextSize.Width;
 
-    AssertCriticalWinApiResult(FillRect(deviceContext, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH)));
+    AssertCriticalWinApiResult(FillRect(deviceContext, &rect, backgroundBrush));
 }
 
 int Renderer::GetFontAscent(HFONT font) const
@@ -83,6 +109,11 @@ int Renderer::GetFontStrokeHeight(HFONT font) const
 {
     TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(emptyDeviceContext, font);
     return scaleProvider->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
+}
+
+int Renderer::GetFontHeight(HFONT font) const
+{
+    return scaleProvider->Downscale(renderingContext->GetFontMetrics(emptyDeviceContext, font).tmHeight);
 }
 
 Size Renderer::GetScaledSize() const
@@ -123,6 +154,12 @@ void Renderer::IncreaseWidth(int widthToAdd)
 void Renderer::IncreaseHeight(int heightToAdd)
 {
     originalSize.Height += scaleProvider->Scale(heightToAdd);
+}
+
+void Renderer::UpdateSize(Size size)
+{
+    originalSize.Width = max(originalSize.Width, size.Width);
+    originalSize.Height = max(originalSize.Height, size.Height);
 }
 
 Renderer::~Renderer()

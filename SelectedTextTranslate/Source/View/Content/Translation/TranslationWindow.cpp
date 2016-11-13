@@ -5,7 +5,7 @@ TranslationWindow::TranslationWindow(WindowContext* context, WindowDescriptor de
     : ContentWindow(context, descriptor, name, parentWindow)
 {
     this->separatorBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
-    this->disabledBackgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Disabled);
+    this->disabledBackgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
     this->OnTranslateSuggestion = Subscribeable<>();
@@ -64,7 +64,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
         Size backgroundSize = Size(
             max(parentWindow->GetSize().Width, headerWindow->GetSize().Width),
             parentWindow->GetSize().Height - headerHeight);
-        renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), disabledBackgroundBrush);
+        renderer->DrawFilledRect(Rect(Point(0, headerHeight), backgroundSize), disabledBackgroundBrush);
 
         contentSize = headerWindow->GetSize();
     }
@@ -101,7 +101,7 @@ void TranslationWindow::Resize()
 
     if(translateResult.IsEmptyResult())
     {
-        renderer->DrawRect(Rect(0, headerHeight, windowSize.Width, windowSize.Height - headerHeight), disabledBackgroundBrush);
+        renderer->DrawFilledRect(Rect(0, headerHeight, windowSize.Width, windowSize.Height - headerHeight), disabledBackgroundBrush);
     }
 
     RenderSeparator(renderer, max(contentSize.Width, windowSize.Width));
@@ -116,7 +116,7 @@ void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const
 {
     int height = 1;
     int scaledWidth = context->GetScaleProvider()->Downscale(width);
-    renderer->DrawRect(Rect(0, headerHeight, scaledWidth, height), separatorBrush);
+    renderer->DrawFilledRect(Rect(0, headerHeight, scaledWidth, height), separatorBrush);
 }
 
 TranslationWindow::~TranslationWindow()

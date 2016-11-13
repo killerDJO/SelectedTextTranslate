@@ -14,6 +14,7 @@ private:
     ScrollProvider* scrollProvider;
 
     HDC emptyDeviceContext;
+    HBRUSH backgroundBrush;
     Size originalSize;
 
     vector<function<void(HDC)>> renderActions;
@@ -25,16 +26,20 @@ public:
     ~Renderer();
 
     Point PrintText(const wstring text, HFONT font, Colors color, Point position);
-    void DrawRect(Rect rect, HBRUSH brush);
+    void DrawFilledRect(Rect rect, HBRUSH brush);
+    void DrawRect(Rect rect, HPEN pen, HBRUSH brush = nullptr);
+    void SetBackground(HBRUSH backgroundBrush);
 
     int GetFontAscent(HFONT font) const;
     int GetFontStrokeHeight(HFONT font) const;
+    int GetFontHeight(HFONT font) const;
 
     Size GetScaledSize() const;
     Size GetSize() const;
 
     void IncreaseWidth(int widthToAdd);
     void IncreaseHeight(int heightToAdd);
+    void UpdateSize(Size size);
 
     void Render(HDC deviceContext, Size deviceContextSize);
     void Render(DeviceContextBuffer* deviceContextBuffer);

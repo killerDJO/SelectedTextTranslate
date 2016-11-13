@@ -25,7 +25,9 @@ void ChildWindow::Initialize()
         parentWindow->GetHandle(),
         NULL,
         context->GetInstance(),
-        this);
+        nullptr);
+
+    SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
     AssertCriticalWinApiResult(windowHandle);
 }
@@ -55,6 +57,12 @@ LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         position.X = pos.x;
         position.Y = pos.y;
 
+        return TRUE;
+    }
+
+    case WM_LBUTTONDOWN:
+    {
+        AssertCriticalWinApiResult(SetFocus(windowHandle));
         return TRUE;
     }
 

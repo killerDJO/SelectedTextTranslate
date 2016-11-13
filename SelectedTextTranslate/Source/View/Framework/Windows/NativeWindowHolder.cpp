@@ -4,6 +4,7 @@
 NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
 {
     this->instance = instance;
+    this->baseWindowProcedure = DefWindowProc;
 
     this->windowHandle = nullptr;
     this->className = nullptr;
@@ -39,20 +40,7 @@ HWND NativeWindowHolder::GetHandle() const
 
 LRESULT NativeWindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    NativeWindowHolder* instance;
-
-    if (message == WM_CREATE)
-    {
-        // Store pointer to the current window class in the GWLP_USERDATA. 'this' must be passed as lpParam in CreateWindow call.
-        CREATESTRUCT* createstruct = (CREATESTRUCT*)lParam;
-        instance = (NativeWindowHolder*)createstruct->lpCreateParams;
-        instance->windowHandle = hWnd;
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)createstruct->lpCreateParams);
-    }
-    else
-    {
-        instance = (NativeWindowHolder*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-    }
+    NativeWindowHolder* instance = (NativeWindowHolder*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
     if (instance == nullptr)
     {
@@ -62,6 +50,11 @@ LRESULT NativeWindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPAR
     return instance->ExecuteWindowProcedure(message, wParam, lParam);
 }
 
+LRESULT NativeWindowHolder::CallBaseWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) const
+{
+    return CallWindowProc(baseWindowProcedure, windowHandle, message, wParam, lParam);
+}
+
 LRESULT NativeWindowHolder::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     return WindowProcedure(message, wParam, lParam);
@@ -69,7 +62,7 @@ LRESULT NativeWindowHolder::ExecuteWindowProcedure(UINT message, WPARAM wParam, 
 
 LRESULT NativeWindowHolder::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    return DefWindowProc(windowHandle, message, wParam, lParam);
+    return CallBaseWindowProcedure(message, wParam, lParam);
 }
 
 NativeWindowHolder::~NativeWindowHolder()

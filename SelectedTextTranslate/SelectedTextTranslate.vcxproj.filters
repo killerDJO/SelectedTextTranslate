@@ -103,6 +103,9 @@
     <Filter Include="Source\View\Content\Settings">
       <UniqueIdentifier>{7fc650a9-c0ba-4797-94d8-fda9822766bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Controls\Inputs">
+      <UniqueIdentifier>{c945885c-1a26-4089-a258-d1f69d4db24d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -245,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp">
       <Filter>Source\View\Content\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp">
+      <Filter>Source\View\Controls\Inputs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +420,9 @@
     </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h">
       <Filter>Source\View\Content\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Controls\Inputs\HotKeyInputWindow.h">
+      <Filter>Source\View\Controls\Inputs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

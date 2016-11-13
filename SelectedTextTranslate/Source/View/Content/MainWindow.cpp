@@ -38,8 +38,9 @@ void MainWindow::Initialize()
         nullptr,
         nullptr,
         context->GetInstance(),
-        this);
+        nullptr);
     AssertCriticalWinApiResult(windowHandle);
+    SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
     CreateViews();
 
@@ -90,7 +91,7 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     AssertCriticalWinApiResult(windowClass->hCursor);
 
-    windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    windowClass->hbrBackground = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
     AssertCriticalWinApiResult(windowClass->hbrBackground);
 }
 
@@ -145,7 +146,7 @@ Size MainWindow::RenderContent(Renderer* renderer)
 
     currentView->Render();
     currentView->Show();
-
+    renderer->SetBackground(context->GetRenderingContext()->CreateCustomBrush(Colors::Background));
     return currentView->GetContentSize();
 }
 
@@ -199,6 +200,7 @@ void MainWindow::Resize()
 
     // Clear background
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    renderer->SetBackground(context->GetRenderingContext()->CreateCustomBrush(Colors::Background));
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
@@ -264,7 +266,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         {
             HWND windowWithFocus = GetParent((HWND)wParam);
             HWND currentWindow = GetHandle();
-            if (windowWithFocus != currentWindow)
+            if (windowWithFocus != currentWindow && !IsChild(currentWindow, windowWithFocus))
             {
                 Minimize();
             }

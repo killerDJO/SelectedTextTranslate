@@ -13,8 +13,6 @@ class Window : public NativeWindowHolder
 private:
     vector<Window*> destroyBeforeDrawList;
 
-    Size RenderToBuffer();
-
     void DrawChildWindows();
     void DestroyChildWindows(vector<Window*>& childWindows) const;
 
@@ -39,6 +37,7 @@ protected:
     void DestroyChildWindows();
 
     void ApplyRenderedState(bool preserveScrolls);
+    Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
     virtual Point GetInitialWindowOffset();
 

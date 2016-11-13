@@ -24,6 +24,7 @@ public:
 
     HFONT CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false) const;
     HBRUSH CreateCustomBrush(Colors color) const;
+    HPEN CreateCustomPen(Colors color, int strokeWidth) const;
 
     Size GetTextSize(HDC deviceContext, wstring text, HFONT font) const;
     TEXTMETRIC GetFontMetrics(HDC deviceContext, HFONT font) const;

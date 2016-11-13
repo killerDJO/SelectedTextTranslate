@@ -8,5 +8,5 @@ enum class Colors
 
     LightGray = RGB(170, 170, 170),
 
-    Disabled = RGB(230, 230, 230)
+    Background = RGB(245, 245, 245)
 };

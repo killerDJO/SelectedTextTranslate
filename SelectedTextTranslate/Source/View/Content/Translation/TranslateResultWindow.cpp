@@ -94,7 +94,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
             rect.Width = (3 - k) * rateUnit;
             rect.Height = strokeHeight - 2;
 
-            renderer->DrawRect(rect, grayBrush);
+            renderer->DrawFilledRect(rect, grayBrush);
         }
 
         curY = CreateExpandButton(category, i, showedEntries.size(), curY , renderer);
@@ -145,7 +145,6 @@ int TranslateResultWindow::CreateExpandButton(
 
         expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
         {
-            context->GetLogger()->Log(LogLevels::Trace, L"expand clicked");
             return OnExpandTranslationResult.Notify(categoryIndex);
         });
 

@@ -169,7 +169,7 @@ void Window::Draw(bool drawChildren)
     HDC deviceContext = GetDC(windowHandle);
     AssertCriticalWinApiResult(deviceContext);
     deviceContextBuffer->Render(deviceContext, windowSize);
-    AssertCriticalWinApiResult(DeleteDC(deviceContext));
+    AssertCriticalWinApiResult(ReleaseDC(windowHandle, deviceContext));
 }
 
 void Window::DrawChildWindows()
@@ -316,7 +316,7 @@ LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         default:
-            return DefWindowProc(windowHandle, message, wParam, lParam);
+            return CallBaseWindowProcedure(message, wParam, lParam);
     }
 
     return 0;

@@ -139,6 +139,11 @@ vector<TranslateResultCategory> TranslateResult::ParseTranslateCategories(json::
 {
     vector<TranslateResultCategory> categories;
 
+    if (!root[L"categories"].is_array())
+    {
+        return categories;
+    }
+
     json::array categoriesJson = root[L"categories"].as_array();
 
     for (size_t i = 0; i < categoriesJson.size(); ++i)
