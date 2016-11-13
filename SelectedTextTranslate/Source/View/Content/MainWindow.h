@@ -2,6 +2,7 @@
 #include "View\Framework\Windows\Window.h"
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Content\Translation\TranslationWindow.h"
+#include "View\Content\Settings\SettingsWindow.h"
 #include "View\Providers\HotkeyProvider.h"
 #include "Controllers\Enums\ApplicationViews.h"
 
@@ -12,6 +13,7 @@ private:
 
     TranslationWindow* translationWindow;
     DictionaryWindow* dictionaryWindow;
+    SettingsWindow* settingsWindow;
 
     ApplicationViews currentView;
 

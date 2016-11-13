@@ -27,6 +27,7 @@ void AppController::Initialize()
     trayIconProvider->OnExit.Subscribe(bind(&AppController::Exit, this));
     trayIconProvider->OnPlaySelectedText.Subscribe(bind(&AppController::PlaySelectedText, this));
     trayIconProvider->OnShowDictionary.Subscribe(bind(&AppController::ShowDictionary, this));
+    trayIconProvider->OnShowSettings.Subscribe(bind(&AppController::ShowSettings, this));
     trayIconProvider->OnTranslateSelectedText.Subscribe(bind(&AppController::TranslateSelectedText, this));
 }
 
@@ -85,6 +86,13 @@ void AppController::ShowDictionary() const
     mainWindow->SetCurrentView(ApplicationViews::Dictionary);
     mainWindow->SetDictionaryModel(dictionary->GetTopRecords(200));
 
+    mainWindow->Render();
+    mainWindow->Maximize();
+}
+
+void AppController::ShowSettings() const
+{
+    mainWindow->SetCurrentView(ApplicationViews::Settings);
     mainWindow->Render();
     mainWindow->Maximize();
 }

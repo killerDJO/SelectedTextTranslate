@@ -1,7 +1,6 @@
 #include "View\Providers\TrayIconProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
-#include "Utilities\StringUtilities.h"
 
 TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance)
     : NativeWindowHolder(instance), ErrorHandler(logger)
@@ -13,6 +12,12 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvide
 
     this->logger = logger;
     this->hotkeyProvider = hotkeyProvider;
+
+    this->OnExit = Subscribeable<>();
+    this->OnPlaySelectedText = Subscribeable<>();
+    this->OnTranslateSelectedText = Subscribeable<>();
+    this->OnShowDictionary = Subscribeable<>();
+    this->OnShowSettings = Subscribeable<>();
 }
 
 void TrayIconProvider::Initialize()
@@ -44,6 +49,7 @@ void TrayIconProvider::CreateMenu()
 
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuTranslateItemId, TEXT("Translate from clipboard")));
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuDictionaryItemId, TEXT("Dictionary")));
+    AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuSettingsItemId, TEXT("Settings")));
     AssertCriticalWinApiResult(AppendMenu(menu, MF_SEPARATOR, NULL, nullptr));
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuExitItemId, TEXT("Exit")));
 }
@@ -127,6 +133,10 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
             if (clicked == MenuDictionaryItemId)
             {
                 OnShowDictionary.Notify();
+            }
+            if (clicked == MenuSettingsItemId)
+            {
+                OnShowSettings.Notify();
             }
         }
 

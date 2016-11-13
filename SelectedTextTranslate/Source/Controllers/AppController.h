@@ -41,6 +41,7 @@ public:
     void PlayCurrentText() const;
 
     void ShowDictionary() const;
+    void ShowSettings() const;
     void TranslateWordFromDictionary(int wordInDictionaryIndex);
 
     void Exit() const;

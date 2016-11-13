@@ -13,6 +13,7 @@ MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, wstr
 
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
+    this->settingsWindow = nullptr;
 
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
@@ -72,6 +73,10 @@ void MainWindow::CreateViews()
     AddChildWindow(dictionaryWindow);
     dictionaryWindow->Hide();
     dictionaryWindow->SetModel(dictionaryRecords);
+
+    settingsWindow = new SettingsWindow(context, windowDescriptor, L"SettingsWindow", this);
+    AddChildWindow(settingsWindow);
+    settingsWindow->Hide();
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -220,6 +225,11 @@ Window* MainWindow::GetWindowToShow() const
         return dictionaryWindow;
     }
 
+    if (currentView == ApplicationViews::Settings)
+    {
+        return settingsWindow;
+    }
+
     throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", currentView));
 }
 
@@ -239,6 +249,8 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
                 case SC_CLOSE:
                     Minimize();
                     return 0;
+                default:
+                    break;
             }
 
             return DefWindowProc(windowHandle, message, wParam, lParam);

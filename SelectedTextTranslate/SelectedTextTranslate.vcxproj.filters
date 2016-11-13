@@ -100,6 +100,9 @@
     <Filter Include="Source\Infrastructure\Logging">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Content\Settings">
+      <UniqueIdentifier>{7fc650a9-c0ba-4797-94d8-fda9822766bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp">
       <Filter>Source\Services\Dictionary\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp">
+      <Filter>Source\View\Content\Settings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -405,6 +411,9 @@
     </ClInclude>
     <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h">
       <Filter>Source\Services\Dictionary\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h">
+      <Filter>Source\View\Content\Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

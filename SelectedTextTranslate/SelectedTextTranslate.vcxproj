@@ -21,6 +21,7 @@
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp" />
     <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h" />
+    <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h" />
     <ClInclude Include="Source\View\Framework\Windows\NativeWindowHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ErrorHandler.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.h" />

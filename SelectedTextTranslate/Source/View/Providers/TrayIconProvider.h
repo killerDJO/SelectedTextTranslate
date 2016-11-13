@@ -13,6 +13,7 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     const int MenuExitItemId = 3000;
     const int MenuTranslateItemId = 3002;
     const int MenuDictionaryItemId = 3005;
+    const int MenuSettingsItemId = 3006;
 
     UINT WM_TASKBARCREATED;
     HMENU menu;
@@ -39,5 +40,6 @@ public:
     Subscribeable<> OnExit;
     Subscribeable<> OnPlaySelectedText;
     Subscribeable<> OnTranslateSelectedText;
-    Subscribeable<> OnShowDictionary;;
+    Subscribeable<> OnShowDictionary;
+    Subscribeable<> OnShowSettings;
 };
