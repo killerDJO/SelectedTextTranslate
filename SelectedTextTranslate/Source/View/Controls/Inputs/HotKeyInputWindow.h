@@ -19,6 +19,8 @@ private:
     void ShowCustomCaret() const;
     wstring GetHotkeyDisplayString() const;
 
+    void RenderBorder(Renderer* renderer) const;
+
 protected:
     Size RenderContent(Renderer* renderer) override;
 

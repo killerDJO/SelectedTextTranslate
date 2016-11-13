@@ -27,7 +27,7 @@ public:
 
     Point PrintText(const wstring text, HFONT font, Colors color, Point position);
     void DrawFilledRect(Rect rect, HBRUSH brush);
-    void DrawRect(Rect rect, HPEN pen, HBRUSH brush = nullptr);
+    void DrawRectUnscaled(Rect rect, HPEN pen, HBRUSH brush = nullptr);
     void SetBackground(HBRUSH backgroundBrush);
 
     int GetFontAscent(HFONT font) const;

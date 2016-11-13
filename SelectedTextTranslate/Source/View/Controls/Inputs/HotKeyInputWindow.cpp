@@ -19,6 +19,7 @@ HotKeyInputWindow::HotKeyInputWindow(
     this->padding = padding;
     this->borderWidth = borderWidth;
     this->lineHeight = lineHeight;
+    this->borderPen = nullptr;
 }
 
 void HotKeyInputWindow::Initialize()
@@ -54,15 +55,8 @@ void HotKeyInputWindow::SubclassNativeControl()
 
 Size HotKeyInputWindow::RenderContent(Renderer* renderer)
 {
-    Size scaledWindowSize = context->GetScaleProvider()->Downscale(GetAvailableClientSize());
-   
-    int borderOffset = borderWidth - 1;
-    renderer->DrawRect(
-        Rect(
-            Point(borderOffset, borderOffset),
-            Size(scaledWindowSize.Width - borderOffset, scaledWindowSize.Height - borderOffset)),
-        borderPen);
-
+    RenderBorder(renderer);
+     
     int textOffset = borderWidth + padding;
     int fontAscent = renderer->GetFontAscent(font);
 
@@ -178,6 +172,20 @@ wstring HotKeyInputWindow::GetHotkeyDisplayString() const
     hotkeyDisplay += (wchar_t)keyChar;
 
     return hotkeyDisplay;
+}
+
+void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
+{
+    Size windowSize = GetAvailableClientSize();
+    int scaledBorderWidth = context->GetScaleProvider()->Scale(borderWidth);
+    int borderOffset = scaledBorderWidth - 1;
+    Rect borderRect = Rect(
+        Point(borderOffset, borderOffset),
+        Size(windowSize.Width - borderOffset, windowSize.Height - borderOffset));
+
+    renderer->DrawRectUnscaled(
+        borderRect,
+        borderPen);
 }
 
 HotKeyInputWindow::~HotKeyInputWindow()

@@ -65,9 +65,8 @@ void Renderer::DrawFilledRect(Rect rect, HBRUSH brush)
     originalSize.Height = max(originalSize.Height, scaledRect.Height);
 }
 
-void Renderer::DrawRect(Rect rect, HPEN pen, HBRUSH brush)
+void Renderer::DrawRectUnscaled(Rect rect, HPEN pen, HBRUSH brush)
 {
-    Rect scaledRect = scaleProvider->Scale(rect);
     auto drawRectAction = [=](HDC hdc) -> void {
         AssertCriticalWinApiResult(SelectObject(hdc, pen));
 
@@ -76,12 +75,12 @@ void Renderer::DrawRect(Rect rect, HPEN pen, HBRUSH brush)
             AssertCriticalWinApiResult(SelectObject(hdc, brush));
         }
 
-        AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.X, scaledRect.Y, scaledRect.GetRight(), scaledRect.GetBottom()));
+        AssertCriticalWinApiResult(Rectangle(hdc, rect.X, rect.Y, rect.GetRight(), rect.GetBottom()));
     };
     renderActions.push_back(drawRectAction);
 
-    originalSize.Width = max(originalSize.Width, scaledRect.Width);
-    originalSize.Height = max(originalSize.Height, scaledRect.Height);
+    originalSize.Width = max(originalSize.Width, rect.Width);
+    originalSize.Height = max(originalSize.Height, rect.Height);
 }
 
 void Renderer::SetBackground(HBRUSH backgroundBrush)
