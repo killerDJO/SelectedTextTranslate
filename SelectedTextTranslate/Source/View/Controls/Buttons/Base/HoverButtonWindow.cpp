@@ -1,14 +1,13 @@
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include <set>
 
 HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
     : ChildWindow(context, descriptor, name, parentWindow)
 {
     this->OnClick = Subscribeable<>();
-    this->isHovered = false;
-
-    this->hoverStateDeviceContext = nullptr;
-    this->normalStateDeviceContext = nullptr;
+    this->state = ButtonStates::Normal;
+    this->stateToDeviceContextMap = map<ButtonStates, HDC>();
 }
 
 void HoverButtonWindow::Initialize()
@@ -21,9 +20,7 @@ void HoverButtonWindow::Initialize()
 
 Size HoverButtonWindow::RenderContent(Renderer* renderer)
 {
-    HDC sourceDC = isHovered
-        ? hoverStateDeviceContext
-        : normalStateDeviceContext;
+    HDC sourceDC = stateToDeviceContextMap[state];
 
     context->GetDeviceContextProvider()->CopyDeviceContext(sourceDC, deviceContextBuffer->GetDeviceContext(), windowSize);
 
@@ -42,49 +39,65 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
     switch (message)
     {
 
-        case WM_LBUTTONUP:
-            OnClick.Notify();
-            return TRUE;
+    case WM_LBUTTONUP:
+    {
+        state = ButtonStates::Hovered;
+        RenderContent(nullptr);
+        InvalidateRect(windowHandle, nullptr, TRUE);
 
-        case WM_MOUSEMOVE:
-            tme.dwFlags = TME_HOVER | TME_LEAVE;
-            AssertCriticalWinApiResult(TrackMouseEvent(&tme));
+        OnClick.Notify();
 
-            return TRUE;
+        return TRUE;
+    }
 
-        case WM_MOUSEHOVER:
+    case WM_LBUTTONDOWN:
+    {
+        state = ButtonStates::Pressed;
+        RenderContent(nullptr);
+        InvalidateRect(windowHandle, nullptr, TRUE);
+        return TRUE;
+    }
+
+    case WM_MOUSEMOVE:
+    {
+        tme.dwFlags = TME_HOVER | TME_LEAVE;
+        AssertCriticalWinApiResult(TrackMouseEvent(&tme));
+
+        return TRUE;
+    }
+
+    case WM_MOUSEHOVER:
+    {
+        if (state == ButtonStates::Normal)
         {
-            if (!isHovered)
-            {
-                isHovered = true;
-                RenderContent(nullptr);
-                InvalidateRect(windowHandle, nullptr, TRUE);
+            state = ButtonStates::Hovered;
+            RenderContent(nullptr);
+            InvalidateRect(windowHandle, nullptr, TRUE);
 
-                SetCursor(LoadCursor(nullptr, IDC_HAND));
-            }
-
-            break;
+            SetCursor(LoadCursor(nullptr, IDC_HAND));
         }
 
+        break;
+    }
 
-        case WM_SETCURSOR:
-            return TRUE;
+    case WM_SETCURSOR:
+        return TRUE;
 
-        case WM_MOUSELEAVE:
+    case WM_MOUSELEAVE:
+    {
+        if (state != ButtonStates::Normal)
         {
-            if(isHovered)
-            {
-                isHovered = false;
-                RenderContent(nullptr);
-                InvalidateRect(windowHandle, nullptr, TRUE);
+            state = ButtonStates::Normal;
+            RenderContent(nullptr);
+            InvalidateRect(windowHandle, nullptr, TRUE);
 
-                SetCursor(LoadCursor(nullptr, IDC_ARROW));
+            SetCursor(LoadCursor(nullptr, IDC_ARROW));
 
-                return TRUE;
-            }
-
-            break;
+            return TRUE;
         }
+
+        break;
+    }
 
     }
 
@@ -93,6 +106,14 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
 HoverButtonWindow::~HoverButtonWindow()
 {
-    AssertWinApiResult(DeleteDC(normalStateDeviceContext));
-    AssertWinApiResult(DeleteDC(hoverStateDeviceContext));
+    set<HDC> deletedDeviceContexts;
+    for (auto iterator = stateToDeviceContextMap.begin(); iterator != stateToDeviceContextMap.end(); ++iterator)
+    {
+        HDC deviceContextToDelete = iterator->second;
+        if(deletedDeviceContexts.find(deviceContextToDelete) == deletedDeviceContexts.end())
+        {
+            AssertCriticalWinApiResult(DeleteDC(iterator->second));
+            deletedDeviceContexts.insert(deviceContextToDelete);
+        }
+    }
 }

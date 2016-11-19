@@ -16,12 +16,13 @@ void HoverTextButtonWindow::RenderStatesDeviceContext()
     windowSize.Width = max(windowSize.Width, textSize.Width);
     windowSize.Height = max(windowSize.Height, textSize.Height);
 
-    normalStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
-    hoverStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
     deviceContextBuffer->Resize(windowSize);
 
-    RenderStateDeviceContext(normalStateDeviceContext, normalColor);
-    RenderStateDeviceContext(hoverStateDeviceContext, hoverColor);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverColor);
 }
 
 void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors color) const

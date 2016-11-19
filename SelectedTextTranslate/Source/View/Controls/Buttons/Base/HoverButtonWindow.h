@@ -1,17 +1,16 @@
 #pragma once
 #include "View\Framework\Windows\ChildWindow.h"
 #include "Utilities\Subscribeable.h"
+#include "View\Controls\Buttons\Base\Enums\ButtonStates.h"
 
 class HoverButtonWindow : public ChildWindow
 {
 private:
-    bool isHovered;
-
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 protected:
-    HDC hoverStateDeviceContext;
-    HDC normalStateDeviceContext;
+    ButtonStates state;
+    map<ButtonStates, HDC> stateToDeviceContextMap;
 
     Size RenderContent(Renderer* renderer) override;
 

@@ -106,6 +106,9 @@
     <Filter Include="Source\View\Controls\Inputs">
       <UniqueIdentifier>{c945885c-1a26-4089-a258-d1f69d4db24d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Controls\Buttons\Base\Enums">
+      <UniqueIdentifier>{8005affb-b6c5-4c06-b03b-57f0be139e65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -251,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp">
       <Filter>Source\View\Controls\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp">
+      <Filter>Source\View\Controls\Buttons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -423,6 +429,12 @@
     </ClInclude>
     <ClInclude Include="Source\View\Controls\Inputs\HotKeyInputWindow.h">
       <Filter>Source\View\Controls\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Controls\Buttons\Base\Enums\ButtonStates.h">
+      <Filter>Source\View\Controls\Buttons\Base\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h">
+      <Filter>Source\View\Controls\Buttons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

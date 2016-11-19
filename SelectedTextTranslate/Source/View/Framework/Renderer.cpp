@@ -13,9 +13,8 @@ Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* de
     this->renderActions = vector<function<void(HDC)>>();
 }
 
-Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position)
+Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position, DWORD horizontalAlignment)
 {
-    //return Point(0, 0);
     Point scaledPosition = scaleProvider->Scale(position);
 
     // Copy text to prevent preliminary dispose by calling code.
@@ -23,7 +22,7 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
     auto printTextAction = [=](HDC deviceContext) -> void {
         AssertCriticalWinApiResult(SelectObject(deviceContext, font));
         ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), true, CLR_INVALID);
-        ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | TA_LEFT), true, GDI_ERROR);
+        ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | horizontalAlignment), true, GDI_ERROR);
         SetBkMode(deviceContext, TRANSPARENT);
 
         AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText)));
@@ -46,7 +45,7 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
     return result;
 }
 
-void Renderer::DrawFilledRect(Rect rect, HBRUSH brush)
+void Renderer::DrawRect(Rect rect, HBRUSH brush)
 {
     Rect scaledRect = scaleProvider->Scale(rect);
 
@@ -65,22 +64,33 @@ void Renderer::DrawFilledRect(Rect rect, HBRUSH brush)
     originalSize.Height = max(originalSize.Height, scaledRect.Height);
 }
 
-void Renderer::DrawRectUnscaled(Rect rect, HPEN pen, HBRUSH brush)
+void Renderer::DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors borderColor)
 {
+    int scaledBorderWidth = scaleProvider->Scale(borderWidth);
+    Rect scaledRect = scaleProvider->Scale(rect);
+
+    int borderAjustments = scaledBorderWidth / 2;
+    scaledRect.X = scaledRect.X + borderAjustments;
+    scaledRect.Y = scaledRect.Y + borderAjustments;
+    scaledRect.Width = scaledRect.Width - borderAjustments;
+    scaledRect.Height = scaledRect.Height - borderAjustments;
+
+    HPEN borderPen = renderingContext->CreateCustomPen(borderColor, borderWidth);
+
     auto drawRectAction = [=](HDC hdc) -> void {
-        AssertCriticalWinApiResult(SelectObject(hdc, pen));
+        AssertCriticalWinApiResult(SelectObject(hdc, borderPen));
 
         if(brush != nullptr)
         {
             AssertCriticalWinApiResult(SelectObject(hdc, brush));
         }
 
-        AssertCriticalWinApiResult(Rectangle(hdc, rect.X, rect.Y, rect.GetRight(), rect.GetBottom()));
+        AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.X, scaledRect.Y, scaledRect.GetRight(), scaledRect.GetBottom()));
     };
     renderActions.push_back(drawRectAction);
 
-    originalSize.Width = max(originalSize.Width, rect.Width);
-    originalSize.Height = max(originalSize.Height, rect.Height);
+    originalSize.Width = max(originalSize.Width, scaledRect.Width);
+    originalSize.Height = max(originalSize.Height, scaledRect.Height);
 }
 
 void Renderer::SetBackground(HBRUSH backgroundBrush)

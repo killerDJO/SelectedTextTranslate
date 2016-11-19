@@ -19,7 +19,7 @@ HotKeyInputWindow::HotKeyInputWindow(
     this->padding = padding;
     this->borderWidth = borderWidth;
     this->lineHeight = lineHeight;
-    this->borderPen = nullptr;
+    this->hasFocus = false;
 }
 
 void HotKeyInputWindow::Initialize()
@@ -33,8 +33,6 @@ void HotKeyInputWindow::Initialize()
     ChildWindow::Initialize();
 
     SubclassNativeControl();
-
-    borderPen = context->GetRenderingContext()->CreateCustomPen(Colors::Gray, borderWidth);
 
     Render();
 }
@@ -56,7 +54,7 @@ void HotKeyInputWindow::SubclassNativeControl()
 Size HotKeyInputWindow::RenderContent(Renderer* renderer)
 {
     RenderBorder(renderer);
-     
+
     int textOffset = borderWidth + padding;
     int fontAscent = renderer->GetFontAscent(font);
 
@@ -88,13 +86,19 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     case WM_SETFOCUS:
     {
+        hasFocus = true;
+        RenderToBuffer();
         ShowCustomCaret();
+        InvalidateRect(windowHandle, nullptr, TRUE);
         return TRUE;
     }
 
     case WM_KILLFOCUS:
     {
+        hasFocus = false;
+        RenderToBuffer();
         AssertCriticalWinApiResult(HideCaret(windowHandle));
+        InvalidateRect(windowHandle, nullptr, TRUE);
         return TRUE;
     }
 
@@ -176,16 +180,15 @@ wstring HotKeyInputWindow::GetHotkeyDisplayString() const
 
 void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 {
-    Size windowSize = GetAvailableClientSize();
-    int scaledBorderWidth = context->GetScaleProvider()->Scale(borderWidth);
-    int borderOffset = scaledBorderWidth - 1;
     Rect borderRect = Rect(
-        Point(borderOffset, borderOffset),
-        Size(windowSize.Width - borderOffset, windowSize.Height - borderOffset));
+        Point(0, 0),
+        context->GetScaleProvider()->Downscale(GetAvailableClientSize()));
 
-    renderer->DrawRectUnscaled(
+    renderer->DrawBorderedRect(
         borderRect,
-        borderPen);
+        nullptr,
+        borderWidth,
+        hasFocus ? Colors::Blue : Colors::Gray);
 }
 
 HotKeyInputWindow::~HotKeyInputWindow()

@@ -22,6 +22,7 @@
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
     <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp" />
+    <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp" />
     <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp" />
     <ClCompile Include="Source\Application.cpp" />
@@ -71,6 +72,8 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h" />
     <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h" />
+    <ClInclude Include="Source\View\Controls\Buttons\Base\Enums\ButtonStates.h" />
+    <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h" />
     <ClInclude Include="Source\View\Controls\Inputs\HotKeyInputWindow.h" />
     <ClInclude Include="Source\View\Framework\Windows\NativeWindowHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ErrorHandler.h" />

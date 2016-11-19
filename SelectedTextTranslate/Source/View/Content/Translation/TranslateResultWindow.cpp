@@ -94,7 +94,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
             rect.Width = (3 - k) * rateUnit;
             rect.Height = strokeHeight - 2;
 
-            renderer->DrawFilledRect(rect, grayBrush);
+            renderer->DrawRect(rect, grayBrush);
         }
 
         curY = CreateExpandButton(category, i, showedEntries.size(), curY , renderer);

@@ -1,5 +1,6 @@
 #include "View\Content\Settings\SettingsWindow.h"
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
+#include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 
 SettingsWindow::SettingsWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
     : ContentWindow(context, descriptor, name, parentWindow)
@@ -23,7 +24,18 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     int curY = paddingY;
 
     curY = RenderHotkeysEditControl(renderer, L"Transalte selected text hotkey:", curY);
-    RenderHotkeysEditControl(renderer, L"Play selected text hotkey:", curY);
+    curY = RenderHotkeysEditControl(renderer, L"Play selected text hotkey:", curY);
+
+    HoverFlatButtonWindow* saveButton = new HoverFlatButtonWindow(
+        context,
+        WindowDescriptor::CreateFixedWindowDescriptor(
+            Point(paddingX, curY),
+            Size(50, 21)),
+        L"SaveButton",
+        this,
+        fontNormal,
+        L"Save");
+    AddChildWindow(saveButton);
 
     renderer->IncreaseWidth(paddingX);
     renderer->IncreaseHeight(paddingY);

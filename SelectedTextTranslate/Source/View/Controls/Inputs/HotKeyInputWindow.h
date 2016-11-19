@@ -7,11 +7,12 @@ private:
     DWORD currentHotkey;
     Point currentTextBottomRight;
     HFONT font;
-    HPEN borderPen;
 
     int padding;
     int borderWidth;
     int lineHeight;
+
+    bool hasFocus;
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 

@@ -13,11 +13,12 @@ HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescr
 
 void HoverIconButtonWindow::RenderStatesDeviceContext()
 {
-    normalStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
-    hoverStateDeviceContext = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
-    RenderStateDeviceContext(normalStateDeviceContext, normalIconResource);
-    RenderStateDeviceContext(hoverStateDeviceContext, hoverIconResource);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalIconResource);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverIconResource);
 }
 
 void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource)
