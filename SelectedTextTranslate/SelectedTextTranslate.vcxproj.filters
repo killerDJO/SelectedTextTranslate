@@ -258,6 +258,12 @@
     <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp">
       <Filter>Source\View\Controls\Buttons</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\HotkeySettingsWindow.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -436,6 +442,8 @@
     <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h">
       <Filter>Source\View\Controls\Buttons</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\HotkeySettingsWindow.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -451,6 +459,10 @@
     <None Include="Resources\translate_inactive.emf">
       <Filter>Resources</Filter>
     </None>
+    <None Include="Resources\Audio.wmf" />
+    <None Include="Resources\Audio_Inactive.wmf" />
+    <None Include="Resources\expand-button.wmf" />
+    <None Include="Resources\expand-button-disabled.wmf" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc">

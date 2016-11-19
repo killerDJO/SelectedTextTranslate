@@ -21,6 +21,8 @@
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\HotkeySettingsWindow.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp" />
@@ -71,6 +73,8 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h" />
+    <ClInclude Include="Source\View\Content\Settings\HotkeySettingsWindow.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\Base\Enums\ButtonStates.h" />
     <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h" />
@@ -132,7 +136,11 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\Audio.emf" />
+    <None Include="Resources\Audio.wmf" />
     <None Include="Resources\Audio_Inactive.emf" />
+    <None Include="Resources\Audio_Inactive.wmf" />
+    <None Include="Resources\expand-button-disabled.wmf" />
+    <None Include="Resources\expand-button.wmf" />
     <None Include="Resources\translate.emf" />
     <None Include="Resources\translate_inactive.emf" />
   </ItemGroup>

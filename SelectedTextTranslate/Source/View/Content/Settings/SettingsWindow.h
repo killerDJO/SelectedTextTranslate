@@ -3,10 +3,6 @@
 
 class SettingsWindow : public ContentWindow
 {
-private:
-    int SettingsWindow::RenderHotkeysEditControl(Renderer* renderer, wstring title, int curY);
-    HFONT hotkeyControlFont;
-
 protected:
     Size RenderContent(Renderer* renderer) override;
 

@@ -1,17 +1,16 @@
 #include "View\Content\Settings\SettingsWindow.h"
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
+#include "View\Content\Settings\HotkeySettingsWindow.h"
 
 SettingsWindow::SettingsWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
     : ContentWindow(context, descriptor, name, parentWindow)
 {
-    this->hotkeyControlFont = nullptr;
 }
 
 void SettingsWindow::Initialize()
 {
     ContentWindow::Initialize();
-    hotkeyControlFont = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Normal);
 }
 
 Size SettingsWindow::RenderContent(Renderer* renderer)
@@ -19,12 +18,35 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    renderer->SetBackground(context->GetRenderingContext()->CreateCustomBrush(Colors::Background));
-
     int curY = paddingY;
 
-    curY = RenderHotkeysEditControl(renderer, L"Transalte selected text hotkey:", curY);
-    curY = RenderHotkeysEditControl(renderer, L"Play selected text hotkey:", curY);
+    int normalFontHeight = renderer->GetFontHeight(fontNormal);
+    HotkeySettingsWindow* hotkeySettings = new HotkeySettingsWindow(
+        context,
+        Point(paddingX, curY),
+        250,
+        L"HotkeySettings",
+        this,
+        true,
+        normalFontHeight);
+    AddChildWindow(hotkeySettings);
+    hotkeySettings->Render();
+
+    curY += context->GetScaleProvider()->Downscale(hotkeySettings->GetSize().Height) - 1;
+
+    HotkeySettingsWindow* hotkeySettings2 = new HotkeySettingsWindow(
+        context,
+        Point(paddingX, curY),
+        250,
+        L"HotkeySettings",
+        this,
+        false,
+        normalFontHeight);
+    AddChildWindow(hotkeySettings2);
+    hotkeySettings2->Render();
+
+    curY += context->GetScaleProvider()->Downscale(hotkeySettings2->GetSize().Height);
+    curY += lineHeight / 2;
 
     HoverFlatButtonWindow* saveButton = new HoverFlatButtonWindow(
         context,
@@ -41,34 +63,6 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     renderer->IncreaseHeight(paddingY);
 
     return renderer->GetScaledSize();
-}
-
-int SettingsWindow::RenderHotkeysEditControl(Renderer* renderer, wstring title, int curY)
-{
-    int normalFontAscent = renderer->GetFontAscent(fontNormal);
-    renderer->PrintText(title.c_str(), fontNormal, Colors::Black, Point(paddingX, curY + normalFontAscent));
-
-    curY += paddingY + 5;
-
-    int hotkeyControlFontHeight = renderer->GetFontHeight(hotkeyControlFont);
-    HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(
-        context,
-        Point(paddingX, curY),
-        L"HotKeyInput",
-        this,
-        0,
-        hotkeyControlFont,
-        hotkeyControlFontHeight);
-
-    AddChildWindow(hotKeyInputWindow);
-
-    renderer->UpdateSize(Size(
-        hotKeyInputWindow->GetSize().Width + hotKeyInputWindow->GetPosition().X,
-        hotKeyInputWindow->GetSize().Height + hotKeyInputWindow->GetPosition().Y));
-
-    curY += hotKeyInputWindow->GetSize().Height + paddingY;
-
-    return curY;
 }
 
 SettingsWindow::~SettingsWindow()

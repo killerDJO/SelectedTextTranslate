@@ -6,6 +6,7 @@ class HoverIconButtonWindow : public HoverButtonWindow
 private:
     DWORD normalIconResource;
     DWORD hoverIconResource;
+    HBRUSH backgroundBrush;
 
     void RenderStateDeviceContext(HDC deviceContext, DWORD iconResource);
 
@@ -17,6 +18,6 @@ protected:
     void RenderStatesDeviceContext() override;
 
 public:
-    HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource);
+    HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, HBRUSH background = nullptr);
     ~HoverIconButtonWindow();
 };

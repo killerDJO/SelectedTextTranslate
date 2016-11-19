@@ -76,14 +76,13 @@ void Renderer::DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors
     scaledRect.Height = scaledRect.Height - borderAjustments;
 
     HPEN borderPen = renderingContext->CreateCustomPen(borderColor, borderWidth);
+    HBRUSH contentBrush = brush != nullptr
+        ? brush
+        : (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 
     auto drawRectAction = [=](HDC hdc) -> void {
         AssertCriticalWinApiResult(SelectObject(hdc, borderPen));
-
-        if(brush != nullptr)
-        {
-            AssertCriticalWinApiResult(SelectObject(hdc, brush));
-        }
+        AssertCriticalWinApiResult(SelectObject(hdc, contentBrush));
 
         AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.X, scaledRect.Y, scaledRect.GetRight(), scaledRect.GetBottom()));
     };

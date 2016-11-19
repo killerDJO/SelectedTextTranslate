@@ -4,11 +4,12 @@
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource)
+HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, HBRUSH backgroundBrush)
     : HoverButtonWindow(context, descriptor, name, parentWindow)
 {
     this->normalIconResource = normalIconResource;
     this->hoverIconResource = hoverIconResource;
+    this->backgroundBrush = backgroundBrush;
 }
 
 void HoverIconButtonWindow::RenderStatesDeviceContext()
@@ -35,6 +36,12 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     Graphics graphics(deviceContext);
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    
+    if(backgroundBrush != nullptr)
+    {
+        renderer->SetBackground(backgroundBrush);
+    }
+
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
