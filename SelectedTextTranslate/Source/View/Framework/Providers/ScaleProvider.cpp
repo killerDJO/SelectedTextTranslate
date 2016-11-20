@@ -46,7 +46,9 @@ WindowDescriptor ScaleProvider::Scale(WindowDescriptor windowDescriptor) const
         Scale(windowDescriptor.GetPosition()),
         Scale(windowDescriptor.GetWindowSize()),
         windowDescriptor.GetOverflowX(),
-        windowDescriptor.GetOverflowY()
+        windowDescriptor.GetOverflowY(),
+        windowDescriptor.IsAutoScaleEnabled(),
+        windowDescriptor.GetName()
     );
 }
 

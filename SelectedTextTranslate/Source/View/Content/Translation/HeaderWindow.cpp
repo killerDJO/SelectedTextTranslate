@@ -4,20 +4,13 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Utilities\StringUtilities.h"
 
-HeaderWindow::HeaderWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
-    : ContentWindow(context, descriptor, name, parentWindow)
+HeaderWindow::HeaderWindow(WindowContext* context, Window* parentWindow)
+    : ContentWindow(context, parentWindow)
 {
-    this->fontSmallUnderscored = nullptr;
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
     this->OnTranslateSuggestion = Subscribeable<>();
-}
-
-void HeaderWindow::Initialize()
-{
-    ContentWindow::Initialize();
-
-    fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small, false, true);
+    this->fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);
 }
 
 void HeaderWindow::SetModel(TranslateResult translateResult)
@@ -53,13 +46,10 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     curY += lineHeight;
 
     int imageSize = smallFontAscent;
-    HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(
-        context,
-        WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize)),
-        L"PlayTextIconButtonWindow",
-        this,
-        IDR_AUDIO_INACTIVE,
-        IDR_AUDIO);
+    HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
+    audioButton->SetDimensions(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize));
+    audioButton->SetHoverIconResource(IDR_AUDIO);
+    audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
 
     AddChildWindow(audioButton);
@@ -113,15 +103,10 @@ void HeaderWindow::PrintHeaderAction(wstring actionDescription, wstring actionTe
         Point(originLineBottomRight.X + 1, curY));
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
-    HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(
-        context,
-        WindowDescriptor::CreateStretchWindowDescriptor(Point(originLineBottomRight.X, curY - smallFontAscent)),
-        L"HeaderActionButtonWindow",
-        this,
-        fontSmallUnderscored,
-        Colors::Gray,
-        Colors::Black,
-        actionText);
+    HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(context, this);
+    forceTranslationButton->SetFont(fontSmallUnderscored);
+    forceTranslationButton->SetPosition(Point(originLineBottomRight.X, curY - smallFontAscent));
+    forceTranslationButton->SetText(actionText);
     forceTranslationButton->OnClick.Subscribe(actionCallback);
 
     AddChildWindow(forceTranslationButton);

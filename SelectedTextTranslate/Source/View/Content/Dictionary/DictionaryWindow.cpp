@@ -1,8 +1,8 @@
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 
-DictionaryWindow::DictionaryWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
-    : ContentWindow(context, descriptor, name, parentWindow)
+DictionaryWindow::DictionaryWindow(WindowContext* context, Window* parentWindow)
+    : ContentWindow(context, parentWindow)
 {
     this->OnShowTranslation = Subscribeable<int>();
 }
@@ -35,14 +35,10 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         Point lineBottomRight = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, Point(paddingX * 2 + 4, curY));
         renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
 
-        HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(
-            context,
-            WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16)),
-            L"TranslateDictionaryItemWindow",
-            this,
-            IDR_TRANSLATE_INACTIVE,
-            IDR_TRANSLATE);
-
+        HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(context, this);
+        translateButton->SetDimensions(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16));
+        translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
+        translateButton->SetHoverIconResource(IDR_TRANSLATE);
         translateButton->OnClick.Subscribe([i, this]() -> void
         {
             return OnShowTranslation.Notify(i);

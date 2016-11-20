@@ -13,7 +13,6 @@ private:
     ScaleProvider* scaleProvider;
     ScrollProvider* scrollProvider;
 
-    HDC emptyDeviceContext;
     Size originalSize;
 
     HBRUSH backgroundBrush;

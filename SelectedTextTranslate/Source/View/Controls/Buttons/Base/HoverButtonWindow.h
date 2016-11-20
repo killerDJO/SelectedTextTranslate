@@ -17,7 +17,7 @@ protected:
     virtual void RenderStatesDeviceContext() = 0;
 
 public:
-    HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
+    HoverButtonWindow(WindowContext* context, Window* parentWindow);
     virtual ~HoverButtonWindow();
 
     Subscribeable<> OnClick;

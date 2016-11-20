@@ -26,7 +26,6 @@ protected:
     Point position;
     WindowStates windowState;
     bool isVisible;
-    wstring name;
 
     DeviceContextBuffer* deviceContextBuffer;
     vector<Window*> activeChildWindows;
@@ -45,18 +44,19 @@ protected:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
     void AssertWindowInitialized() const;
+    void AssertWindowNotInitialized() const;
 
 public:
-    Window(WindowContext* context, WindowDescriptor descriptor, wstring name);
+    Window(WindowContext* context);
     ~Window() override;
 
     WindowDescriptor GetDescriptor() const;
+    virtual void SetDescriptor(WindowDescriptor descriptor);
 
     Size GetSize() const;
     Size GetAvailableClientSize() const;
     Size GetContentSize() const;
     Point GetPosition() const;
-    wstring GetName() const;
 
     void Show();
     void Hide();

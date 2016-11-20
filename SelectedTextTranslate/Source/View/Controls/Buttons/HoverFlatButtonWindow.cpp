@@ -1,11 +1,56 @@
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, HFONT font, wstring text, int padding)
-    : HoverButtonWindow(context, descriptor, name, parentWindow)
+HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* parentWindow)
+    : HoverButtonWindow(context, parentWindow)
 {
+    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->text = wstring();
+    this->padding = 2;
+}
+
+void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
+{
+    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
+}
+
+void HoverFlatButtonWindow::SetDimensions(Point position, Size size)
+{
+    AssertWindowNotInitialized();
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
+}
+
+void HoverFlatButtonWindow::SetFont(HFONT font)
+{
+    AssertWindowNotInitialized();
     this->font = font;
+}
+
+HFONT HoverFlatButtonWindow::GetFont() const
+{
+    return font;
+}
+
+void HoverFlatButtonWindow::SetText(wstring text)
+{
+    AssertWindowNotInitialized();
     this->text = text;
-    this->padding = context->GetScaleProvider()->Scale(padding);
+}
+
+wstring HoverFlatButtonWindow::GetText() const
+{
+    return text;
+}
+
+void HoverFlatButtonWindow::SetPadding(int padding)
+{
+    AssertWindowNotInitialized();
+    this->padding = padding;
+}
+
+int HoverFlatButtonWindow::GetPadding() const
+{
+    return padding;
 }
 
 void HoverFlatButtonWindow::RenderStatesDeviceContext()
@@ -34,7 +79,8 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
         borderColor);
 
     int fontAscent = renderer->GetFontAscent(font);
-    renderer->PrintText(text.c_str(), font, Colors::Black, Point(context->GetScaleProvider()->Downscale(windowSize.Width / 2), padding + fontAscent), TA_CENTER);
+    int scaledWindowWidth = context->GetScaleProvider()->Downscale(windowSize.Width);
+    renderer->PrintText(text.c_str(), font, Colors::Black, Point(scaledWindowWidth / 2, padding + fontAscent), TA_CENTER);
 
     renderer->Render(deviceContext, windowSize);
 

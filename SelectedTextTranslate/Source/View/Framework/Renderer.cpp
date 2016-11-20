@@ -4,7 +4,6 @@
 
 Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider, ScrollProvider* scrollProvider)
 {
-    this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(0, 0));
     this->renderingContext = renderingContext;
     this->scaleProvider = scaleProvider;
     this->scrollProvider = scrollProvider;
@@ -31,7 +30,7 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
     };
     renderActions.push_back(printTextAction);
 
-    Size textSize = renderingContext->GetTextSize(emptyDeviceContext, text.c_str(), font);
+    Size textSize = renderingContext->GetTextSize(text.c_str(), font);
 
     originalSize.Width = max(originalSize.Width, scaledPosition.X + textSize.Width);
     originalSize.Height = max(originalSize.Height, scaledPosition.Y + textSize.Height);
@@ -110,18 +109,18 @@ void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) con
 
 int Renderer::GetFontAscent(HFONT font) const
 {
-    return scaleProvider->Downscale(renderingContext->GetFontMetrics(emptyDeviceContext, font).tmAscent);
+    return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmAscent);
 }
 
 int Renderer::GetFontStrokeHeight(HFONT font) const
 {
-    TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(emptyDeviceContext, font);
+    TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(font);
     return scaleProvider->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
 }
 
 int Renderer::GetFontHeight(HFONT font) const
 {
-    return scaleProvider->Downscale(renderingContext->GetFontMetrics(emptyDeviceContext, font).tmHeight);
+    return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmHeight);
 }
 
 Size Renderer::GetScaledSize() const

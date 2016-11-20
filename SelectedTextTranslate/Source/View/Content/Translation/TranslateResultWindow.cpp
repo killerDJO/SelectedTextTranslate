@@ -2,18 +2,11 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TranslateResultWindow::TranslateResultWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
-: ContentWindow(context, descriptor, name, parentWindow)
+TranslateResultWindow::TranslateResultWindow(WindowContext* context, Window* parentWindow)
+: ContentWindow(context, parentWindow)
 {
-    this->fontUnderscored = nullptr;
+    this->fontUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);;
     this->OnExpandTranslationResult = Subscribeable<int>();
-}
-
-void TranslateResultWindow::Initialize()
-{
-    ContentWindow::Initialize();
-
-    fontUnderscored = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small, false, true);
 }
 
 void TranslateResultWindow::SetModel(TranslateResult translateResult)
@@ -133,16 +126,10 @@ int TranslateResultWindow::CreateExpandButton(
         }
 
         int underscoredFontAscent = renderer->GetFontAscent(fontUnderscored);
-        HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(
-            context,
-            WindowDescriptor::CreateStretchWindowDescriptor(Point(paddingX * 3, curY + 7)),
-            L"ExpandTranslateResultButtonWindow",
-            this,
-            fontUnderscored,
-            Colors::Gray,
-            Colors::Black,
-            text);
-
+        HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(context, this);
+        expandButton->SetPosition(Point(paddingX * 3, curY + 7));
+        expandButton->SetFont(fontUnderscored);
+        expandButton->SetText(text);
         expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
         {
             return OnExpandTranslationResult.Notify(categoryIndex);

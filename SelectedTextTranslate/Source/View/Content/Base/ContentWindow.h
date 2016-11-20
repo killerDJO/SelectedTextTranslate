@@ -18,8 +18,13 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ContentWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
+    ContentWindow(WindowContext* context, Window* parentWindow);
     ~ContentWindow() override;
 
-    void Initialize() override;
+    int GetLineHeight() const;
+    void SetLineHeight(int lineHeight);
+    int GetPaddingX() const;
+    void SetPaddingX(int paddingX);
+    int GetPaddingY() const;
+    void SetPaddingY(int paddingY);
 };

@@ -14,13 +14,16 @@ protected:
     void RenderStatesDeviceContext() override;
 
 public:
-    HoverFlatButtonWindow(
-        WindowContext* context,
-        WindowDescriptor descriptor,
-        wstring name,
-        Window* parentWindow,
-        HFONT font,
-        wstring text,
-        int padding = 2);
+    HoverFlatButtonWindow(WindowContext* context, Window* parentWindow);
     ~HoverFlatButtonWindow();
+
+    void SetDescriptor(WindowDescriptor descriptor) override;
+    void SetDimensions(Point position, Size size);
+
+    void SetFont(HFONT font);
+    HFONT GetFont() const;
+    void SetText(wstring text);
+    wstring GetText() const;
+    void SetPadding(int padding);
+    int GetPadding() const;
 };

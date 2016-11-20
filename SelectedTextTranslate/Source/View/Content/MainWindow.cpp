@@ -3,8 +3,8 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
 
-MainWindow::MainWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, HotkeyProvider* hotkeyProvider)
-    : Window(context, descriptor, name)
+MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
+    : Window(context)
 {
     this->hotkeyProvider = hotkeyProvider;
 
@@ -60,7 +60,8 @@ void MainWindow::CreateViews()
         OverflowModes::Stretch,
         false);
 
-    translationWindow = new TranslationWindow(context, windowDescriptor, L"TranslationWindow", this);
+    translationWindow = new TranslationWindow(context, this);
+    translationWindow->SetDescriptor(windowDescriptor);
     AddChildWindow(translationWindow);
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
@@ -69,13 +70,15 @@ void MainWindow::CreateViews()
     translationWindow->Hide();
     translationWindow->SetModel(translateResult);
 
-    dictionaryWindow = new DictionaryWindow(context, windowDescriptor, L"DictionaryWindow", this);
+    dictionaryWindow = new DictionaryWindow(context, this);
+    dictionaryWindow->SetDescriptor(windowDescriptor);
     dictionaryWindow->OnShowTranslation.Subscribe(&OnShowTranslation);
     AddChildWindow(dictionaryWindow);
     dictionaryWindow->Hide();
     dictionaryWindow->SetModel(dictionaryRecords);
 
-    settingsWindow = new SettingsWindow(context, windowDescriptor, L"SettingsWindow", this);
+    settingsWindow = new SettingsWindow(context, this);
+    settingsWindow->SetDescriptor(windowDescriptor);
     AddChildWindow(settingsWindow);
     settingsWindow->Hide();
 }

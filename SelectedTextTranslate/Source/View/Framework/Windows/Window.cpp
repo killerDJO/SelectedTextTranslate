@@ -3,37 +3,50 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-Window::Window(WindowContext* context, WindowDescriptor descriptor, wstring name)
+Window::Window(WindowContext* context)
     : NativeWindowHolder(context->GetInstance())
 {
-    if (descriptor.IsAutoScaleEnabled())
-    {
-        this->descriptor = context->GetScaleProvider()->Scale(descriptor);
-    }
-    else
-    {
-        this->descriptor = descriptor;
-    }
-
     this->context = context;
-    this->name = name;
-
-    this->windowSize = this->descriptor.GetWindowSize();
-    this->position = this->descriptor.GetPosition();
-    this->contentSize = Size(0, 0);
-
+    this->descriptor = WindowDescriptor();
     this->activeChildWindows = vector<Window*>();
     this->destroyBeforeDrawList = vector<Window*>();
 
     this->className = nullptr;
-    this->deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), this->descriptor.GetWindowSize());
+    this->deviceContextBuffer = nullptr;
 
     this->isVisible = true;
     this->windowState = WindowStates::New;
 }
 
+WindowDescriptor Window::GetDescriptor() const
+{
+    return descriptor;
+}
+
+void Window::SetDescriptor(WindowDescriptor descriptor)
+{
+    AssertWindowNotInitialized();
+    this->descriptor = descriptor;
+}
+
 void Window::Initialize()
 {
+    if(descriptor.IsEmpty())
+    {
+        throw new SelectedTextTranslateException(L"Descriptor must be set for window");
+    }
+
+    if (descriptor.IsAutoScaleEnabled())
+    {
+        descriptor = context->GetScaleProvider()->Scale(descriptor);
+    }
+
+    deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), descriptor.GetWindowSize());
+
+    windowSize = descriptor.GetWindowSize();
+    position = descriptor.GetPosition();
+    contentSize = Size(0, 0);
+
     NativeWindowHolder::Initialize();
     windowState = WindowStates::Initialized;
 }
@@ -226,11 +239,6 @@ DWORD Window::GetScrollStyle() const
     return scrollStyle;
 }
 
-WindowDescriptor Window::GetDescriptor() const
-{
-    return this->descriptor;
-}
-
 Size Window::GetSize() const
 {
     return windowSize;
@@ -255,11 +263,6 @@ Size Window::GetContentSize() const
 Point Window::GetPosition() const
 {
     return position;
-}
-
-wstring Window::GetName() const
-{
-    return name;
 }
 
 void Window::Show()
@@ -327,6 +330,14 @@ void Window::AssertWindowInitialized() const
     if (windowState == WindowStates::New)
     {
         throw SelectedTextTranslateFatalException(L"Window has not been initialized.");
+    }
+}
+
+void Window::AssertWindowNotInitialized() const
+{
+    if (windowState != WindowStates::New)
+    {
+        throw SelectedTextTranslateFatalException(L"Window has been already initialized.");
     }
 }
 

@@ -17,17 +17,18 @@ private:
     ScrollProvider* scrollProvider;
 
     Window* renderingRoot;
+    HDC emptyDeviceContext;
 
 public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider, ScrollProvider* scrollProvider);
     ~RenderingContext();
 
-    HFONT CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic = false, bool isUnderscored = false) const;
+    HFONT CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false) const;
     HBRUSH CreateCustomBrush(Colors color) const;
     HPEN CreateCustomPen(Colors color, int strokeWidth) const;
 
-    Size GetTextSize(HDC deviceContext, wstring text, HFONT font) const;
-    TEXTMETRIC GetFontMetrics(HDC deviceContext, HFONT font) const;
+    Size GetTextSize(wstring text, HFONT font) const;
+    TEXTMETRIC GetFontMetrics(HFONT font) const;
 
     Renderer* GetRenderer();
     void ReleaseRenderer(Renderer* renderer) const;

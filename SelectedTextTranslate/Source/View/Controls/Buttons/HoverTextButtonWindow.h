@@ -15,14 +15,18 @@ protected:
     void RenderStatesDeviceContext() override;
 
 public:
-    HoverTextButtonWindow(
-        WindowContext* context,
-        WindowDescriptor descriptor,
-        wstring name,
-        Window* parentWindow,
-        HFONT font,
-        Colors normalColor,
-        Colors hoverColor,
-        wstring text);
+    HoverTextButtonWindow(WindowContext* context, Window* parentWindow);
     ~HoverTextButtonWindow();
+
+    void SetDescriptor(WindowDescriptor descriptor) override;
+    void SetPosition(Point position);
+
+    void SetNormalColor(Colors normalColor);
+    Colors GetNormalColor() const;
+    void SetHoverColor(Colors hoverColor);
+    Colors GetHoverColor() const;
+    void SetFont(HFONT font);
+    HFONT GetFont() const;
+    void SetText(wstring text);
+    wstring GetText() const;
 };

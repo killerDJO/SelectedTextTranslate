@@ -9,9 +9,10 @@ WindowDescriptor::WindowDescriptor()
     this->overflowY = OverflowModes::Fixed;
 
     this->autoScale = false;
+    this->isEmpty = true;
 }
 
-WindowDescriptor::WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale)
+WindowDescriptor::WindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale, wstring name)
 {
     this->position = position;
     this->windowSize = windowSize;
@@ -20,11 +21,13 @@ WindowDescriptor::WindowDescriptor(Point position, Size windowSize, OverflowMode
     this->overflowX = overflowX;
 
     this->autoScale = autoScale;
+    this->name = name;
+    this->isEmpty = false;
 }
 
-WindowDescriptor WindowDescriptor::CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale)
+WindowDescriptor WindowDescriptor::CreateWindowDescriptor(Point position, Size windowSize, OverflowModes overflowX, OverflowModes overflowY, bool autoScale, wstring name)
 {
-    return WindowDescriptor(position, windowSize, overflowX, overflowY, autoScale);
+    return WindowDescriptor(position, windowSize, overflowX, overflowY, autoScale, name);
 }
 
 WindowDescriptor WindowDescriptor::CreateFixedWindowDescriptor(Point position, Size windowSize)
@@ -62,6 +65,11 @@ bool WindowDescriptor::IsAutoScaleEnabled() const
     return autoScale;
 }
 
+wstring WindowDescriptor::GetName() const
+{
+    return name;
+}
+
 void WindowDescriptor::SetPosition(Point position)
 {
     this->position = position;
@@ -70,6 +78,11 @@ void WindowDescriptor::SetPosition(Point position)
 void WindowDescriptor::SetWindowSize(Size windowSize)
 {
     this->windowSize = windowSize;
+}
+
+bool WindowDescriptor::IsEmpty() const
+{
+    return isEmpty;
 }
 
 WindowDescriptor::~WindowDescriptor()

@@ -1,17 +1,73 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, HFONT font, Colors normalColor, Colors hoverColor, wstring text)
-    : HoverButtonWindow(context, descriptor, name, parentWindow)
+HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* parentWindow)
+    : HoverButtonWindow(context, parentWindow)
 {
-    this->font = font;
+    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->normalColor = Colors::Gray;
+    this->hoverColor = Colors::Black;
+    this->text = wstring();
+}
+
+void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
+{
+    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
+}
+
+void HoverTextButtonWindow::SetPosition(Point position)
+{
+    AssertWindowNotInitialized();
+    descriptor = WindowDescriptor::CreateStretchWindowDescriptor(position);
+}
+
+void HoverTextButtonWindow::SetNormalColor(Colors normalColor)
+{
+    AssertWindowNotInitialized();
     this->normalColor = normalColor;
+}
+
+Colors HoverTextButtonWindow::GetNormalColor() const
+{
+    return normalColor;
+}
+
+void HoverTextButtonWindow::SetHoverColor(Colors hoverColor)
+{
+    AssertWindowNotInitialized();
     this->hoverColor = hoverColor;
+}
+
+Colors HoverTextButtonWindow::GetHoverColor() const
+{
+    return hoverColor;
+}
+
+void HoverTextButtonWindow::SetFont(HFONT font)
+{
+    AssertWindowNotInitialized();
+    this->font = font;
+}
+
+HFONT HoverTextButtonWindow::GetFont() const
+{
+    return font;
+}
+
+void HoverTextButtonWindow::SetText(wstring text)
+{
+    AssertWindowNotInitialized();
     this->text = text;
+}
+
+wstring HoverTextButtonWindow::GetText() const
+{
+    return text;
 }
 
 void HoverTextButtonWindow::RenderStatesDeviceContext()
 {
-    Size textSize = context->GetRenderingContext()->GetTextSize(deviceContextBuffer->GetDeviceContext(), text.c_str(), font);
+    Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), font);
 
     windowSize.Width = max(windowSize.Width, textSize.Width);
     windowSize.Height = max(windowSize.Height, textSize.Height);

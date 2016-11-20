@@ -33,7 +33,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, HotkeyProvider* hotkeyProvider);
+    MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider);
     ~MainWindow();
 
     Subscribeable<> OnPlayText;

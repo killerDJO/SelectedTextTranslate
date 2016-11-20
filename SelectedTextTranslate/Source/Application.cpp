@@ -75,7 +75,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         &renderingContext,
         logger);
 
-    MainWindow mainWindow = MainWindow(&windowContext, GetMainWindowDescriptor(&scaleProvider), L"MainWindow", &hotkeyProvider);
+    MainWindow mainWindow = MainWindow(&windowContext, &hotkeyProvider);
+    mainWindow.SetDescriptor(GetMainWindowDescriptor(&scaleProvider));
 
     AppController appController = AppController(
         &mainWindow,

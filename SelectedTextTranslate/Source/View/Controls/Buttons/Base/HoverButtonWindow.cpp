@@ -2,8 +2,8 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include <set>
 
-HoverButtonWindow::HoverButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
-    : ChildWindow(context, descriptor, name, parentWindow)
+HoverButtonWindow::HoverButtonWindow(WindowContext* context, Window* parentWindow)
+    : ChildWindow(context, parentWindow)
 {
     this->OnClick = Subscribeable<>();
     this->state = ButtonStates::Normal;

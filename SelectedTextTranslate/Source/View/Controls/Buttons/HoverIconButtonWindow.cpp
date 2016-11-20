@@ -1,15 +1,70 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, HBRUSH backgroundBrush)
-    : HoverButtonWindow(context, descriptor, name, parentWindow)
+HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, Window* parentWindow)
+    : HoverButtonWindow(context, parentWindow)
 {
+    this->hoverIconResource = 0;
+    this->normalIconResource = 0;
+    this->backgroundBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
+}
+
+void HoverIconButtonWindow::SetDescriptor(WindowDescriptor descriptor)
+{
+    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
+}
+
+void HoverIconButtonWindow::SetDimensions(Point position, Size size)
+{
+    AssertWindowNotInitialized();
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
+}
+
+void HoverIconButtonWindow::SetNormalIconResource(DWORD normalIconResource)
+{
+    AssertWindowNotInitialized();
     this->normalIconResource = normalIconResource;
+}
+
+DWORD HoverIconButtonWindow::GetNormalIconResource() const
+{
+    return normalIconResource;
+}
+
+void HoverIconButtonWindow::SetHoverIconResource(DWORD hoverIconResource)
+{
+    AssertWindowNotInitialized();
     this->hoverIconResource = hoverIconResource;
+}
+
+DWORD HoverIconButtonWindow::GetHoverIconResource() const
+{
+    return hoverIconResource;
+}
+
+void HoverIconButtonWindow::SetBackgroundBrush(HBRUSH backgroundBrush)
+{
+    AssertWindowNotInitialized();
     this->backgroundBrush = backgroundBrush;
+}
+
+HBRUSH HoverIconButtonWindow::GetBackgroundBrush() const
+{
+    return backgroundBrush;
+}
+
+void HoverIconButtonWindow::Initialize()
+{
+    if(normalIconResource == 0 || hoverIconResource == 0)
+    {
+        throw new SelectedTextTranslateFatalException(L"Hover and normal icon resources must be set before initialization");
+    }
+
+    HoverButtonWindow::Initialize();
 }
 
 void HoverIconButtonWindow::RenderStatesDeviceContext()

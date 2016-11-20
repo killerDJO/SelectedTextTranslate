@@ -1,8 +1,8 @@
 #include "View\Content\Settings\HotkeySettingsWindow.h"
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 
-HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Point position, int width, wstring name, Window* parentWindow, bool isCollapsed, int titleLineHeight)
-    : SettingGroupWindow(context, position, width, name, parentWindow, isCollapsed, L"Hotkeys Settings", titleLineHeight)
+HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* parentWindow)
+    : SettingGroupWindow(context, parentWindow)
 {
 }
 
@@ -23,20 +23,12 @@ void HotkeySettingsWindow::RenderSettingsContent(Renderer* renderer, Point conte
 int HotkeySettingsWindow::RenderHotkeysEditControl(Renderer* renderer, wstring title, int curX, int curY)
 {
     int normalFontAscent = renderer->GetFontAscent(fontNormal);
-    renderer->PrintText(title.c_str(), fontNormal, Colors::Black, Point(curX, curY + normalFontAscent));
+    Point textBottomRight = renderer->PrintText(title.c_str(), fontNormal, Colors::Black, Point(curX, curY + normalFontAscent));
 
-    curY += paddingY + 3;
+    curY = textBottomRight.Y + 1;
 
-    int hotkeyControlFontHeight = renderer->GetFontHeight(fontNormal);
-    HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(
-        context,
-        Point(curX, curY),
-        L"HotKeyInput",
-        this,
-        0,
-        fontNormal,
-        hotkeyControlFontHeight);
-
+    HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(context, this);
+    hotKeyInputWindow->SetPosition(Point(curX, curY));
     AddChildWindow(hotKeyInputWindow);
 
     renderer->UpdateSize(Size(

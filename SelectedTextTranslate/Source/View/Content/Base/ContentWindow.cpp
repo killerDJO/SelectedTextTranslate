@@ -1,30 +1,48 @@
 #include "View\Content\Base\ContentWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-ContentWindow::ContentWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow)
-    : ChildWindow(context, descriptor, name, parentWindow)
+ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
+    : ChildWindow(context, parentWindow)
 {
     this->lineHeight = 20;
     this->paddingX = 15;
     this->paddingY = 15;
 
-    this->fontNormal = nullptr;
-    this->fontHeader = nullptr;
-    this->fontItalic = nullptr;
-    this->fontSmall = nullptr;
-    this->grayBrush = nullptr;
+    this->fontNormal = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->fontHeader = context->GetRenderingContext()->CreateCustomFont(FontSizes::Large);
+    this->fontItalic = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, true);
+    this->fontSmall = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small);
+    this->grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
 }
 
-void ContentWindow::Initialize()
+int ContentWindow::GetLineHeight() const
 {
-    ChildWindow::Initialize();
+    return lineHeight;
+}
 
-    grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+void ContentWindow::SetLineHeight(int lineHeight)
+{
+    this->lineHeight = lineHeight;
+}
 
-    fontNormal = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Normal);
-    fontHeader = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Large);
-    fontItalic = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Normal, true);
-    fontSmall = context->GetRenderingContext()->CreateCustomFont(windowHandle, FontSizes::Small);
+int ContentWindow::GetPaddingX() const
+{
+    return paddingX;
+}
+
+void ContentWindow::SetPaddingX(int paddingX)
+{
+    this->paddingX = paddingX;
+}
+
+int ContentWindow::GetPaddingY() const
+{
+    return paddingY;
+}
+
+void ContentWindow::SetPaddingY(int paddingY)
+{
+    this->paddingY = paddingY;
 }
 
 Size ContentWindow::RenderContent(Renderer* renderer)

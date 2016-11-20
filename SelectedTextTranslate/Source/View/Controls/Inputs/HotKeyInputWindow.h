@@ -26,18 +26,20 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HotKeyInputWindow(
-        WindowContext* context,
-        Point postion,
-        wstring name,
-        Window* parentWindow,
-        int defaultHotKey,
-        HFONT font,
-        int lineHeight,
-        int padding = 3,
-        int borderWidth = 1);
-
+    HotKeyInputWindow(WindowContext* context, Window* parentWindow);
     virtual ~HotKeyInputWindow();
+
+    void SetDescriptor(WindowDescriptor descriptor) override;
+    void SetPosition(Point position);
+
+    void SetFont(HFONT font);
+    HFONT GetFont() const;
+    void SetPadding(int padding);
+    int GetPadding() const;
+    void SetBorderWidth(int borderWidth);
+    int GetBorderWidth() const;
+    void SetLineHeight(int lineHeight);
+    int GetLineHeight() const;
 
     void Initialize() override;
 };

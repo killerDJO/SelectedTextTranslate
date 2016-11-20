@@ -21,14 +21,12 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HeaderWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
+    HeaderWindow(WindowContext* context, Window* parentWindow);
     ~HeaderWindow() override;
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
     Subscribeable<> OnTranslateSuggestion;
-
-    void Initialize() override;
 
     void SetModel(TranslateResult translateResult);
 };

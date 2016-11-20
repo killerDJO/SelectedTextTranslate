@@ -8,24 +8,25 @@ RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextPr
     this->scrollProvider = scrollProvider;
 
     this->renderingRoot = nullptr;
+    this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(1, 1));
 }
 
-Size RenderingContext::GetTextSize(HDC deviceContext, wstring text, HFONT font) const
+Size RenderingContext::GetTextSize(wstring text, HFONT font) const
 {
-    AssertCriticalWinApiResult(SelectObject(deviceContext, font));
+    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font));
 
     SIZE textSize;
-    AssertCriticalWinApiResult(GetTextExtentPoint32(deviceContext, text.c_str(), text.length(), &textSize));
+    AssertCriticalWinApiResult(GetTextExtentPoint32(emptyDeviceContext, text.c_str(), text.length(), &textSize));
 
     return Size(textSize.cx, textSize.cy);
 }
 
-TEXTMETRIC RenderingContext::GetFontMetrics(HDC deviceContext, HFONT font) const
+TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
 {
-    AssertCriticalWinApiResult(SelectObject(deviceContext, font));
+    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font));
 
     TEXTMETRIC tm;
-    AssertCriticalWinApiResult(GetTextMetrics(deviceContext, &tm));
+    AssertCriticalWinApiResult(GetTextMetrics(emptyDeviceContext, &tm));
 
     return tm;
 }
@@ -61,11 +62,8 @@ bool RenderingContext::IsRenderingRoot(Window* window) const
     return window == renderingRoot;
 }
 
-HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, bool isItalic, bool isUnderscored) const
+HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool isUnderscored) const
 {
-    HDC deviceContext = GetDC(windowHandle);
-    AssertCriticalWinApiResult(deviceContext);
-
     int fontSizeInPixels = 10;
 
     switch (fontSize)
@@ -81,7 +79,7 @@ HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, 
         break;
     }
 
-    long logicalFontSize = -MulDiv(scaleProvider->Scale(fontSizeInPixels), GetDeviceCaps(deviceContext, LOGPIXELSY), 72);
+    long logicalFontSize = -MulDiv(scaleProvider->Scale(fontSizeInPixels), GetDeviceCaps(emptyDeviceContext, LOGPIXELSY), 72);
     ExceptionHelper::ThrowOnWinapiError(logicalFontSize, true, -1);
 
     int italicValue = isItalic ? 1 : 0;
@@ -89,8 +87,6 @@ HFONT RenderingContext::CreateCustomFont(HWND windowHandle, FontSizes fontSize, 
 
     HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
     AssertCriticalWinApiResult(font);
-
-    AssertCriticalWinApiResult(DeleteDC(deviceContext));
 
     return font;
 }

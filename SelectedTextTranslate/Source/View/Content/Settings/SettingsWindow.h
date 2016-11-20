@@ -7,7 +7,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    SettingsWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
+    SettingsWindow(WindowContext* context, Window* parentWindow);
     ~SettingsWindow() override;
 
     void Initialize() override;

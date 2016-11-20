@@ -18,6 +18,18 @@ protected:
     void RenderStatesDeviceContext() override;
 
 public:
-    HoverIconButtonWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow, DWORD normalIconResource, DWORD hoverIconResource, HBRUSH background = nullptr);
+    HoverIconButtonWindow(WindowContext* context, Window* parentWindow);
     ~HoverIconButtonWindow();
+
+    void SetDescriptor(WindowDescriptor descriptor) override;
+    void SetDimensions(Point position, Size size);
+
+    void SetNormalIconResource(DWORD normalIconResource);
+    DWORD GetNormalIconResource() const;
+    void SetHoverIconResource(DWORD hoverIconResource);
+    DWORD GetHoverIconResource() const;
+    void SetBackgroundBrush(HBRUSH backgroundBrush);
+    HBRUSH GetBackgroundBrush() const;
+
+    void Initialize() override;
 };

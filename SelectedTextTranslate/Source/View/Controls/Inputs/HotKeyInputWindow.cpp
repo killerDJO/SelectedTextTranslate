@@ -1,29 +1,78 @@
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HotKeyInputWindow::HotKeyInputWindow(
-    WindowContext* context,
-    Point postion,
-    wstring name,
-    Window* parentWindow,
-    int defaultHotKey,
-    HFONT font,
-    int lineHeight,
-    int padding,
-    int borderWidth)
-    : ChildWindow(context, WindowDescriptor::CreateFixedWindowDescriptor(postion, Size(200, lineHeight + padding * 2 + borderWidth * 2)), name, parentWindow)
+HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindow)
+    : ChildWindow(context, parentWindow)
 {
     this->className = HOTKEY_CLASS;
-    this->currentHotkey = defaultHotKey;
-    this->font = font;
-    this->padding = padding;
-    this->borderWidth = borderWidth;
-    this->lineHeight = lineHeight;
+    this->currentHotkey = 0;
+    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->padding = 3;
+    this->borderWidth = 1;
+    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->font).tmHeight);
     this->hasFocus = false;
+}
+
+void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
+{
+    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
+}
+
+void HotKeyInputWindow::SetPosition(Point position)
+{
+    AssertWindowNotInitialized();
+    this->position = position;
+}
+
+void HotKeyInputWindow::SetFont(HFONT font)
+{
+    AssertWindowNotInitialized();
+    this->font = font;
+}
+
+HFONT HotKeyInputWindow::GetFont() const
+{
+    return font;
+}
+
+void HotKeyInputWindow::SetPadding(int padding)
+{
+    AssertWindowNotInitialized();
+    this->padding = padding;
+}
+
+int HotKeyInputWindow::GetPadding() const
+{
+    return padding;
+}
+
+void HotKeyInputWindow::SetBorderWidth(int borderWidth)
+{
+    AssertWindowNotInitialized();
+    this->borderWidth = borderWidth;
+}
+
+int HotKeyInputWindow::GetBorderWidth() const
+{
+    return borderWidth;
+}
+
+void HotKeyInputWindow::SetLineHeight(int lineHeight)
+{
+    AssertWindowNotInitialized();
+    this->lineHeight = lineHeight;
+}
+
+int HotKeyInputWindow::GetLineHeight() const
+{
+    return lineHeight;
 }
 
 void HotKeyInputWindow::Initialize()
 {
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(200, lineHeight + padding * 2 + borderWidth * 2));
+
     // Ensure that the common control DLL is loaded.
     INITCOMMONCONTROLSEX icex;
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);

@@ -10,7 +10,7 @@ protected:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    ChildWindow(WindowContext* context, WindowDescriptor descriptor, wstring name, Window* parentWindow);
+    ChildWindow(WindowContext* context, Window* parentWindow);
     ~ChildWindow() override;
 
     void Initialize() override;
