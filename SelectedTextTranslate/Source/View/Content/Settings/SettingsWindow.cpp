@@ -6,6 +6,8 @@
 SettingsWindow::SettingsWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
 {
+    stateMap[0] = true;
+    stateMap[1] = true;
 }
 
 void SettingsWindow::Initialize()
@@ -21,22 +23,11 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     int curY = paddingY;
 
     HotkeySettingsWindow* hotkeySettings = new HotkeySettingsWindow(context, this);
-    hotkeySettings->SetDimensions(Point(paddingX, curY), 250);
-    hotkeySettings->SetState(true);
-    hotkeySettings->SetTitle(L"Hotkeys settings");
-    AddChildWindow(hotkeySettings);
-    hotkeySettings->Render();
-
-    curY += context->GetScaleProvider()->Downscale(hotkeySettings->GetSize().Height) - 1;
+    curY = InitializeSettingsGroup(renderer, hotkeySettings, curY, 0) + lineHeight / 2;
 
     HotkeySettingsWindow* hotkeySettings2 = new HotkeySettingsWindow(context, this);
-    hotkeySettings2->SetDimensions(Point(paddingX, curY), 250);
-    hotkeySettings2->SetState(false);
-    hotkeySettings2->SetTitle(L"Hotkeys settings");
-    AddChildWindow(hotkeySettings2);
-    hotkeySettings2->Render();
+    curY = InitializeSettingsGroup(renderer, hotkeySettings2, curY, 1);
 
-    curY += context->GetScaleProvider()->Downscale(hotkeySettings2->GetSize().Height);
     curY += lineHeight / 2;
 
     HoverFlatButtonWindow* saveButton = new HoverFlatButtonWindow(context, this);
@@ -48,6 +39,26 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     renderer->IncreaseHeight(paddingY);
 
     return renderer->GetScaledSize();
+}
+
+int SettingsWindow::InitializeSettingsGroup(Renderer* renderer, SettingsGroupWindow* settingsGroup, int curY, int index)
+{
+    settingsGroup->SetDimensions(Point(paddingX, curY), 250);
+    settingsGroup->SetState(stateMap[index]);
+    settingsGroup->OnSettingsToggled.Subscribe([index, this]() -> void
+    {
+        stateMap[index] ^= true;
+        this->Render(true);
+    });
+
+    AddChildWindow(settingsGroup);
+    settingsGroup->Render();
+
+    renderer->UpdateSize(Size(
+        settingsGroup->GetSize().Width + settingsGroup->GetPosition().X,
+        settingsGroup->GetSize().Height + settingsGroup->GetPosition().Y));
+
+    return curY + settingsGroup->GetSize(true).Height;
 }
 
 SettingsWindow::~SettingsWindow()

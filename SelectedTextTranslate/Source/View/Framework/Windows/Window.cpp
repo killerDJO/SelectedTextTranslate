@@ -239,9 +239,9 @@ DWORD Window::GetScrollStyle() const
     return scrollStyle;
 }
 
-Size Window::GetSize() const
+Size Window::GetSize(bool downscale) const
 {
-    return windowSize;
+    return !downscale ? windowSize : context->GetScaleProvider()->Downscale(windowSize);
 }
 
 Size Window::GetAvailableClientSize() const
@@ -260,9 +260,10 @@ Size Window::GetContentSize() const
     return contentSize;
 }
 
-Point Window::GetPosition() const
+Point Window::GetPosition(bool downscale) const
 {
-    return position;
+    ScaleProvider* scaleProvider = context->GetScaleProvider();
+    return !downscale ? position : Point(scaleProvider->Downscale(position.X), scaleProvider->Downscale(position.Y));
 }
 
 void Window::Show()

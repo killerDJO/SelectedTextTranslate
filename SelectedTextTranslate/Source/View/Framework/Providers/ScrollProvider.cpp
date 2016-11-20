@@ -23,7 +23,7 @@ void ScrollProvider::InitializeScrollbars(
     }
 
     Size clientSize = window->GetAvailableClientSize();
-    Size contentSize = window->GetContentSize();
+    Size contentSize = AlignWithScrollingGrid(window->GetContentSize());
     bool horizontalScrollVisible = initializeHorizontalScroll && clientSize.Width < contentSize.Width;
     bool verticalScrollVisible = initializeVerticalScroll && clientSize.Height < contentSize.Height;
 
@@ -178,6 +178,15 @@ void ScrollProvider::ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam,
     }
 
     SetScrollPosition(window, scrollInfo, scrollBar, scrollOffset);
+}
+
+Size ScrollProvider::AlignWithScrollingGrid(Size size) const
+{
+    int scrollCharX = GetScrollChar(ScrollBars::Horizontal);
+    int scrollCharY = GetScrollChar(ScrollBars::Vertical);
+    return Size(
+        roundToInt(ceil(size.Width * 1.0 / scrollCharX) * scrollCharX),
+        roundToInt(ceil(size.Height * 1.0 / scrollCharY) * scrollCharY));
 }
 
 void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const

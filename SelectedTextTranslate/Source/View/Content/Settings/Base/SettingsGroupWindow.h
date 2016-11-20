@@ -1,19 +1,20 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
 
-class SettingGroupWindow : public ContentWindow
+class SettingsGroupWindow : public ContentWindow
 {
-private:
+protected:
     bool isCollapsed;
     wstring title;
 
-protected:
+    HBRUSH backgroundBrush;
+
     Size RenderContent(Renderer* renderer) override;
     virtual void RenderSettingsContent(Renderer* renderer, Point contentPosition) = 0;
 
 public:
-    SettingGroupWindow(WindowContext* context, Window* parentWindow);
-    ~SettingGroupWindow() override;
+    SettingsGroupWindow(WindowContext* context, Window* parentWindow);
+    ~SettingsGroupWindow() override;
 
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);

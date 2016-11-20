@@ -139,7 +139,9 @@
     <None Include="Resources\Audio.wmf" />
     <None Include="Resources\Audio_Inactive.emf" />
     <None Include="Resources\Audio_Inactive.wmf" />
-    <None Include="Resources\expand-button-disabled.wmf" />
+    <None Include="Resources\collapse-button-inactive.wmf" />
+    <None Include="Resources\collapse-button.wmf" />
+    <None Include="Resources\expand-button-inactive.wmf" />
     <None Include="Resources\expand-button.wmf" />
     <None Include="Resources\translate.emf" />
     <None Include="Resources\translate_inactive.emf" />

@@ -94,7 +94,7 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     AssertCriticalWinApiResult(windowClass->hCursor);
 
-    windowClass->hbrBackground = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
+    windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
     AssertCriticalWinApiResult(windowClass->hbrBackground);
 }
 
@@ -149,7 +149,6 @@ Size MainWindow::RenderContent(Renderer* renderer)
 
     currentView->Render();
     currentView->Show();
-    renderer->SetBackground(context->GetRenderingContext()->CreateCustomBrush(Colors::Background));
     return currentView->GetContentSize();
 }
 
@@ -203,7 +202,6 @@ void MainWindow::Resize()
 
     // Clear background
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
-    renderer->SetBackground(context->GetRenderingContext()->CreateCustomBrush(Colors::Background));
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 

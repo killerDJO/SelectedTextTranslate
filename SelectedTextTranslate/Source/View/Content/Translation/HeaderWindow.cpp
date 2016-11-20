@@ -115,7 +115,7 @@ void HeaderWindow::PrintHeaderAction(wstring actionDescription, wstring actionTe
         L")",
         fontSmall,
         Colors::Gray,
-        Point(originLineBottomRight.X + context->GetScaleProvider()->Downscale(forceTranslationButton->GetSize().Width), curY));
+        Point(originLineBottomRight.X + forceTranslationButton->GetSize(true).Width, curY));
 }
 
 HeaderWindow::~HeaderWindow()

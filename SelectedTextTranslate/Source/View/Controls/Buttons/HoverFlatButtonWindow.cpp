@@ -1,12 +1,13 @@
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
     this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
     this->text = wstring();
-    this->padding = 2;
+    this->padding = 3;
 }
 
 void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -53,38 +54,67 @@ int HoverFlatButtonWindow::GetPadding() const
     return padding;
 }
 
+void HoverFlatButtonWindow::Disable()
+{
+    ChangeButtonState(ButtonStates::Disabled);
+}
+
+void HoverFlatButtonWindow::Enable()
+{
+    ChangeButtonState(ButtonStates::Normal);
+}
+
+void HoverFlatButtonWindow::ChangeButtonState(ButtonStates newState)
+{
+    state = newState;
+
+    if (windowState == WindowStates::Initialized)
+    {
+        RenderContent(nullptr);
+        Draw();
+    }
+}
+
+
+bool HoverFlatButtonWindow::IsDisabled() const
+{
+    return state == ButtonStates::Disabled;
+}
+
 void HoverFlatButtonWindow::RenderStatesDeviceContext()
 {
     stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
     stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
     stateToDeviceContextMap[ButtonStates::Pressed] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
 
-    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], Colors::Button, Colors::LightGray);
-    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], Colors::ButtonHovered, Colors::Blue);
-    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Pressed], Colors::ButtonPressed, Colors::Blue);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], Colors::Button, Colors::LightGray, Colors::Black);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], Colors::ButtonHovered, Colors::Blue, Colors::Black);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Pressed], Colors::ButtonPressed, Colors::Blue, Colors::Black);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Disabled], Colors::Background, Colors::LightGray, Colors::LightGray);
 }
 
-void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor) const
+void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    Rect borderRect = Rect(
-        Point(0, 0),
-        context->GetScaleProvider()->Downscale(GetAvailableClientSize()));
+    HBRUSH backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
+    Size windowSize = GetSize(true);
 
     renderer->DrawBorderedRect(
-        borderRect,
-        context->GetRenderingContext()->CreateCustomBrush(backgroundColor),
+        Rect(Point(0, 0), windowSize),
+        backgroundBrush,
         1,
         borderColor);
 
-    int fontAscent = renderer->GetFontAscent(font);
-    int scaledWindowWidth = context->GetScaleProvider()->Downscale(windowSize.Width);
-    renderer->PrintText(text.c_str(), font, Colors::Black, Point(scaledWindowWidth / 2, padding + fontAscent), TA_CENTER);
+    int fontDescent = renderer->GetFontDescent(font);
+    renderer->PrintText(text.c_str(), font, fontColor, Point(windowSize.Width / 2, windowSize.Height - padding - fontDescent), TA_CENTER);
 
     renderer->Render(deviceContext, windowSize);
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
+
+    AssertCriticalWinApiResult(DeleteObject(backgroundBrush));
 }
 
 HoverFlatButtonWindow::~HoverFlatButtonWindow()

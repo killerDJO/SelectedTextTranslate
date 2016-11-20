@@ -41,6 +41,11 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONUP:
     {
+        if(state == ButtonStates::Disabled)
+        {
+            return TRUE;
+        }
+
         state = ButtonStates::Hovered;
         RenderContent(nullptr);
         InvalidateRect(windowHandle, nullptr, TRUE);
@@ -52,6 +57,11 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONDOWN:
     {
+        if (state == ButtonStates::Disabled)
+        {
+            return TRUE;
+        }
+
         state = ButtonStates::Pressed;
         RenderContent(nullptr);
         InvalidateRect(windowHandle, nullptr, TRUE);
@@ -85,7 +95,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     case WM_MOUSELEAVE:
     {
-        if (state != ButtonStates::Normal)
+        if (state != ButtonStates::Normal && state != ButtonStates::Disabled)
         {
             state = ButtonStates::Normal;
             RenderContent(nullptr);

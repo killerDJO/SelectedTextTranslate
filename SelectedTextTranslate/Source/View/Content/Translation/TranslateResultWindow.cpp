@@ -137,7 +137,7 @@ int TranslateResultWindow::CreateExpandButton(
 
         AddChildWindow(expandButton);
 
-        renderer->IncreaseHeight(expandButton->GetSize().Height);
+        renderer->IncreaseHeight(expandButton->GetSize(true).Height);
         curY += underscoredFontAscent;
     }
 

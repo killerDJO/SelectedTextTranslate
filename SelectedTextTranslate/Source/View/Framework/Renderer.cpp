@@ -2,11 +2,10 @@
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider, ScrollProvider* scrollProvider)
+Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider)
 {
     this->renderingContext = renderingContext;
     this->scaleProvider = scaleProvider;
-    this->scrollProvider = scrollProvider;
     this->originalSize = Size(0, 0);
     this->backgroundBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
     this->renderActions = vector<function<void(HDC)>>();
@@ -84,6 +83,8 @@ void Renderer::DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors
         AssertCriticalWinApiResult(SelectObject(hdc, contentBrush));
 
         AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.X, scaledRect.Y, scaledRect.GetRight(), scaledRect.GetBottom()));
+
+        AssertCriticalWinApiResult(DeleteObject(borderPen));
     };
     renderActions.push_back(drawRectAction);
 
@@ -112,6 +113,11 @@ int Renderer::GetFontAscent(HFONT font) const
     return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmAscent);
 }
 
+int Renderer::GetFontDescent(HFONT font) const
+{
+    return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmDescent);
+}
+
 int Renderer::GetFontStrokeHeight(HFONT font) const
 {
     TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(font);
@@ -125,17 +131,12 @@ int Renderer::GetFontHeight(HFONT font) const
 
 Size Renderer::GetScaledSize() const
 {
-    // Align content size with scrolling grid.
-    int scrollCharX = scrollProvider->GetScrollChar(ScrollBars::Horizontal);
-    int scrollCharY = scrollProvider->GetScrollChar(ScrollBars::Vertical);
-    return Size(
-        roundToInt(ceil(originalSize.Width * 1.0 / scrollCharX) * scrollCharX),
-        roundToInt(ceil(originalSize.Height * 1.0 / scrollCharY) * scrollCharY));
+    return originalSize;
 }
 
 Size Renderer::GetSize() const
 {
-    return scaleProvider->Downscale(GetScaledSize());
+    return scaleProvider->Downscale(originalSize);
 }
 
 void Renderer::Render(HDC deviceContext, Size deviceContextSize)

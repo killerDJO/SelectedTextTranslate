@@ -8,7 +8,8 @@ private:
     wstring text;
     int padding;
 
-    void RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor) const;
+    void RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const;
+    void ChangeButtonState(ButtonStates newState);
 
 protected:
     void RenderStatesDeviceContext() override;
@@ -22,8 +23,14 @@ public:
 
     void SetFont(HFONT font);
     HFONT GetFont() const;
+
     void SetText(wstring text);
     wstring GetText() const;
+
     void SetPadding(int padding);
     int GetPadding() const;
+
+    void Disable();
+    void Enable();
+    bool IsDisabled() const;
 };

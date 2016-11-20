@@ -64,7 +64,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     ScaleProvider scaleProvider = ScaleProvider();
     DeviceContextProvider deviceContextProvider = DeviceContextProvider();
     ScrollProvider scrollProvider = ScrollProvider();
-    RenderingContext renderingContext = RenderingContext(&scaleProvider, &deviceContextProvider, &scrollProvider);
+    RenderingContext renderingContext = RenderingContext(&scaleProvider, &deviceContextProvider);
 
     WindowContext windowContext = WindowContext(
         hInstance,

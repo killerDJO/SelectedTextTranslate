@@ -53,10 +53,10 @@ public:
     WindowDescriptor GetDescriptor() const;
     virtual void SetDescriptor(WindowDescriptor descriptor);
 
-    Size GetSize() const;
+    Size GetSize(bool downscale = false) const;
     Size GetAvailableClientSize() const;
     Size GetContentSize() const;
-    Point GetPosition() const;
+    Point GetPosition(bool downscale = false) const;
 
     void Show();
     void Hide();

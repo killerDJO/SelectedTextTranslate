@@ -2,22 +2,23 @@
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 
 HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* parentWindow)
-    : SettingGroupWindow(context, parentWindow)
+    : SettingsGroupWindow(context, parentWindow)
 {
+    this->title = L"Hotkeys";
 }
 
 void HotkeySettingsWindow::Initialize()
 {
-    SettingGroupWindow::Initialize();
+    SettingsGroupWindow::Initialize();
 }
 
 void HotkeySettingsWindow::RenderSettingsContent(Renderer* renderer, Point contentPosition)
 {
-    int curY = contentPosition.Y;
+    int curY = contentPosition.Y + paddingY;
     int curX = contentPosition.X;
     curY = RenderHotkeysEditControl(renderer, L"Translate selected text hotkey:", curX, curY);
     RenderHotkeysEditControl(renderer, L"Play selected text hotkey:", curX, curY);
-    renderer->IncreaseWidth(paddingY);
+    renderer->IncreaseHeight(2 * paddingY);
 }
 
 int HotkeySettingsWindow::RenderHotkeysEditControl(Renderer* renderer, wstring title, int curX, int curY)
@@ -35,7 +36,7 @@ int HotkeySettingsWindow::RenderHotkeysEditControl(Renderer* renderer, wstring t
         hotKeyInputWindow->GetSize().Width + hotKeyInputWindow->GetPosition().X,
         hotKeyInputWindow->GetSize().Height + hotKeyInputWindow->GetPosition().Y));
 
-    curY += context->GetScaleProvider()->Downscale(hotKeyInputWindow->GetSize().Height) + 7;
+    curY += hotKeyInputWindow->GetSize(true).Height + 7;
 
     return curY;
 }

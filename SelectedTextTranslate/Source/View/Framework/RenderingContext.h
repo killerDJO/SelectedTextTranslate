@@ -20,7 +20,7 @@ private:
     HDC emptyDeviceContext;
 
 public:
-    RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider, ScrollProvider* scrollProvider);
+    RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
     ~RenderingContext();
 
     HFONT CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false) const;

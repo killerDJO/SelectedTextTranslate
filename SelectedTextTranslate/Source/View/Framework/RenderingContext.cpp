@@ -1,11 +1,10 @@
 #include "View\Framework\RenderingContext.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider, ScrollProvider* scrollProvider)
+RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider)
 {
     this->scaleProvider = scaleProvider;
     this->deviceContextProvider = deviceContextProvider;
-    this->scrollProvider = scrollProvider;
 
     this->renderingRoot = nullptr;
     this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(1, 1));
@@ -33,7 +32,7 @@ TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
 
 Renderer* RenderingContext::GetRenderer()
 {
-    return new Renderer(this, deviceContextProvider, scaleProvider, scrollProvider);
+    return new Renderer(this, deviceContextProvider, scaleProvider);
 }
 
 void RenderingContext::ReleaseRenderer(Renderer* renderer) const

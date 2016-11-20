@@ -22,7 +22,7 @@ private:
     void ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const;
 
 public:
-    Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider, ScrollProvider* scrollProvider);
+    Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider);
     ~Renderer();
 
     Point PrintText(const wstring text, HFONT font, Colors color, Point position, DWORD horizontalAlignment = TA_LEFT);
@@ -31,6 +31,7 @@ public:
     void SetBackground(HBRUSH backgroundBrush);
 
     int GetFontAscent(HFONT font) const;
+    int GetFontDescent(HFONT font) const;
     int GetFontStrokeHeight(HFONT font) const;
     int GetFontHeight(HFONT font) const;
 

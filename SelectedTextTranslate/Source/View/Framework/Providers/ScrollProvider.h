@@ -19,6 +19,8 @@ private:
     void SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const;
     void ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const;
 
+    Size AlignWithScrollingGrid(Size size) const;
+
 public:
     ScrollProvider();
     ~ScrollProvider();
