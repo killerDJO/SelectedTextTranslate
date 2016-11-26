@@ -6,5 +6,7 @@ enum class FontSizes
 
     Large = 2,
 
-    Small = 3
+    Small = 3,
+
+    Medium = 4
 };

@@ -14,7 +14,6 @@ class RenderingContext
 private:
     ScaleProvider* scaleProvider;
     DeviceContextProvider* deviceContextProvider;
-    ScrollProvider* scrollProvider;
 
     Window* renderingRoot;
     HDC emptyDeviceContext;

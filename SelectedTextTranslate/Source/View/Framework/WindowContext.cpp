@@ -5,6 +5,7 @@ WindowContext::WindowContext(
     ScrollProvider* scrollProvider,
     ScaleProvider* scaleProvider,
     DeviceContextProvider* deviceContextProvider,
+    HotkeyProvider* hotkeyProvider,
     ErrorHandler* errorHandler,
     RenderingContext* renderingContext,
     Logger* logger)
@@ -16,6 +17,7 @@ WindowContext::WindowContext(
     this->renderingContext = renderingContext;
     this->errorHandler = errorHandler;
     this->logger = logger;
+    this->hotkeyProvider = hotkeyProvider;
 }
 
 HINSTANCE WindowContext::GetInstance() const
@@ -51,6 +53,11 @@ RenderingContext* WindowContext::GetRenderingContext() const
 Logger* WindowContext::GetLogger() const
 {
     return logger;
+}
+
+HotkeyProvider* WindowContext::GetHotkeyProvider() const
+{
+    return hotkeyProvider;
 }
 
 WindowContext::~WindowContext()

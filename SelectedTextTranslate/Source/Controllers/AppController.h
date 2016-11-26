@@ -20,6 +20,7 @@ private:
     DictionaryService* dictionary;
     SettingsProvider* settingsProvider;
 
+    HotkeyProvider* hotkeyProvider;
     TrayIconProvider* trayIconProvider;
 
 public:
@@ -30,7 +31,8 @@ public:
         TextPlayer* textPlayer,
         TextExtractor* textExtractor,
         DictionaryService* dictionaryService,
-        SettingsProvider* settingsProvider);
+        SettingsProvider* settingsProvider,
+        HotkeyProvider* hotkeyProvider);
     ~AppController();
 
     void Initialize();

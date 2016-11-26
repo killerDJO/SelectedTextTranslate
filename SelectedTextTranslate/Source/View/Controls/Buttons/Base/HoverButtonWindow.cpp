@@ -114,6 +114,32 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
     return ChildWindow::WindowProcedure(message, wParam, lParam);
 }
 
+void HoverButtonWindow::Disable()
+{
+    ChangeButtonState(ButtonStates::Disabled);
+}
+
+void HoverButtonWindow::Enable()
+{
+    ChangeButtonState(ButtonStates::Normal);
+}
+
+void HoverButtonWindow::ChangeButtonState(ButtonStates newState)
+{
+    state = newState;
+
+    if (windowState != WindowStates::New)
+    {
+        RenderContent(nullptr);
+        Draw();
+    }
+}
+
+bool HoverButtonWindow::IsDisabled() const
+{
+    return state == ButtonStates::Disabled;
+}
+
 HoverButtonWindow::~HoverButtonWindow()
 {
     set<HDC> deletedDeviceContexts;

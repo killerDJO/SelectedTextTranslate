@@ -14,6 +14,8 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Content\Settings\Dto\SettingsState.cpp" />
+    <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
@@ -24,7 +26,7 @@
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
-    <ClCompile Include="Source\View\Content\Settings\HotkeySettingsWindow.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp" />
@@ -73,6 +75,9 @@
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupState.h" />
+    <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h" />
     <ClInclude Include="Source\View\Framework\ModelHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
@@ -80,7 +85,7 @@
     <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h" />
     <ClInclude Include="Source\Services\Settings\Dto\Settings.h" />
     <ClInclude Include="Source\Services\Settings\SettingsProvider.h" />
-    <ClInclude Include="Source\View\Content\Settings\HotkeySettingsWindow.h" />
+    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\Base\Enums\ButtonStates.h" />
@@ -142,9 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Audio.emf" />
     <None Include="Resources\Audio.wmf" />
-    <None Include="Resources\Audio_Inactive.emf" />
     <None Include="Resources\Audio_Inactive.wmf" />
     <None Include="Resources\collapse-button-inactive.wmf" />
     <None Include="Resources\collapse-button.wmf" />

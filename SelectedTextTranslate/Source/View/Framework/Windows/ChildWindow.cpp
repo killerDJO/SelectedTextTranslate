@@ -5,8 +5,6 @@ ChildWindow::ChildWindow(WindowContext* context, Window* parentWindow)
     : Window(context)
 {
     this->parentWindow = parentWindow;
-
-    this->className = L"STT_CONTENT";
 }
 
 void ChildWindow::Initialize()

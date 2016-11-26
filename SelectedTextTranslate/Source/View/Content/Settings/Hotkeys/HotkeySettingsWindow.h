@@ -5,7 +5,7 @@
 class HotkeySettingsWindow : public SettingsGroupWindow, public ModelHolder<HotkeySettings>
 {
 private:
-    int RenderHotkeysEditControl(Renderer* renderer, wstring title, int curX, int curY, int hotkey, function<void(DWORD)> hotkeySetter);
+    int RenderHotkeyEditControl(Renderer* renderer, wstring title, int curX, int curY, int hotkey, function<void(DWORD)> hotkeySetter);
 
 protected:
     void RenderSettingsContent(Renderer* renderer, Point contentPosition) override;
@@ -13,8 +13,6 @@ protected:
 public:
     HotkeySettingsWindow(WindowContext* context, Window* parentWindow);
     ~HotkeySettingsWindow() override;
-
-    void Initialize() override;
 
     Subscribeable<HotkeySettings> OnSettingsChanged;
 };

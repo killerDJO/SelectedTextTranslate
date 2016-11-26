@@ -7,7 +7,9 @@ HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* par
     this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
     this->normalColor = Colors::Gray;
     this->hoverColor = Colors::Black;
+    this->disabledColor = Colors::LightGray;
     this->text = wstring();
+    this->className = L"STT_HOVERTEXTBUTTON";
 }
 
 void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -43,6 +45,16 @@ Colors HoverTextButtonWindow::GetHoverColor() const
     return hoverColor;
 }
 
+void HoverTextButtonWindow::SetDisabledColor(Colors disabledColor)
+{
+    this->disabledColor = disabledColor;
+}
+
+Colors HoverTextButtonWindow::GetDisabledColor() const
+{
+    return disabledColor;
+}
+
 void HoverTextButtonWindow::SetFont(HFONT font)
 {
     AssertWindowNotInitialized();
@@ -74,11 +86,13 @@ void HoverTextButtonWindow::RenderStatesDeviceContext()
 
     stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
     stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
     deviceContextBuffer->Resize(windowSize);
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverColor);
+    RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Disabled], disabledColor);
 }
 
 void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors color) const

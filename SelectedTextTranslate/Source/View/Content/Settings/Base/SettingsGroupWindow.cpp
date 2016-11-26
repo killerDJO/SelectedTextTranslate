@@ -6,11 +6,12 @@
 SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
 {
-    this->isCollapsed = true;
+    this->state = SettingsGroupState::Collapsed;
     this->title = wstring();
     this->paddingX = this->paddingY = 5;
     this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->fontNormal).tmHeight);
     this->backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
+    this->className = L"STT_SETTINGS";
 }
 
 void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -36,20 +37,20 @@ wstring SettingsGroupWindow::GetTitle() const
     return title;
 }
 
-void SettingsGroupWindow::SetState(bool isCollapsed)
+void SettingsGroupWindow::SetState(SettingsGroupState state)
 {
     AssertWindowNotInitialized();
-    this->isCollapsed = isCollapsed;
+    this->state = state;
 }
 
-bool SettingsGroupWindow::IsCollapsed() const
+SettingsGroupState SettingsGroupWindow::GetState() const
 {
-    return isCollapsed;
+    return state;
 }
 
 void SettingsGroupWindow::Initialize()
 {
-    descriptor = isCollapsed
+    descriptor = state == SettingsGroupState::Collapsed
         ? WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.Width, lineHeight + paddingY * 2))
         : WindowDescriptor::CreateWindowDescriptor(position, Size(windowSize.Width, 0), OverflowModes::Fixed, OverflowModes::Stretch);
 
@@ -73,13 +74,13 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
     expandButton->SetDimensions(Point(windowWidth - iconSize - paddingX, curY - iconSize + 2), Size(iconSize, iconSize));
-    expandButton->SetNormalIconResource(isCollapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
-    expandButton->SetHoverIconResource(isCollapsed ? IDR_EXPAND : IDR_COLLAPSE);
+    expandButton->SetNormalIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
+    expandButton->SetHoverIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);
     expandButton->OnClick.Subscribe(&OnSettingsToggled);
     AddChildWindow(expandButton);
 
-    if(!isCollapsed)
+    if (state == SettingsGroupState::Expanded)
     {
         RenderSettingsContent(renderer, Point(paddingX * 2, curY + paddingY * 2));
         Rect contentBorderRect = Rect(Point(0, 0), Size(windowWidth, renderer->GetSize().Height));

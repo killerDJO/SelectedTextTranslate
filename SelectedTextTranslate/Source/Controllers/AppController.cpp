@@ -7,7 +7,8 @@ AppController::AppController(
     TextPlayer* textPlayer,
     TextExtractor* textExtractor,
     DictionaryService* dictionary,
-    SettingsProvider* settingsProvider)
+    SettingsProvider* settingsProvider,
+    HotkeyProvider* hotkeyProvider)
 {
     this->mainWindow = mainWindow;
     this->textPlayer = textPlayer;
@@ -16,6 +17,7 @@ AppController::AppController(
     this->dictionary = dictionary;
     this->trayIconProvider = trayIconProvider;
     this->settingsProvider = settingsProvider;
+    this->hotkeyProvider = hotkeyProvider;
 }
 
 void AppController::Initialize()
@@ -118,6 +120,7 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
 void AppController::SaveSettings(Settings settings) const
 {
     settingsProvider->UpdateSettings(settings);
+    hotkeyProvider->SetHotkeysSettings(settings.GetHotkeySettings());
     mainWindow->SetSettingsModel(settingsProvider->GetSettings());
     mainWindow->Render();
 }

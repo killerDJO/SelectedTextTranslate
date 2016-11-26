@@ -67,6 +67,9 @@ HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool
 
     switch (fontSize)
     {
+    case FontSizes::Medium:
+        fontSizeInPixels = 9;
+        break;
     case FontSizes::Normal:
         fontSizeInPixels = 10;
         break;

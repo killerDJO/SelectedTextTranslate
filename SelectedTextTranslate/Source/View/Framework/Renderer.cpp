@@ -164,10 +164,11 @@ void Renderer::IncreaseHeight(int heightToAdd)
     originalSize.Height += scaleProvider->Scale(heightToAdd);
 }
 
-void Renderer::UpdateSize(Size size)
+void Renderer::UpdateRenderedContentSize(Window* window)
 {
-    originalSize.Width = max(originalSize.Width, size.Width);
-    originalSize.Height = max(originalSize.Height, size.Height);
+    Rect windowRect = window->GetBoundingRect();
+    originalSize.Width = max(originalSize.Width, windowRect.GetRight());
+    originalSize.Height = max(originalSize.Height, windowRect.GetBottom());
 }
 
 Renderer::~Renderer()

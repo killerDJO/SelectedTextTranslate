@@ -96,19 +96,19 @@ void HeaderWindow::PrintHeaderAction(wstring actionDescription, wstring actionTe
         Point(originLineBottomRight.X + 1, curY));
 
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
-    HoverTextButtonWindow* forceTranslationButton = new HoverTextButtonWindow(context, this);
-    forceTranslationButton->SetFont(fontSmallUnderscored);
-    forceTranslationButton->SetPosition(Point(originLineBottomRight.X, curY - smallFontAscent));
-    forceTranslationButton->SetText(actionText);
-    forceTranslationButton->OnClick.Subscribe(actionCallback);
+    HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
+    headerActionButton->SetFont(fontSmallUnderscored);
+    headerActionButton->SetPosition(Point(originLineBottomRight.X, curY - smallFontAscent));
+    headerActionButton->SetText(actionText);
+    headerActionButton->OnClick.Subscribe(actionCallback);
 
-    AddChildWindow(forceTranslationButton);
+    AddChildWindow(headerActionButton);
 
     renderer->PrintText(
         L")",
         fontSmall,
         Colors::Gray,
-        Point(originLineBottomRight.X + forceTranslationButton->GetSize(true).Width, curY));
+        Point(headerActionButton->GetBoundingRect(true).GetRight(), curY));
 }
 
 HeaderWindow::~HeaderWindow()

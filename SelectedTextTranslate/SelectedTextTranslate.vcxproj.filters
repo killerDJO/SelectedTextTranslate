@@ -109,6 +109,27 @@
     <Filter Include="Source\View\Controls\Buttons\Base\Enums">
       <UniqueIdentifier>{8005affb-b6c5-4c06-b03b-57f0be139e65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Providers\Dto">
+      <UniqueIdentifier>{1c9de231-744a-4311-bd52-5e16eac50702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Content\Settings\Base">
+      <UniqueIdentifier>{ee30c734-2883-4024-9906-2ede6bdf5441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Content\Settings\Dto">
+      <UniqueIdentifier>{64e0d8ec-d732-4366-a074-369699311013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Content\Settings\Hotkeys">
+      <UniqueIdentifier>{8c8a0a75-e940-4f3d-bcd7-73eb2e0ff3b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Content\Settings\Base\Enums">
+      <UniqueIdentifier>{075b9ea0-a712-445a-a32e-9bff969cf7c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services\Settings">
+      <UniqueIdentifier>{9b4728f1-5dff-436a-af9b-b0be72c0ce62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services\Settings\Dto">
+      <UniqueIdentifier>{a6feafe2-182a-49b5-8e24-91128c89e306}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -258,20 +279,26 @@
     <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp">
       <Filter>Source\View\Controls\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\HotkeySettingsWindow.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp">
+      <Filter>Source\View\Providers\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.cpp">
+      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Dto\SettingsState.cpp">
+      <Filter>Source\View\Content\Settings\Dto</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\View\Content\Settings\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source\Services\Settings\Dto\Settings.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\Services\Settings\Dto</Filter>
     </ClCompile>
     <ClCompile Include="Source\Services\Settings\Dto\HotkeySettings.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\Services\Settings\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp">
+      <Filter>Source\Services\Settings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -451,33 +478,60 @@
     <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h">
       <Filter>Source\View\Controls\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\HotkeySettingsWindow.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
-    <ClInclude Include="Source\Services\Settings\Dto\Settings.h" />
-    <ClInclude Include="Source\Services\Settings\SettingsProvider.h" />
-    <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h" />
-    <ClInclude Include="Source\View\Framework\ModelHolder.h" />
+    <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h">
+      <Filter>Source\View\Providers\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.h">
+      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupState.h">
+      <Filter>Source\View\Content\Settings\Base\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h">
+      <Filter>Source\View\Content\Settings\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h">
+      <Filter>Source\View\Content\Settings\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Settings\Dto\Settings.h">
+      <Filter>Source\Services\Settings\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h">
+      <Filter>Source\Services\Settings\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Settings\SettingsProvider.h">
+      <Filter>Source\Services\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\ModelHolder.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Audio.emf">
-      <Filter>Resources</Filter>
-    </None>
-    <None Include="Resources\Audio_Inactive.emf">
-      <Filter>Resources</Filter>
-    </None>
     <None Include="Resources\translate.emf">
       <Filter>Resources</Filter>
     </None>
     <None Include="Resources\translate_inactive.emf">
       <Filter>Resources</Filter>
     </None>
-    <None Include="Resources\Audio.wmf" />
-    <None Include="Resources\Audio_Inactive.wmf" />
-    <None Include="Resources\expand-button.wmf" />
-    <None Include="Resources\expand-button-inactive.wmf" />
-    <None Include="Resources\collapse-button.wmf" />
-    <None Include="Resources\collapse-button-inactive.wmf" />
+    <None Include="Resources\Audio.wmf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Audio_Inactive.wmf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\collapse-button.wmf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\collapse-button-inactive.wmf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\expand-button.wmf">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\expand-button-inactive.wmf">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc">

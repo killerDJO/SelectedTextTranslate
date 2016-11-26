@@ -266,6 +266,13 @@ Point Window::GetPosition(bool downscale) const
     return !downscale ? position : Point(scaleProvider->Downscale(position.X), scaleProvider->Downscale(position.Y));
 }
 
+Rect Window::GetBoundingRect(bool downscale) const
+{
+    Point positon = GetPosition(downscale);
+    Size size = GetSize(downscale);
+    return Rect(positon, size);
+}
+
 void Window::Show()
 {
     isVisible = true;

@@ -11,6 +11,7 @@ HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, Window* par
     this->hoverIconResource = 0;
     this->normalIconResource = 0;
     this->backgroundBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    this->className = L"STT_HOVERICONBUTTON";
 }
 
 void HoverIconButtonWindow::SetDescriptor(WindowDescriptor descriptor)

@@ -7,6 +7,7 @@ class HoverButtonWindow : public ChildWindow
 {
 private:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+    void ChangeButtonState(ButtonStates newState);
 
 protected:
     ButtonStates state;
@@ -23,4 +24,8 @@ public:
     Subscribeable<> OnClick;
 
     void Initialize() override;
+
+    void Disable();
+    void Enable();
+    bool IsDisabled() const;
 };

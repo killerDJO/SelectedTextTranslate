@@ -13,6 +13,8 @@ ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     this->fontItalic = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, true);
     this->fontSmall = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small);
     this->grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+
+    this->className = L"STT_CONTENT";
 }
 
 int ContentWindow::GetLineHeight() const

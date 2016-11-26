@@ -7,11 +7,17 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
 {
     this->className = HOTKEY_CLASS;
     this->currentHotkey = 0;
-    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
     this->padding = 3;
     this->borderWidth = 1;
     this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->font).tmHeight);
     this->hasFocus = false;
+
+    this->controlToDisplayNameMap = vector<pair<DWORD, wstring>>();
+    this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_CONTROL, L"CTRL"));
+    this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_ALT, L"ALT"));
+    this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_SHIFT, L"SHIFT"));
+    this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_EXT, L"EXT"));
 }
 
 void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -152,6 +158,7 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         RenderToBuffer();
         ShowCustomCaret();
         InvalidateRect(windowHandle, nullptr, TRUE);
+        context->GetHotkeyProvider()->SuspendHotkeys();
         return TRUE;
     }
 
@@ -161,6 +168,7 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         RenderToBuffer();
         AssertCriticalWinApiResult(HideCaret(windowHandle));
         InvalidateRect(windowHandle, nullptr, TRUE);
+        context->GetHotkeyProvider()->EnableHotkeys();
         return TRUE;
     }
 
@@ -190,7 +198,25 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
     {
         int procedureResult = CallBaseWindowProcedure(message, wParam, lParam);
         currentHotkey = SendMessage(windowHandle, HKM_GETHOTKEY, 0, 0);
-        OnHotkeyChanged.Notify(currentHotkey);
+
+        int virtualCode = LOBYTE(LOWORD(currentHotkey));
+        int modifier = HIBYTE(LOWORD(currentHotkey));
+
+        if(message == WM_KEYUP)
+        {
+            OnHotkeyChanged.Notify(currentHotkey);
+        }
+        else
+        {
+            bool isModifierInvalid = modifier == 0 || (modifier & HOTKEYF_EXT) == HOTKEYF_EXT;
+            bool isKeyInvalid = virtualCode != 0 && MapVirtualKey(virtualCode, MAPVK_VK_TO_CHAR) == 0;
+            if (isModifierInvalid || isKeyInvalid)
+            {
+                currentHotkey = 0;
+                SendMessage(windowHandle, HKM_SETHOTKEY, 0, 0);
+            }
+        }
+
         RenderToBuffer();
         return procedureResult;
     }
@@ -215,24 +241,13 @@ wstring HotKeyInputWindow::GetHotkeyDisplayString() const
     int modifier = HIBYTE(LOWORD(currentHotkey));
     int key = LOBYTE(LOWORD(currentHotkey));
 
-    if ((modifier & HOTKEYF_CONTROL) == HOTKEYF_CONTROL)
+    for(size_t i = 0; i < controlToDisplayNameMap.size(); ++i)
     {
-        hotkeyDisplay += L"CTRL + ";
-    }
-
-    if ((modifier & HOTKEYF_ALT) == HOTKEYF_ALT)
-    {
-        hotkeyDisplay += L"ALT + ";
-    }
-
-    if ((modifier & HOTKEYF_SHIFT) == HOTKEYF_SHIFT)
-    {
-        hotkeyDisplay += L"SHIFT + ";
-    }
-
-    if ((modifier & HOTKEYF_EXT) == HOTKEYF_EXT)
-    {
-        hotkeyDisplay += L"EXT + ";
+        DWORD control = controlToDisplayNameMap[i].first;
+        if((modifier & control) == control)
+        {
+            hotkeyDisplay += controlToDisplayNameMap[i].second + L" + ";
+        }
     }
 
     DWORD keyChar = MapVirtualKey(key, MAPVK_VK_TO_CHAR);
@@ -256,4 +271,5 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 
 HotKeyInputWindow::~HotKeyInputWindow()
 {
+    context->GetHotkeyProvider()->EnableHotkeys();
 }

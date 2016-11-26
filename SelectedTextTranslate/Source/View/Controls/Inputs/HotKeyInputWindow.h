@@ -14,6 +14,8 @@ private:
 
     bool hasFocus;
 
+    vector<pair<DWORD, wstring>> controlToDisplayNameMap;
+
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
     void SubclassNativeControl();

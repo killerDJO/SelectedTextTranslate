@@ -52,8 +52,10 @@ int Application::Run(HINSTANCE hInstance) const
 int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
 {
     SettingsProvider settingsProvider = SettingsProvider(logger);
-    Settings s = settingsProvider.GetSettings();
-    HotkeyProvider hotkeyProvider = HotkeyProvider();
+    Settings settings = settingsProvider.GetSettings();
+
+    HotkeyProvider hotkeyProvider = HotkeyProvider(settings.GetHotkeySettings());
+
     TrayIconProvider trayIconProvider = TrayIconProvider(logger, &hotkeyProvider, hInstance);
 
     SqliteProvider sqliteProvider = SqliteProvider();
@@ -74,11 +76,12 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         &scrollProvider,
         &scaleProvider,
         &deviceContextProvider,
+        &hotkeyProvider,
         &trayIconProvider,
         &renderingContext,
         logger);
 
-    MainWindow mainWindow = MainWindow(&windowContext, &hotkeyProvider);
+    MainWindow mainWindow = MainWindow(&windowContext);
     mainWindow.SetDescriptor(GetMainWindowDescriptor(&scaleProvider));
 
     AppController appController = AppController(
@@ -88,7 +91,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         &textPlayer,
         &textExtractor,
         &dictionarySerivce,
-        &settingsProvider);
+        &settingsProvider,
+        &hotkeyProvider);
 
     trayIconProvider.Initialize();
     mainWindow.Initialize();

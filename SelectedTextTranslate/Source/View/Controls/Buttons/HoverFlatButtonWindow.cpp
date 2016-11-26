@@ -8,6 +8,7 @@ HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* par
     this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
     this->text = wstring();
     this->padding = 3;
+    this->className = L"STT_HOVERFLATBUTTON";
 }
 
 void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -58,32 +59,6 @@ int HoverFlatButtonWindow::GetTextBaseline() const
 {
     int fontDescent = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(font).tmDescent);
     return GetSize(true).Height - padding - fontDescent;
-}
-
-void HoverFlatButtonWindow::Disable()
-{
-    ChangeButtonState(ButtonStates::Disabled);
-}
-
-void HoverFlatButtonWindow::Enable()
-{
-    ChangeButtonState(ButtonStates::Normal);
-}
-
-void HoverFlatButtonWindow::ChangeButtonState(ButtonStates newState)
-{
-    state = newState;
-
-    if (windowState != WindowStates::New)
-    {
-        RenderContent(nullptr);
-        Draw();
-    }
-}
-
-bool HoverFlatButtonWindow::IsDisabled() const
-{
-    return state == ButtonStates::Disabled;
 }
 
 void HoverFlatButtonWindow::RenderStatesDeviceContext()

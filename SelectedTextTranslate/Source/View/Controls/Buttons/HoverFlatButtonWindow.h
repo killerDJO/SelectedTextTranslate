@@ -9,7 +9,6 @@ private:
     int padding;
 
     void RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const;
-    void ChangeButtonState(ButtonStates newState);
 
 protected:
     void RenderStatesDeviceContext() override;
@@ -31,8 +30,4 @@ public:
     int GetPadding() const;
 
     int GetTextBaseline() const;
-
-    void Disable();
-    void Enable();
-    bool IsDisabled() const;
 };

@@ -57,6 +57,7 @@ public:
     Size GetAvailableClientSize() const;
     Size GetContentSize() const;
     Point GetPosition(bool downscale = false) const;
+    Rect GetBoundingRect(bool downscale = false) const;
 
     void Show();
     void Hide();

@@ -1,11 +1,12 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
 #include "Services\Settings\Dto\Settings.h"
+#include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
 
 class SettingsGroupWindow : public ContentWindow
 {
 protected:
-    bool isCollapsed;
+    SettingsGroupState state;
     wstring title;
     Settings settings;
 
@@ -24,8 +25,8 @@ public:
     void SetTitle(wstring title);
     wstring GetTitle() const;
 
-    void SetState(bool isCollapsed);
-    bool IsCollapsed() const;
+    void SetState(SettingsGroupState state);
+    SettingsGroupState GetState() const;
 
     void Initialize() override;
 

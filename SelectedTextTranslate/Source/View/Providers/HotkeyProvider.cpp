@@ -1,75 +1,114 @@
 #include "View\Providers\HotkeyProvider.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-HotkeyProvider::HotkeyProvider()
+HotkeyProvider::HotkeyProvider(HotkeySettings settings)
 {
-    this->hotkeyCallbacks = map<int, function<void()>>();
+    this->hotkeysRegistry = vector<HotkeyInfo>();
+    this->isSuspended = false;
+    this->hotkeyIdToHotkeyMap = map<int, int>();
+
+    SetHotkeysSettings(settings);
 }
 
-void HotkeyProvider::RegisterHotkeyCallback(int hotkeyId, function<void()> pressedCallback)
+void HotkeyProvider::SetHotkeysSettings(HotkeySettings settings)
 {
-    hotkeyCallbacks[hotkeyId] = pressedCallback;
+    hotkeyIdToHotkeyMap[TranslateHotkeyId] = settings.GetTranslateHotkey();
+    hotkeyIdToHotkeyMap[PlayTextHotkeyId] = settings.GetPlayTextHotkey();
+    hotkeyIdToHotkeyMap[ZoomInHotkeyPrimaryId] = settings.GetZoomInHotkey();
+    hotkeyIdToHotkeyMap[ZoomOutHotkeyPrimaryId] = settings.GetZoomOutHotkey();
+
+    SuspendHotkeys();
+    UpdateHotkeysInfo();
+    EnableHotkeys();
 }
 
-void HotkeyProvider::UnregisterHotkeyCallback(int hotkeyId)
+void HotkeyProvider::RegisterCustomHotkey(HotkeyInfo hotkeyInfo)
 {
-    if(hotkeyCallbacks.count(hotkeyId) != 0)
+    if(!isSuspended)
     {
-        hotkeyCallbacks.erase(hotkeyId);
+        hotkeyInfo.Register();
     }
-}
-
-void HotkeyProvider::RegisterCustomHotkey(HWND windowHandle, function<void()> pressedCallback, int hotkeyId, UINT modifiers, UINT virtualCode)
-{
-    AssertWinApiResult(RegisterHotKey(windowHandle, hotkeyId, modifiers, virtualCode));
-    RegisterHotkeyCallback(hotkeyId, pressedCallback);
+    
+    hotkeysRegistry.push_back(hotkeyInfo);
 }
 
 void HotkeyProvider::UnregisterCustomHotkey(HWND windowHandle, int hotkeyId)
 {
-    AssertWinApiResult(UnregisterHotKey(windowHandle, hotkeyId));
-    UnregisterHotkeyCallback(hotkeyId);
+    for(size_t i = 0; i < hotkeysRegistry.size(); ++i)
+    {
+        HotkeyInfo hotkeyInfo = hotkeysRegistry[i];
+        if(hotkeyInfo.GetHotkeyId() == hotkeyId && hotkeyInfo.GetWindowHandle() == windowHandle)
+        {
+            hotkeyInfo.Unregister();
+            hotkeysRegistry.erase(hotkeysRegistry.begin() + i);
+            break;
+        }
+    }
 }
 
 void HotkeyProvider::RegisterTranslateHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterCustomHotkey(windowHandle, pressedCallback, TranslateHotkeyId, MOD_CONTROL, 0x54/*T*/);
+    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, TranslateHotkeyId, hotkeyIdToHotkeyMap[TranslateHotkeyId]));
 }
 
 void HotkeyProvider::RegisterPlayTextHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterCustomHotkey(windowHandle, pressedCallback, PlayTextHotkeyId, MOD_CONTROL, 0x52/*R*/);
+    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, PlayTextHotkeyId, hotkeyIdToHotkeyMap[PlayTextHotkeyId]));
 }
 
 void HotkeyProvider::RegisterZoomInHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomInHotkeyPrimaryId, MOD_CONTROL, 0x6B/*Numpad plus*/);
-    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomInHotkeySecondaryId, MOD_CONTROL, VK_OEM_PLUS);
+    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomInHotkeyPrimaryId, hotkeyIdToHotkeyMap[ZoomInHotkeyPrimaryId]));
 }
 
 void HotkeyProvider::RegisterZoomOutHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomOutHotkeyPrimaryId, MOD_CONTROL, 0x6d/*Numpad minus*/);
-    RegisterCustomHotkey(windowHandle, pressedCallback, ZoomOutHotkeySecondaryId, MOD_CONTROL, VK_OEM_MINUS);
+    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomOutHotkeyPrimaryId, hotkeyIdToHotkeyMap[ZoomOutHotkeyPrimaryId]));
 }
 
 void HotkeyProvider::UnregisterZoomInHotkey(HWND windowHandle)
 {
     UnregisterCustomHotkey(windowHandle, ZoomInHotkeyPrimaryId);
-    UnregisterCustomHotkey(windowHandle, ZoomInHotkeySecondaryId);
 }
 
 void HotkeyProvider::UnregisterZoomOutHotkey(HWND windowHandle)
 {
     UnregisterCustomHotkey(windowHandle, ZoomOutHotkeyPrimaryId);
-    UnregisterCustomHotkey(windowHandle, ZoomOutHotkeySecondaryId);
+}
+
+void HotkeyProvider::SuspendHotkeys()
+{
+    isSuspended = true;
+    for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
+    {
+        hotkeysRegistry[i].Unregister();
+    }
+}
+
+void HotkeyProvider::EnableHotkeys()
+{
+    isSuspended = false;
+    for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
+    {
+        hotkeysRegistry[i].Register();
+    }
+}
+
+void HotkeyProvider::UpdateHotkeysInfo()
+{
+    for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
+    {
+        hotkeysRegistry[i].UpdateHotkey(hotkeyIdToHotkeyMap[hotkeysRegistry[i].GetHotkeyId()]);
+    }
 }
 
 void HotkeyProvider::ProcessHotkey(DWORD hotkeyId)
 {
-    if(hotkeyCallbacks.count(hotkeyId) != 0)
+    for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
     {
-        hotkeyCallbacks[hotkeyId]();
+        if (hotkeysRegistry[i].GetHotkeyId() == hotkeyId)
+        {
+            hotkeysRegistry[i].GetPressedCallback()();
+        }
     }
 }
 

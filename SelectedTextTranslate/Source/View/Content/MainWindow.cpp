@@ -3,11 +3,9 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
 
-MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
+MainWindow::MainWindow(WindowContext* context)
     : Window(context)
 {
-    this->hotkeyProvider = hotkeyProvider;
-
     this->className = L"STT_MAIN";
     this->currentView = ApplicationViews::Hidden;
 
@@ -273,36 +271,34 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         }
 
         case WM_HOTKEY:
-            hotkeyProvider->ProcessHotkey(wParam);
+            context->GetHotkeyProvider()->ProcessHotkey(wParam);
             return Window::WindowProcedure(message, wParam, lParam);
 
-        case WM_KILLFOCUS:
+        case WM_ACTIVATE:
         {
-            HWND windowWithFocus = GetParent((HWND)wParam);
-            HWND currentWindow = GetHandle();
-            if (windowWithFocus != currentWindow && !IsChild(currentWindow, windowWithFocus))
+            if(wParam == WA_INACTIVE)
             {
                 Minimize();
             }
-            break;
+            return TRUE;
         }
 
         case WM_SHOWWINDOW:
         {
             if (wParam == TRUE)
             {
-                hotkeyProvider->RegisterZoomInHotkey(
+                context->GetHotkeyProvider()->RegisterZoomInHotkey(
                     GetHandle(),
                     [=]() -> void { Scale(0.1); });
 
-                hotkeyProvider->RegisterZoomOutHotkey(
+                context->GetHotkeyProvider()->RegisterZoomOutHotkey(
                     GetHandle(),
                     [=]() -> void { Scale(-0.1); });
             }
             else
             {
-                hotkeyProvider->UnregisterZoomInHotkey(GetHandle());
-                hotkeyProvider->UnregisterZoomOutHotkey(GetHandle());
+                context->GetHotkeyProvider()->UnregisterZoomInHotkey(GetHandle());
+                context->GetHotkeyProvider()->UnregisterZoomOutHotkey(GetHandle());
             }
             break;
         }

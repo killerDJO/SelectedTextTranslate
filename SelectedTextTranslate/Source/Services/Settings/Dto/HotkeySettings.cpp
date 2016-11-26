@@ -10,10 +10,10 @@ HotkeySettings::HotkeySettings(DWORD translateHotkey, DWORD playTextHotkey, DWOR
 
 HotkeySettings::HotkeySettings()
 {
-    this->translateHotkey = 0;
-    this->playTextHotkey = 0;
-    this->zoomInHotkey = 0;
-    this->zoomOutHotkey = 0;
+    this->translateHotkey = 596 /* CTRL + T */;
+    this->playTextHotkey = 594 /* CTRL + R */;
+    this->zoomInHotkey = 619 /* CTRL + NUM_PLUS */;
+    this->zoomOutHotkey = 621 /* CTRL + NUM_MINUS */;
 }
 
 DWORD HotkeySettings::GetTranslateHotkey() const

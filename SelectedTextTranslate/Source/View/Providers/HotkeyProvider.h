@@ -1,4 +1,6 @@
 #pragma once
+#include "View\Providers\Dto\HotkeyInfo.h"
+#include "Services\Settings\Dto\HotkeySettings.h"
 
 class HotkeyProvider
 {
@@ -7,20 +9,20 @@ private:
     const int PlayTextHotkeyId = 3004;
     const int ZoomInHotkeyPrimaryId = 3006;
     const int ZoomOutHotkeyPrimaryId = 3007;
-    const int ZoomInHotkeySecondaryId = 3008;
-    const int ZoomOutHotkeySecondaryId = 3009;
 
-    map<int, function<void()>> hotkeyCallbacks;
+    map<int, int> hotkeyIdToHotkeyMap;
+    vector<HotkeyInfo> hotkeysRegistry;
+    bool isSuspended;
 
-    void RegisterHotkeyCallback(int hotkeyId, function<void()> pressedCallback);
-    void UnregisterHotkeyCallback(int hotkeyId);
-
-    void RegisterCustomHotkey(HWND windowHandle, function<void()> pressedCallback, int hotkeyId, UINT modifiers, UINT virtualCode);
+    void RegisterCustomHotkey(HotkeyInfo hotkeyInfo);
     void UnregisterCustomHotkey(HWND windowHandle, int hotkeyId);
+    void UpdateHotkeysInfo();
 
 public:
-    HotkeyProvider();
+    HotkeyProvider(HotkeySettings settings);
     ~HotkeyProvider();
+
+    void SetHotkeysSettings(HotkeySettings settings);
 
     void RegisterTranslateHotkey(HWND windowHandle, function<void()> pressedCallback);
     void RegisterPlayTextHotkey(HWND windowHandle, function<void()> pressedCallback);
@@ -30,6 +32,9 @@ public:
 
     void UnregisterZoomInHotkey(HWND windowHandle);
     void UnregisterZoomOutHotkey(HWND windowHandle);
+
+    void SuspendHotkeys();
+    void EnableHotkeys();
 
     void ProcessHotkey(DWORD hotkeyId);
 };

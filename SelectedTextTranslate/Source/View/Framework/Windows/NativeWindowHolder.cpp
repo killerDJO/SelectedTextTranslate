@@ -1,5 +1,6 @@
 #include "View\Framework\Windows\NativeWindowHolder.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
 {
@@ -13,6 +14,11 @@ NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
 void NativeWindowHolder::Initialize()
 {
     WNDCLASSEX windowClass = { 0 };
+
+    if(className == nullptr)
+    {
+        throw SelectedTextTranslateFatalException(L"Window class name should be provided.");
+    }
 
     if (!GetClassInfoEx(instance, className, &windowClass))
     {

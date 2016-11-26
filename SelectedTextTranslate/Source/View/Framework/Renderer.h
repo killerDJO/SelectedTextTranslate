@@ -5,6 +5,7 @@
 
 class RenderingContext;
 class ScrollProvider;
+class Window;
 
 class Renderer
 {
@@ -40,7 +41,7 @@ public:
 
     void IncreaseWidth(int widthToAdd);
     void IncreaseHeight(int heightToAdd);
-    void UpdateSize(Size size);
+    void UpdateRenderedContentSize(Window* window);
 
     void Render(HDC deviceContext, Size deviceContextSize);
     void Render(DeviceContextBuffer* deviceContextBuffer);
