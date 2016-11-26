@@ -54,6 +54,12 @@ int HoverFlatButtonWindow::GetPadding() const
     return padding;
 }
 
+int HoverFlatButtonWindow::GetTextBaseline() const
+{
+    int fontDescent = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(font).tmDescent);
+    return GetSize(true).Height - padding - fontDescent;
+}
+
 void HoverFlatButtonWindow::Disable()
 {
     ChangeButtonState(ButtonStates::Disabled);
@@ -68,13 +74,12 @@ void HoverFlatButtonWindow::ChangeButtonState(ButtonStates newState)
 {
     state = newState;
 
-    if (windowState == WindowStates::Initialized)
+    if (windowState != WindowStates::New)
     {
         RenderContent(nullptr);
         Draw();
     }
 }
-
 
 bool HoverFlatButtonWindow::IsDisabled() const
 {

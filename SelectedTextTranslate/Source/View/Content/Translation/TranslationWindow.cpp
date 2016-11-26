@@ -44,9 +44,7 @@ void TranslationWindow::Initialize()
 
 void TranslationWindow::SetModel(TranslateResult translateResult)
 {
-    AssertWindowInitialized();
-
-    this->translateResult = translateResult;
+    ModelHolder<TranslateResult>::SetModel(translateResult);
     this->headerWindow->SetModel(translateResult);
     this->translateResultWindow->SetModel(translateResult);
 }
@@ -59,7 +57,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
 
     Size contentSize;
 
-    if (translateResult.IsEmptyResult())
+    if (model.IsEmptyResult())
     {
         translateResultWindow->Hide();
 
@@ -101,7 +99,7 @@ void TranslationWindow::Resize()
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    if(translateResult.IsEmptyResult())
+    if(model.IsEmptyResult())
     {
         renderer->DrawRect(Rect(0, headerHeight, windowSize.Width, windowSize.Height - headerHeight), disabledBackgroundBrush);
     }

@@ -30,6 +30,8 @@ public:
     void SetPadding(int padding);
     int GetPadding() const;
 
+    int GetTextBaseline() const;
+
     void Disable();
     void Enable();
     bool IsDisabled() const;

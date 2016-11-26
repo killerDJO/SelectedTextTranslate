@@ -2,12 +2,10 @@
 #include "View\Content\Base\ContentWindow.h"
 #include "Services\Dictionary\Dto\DictionaryRecord.h"
 #include "Utilities\Subscribeable.h"
+#include "View\Framework\ModelHolder.h"
 
-class DictionaryWindow : public ContentWindow
+class DictionaryWindow : public ContentWindow, public ModelHolder<vector<DictionaryRecord>>
 {
-private:
-    vector<DictionaryRecord> dictionaryRecords;
-
 protected:
     Size RenderContent(Renderer* renderer) override;
 
@@ -16,6 +14,4 @@ public:
     ~DictionaryWindow() override;
 
     Subscribeable<int> OnShowTranslation;
-
-    void SetModel(vector<DictionaryRecord> dictionaryRecords);
 };

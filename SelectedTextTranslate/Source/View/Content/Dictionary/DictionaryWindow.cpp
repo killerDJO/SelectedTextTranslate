@@ -7,13 +7,6 @@ DictionaryWindow::DictionaryWindow(WindowContext* context, Window* parentWindow)
     this->OnShowTranslation = Subscribeable<int>();
 }
 
-void DictionaryWindow::SetModel(vector<DictionaryRecord> dictionaryRecords)
-{
-    AssertWindowInitialized();
-
-    this->dictionaryRecords = dictionaryRecords;
-}
-
 Size DictionaryWindow::RenderContent(Renderer* renderer)
 {
     ContentWindow::RenderContent(renderer);
@@ -22,16 +15,16 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
     int normalFontAscent = renderer->GetFontAscent(fontNormal);
     int curY = paddingY / 2 + normalFontAscent;
 
-    size_t countToShow = min(200, dictionaryRecords.size());
+    size_t countToShow = min(200, model.size());
 
-    wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(dictionaryRecords.size());
+    wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(model.size());
     renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, Point(paddingX, curY));
 
     curY += lineHeight;
 
     for (size_t i = 0; i < countToShow; ++i)
     {
-        DictionaryRecord record = dictionaryRecords[i];
+        DictionaryRecord record = model[i];
         Point lineBottomRight = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, Point(paddingX * 2 + 4, curY));
         renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
 

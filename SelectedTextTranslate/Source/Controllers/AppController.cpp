@@ -6,7 +6,8 @@ AppController::AppController(
     TranslationService* translator,
     TextPlayer* textPlayer,
     TextExtractor* textExtractor,
-    DictionaryService* dictionary)
+    DictionaryService* dictionary,
+    SettingsProvider* settingsProvider)
 {
     this->mainWindow = mainWindow;
     this->textPlayer = textPlayer;
@@ -14,6 +15,7 @@ AppController::AppController(
     this->textExtractor = textExtractor;
     this->dictionary = dictionary;
     this->trayIconProvider = trayIconProvider;
+    this->settingsProvider = settingsProvider;
 }
 
 void AppController::Initialize()
@@ -23,6 +25,8 @@ void AppController::Initialize()
     mainWindow->OnTranslateSuggestion.Subscribe(bind(&AppController::TranslateSuggestion, this));
     mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultCategory, this, placeholders::_1));
     mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
+    mainWindow->OnSaveSettings.Subscribe(bind(&AppController::SaveSettings, this, placeholders::_1));
+    mainWindow->OnSettingsStateChanged.Subscribe(bind(&AppController::ShowSettings, this));
 
     trayIconProvider->OnExit.Subscribe(bind(&AppController::Exit, this));
     trayIconProvider->OnPlaySelectedText.Subscribe(bind(&AppController::PlaySelectedText, this));
@@ -93,6 +97,7 @@ void AppController::ShowDictionary() const
 void AppController::ShowSettings() const
 {
     mainWindow->SetCurrentView(ApplicationViews::Settings);
+    mainWindow->SetSettingsModel(settingsProvider->GetSettings());
     mainWindow->Render();
     mainWindow->Maximize();
 }
@@ -107,6 +112,13 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);
 
+    mainWindow->Render();
+}
+
+void AppController::SaveSettings(Settings settings) const
+{
+    settingsProvider->UpdateSettings(settings);
+    mainWindow->SetSettingsModel(settingsProvider->GetSettings());
     mainWindow->Render();
 }
 

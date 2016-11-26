@@ -20,6 +20,8 @@ MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
     this->OnTranslateSuggestion = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
     this->OnShowTranslation = Subscribeable<int>();
+    this->OnSettingsStateChanged = Subscribeable<>();
+    this->OnSaveSettings = Subscribeable<Settings>();
 }
 
 void MainWindow::Initialize()
@@ -79,8 +81,11 @@ void MainWindow::CreateViews()
 
     settingsWindow = new SettingsWindow(context, this);
     settingsWindow->SetDescriptor(windowDescriptor);
+    settingsWindow->OnSettingsStateChanged.Subscribe(&OnSettingsStateChanged);
+    settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
     AddChildWindow(settingsWindow);
     settingsWindow->Hide();
+    settingsWindow->SetModel(settings);
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -129,6 +134,14 @@ void MainWindow::SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords)
 
     this->dictionaryRecords = dictionaryRecords;
     this->dictionaryWindow->SetModel(dictionaryRecords);
+}
+
+void MainWindow::SetSettingsModel(Settings settings)
+{
+    AssertWindowInitialized();
+
+    this->settings = settings;
+    this->settingsWindow->SetModel(settings);
 }
 
 void MainWindow::SetCurrentView(ApplicationViews applicationView)

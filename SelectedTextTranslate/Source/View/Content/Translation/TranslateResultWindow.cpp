@@ -9,13 +9,6 @@ TranslateResultWindow::TranslateResultWindow(WindowContext* context, Window* par
     this->OnExpandTranslationResult = Subscribeable<int>();
 }
 
-void TranslateResultWindow::SetModel(TranslateResult translateResult)
-{
-    AssertWindowInitialized();
-
-    this->translateResult = translateResult;
-}
-
 Size TranslateResultWindow::RenderContent(Renderer* renderer)
 {
     ContentWindow::RenderContent(renderer);
@@ -23,7 +16,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
 
     int curY = lineHeight;
 
-    vector<TranslateResultCategory> translateCategories = translateResult.GetTranslateCategories();
+    vector<TranslateResultCategory> translateCategories = model.GetTranslateCategories();
     for (size_t i = 0; i < translateCategories.size(); ++i)
     {
         TranslateResultCategory category = translateCategories[i];

@@ -1,11 +1,13 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
+#include "Services\Settings\Dto\Settings.h"
 
 class SettingsGroupWindow : public ContentWindow
 {
 protected:
     bool isCollapsed;
     wstring title;
+    Settings settings;
 
     HBRUSH backgroundBrush;
 
@@ -21,9 +23,11 @@ public:
 
     void SetTitle(wstring title);
     wstring GetTitle() const;
+
     void SetState(bool isCollapsed);
     bool IsCollapsed() const;
 
     void Initialize() override;
+
     Subscribeable<> OnSettingsToggled;
 };

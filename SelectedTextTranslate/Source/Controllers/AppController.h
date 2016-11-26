@@ -6,6 +6,7 @@
 #include "Services\Dictionary\DictionaryService.h"
 #include "View\Content\MainWindow.h"
 #include "View\Providers\TrayIconProvider.h"
+#include "Services\Settings\SettingsProvider.h"
 
 class AppController
 {
@@ -17,6 +18,7 @@ private:
     TranslationService* translationService;
     TextPlayer* textPlayer;
     DictionaryService* dictionary;
+    SettingsProvider* settingsProvider;
 
     TrayIconProvider* trayIconProvider;
 
@@ -27,7 +29,8 @@ public:
         TranslationService* translator,
         TextPlayer* textPlayer,
         TextExtractor* textExtractor,
-        DictionaryService* dictionaryService);
+        DictionaryService* dictionaryService,
+        SettingsProvider* settingsProvider);
     ~AppController();
 
     void Initialize();
@@ -43,6 +46,8 @@ public:
     void ShowDictionary() const;
     void ShowSettings() const;
     void TranslateWordFromDictionary(int wordInDictionaryIndex);
+
+    void SaveSettings(Settings settings) const;
 
     void Exit() const;
 };

@@ -69,6 +69,17 @@ int HotKeyInputWindow::GetLineHeight() const
     return lineHeight;
 }
 
+void HotKeyInputWindow::SetDefaultHotkey(DWORD hotkey)
+{
+    AssertWindowNotInitialized();
+    currentHotkey = hotkey;
+}
+
+DWORD HotKeyInputWindow::GetDefaultHotKey() const
+{
+    return currentHotkey;
+}
+
 void HotKeyInputWindow::Initialize()
 {
     descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(200, lineHeight + padding * 2 + borderWidth * 2));
@@ -98,6 +109,8 @@ void HotKeyInputWindow::SubclassNativeControl()
     AssertCriticalWinApiResult(SetWindowLong(windowHandle, GWL_EXSTYLE, exStyle));
 
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER));
+
+    SendMessage(windowHandle, HKM_SETHOTKEY, currentHotkey, 0);
 }
 
 Size HotKeyInputWindow::RenderContent(Renderer* renderer)
@@ -177,6 +190,7 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
     {
         int procedureResult = CallBaseWindowProcedure(message, wParam, lParam);
         currentHotkey = SendMessage(windowHandle, HKM_GETHOTKEY, 0, 0);
+        OnHotkeyChanged.Notify(currentHotkey);
         RenderToBuffer();
         return procedureResult;
     }

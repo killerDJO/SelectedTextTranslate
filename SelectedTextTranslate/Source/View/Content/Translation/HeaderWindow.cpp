@@ -13,19 +13,12 @@ HeaderWindow::HeaderWindow(WindowContext* context, Window* parentWindow)
     this->fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);
 }
 
-void HeaderWindow::SetModel(TranslateResult translateResult)
-{
-    AssertWindowInitialized();
-
-    this->translateResult = translateResult;
-}
-
 Size HeaderWindow::RenderContent(Renderer* renderer)
 {
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    if(!translateResult.IsEmptyResult())
+    if(!model.IsEmptyResult())
     {
         return RenderTranslationResult(renderer);
     }
@@ -40,7 +33,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
     int curY = lineHeight;
 
-    TranslateResultSentence sentence = translateResult.GetSentence();
+    TranslateResultSentence sentence = model.GetSentence();
     renderer->PrintText(sentence.GetTranslation(), fontHeader, Colors::Black, Point(paddingX, curY));
 
     curY += lineHeight;
@@ -60,7 +53,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
         Colors::Gray,
         Point(paddingX + imageSize + 2, curY));
 
-    if (translateResult.IsInputCorrected())
+    if (model.IsInputCorrected())
     {
         PrintInputCorrectionWarning(sentence.GetInput(), curY, originLintBottomRight, renderer);
     }

@@ -2,13 +2,12 @@
 #include "View\Content\Base\ContentWindow.h"
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
+#include "View\Framework\ModelHolder.h"
 
-class TranslateResultWindow : public ContentWindow
+class TranslateResultWindow : public ContentWindow, public ModelHolder<TranslateResult>
 {
 private:
     HFONT fontUnderscored;
-
-    TranslateResult translateResult;
 
     int CreateExpandButton(TranslateResultCategory category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
 
@@ -20,6 +19,4 @@ public:
     ~TranslateResultWindow() override;
 
     Subscribeable<int> OnExpandTranslationResult;
-
-    void SetModel(TranslateResult translateResult);
 };

@@ -16,10 +16,10 @@ DictionaryRecord::DictionaryRecord()
     this->word = wstring();
     this->count = 0;
     this->json = wstring();
-    this->isForcedTranslation = 0;
+    this->isForcedTranslation = false;
     this->createdDate = 0;
     this->updatedDate = 0;
-    this->isActive = 0;
+    this->isActive = false;
 }
 
 wstring DictionaryRecord::GetWord() const

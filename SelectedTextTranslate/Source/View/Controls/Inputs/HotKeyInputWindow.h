@@ -34,12 +34,20 @@ public:
 
     void SetFont(HFONT font);
     HFONT GetFont() const;
+
     void SetPadding(int padding);
     int GetPadding() const;
+
     void SetBorderWidth(int borderWidth);
     int GetBorderWidth() const;
+
     void SetLineHeight(int lineHeight);
     int GetLineHeight() const;
 
+    void SetDefaultHotkey(DWORD hotkey);
+    DWORD GetDefaultHotKey() const;
+
     void Initialize() override;
+
+    Subscribeable<DWORD> OnHotkeyChanged;
 };

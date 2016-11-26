@@ -2,13 +2,12 @@
 #include "View\Content\Base\ContentWindow.h"
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
+#include "View\Framework\ModelHolder.h"
 
-class HeaderWindow : public ContentWindow
+class HeaderWindow : public ContentWindow, public ModelHolder<TranslateResult>
 {
 private:
     HFONT fontSmallUnderscored;
-
-    TranslateResult translateResult;
 
     void PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
     void PrintSuggestion(wstring suggestion, int curY, Point originLineBottomRight, Renderer* renderer);
@@ -27,6 +26,4 @@ public:
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
     Subscribeable<> OnTranslateSuggestion;
-
-    void SetModel(TranslateResult translateResult);
 };

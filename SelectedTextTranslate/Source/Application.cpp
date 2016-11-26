@@ -6,6 +6,7 @@
 #include "Services\Dictionary\DictionaryService.h"
 #include "Providers\RequestProvider.h"
 #include "View\Content\MainWindow.h"
+#include "Services\Settings\SettingsProvider.h"
 
 Application::Application()
 {
@@ -50,6 +51,8 @@ int Application::Run(HINSTANCE hInstance) const
 
 int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
 {
+    SettingsProvider settingsProvider = SettingsProvider(logger);
+    Settings s = settingsProvider.GetSettings();
     HotkeyProvider hotkeyProvider = HotkeyProvider();
     TrayIconProvider trayIconProvider = TrayIconProvider(logger, &hotkeyProvider, hInstance);
 
@@ -84,7 +87,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         &translationService,
         &textPlayer,
         &textExtractor,
-        &dictionarySerivce);
+        &dictionarySerivce,
+        &settingsProvider);
 
     trayIconProvider.Initialize();
     mainWindow.Initialize();

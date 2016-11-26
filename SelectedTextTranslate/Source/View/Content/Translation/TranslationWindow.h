@@ -3,7 +3,7 @@
 #include "View\Content\Translation\HeaderWindow.h"
 #include "View\Content\Translation\TranslateResultWindow.h"
 
-class TranslationWindow : public ContentWindow
+class TranslationWindow : public ContentWindow, public ModelHolder<TranslateResult>
 {
 private:
     const int headerHeight = 50;
@@ -12,8 +12,6 @@ private:
 
     HeaderWindow* headerWindow;
     TranslateResultWindow* translateResultWindow;
-
-    TranslateResult translateResult;
 
     void RenderSeparator(Renderer* renderer, int width) const;
 
@@ -32,5 +30,5 @@ public:
     Subscribeable<> OnTranslateSuggestion;
     Subscribeable<int> OnExpandTranslationResult;
 
-    void SetModel(TranslateResult translateResult);
+    void SetModel(TranslateResult translateResult) override;
 };

@@ -1,18 +1,26 @@
 #include "View\Content\Settings\SettingsWindow.h"
-#include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
-#include "View\Content\Settings\HotkeySettingsWindow.h"
+#include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
 SettingsWindow::SettingsWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
 {
-    stateMap[0] = true;
-    stateMap[1] = true;
+    settingsGroupsState[0] = true;
+    settingsGroupsState[1] = true;
+
+    this->fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);
+    this->hotkeySettingsWindow = nullptr;
 }
 
 void SettingsWindow::Initialize()
 {
     ContentWindow::Initialize();
+}
+
+void SettingsWindow::SetModel(Settings model)
+{
+    ModelHolder<Settings>::SetModel(model);
+    globalModel = model;
 }
 
 Size SettingsWindow::RenderContent(Renderer* renderer)
@@ -22,18 +30,17 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
 
     int curY = paddingY;
 
-    HotkeySettingsWindow* hotkeySettings = new HotkeySettingsWindow(context, this);
-    curY = InitializeSettingsGroup(renderer, hotkeySettings, curY, 0) + lineHeight / 2;
-
-    HotkeySettingsWindow* hotkeySettings2 = new HotkeySettingsWindow(context, this);
-    curY = InitializeSettingsGroup(renderer, hotkeySettings2, curY, 1);
+    hotkeySettingsWindow = new HotkeySettingsWindow(context, this);
+    curY = InitializeSettingsGroup(renderer, hotkeySettingsWindow, curY, 0, model.GetHotkeySettings());
+    hotkeySettingsWindow->OnSettingsChanged.Subscribe([this](HotkeySettings settings) -> void
+    {
+        this->model.SetHotkeySettings(settings);
+        this->SetSaveButtonState();
+    });
 
     curY += lineHeight / 2;
 
-    HoverFlatButtonWindow* saveButton = new HoverFlatButtonWindow(context, this);
-    saveButton->SetDimensions(Point(paddingX, curY), Size(50, 21));
-    saveButton->SetText(L"Save");
-    AddChildWindow(saveButton);
+    CreateControls(renderer, curY);
 
     renderer->IncreaseWidth(paddingX);
     renderer->IncreaseHeight(paddingY);
@@ -41,17 +48,20 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     return renderer->GetScaledSize();
 }
 
-int SettingsWindow::InitializeSettingsGroup(Renderer* renderer, SettingsGroupWindow* settingsGroup, int curY, int index)
+template<typename TModel>
+int SettingsWindow::InitializeSettingsGroup(Renderer* renderer, SettingsGroupWindow* settingsGroup, int curY, int index, TModel model)
 {
     settingsGroup->SetDimensions(Point(paddingX, curY), 250);
-    settingsGroup->SetState(stateMap[index]);
+    settingsGroup->SetState(settingsGroupsState[index]);
     settingsGroup->OnSettingsToggled.Subscribe([index, this]() -> void
     {
-        stateMap[index] ^= true;
-        this->Render(true);
+        settingsGroupsState[index] ^= true;
+        this->OnSettingsStateChanged.Notify();
     });
 
     AddChildWindow(settingsGroup);
+    dynamic_cast<ModelHolder<TModel>*>(settingsGroup)->SetModel(model);
+
     settingsGroup->Render();
 
     renderer->UpdateSize(Size(
@@ -59,6 +69,54 @@ int SettingsWindow::InitializeSettingsGroup(Renderer* renderer, SettingsGroupWin
         settingsGroup->GetSize().Height + settingsGroup->GetPosition().Y));
 
     return curY + settingsGroup->GetSize(true).Height;
+}
+
+void SettingsWindow::CreateControls(Renderer* renderer, int curY)
+{
+    int saveButtonHeight = 21;
+    saveButton = new HoverFlatButtonWindow(context, this);
+    saveButton->SetDimensions(Point(paddingX, curY), Size(50, saveButtonHeight));
+    saveButton->SetText(L"Save");
+    saveButton->OnClick.Subscribe([this]() -> void
+    {
+        this->OnSaveSettings.Notify(model);
+    });
+    AddChildWindow(saveButton);
+    saveButton->Disable();
+
+    renderer->UpdateSize(Size(
+        saveButton->GetSize().Width + saveButton->GetPosition().X,
+        saveButton->GetSize().Height + saveButton->GetPosition().Y));
+
+    int curX = saveButton->GetSize(true).Width + saveButton->GetPosition(true).X;
+
+    HoverTextButtonWindow* resetButton = new HoverTextButtonWindow(context, this);
+    resetButton->SetFont(fontSmallUnderscored);
+
+    int fontAscent = renderer->GetFontAscent(resetButton->GetFont());
+    resetButton->SetPosition(Point(curX + 7, curY + saveButton->GetTextBaseline() - fontAscent));
+    resetButton->SetText(L"Reset to default");
+    resetButton->OnClick.Subscribe([this]() -> void
+    {
+        //this->OnSaveSettings.Notify(model);
+    });
+    AddChildWindow(resetButton);
+
+    renderer->UpdateSize(Size(
+        resetButton->GetSize().Width + resetButton->GetPosition().X,
+        resetButton->GetSize().Height + resetButton->GetPosition().Y));
+}
+
+void SettingsWindow::SetSaveButtonState() const
+{
+    if (model.EqualTo(globalModel))
+    {
+        saveButton->Disable();
+    }
+    else
+    {
+        saveButton->Enable();
+    }
 }
 
 SettingsWindow::~SettingsWindow()

@@ -264,6 +264,15 @@
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Services\Settings\Dto\Settings.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Settings\Dto\HotkeySettings.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -444,6 +453,10 @@
     </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\HotkeySettingsWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
+    <ClInclude Include="Source\Services\Settings\Dto\Settings.h" />
+    <ClInclude Include="Source\Services\Settings\SettingsProvider.h" />
+    <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h" />
+    <ClInclude Include="Source\View\Framework\ModelHolder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

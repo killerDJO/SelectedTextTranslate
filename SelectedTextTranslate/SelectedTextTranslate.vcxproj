@@ -18,6 +18,9 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\StackProvider.cpp" />
+    <ClCompile Include="Source\Services\Settings\Dto\HotkeySettings.cpp" />
+    <ClCompile Include="Source\Services\Settings\Dto\Settings.cpp" />
+    <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
@@ -70,9 +73,13 @@
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Framework\ModelHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h" />
+    <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h" />
+    <ClInclude Include="Source\Services\Settings\Dto\Settings.h" />
+    <ClInclude Include="Source\Services\Settings\SettingsProvider.h" />
     <ClInclude Include="Source\View\Content\Settings\HotkeySettingsWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h" />

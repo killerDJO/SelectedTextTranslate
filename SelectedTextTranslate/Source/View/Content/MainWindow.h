@@ -19,6 +19,7 @@ private:
 
     TranslateResult translateResult;
     vector<DictionaryRecord> dictionaryRecords;
+    Settings settings;
 
     void CreateViews();
 
@@ -41,6 +42,8 @@ public:
     Subscribeable<> OnTranslateSuggestion;
     Subscribeable<int> OnExpandTranslationResult;
     Subscribeable<int> OnShowTranslation;
+    Subscribeable<> OnSettingsStateChanged;
+    Subscribeable<Settings> OnSaveSettings;
 
     void Initialize() override;
 
@@ -50,4 +53,5 @@ public:
     void SetCurrentView(ApplicationViews applicationView);
     void SetTranslateResultModel(TranslateResult translateResult);
     void SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords);
+    void SetSettingsModel(Settings settings);
 };
