@@ -23,7 +23,11 @@ void ScrollProvider::InitializeScrollbars(
     }
 
     Size clientSize = window->GetAvailableClientSize();
-    Size contentSize = AlignWithScrollingGrid(window->GetContentSize());
+
+    Size contentSize = window->GetContentSize();
+    contentSize.Width -= GetScrollChar(ScrollBars::Vertical);
+    contentSize.Height -= GetScrollChar(ScrollBars::Horizontal);
+
     bool horizontalScrollVisible = initializeHorizontalScroll && clientSize.Width < contentSize.Width;
     bool verticalScrollVisible = initializeVerticalScroll && clientSize.Height < contentSize.Height;
 
@@ -78,7 +82,7 @@ void ScrollProvider::InitializeScrollbar(HWND windowHandle, int contentDimension
 {
     int scrollChar = GetScrollChar(scrollBar);
     int numberOfLines = int(ceil(contentDimension * 1.0 / scrollChar));
-    int availableLines = int(ceil(windowDimension * 1.0 / scrollChar));
+    int availableLines = int(floor(windowDimension * 1.0 / scrollChar));
 
     int availableInitialScrollPosition = min(numberOfLines - availableLines, initialPosition);
 
@@ -221,7 +225,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
             nullptr,
             SW_SCROLLCHILDREN);
 
-        ExceptionHelper::ThrowOnWinapiError(scrollResult, ERROR);
+        ExceptionHelper::ThrowOnWinapiError(scrollResult, true, ERROR);
 
         window->Draw(true);
     }

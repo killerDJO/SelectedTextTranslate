@@ -300,6 +300,9 @@
     <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp">
       <Filter>Source\Services\Settings</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp">
+      <Filter>Source\View\Content\Settings\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -504,6 +507,9 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\ModelHolder.h">
       <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h">
+      <Filter>Source\View\Content\Settings\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

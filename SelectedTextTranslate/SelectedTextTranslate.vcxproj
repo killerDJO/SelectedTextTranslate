@@ -14,6 +14,7 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Dto\SettingsState.cpp" />
     <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupState.h" />
     <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h" />

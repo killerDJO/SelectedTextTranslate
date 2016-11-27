@@ -23,6 +23,7 @@ private:
     HoverTextButtonWindow* resetButton;
 
     int CreateSettingsGroups(Renderer* renderer, int curY);
+    int CreateHotkeySettingsGroup(Renderer* renderer, int curY);
     template<typename TModel>
     int InitializeSettingsGroup(Renderer* renderer, SettingsGroupWindow* settingsGroup, int curY, SettingsGroupState state, TModel model);
 

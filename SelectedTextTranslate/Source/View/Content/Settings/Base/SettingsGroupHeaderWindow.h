@@ -1,27 +1,23 @@
 #pragma once
 #include "View\Content\Base\ContentWindow.h"
 #include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
-#include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 
-class SettingsGroupWindow : public ContentWindow
+class SettingsGroupHeaderWindow : public ContentWindow
 {
 private:
-    void UpdateModificationState() const;
-    wstring GetCurrentTitle() const;
-
-protected:
     SettingsGroupState state;
     wstring title;
-    bool isModified;
 
-    SettingsGroupHeaderWindow* headerWindow;
+    HBRUSH backgroundBrush;
 
+protected:
     Size RenderContent(Renderer* renderer) override;
-    virtual void RenderSettingsContent(Renderer* renderer, Point contentPosition) = 0;
+    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
+    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    SettingsGroupWindow(WindowContext* context, Window* parentWindow);
-    ~SettingsGroupWindow() override;
+    SettingsGroupHeaderWindow(WindowContext* context, Window* parentWindow);
+    ~SettingsGroupHeaderWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);
@@ -31,10 +27,6 @@ public:
 
     void SetState(SettingsGroupState state);
     SettingsGroupState GetState() const;
-
-    void SetModifiedState();
-    void SetNotModifiedState();
-    bool IsModified() const;
 
     void Initialize() override;
 

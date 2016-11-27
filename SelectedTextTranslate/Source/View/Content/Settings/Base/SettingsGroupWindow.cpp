@@ -1,7 +1,7 @@
 #include "View\Content\Settings\Base\SettingsGroupWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 
 SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
@@ -9,9 +9,9 @@ SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentW
     this->state = SettingsGroupState::Collapsed;
     this->title = wstring();
     this->paddingX = this->paddingY = 5;
-    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->fontNormal).tmHeight);
-    this->backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
-    this->className = L"STT_SETTINGS";
+    this->className = L"STT_SETTINGS_GROUP";
+    this->headerWindow = nullptr;
+    this->isModified = false;
 }
 
 void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -28,7 +28,6 @@ void SettingsGroupWindow::SetDimensions(Point position, int width)
 
 void SettingsGroupWindow::SetTitle(wstring title)
 {
-    AssertWindowNotInitialized();
     this->title = title;
 }
 
@@ -48,6 +47,37 @@ SettingsGroupState SettingsGroupWindow::GetState() const
     return state;
 }
 
+void SettingsGroupWindow::SetModifiedState()
+{
+    isModified = true;
+    UpdateModificationState();
+}
+
+void SettingsGroupWindow::SetNotModifiedState()
+{
+    isModified = false;
+    UpdateModificationState();
+}
+
+void SettingsGroupWindow::UpdateModificationState() const
+{
+    if (windowState != WindowStates::New)
+    {
+        headerWindow->SetTitle(GetCurrentTitle());
+        headerWindow->Render();
+    }
+}
+
+wstring SettingsGroupWindow::GetCurrentTitle() const
+{
+    return title + (IsModified() ? L"*" : L"");
+}
+
+bool SettingsGroupWindow::IsModified() const
+{
+    return isModified;
+}
+
 void SettingsGroupWindow::Initialize()
 {
     descriptor = state == SettingsGroupState::Collapsed
@@ -61,29 +91,18 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    int windowWidth = GetSize(true).Width;
-    int headerHeight = lineHeight + paddingY * 2;
-
-    renderer->DrawBorderedRect(Rect(Point(0, 0), Size(windowWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
-
-    int fontAscent = renderer->GetFontAscent(fontNormal);
-    int curY = paddingY + fontAscent;
-    renderer->PrintText(title, fontNormal, Colors::Black, Point(paddingX, curY));
-
-    int iconSize = fontAscent;
-
-    HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
-    expandButton->SetDimensions(Point(windowWidth - iconSize - paddingX, curY - iconSize + 2), Size(iconSize, iconSize));
-    expandButton->SetNormalIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
-    expandButton->SetHoverIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
-    expandButton->SetBackgroundBrush(backgroundBrush);
-    expandButton->OnClick.Subscribe(&OnSettingsToggled);
-    AddChildWindow(expandButton);
+    headerWindow = new SettingsGroupHeaderWindow(context, this);
+    headerWindow->SetTitle(GetCurrentTitle());
+    headerWindow->SetState(state);
+    headerWindow->SetDimensions(Point(0, 0), GetSize(true).Width);
+    headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
+    AddChildWindow(headerWindow);
+    headerWindow->Render();
 
     if (state == SettingsGroupState::Expanded)
     {
-        RenderSettingsContent(renderer, Point(paddingX * 2, curY + paddingY * 2));
-        Rect contentBorderRect = Rect(Point(0, 0), Size(windowWidth, renderer->GetSize().Height));
+        RenderSettingsContent(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect(true).GetBottom()));
+        Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize(true).Width, renderer->GetSize().Height));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
     }
 
@@ -92,5 +111,4 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 
 SettingsGroupWindow::~SettingsGroupWindow()
 {
-    AssertCriticalWinApiResult(DeleteObject(backgroundBrush));
 }

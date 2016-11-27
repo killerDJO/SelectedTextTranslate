@@ -66,7 +66,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
             parentWindow->GetSize().Height - headerHeight);
         renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), disabledBackgroundBrush);
 
-        contentSize = headerWindow->GetSize();
+        renderer->UpdateRenderedContentSize(headerWindow);
     }
     else
     {

@@ -47,15 +47,29 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
 
 int SettingsWindow::CreateSettingsGroups(Renderer* renderer, int curY)
 {
+    return CreateHotkeySettingsGroup(renderer, curY);
+}
+
+int SettingsWindow::CreateHotkeySettingsGroup(Renderer* renderer, int curY)
+{
     hotkeySettingsWindow = new HotkeySettingsWindow(context, this);
     curY = InitializeSettingsGroup(renderer, hotkeySettingsWindow, curY, settingsState.GetHotkeySettingsGroupState(), model.GetHotkeySettings());
 
     hotkeySettingsWindow->OnSettingsChanged.Subscribe([this](HotkeySettings settings) -> void
     {
+        if (!globalModel.GetHotkeySettings().EqualTo(settings))
+        {
+            hotkeySettingsWindow->SetModifiedState();
+        }
+        else
+        {
+            hotkeySettingsWindow->SetNotModifiedState();
+        }
+
         model.SetHotkeySettings(settings);
         SetButtonsState();
     });
-    
+
     hotkeySettingsWindow->OnSettingsToggled.Subscribe([this]() -> void
     {
         settingsState.SetHotkeySettingsGroupState(ToggleSettingsGroupState(settingsState.GetHotkeySettingsGroupState()));

@@ -17,7 +17,7 @@ void HotkeySettingsWindow::RenderSettingsContent(Renderer* renderer, Point conte
     curY = RenderHotkeyEditControl(renderer, L"Zoom In:", curX, curY, model.GetZoomInHotkey(), [this](DWORD hotkey) -> void { this->model.SetZoomInHotkey(hotkey); });
     RenderHotkeyEditControl(renderer, L"Zoom Out:", curX, curY, model.GetZoomOutHotkey(), [this](DWORD hotkey) -> void { this->model.SetZoomOutHotkey(hotkey); });
 
-    renderer->IncreaseHeight(2 * paddingY + 2);
+    renderer->IncreaseHeight(2 * paddingY);
 }
 
 int HotkeySettingsWindow::RenderHotkeyEditControl(Renderer* renderer, wstring title, int curX, int curY, int hotkey, function<void(DWORD)> hotkeySetter)

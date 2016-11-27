@@ -89,7 +89,6 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
     }
 
     renderer->IncreaseWidth(paddingX);
-    renderer->IncreaseHeight(lineHeight);
 
     return renderer->GetScaledSize();
 }
