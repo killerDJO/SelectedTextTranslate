@@ -1,5 +1,6 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* parentWindow)
     : HoverButtonWindow(context, parentWindow)
@@ -8,6 +9,7 @@ HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* par
     this->normalColor = Colors::Gray;
     this->hoverColor = Colors::Black;
     this->disabledColor = Colors::LightGray;
+    this->backgroundColor = Colors::White;
     this->text = wstring();
     this->className = L"STT_HOVERTEXTBUTTON";
 }
@@ -20,7 +22,7 @@ void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
 void HoverTextButtonWindow::SetPosition(Point position)
 {
     AssertWindowNotInitialized();
-    descriptor = WindowDescriptor::CreateStretchWindowDescriptor(position);
+    this->position = position;
 }
 
 void HoverTextButtonWindow::SetNormalColor(Colors normalColor)
@@ -47,12 +49,24 @@ Colors HoverTextButtonWindow::GetHoverColor() const
 
 void HoverTextButtonWindow::SetDisabledColor(Colors disabledColor)
 {
+    AssertWindowNotInitialized();
     this->disabledColor = disabledColor;
 }
 
 Colors HoverTextButtonWindow::GetDisabledColor() const
 {
     return disabledColor;
+}
+
+void HoverTextButtonWindow::SetBackgroundColor(Colors backgroundColor)
+{
+    AssertWindowNotInitialized();
+    this->backgroundColor = backgroundColor;
+}
+
+Colors HoverTextButtonWindow::GetBackgroundColor() const
+{
+    return backgroundColor;
 }
 
 void HoverTextButtonWindow::SetFont(HFONT font)
@@ -77,6 +91,13 @@ wstring HoverTextButtonWindow::GetText() const
     return text;
 }
 
+void HoverTextButtonWindow::Initialize()
+{
+    // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
+    descriptor = WindowDescriptor::CreateWindowDescriptor(position, Size(1, 1), OverflowModes::Stretch, OverflowModes::Stretch);
+    HoverButtonWindow::Initialize();
+}
+
 void HoverTextButtonWindow::RenderStatesDeviceContext()
 {
     Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), font);
@@ -99,11 +120,16 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
+    HBRUSH backgroudBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
+    renderer->SetBackground(backgroudBrush);
+
     int fontAscent = renderer->GetFontAscent(font);
     renderer->PrintText(text.c_str(), font, color, Point(0, fontAscent));
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
+
+    AssertCriticalWinApiResult(DeleteObject(backgroudBrush));
 }
 
 HoverTextButtonWindow::~HoverTextButtonWindow()

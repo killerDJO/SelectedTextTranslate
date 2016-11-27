@@ -5,6 +5,7 @@ class ChildWindow : public Window
 {
 protected:
     Window* parentWindow;
+    bool isLayered;
 
     Point GetInitialWindowOffset() override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -14,4 +15,6 @@ public:
     ~ChildWindow() override;
 
     void Initialize() override;
+
+    void EnableLayeredMode();
 };

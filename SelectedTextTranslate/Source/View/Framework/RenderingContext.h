@@ -22,7 +22,7 @@ public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
     ~RenderingContext();
 
-    HFONT CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false) const;
+    HFONT CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false, bool isBold = false) const;
     HBRUSH CreateCustomBrush(Colors color) const;
     HPEN CreateCustomPen(Colors color, int strokeWidth) const;
 

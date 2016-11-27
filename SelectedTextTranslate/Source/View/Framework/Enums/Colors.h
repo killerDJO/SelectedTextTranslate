@@ -5,6 +5,7 @@ enum class Colors
     Gray = RGB(119, 119, 119),
 
     Black = RGB(0, 0, 0),
+    White = RGB(255, 255, 255),
 
     LightGray = RGB(170, 170, 170),
 

@@ -5,6 +5,7 @@ ChildWindow::ChildWindow(WindowContext* context, Window* parentWindow)
     : Window(context)
 {
     this->parentWindow = parentWindow;
+    this->isLayered = false;
 }
 
 void ChildWindow::Initialize()
@@ -12,22 +13,35 @@ void ChildWindow::Initialize()
     Window::Initialize();
 
     Point offset = GetInitialWindowOffset();
+
     windowHandle = CreateWindow(
         className,
-        NULL,
+        nullptr,
         WS_CHILD | WS_CLIPCHILDREN,
         descriptor.GetPosition().X - offset.X,
         descriptor.GetPosition().Y - offset.Y,
         descriptor.GetWindowSize().Width,
         descriptor.GetWindowSize().Height,
         parentWindow->GetHandle(),
-        NULL,
+        nullptr,
         context->GetInstance(),
         nullptr);
 
+    AssertCriticalWinApiResult(windowHandle);
+
     SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
-    AssertCriticalWinApiResult(windowHandle);
+    if(isLayered)
+    {
+        SetWindowLongPtr(windowHandle, GWL_EXSTYLE, GetWindowLongPtr(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED);
+        AssertCriticalWinApiResult(SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA));
+    }
+}
+
+void ChildWindow::EnableLayeredMode()
+{
+    AssertWindowNotInitialized();
+    this->isLayered = true;
 }
 
 Point ChildWindow::GetInitialWindowOffset()

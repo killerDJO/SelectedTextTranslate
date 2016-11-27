@@ -2,6 +2,7 @@
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 
 SettingsWindow::SettingsWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
@@ -38,6 +39,10 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
     curY += lineHeight / 2;
 
     CreateControls(renderer, curY, paddingX);
+
+    ConfirmDialogWindow* dialog = new ConfirmDialogWindow(context, this);
+    dialog->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize(true)));
+    AddChildWindow(dialog);
 
     renderer->IncreaseWidth(paddingX);
     renderer->IncreaseHeight(paddingY);

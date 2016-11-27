@@ -8,6 +8,7 @@ private:
     Colors normalColor;
     Colors hoverColor;
     Colors disabledColor;
+    Colors backgroundColor;
     wstring text;
 
     void RenderStateDeviceContext(HDC deviceContext, Colors color) const;
@@ -31,9 +32,14 @@ public:
     void SetDisabledColor(Colors disabledColor);
     Colors GetDisabledColor() const;
 
+    void SetBackgroundColor(Colors backgroundColor);
+    Colors GetBackgroundColor() const;
+
     void SetFont(HFONT font);
     HFONT GetFont() const;
 
     void SetText(wstring text);
     wstring GetText() const;
+
+    void Initialize() override;
 };

@@ -14,6 +14,9 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp" />
+    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp" />
+    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Dto\SettingsState.cpp" />
     <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp" />
@@ -76,6 +79,9 @@
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h" />
+    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h" />
+    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupState.h" />
@@ -172,6 +178,9 @@
       <Project>{b055ade7-5b2d-40ce-a363-206d1fa7bdd1}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Resources\SelectedTextTranslate.exe.manifest" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D5EE84A-5E10-400B-9F11-C6AAC29C0E53}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -209,6 +218,7 @@
     <OutDir>Build\$(Configuration)\</OutDir>
     <IntDir>Intermediate\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <EmbedManifest>true</EmbedManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

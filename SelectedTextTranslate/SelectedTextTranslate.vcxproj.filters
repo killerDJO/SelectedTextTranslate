@@ -130,6 +130,12 @@
     <Filter Include="Source\Services\Settings\Dto">
       <UniqueIdentifier>{a6feafe2-182a-49b5-8e24-91128c89e306}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Controls\Dialogs">
+      <UniqueIdentifier>{34ae1a56-a841-447e-a4e0-3e013c41a218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Controls\Dialogs\Confirm">
+      <UniqueIdentifier>{92fcec42-94ad-432a-997f-b5fc986876dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -302,6 +308,15 @@
     </ClCompile>
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp">
       <Filter>Source\View\Content\Settings\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp">
+      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp">
+      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
+      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +526,15 @@
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h">
       <Filter>Source\View\Content\Settings\Base</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h">
+      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h">
+      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
+      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -543,5 +567,10 @@
     <ResourceCompile Include="Resources\Resource.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Resources\SelectedTextTranslate.exe.manifest">
+      <Filter>Resources</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>

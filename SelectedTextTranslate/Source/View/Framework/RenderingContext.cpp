@@ -61,7 +61,7 @@ bool RenderingContext::IsRenderingRoot(Window* window) const
     return window == renderingRoot;
 }
 
-HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool isUnderscored) const
+HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool isUnderscored, bool isBold) const
 {
     int fontSizeInPixels = 10;
 
@@ -86,8 +86,9 @@ HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool
 
     int italicValue = isItalic ? 1 : 0;
     int underscoredValue = isUnderscored ? 1 : 0;
+    int boldValue = isBold ? FW_BOLD : 0;
 
-    HFONT font = CreateFont(logicalFontSize, 0, 0, 0, 0, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
+    HFONT font = CreateFont(logicalFontSize, 0, 0, 0, boldValue, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
     AssertCriticalWinApiResult(font);
 
     return font;
