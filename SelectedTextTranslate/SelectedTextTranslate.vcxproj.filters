@@ -318,6 +318,18 @@
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderPosition.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -535,6 +547,10 @@
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

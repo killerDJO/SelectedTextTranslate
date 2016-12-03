@@ -5,7 +5,7 @@ class HotKeyInputWindow : public ChildWindow
 {
 private:
     DWORD currentHotkey;
-    Point currentTextBottomRight;
+    RenderPosition currentTextPoistion;
     HFONT font;
 
     int padding;

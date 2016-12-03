@@ -3,15 +3,14 @@
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
 #include "View\Framework\ModelHolder.h"
+#include "View\Framework\Dto\Rendering\RenderDescriptor.h"
 
 class HeaderWindow : public ContentWindow, public ModelHolder<TranslateResult>
 {
 private:
-    HFONT fontSmallUnderscored;
-
-    void PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLineBottomRight, Renderer* renderer);
-    void PrintSuggestion(wstring suggestion, int curY, Point originLineBottomRight, Renderer* renderer);
-    void PrintHeaderAction(wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback, int curY, Point originLineBottomRight, Renderer* renderer);
+    void PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput);
+    void PrintSuggestion(RenderDescriptor renderDescriptor, wstring suggestion);
+    void PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback);
 
     Size RenderTranslationResult(Renderer* renderer);
     Size RenderEmptyResult(Renderer* renderer) const;

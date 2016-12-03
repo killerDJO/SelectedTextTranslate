@@ -5,10 +5,10 @@
 class HotkeySettingsWindow : public SettingsGroupWindow, public ModelHolder<HotkeySettings>
 {
 private:
-    int RenderHotkeyEditControl(Renderer* renderer, wstring title, int curX, int curY, int hotkey, function<void(DWORD)> hotkeySetter);
+    RenderResult RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(DWORD)> hotkeySetter);
 
 protected:
-    void RenderSettingsContent(Renderer* renderer, Point contentPosition) override;
+    void RenderSettingsContent(RenderDescriptor renderDescriptor) override;
 
 public:
     HotkeySettingsWindow(WindowContext* context, Window* parentWindow);

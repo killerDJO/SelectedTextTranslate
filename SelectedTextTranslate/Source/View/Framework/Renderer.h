@@ -1,7 +1,7 @@
 #pragma once
 #include "View\Framework\RenderingContext.h"
 #include "View\Framework\DeviceContextBuffer.h"
-#include "View\Framework\Providers\DeviceContextProvider.h"
+#include "View\Framework\Dto\Rendering\TextRenderResult.h"
 
 class RenderingContext;
 class ScrollProvider;
@@ -12,7 +12,6 @@ class Renderer
 private:
     RenderingContext* renderingContext;
     ScaleProvider* scaleProvider;
-    ScrollProvider* scrollProvider;
 
     Size originalSize;
 
@@ -23,10 +22,10 @@ private:
     void ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const;
 
 public:
-    Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider);
+    Renderer(RenderingContext* renderingContext, ScaleProvider* scaleProvider);
     ~Renderer();
 
-    Point PrintText(const wstring text, HFONT font, Colors color, Point position, DWORD horizontalAlignment = TA_LEFT);
+    TextRenderResult PrintText(const wstring text, HFONT font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment = TA_LEFT);
     void DrawRect(Rect rect, HBRUSH brush);
     void DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors borderColor);
     void SetBackground(HBRUSH backgroundBrush);

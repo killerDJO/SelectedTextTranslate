@@ -2,7 +2,7 @@
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider, ScaleProvider* scaleProvider)
+Renderer::Renderer(RenderingContext* renderingContext, ScaleProvider* scaleProvider)
 {
     this->renderingContext = renderingContext;
     this->scaleProvider = scaleProvider;
@@ -11,8 +11,9 @@ Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* de
     this->renderActions = vector<function<void(HDC)>>();
 }
 
-Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position, DWORD horizontalAlignment)
+TextRenderResult Renderer::PrintText(wstring text, HFONT font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment)
 {
+    Point position = renderPosition.GetPosition();
     Point scaledPosition = scaleProvider->Scale(position);
 
     // Copy text to prevent preliminary dispose by calling code.
@@ -21,7 +22,7 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
         AssertCriticalWinApiResult(SelectObject(deviceContext, font));
         ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), true, CLR_INVALID);
         ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | horizontalAlignment), true, GDI_ERROR);
-        SetBkMode(deviceContext, TRANSPARENT);
+        AssertCriticalWinApiResult(SetBkMode(deviceContext, TRANSPARENT));
 
         AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText)));
 
@@ -36,11 +37,10 @@ Point Renderer::PrintText(wstring text, HFONT font, Colors color, Point position
 
     Size downscaledSize = scaleProvider->Downscale(textSize);
 
-    Point result;
-    result.X = position.X + downscaledSize.Width;
-    result.Y = position.Y - GetFontAscent(font) + downscaledSize.Height;
+    int rightX = position.X + downscaledSize.Width;
+    int bottomY = position.Y - GetFontAscent(font) + downscaledSize.Height;
 
-    return result;
+    return TextRenderResult(downscaledSize, rightX, position.Y, bottomY);
 }
 
 void Renderer::DrawRect(Rect rect, HBRUSH brush)

@@ -14,6 +14,9 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderPosition.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp" />
@@ -77,8 +80,12 @@
     <ClCompile Include="Source\View\Content\Translation\TranslationWindow.cpp" />
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h" />
@@ -149,6 +156,7 @@
     <ClInclude Include="Source\View\Providers\TrayIconProvider.h" />
     <ClInclude Include="Source\Utilities\Subscribeable.h" />
     <ClInclude Include="Source\Providers\SqliteProvider.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

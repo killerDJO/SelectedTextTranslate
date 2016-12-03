@@ -6,6 +6,8 @@ class ConfirmDialogContentWindow : public ContentWindow
 private:
     wstring title;
 
+    HFONT headerFont;
+
 protected:
     Size RenderContent(Renderer* renderer) override;
 

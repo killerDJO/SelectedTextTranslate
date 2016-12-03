@@ -10,7 +10,6 @@ HeaderWindow::HeaderWindow(WindowContext* context, Window* parentWindow)
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
     this->OnTranslateSuggestion = Subscribeable<>();
-    this->fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);
 }
 
 Size HeaderWindow::RenderContent(Renderer* renderer)
@@ -31,35 +30,33 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
 Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 {
     int smallFontAscent = renderer->GetFontAscent(fontSmall);
-    int curY = lineHeight;
+
+    RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 
     TranslateResultSentence sentence = model.GetSentence();
-    renderer->PrintText(sentence.GetTranslation(), fontHeader, Colors::Black, Point(paddingX, curY));
+    renderer->PrintText(sentence.GetTranslation(), fontHeader, Colors::Black, renderPosition);
 
-    curY += lineHeight;
+    renderPosition = renderPosition.MoveY(lineHeight);
 
     int imageSize = smallFontAscent;
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
-    audioButton->SetDimensions(Point(paddingX, curY - imageSize + 2), Size(imageSize, imageSize));
+    audioButton->SetDimensions(renderPosition.MoveY(- imageSize + 2).GetPosition(), Size(imageSize, imageSize));
     audioButton->SetHoverIconResource(IDR_AUDIO);
     audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
-
     AddChildWindow(audioButton);
 
-    Point originLintBottomRight = renderer->PrintText(
-        sentence.GetOrigin(),
-        fontSmall,
-        Colors::Gray,
-        Point(paddingX + imageSize + 2, curY));
+    renderPosition = renderPosition.MoveX(imageSize + 2);
+    renderPosition = renderer->PrintText(sentence.GetOrigin(), fontSmall, Colors::Gray, renderPosition);
 
+    RenderDescriptor actionRenderDescriptor = RenderDescriptor(renderer, renderPosition.MoveX(1));
     if (model.IsInputCorrected())
     {
-        PrintInputCorrectionWarning(sentence.GetInput(), curY, originLintBottomRight, renderer);
+        PrintInputCorrectionWarning(actionRenderDescriptor, sentence.GetInput());
     }
     else if (!sentence.GetSuggestion().empty())
     {
-        PrintSuggestion(sentence.GetSuggestion(), curY, originLintBottomRight, renderer);
+        PrintSuggestion(actionRenderDescriptor, sentence.GetSuggestion());
     }
 
     renderer->IncreaseWidth(paddingX);
@@ -72,46 +69,45 @@ Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
     int fontHeight = renderer->GetFontStrokeHeight(fontHeader);
     int curY = context->GetScaleProvider()->Downscale(windowSize.Height / 2) + fontHeight / 2;
 
-    renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, Point(paddingX, curY));
+    renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, RenderPosition(paddingX, curY));
 
     return renderer->GetScaledSize();
 }
 
-void HeaderWindow::PrintInputCorrectionWarning(wstring originalInput, int curY, Point originLintBottomRight, Renderer* renderer)
+void HeaderWindow::PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput)
 {
-    PrintHeaderAction(L"corrected from", originalInput, &OnForceTranslation, curY, originLintBottomRight, renderer);
+    PrintHeaderAction(renderDescriptor, L"corrected from", originalInput, &OnForceTranslation);
 }
 
-void HeaderWindow::PrintSuggestion(wstring suggestion, int curY, Point originLintBottomRight, Renderer* renderer)
+void HeaderWindow::PrintSuggestion(RenderDescriptor renderDescriptor, wstring suggestion)
 {
-    PrintHeaderAction(L"maybe you meant", suggestion, &OnTranslateSuggestion, curY, originLintBottomRight, renderer);
+    PrintHeaderAction(renderDescriptor, L"maybe you meant", suggestion, &OnTranslateSuggestion);
 }
 
-void HeaderWindow::PrintHeaderAction(wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback, int curY, Point originLineBottomRight, Renderer* renderer)
+void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback)
 {
-    originLineBottomRight = renderer->PrintText(
+    TextRenderResult orignLineRenderResult = renderDescriptor.GetRenderer()->PrintText(
         StringUtilities::Format(L" (%ls ", actionDescription.c_str()),
         fontSmall,
         Colors::Gray,
-        Point(originLineBottomRight.X + 1, curY));
+        renderDescriptor.GetRenderPosition());
 
-    int smallFontAscent = renderer->GetFontAscent(fontSmall);
+    int smallFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(fontSmall);
     HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
     headerActionButton->SetFont(fontSmallUnderscored);
-    headerActionButton->SetPosition(Point(originLineBottomRight.X, curY - smallFontAscent));
+    headerActionButton->SetPosition(orignLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition());
     headerActionButton->SetText(actionText);
     headerActionButton->OnClick.Subscribe(actionCallback);
 
     AddChildWindow(headerActionButton);
 
-    renderer->PrintText(
+    renderDescriptor.GetRenderer()->PrintText(
         L")",
         fontSmall,
         Colors::Gray,
-        Point(headerActionButton->GetBoundingRect(true).GetRight(), curY));
+        Point(headerActionButton->GetBoundingRect(true).GetRight(), orignLineRenderResult.GetBaselineY()));
 }
 
 HeaderWindow::~HeaderWindow()
 {
-    AssertCriticalWinApiResult(DeleteObject(fontSmallUnderscored));
 }

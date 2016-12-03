@@ -14,6 +14,8 @@ ConfirmDialogContentWindow::ConfirmDialogContentWindow(WindowContext* context, W
     this->paddingY = 5;
     this->lineHeight = 25;
 
+    this->headerFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, false, false, true);
+
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
 }
@@ -26,6 +28,7 @@ void ConfirmDialogContentWindow::SetDescriptor(WindowDescriptor descriptor)
 void ConfirmDialogContentWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
+
     this->position = position;
     this->windowSize = Size(width, 0);
 }
@@ -55,35 +58,38 @@ void ConfirmDialogContentWindow::Initialize()
 Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
+    
+    Size scaledWindowSize = GetSize(true);
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize(true)), nullptr, 1, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), scaledWindowSize), nullptr, 1, Colors::Gray);
 
-    int delimiterY = lineHeight;
+    RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
-    HFONT headerFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, false, false, true);
     int headerFontAscent = renderer->GetFontAscent(headerFont);
-    renderer->PrintText(title, headerFont, Colors::Black, Point(paddingX, paddingY + headerFontAscent));
-    renderer->DrawRect(Rect(Point(0, delimiterY), Size(GetSize(true).Width, 1)), context->GetRenderingContext()->CreateCustomBrush(Colors::Gray));
+    renderer->PrintText(title, headerFont, Colors::Black, renderPosition.MoveY(headerFontAscent));
 
-    delimiterY = roundToInt(delimiterY * 2.5);
+    renderPosition = renderPosition.SetY(lineHeight).SetX(0);
+    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(scaledWindowSize.Width, 1)), grayBrush);
 
     int fontAscent = renderer->GetFontAscent(fontSmall);
-    renderer->PrintText(L"Do you want to perform this action?", fontSmall, Colors::Black, Point(paddingX, lineHeight + fontAscent + 10));
+    renderPosition = renderPosition.SetY(lineHeight + fontAscent + 10).SetX(paddingX);
+    renderer->PrintText(L"Do you want to perform this action?", fontSmall, Colors::Black, renderPosition);
+
+    renderPosition = renderPosition.SetY(roundToInt(lineHeight * 2.5)).SetX(0);
     renderer->DrawBorderedRect(
-        Rect(Rect(Point(0, delimiterY), Size(GetSize(true).Width, GetSize(true).Height - delimiterY))),
-        context->GetRenderingContext()->CreateCustomBrush(Colors::Background),
+        Rect(Rect(renderPosition.GetPosition(), Size(scaledWindowSize.Width, scaledWindowSize.Height - renderPosition.GetY()))),
+        backgroundBrush,
         1,
         Colors::Gray);
 
     Size confirmButtonSize = Size(60, 21);
     HoverFlatButtonWindow* confirmButton = new HoverFlatButtonWindow(context, this);
     confirmButton->SetText(L"Confirm");
-    confirmButton->SetDimensions(Point(GetSize(true).Width - paddingX - confirmButtonSize.Width, delimiterY + paddingX), confirmButtonSize);
+    confirmButton->SetDimensions(Point(scaledWindowSize.Width - paddingX - confirmButtonSize.Width, renderPosition.GetY() + paddingX), confirmButtonSize);
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();
     AddChildWindow(confirmButton);
 
-    HFONT fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);
     int cancelButtonFontAscent = renderer->GetFontAscent(fontSmallUnderscored);
     int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).Width;
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
@@ -96,11 +102,10 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     AddChildWindow(cancelButton);
     cancelButton->Draw();
 
-    AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
-
     return windowSize;
 }
 
 ConfirmDialogContentWindow::~ConfirmDialogContentWindow()
 {
+    AssertCriticalWinApiResult(DeleteObject(headerFont));
 }

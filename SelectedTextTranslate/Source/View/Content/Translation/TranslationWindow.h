@@ -7,8 +7,6 @@ class TranslationWindow : public ContentWindow, public ModelHolder<TranslateResu
 {
 private:
     const int headerHeight = 50;
-    HBRUSH separatorBrush;
-    HBRUSH disabledBackgroundBrush;
 
     HeaderWindow* headerWindow;
     TranslateResultWindow* translateResultWindow;

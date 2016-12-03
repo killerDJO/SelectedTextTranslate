@@ -12,7 +12,11 @@ ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     this->fontHeader = context->GetRenderingContext()->CreateCustomFont(FontSizes::Large);
     this->fontItalic = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, true);
     this->fontSmall = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small);
-    this->grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+    this->fontSmallUnderscored = context->GetRenderingContext()->CreateCustomFont(FontSizes::Small, false, true);
+
+    this->lightGrayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::LightGray);
+    this->grayBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Gray);
+    this->backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
 
     this->className = L"STT_CONTENT";
 }
@@ -57,6 +61,7 @@ ContentWindow::~ContentWindow()
     AssertCriticalWinApiResult(DeleteObject(fontNormal));
     AssertCriticalWinApiResult(DeleteObject(fontHeader));
     AssertCriticalWinApiResult(DeleteObject(fontItalic));
+    AssertCriticalWinApiResult(DeleteObject(fontSmallUnderscored));
     AssertCriticalWinApiResult(DeleteObject(fontSmall));
-    AssertCriticalWinApiResult(DeleteObject(grayBrush));
+    AssertCriticalWinApiResult(DeleteObject(lightGrayBrush));
 }

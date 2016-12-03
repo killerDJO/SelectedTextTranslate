@@ -32,7 +32,7 @@ TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
 
 Renderer* RenderingContext::GetRenderer()
 {
-    return new Renderer(this, deviceContextProvider, scaleProvider);
+    return new Renderer(this, scaleProvider);
 }
 
 void RenderingContext::ReleaseRenderer(Renderer* renderer) const

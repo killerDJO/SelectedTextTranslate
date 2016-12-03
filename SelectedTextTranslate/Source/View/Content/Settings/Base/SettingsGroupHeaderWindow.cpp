@@ -1,6 +1,5 @@
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 
 SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Window* parentWindow)
@@ -10,7 +9,6 @@ SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Win
     this->title = wstring();
     this->paddingX = this->paddingY = 5;
     this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->fontNormal).tmHeight);
-    this->backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::Background);
     this->className = L"STT_SETTINGS_GROUP_HEADER";
 }
 
@@ -62,19 +60,20 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    int windowWidth = GetSize(true).Width;
-    int headerHeight = lineHeight + paddingY * 2;
+    int headerWidth = GetSize(true).Width;
+    int headerHeight = GetSize(true).Height;
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), Size(windowWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), Size(headerWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
 
     int fontAscent = renderer->GetFontAscent(fontNormal);
-    int curY = paddingY + fontAscent;
-    renderer->PrintText(title, fontNormal, Colors::Black, Point(paddingX, curY));
+    RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontAscent);
+
+    renderPosition = renderer->PrintText(title, fontNormal, Colors::Black, renderPosition);
 
     int iconSize = fontAscent;
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
-    expandButton->SetDimensions(Point(windowWidth - iconSize - paddingX, curY - iconSize + 2), Size(iconSize, iconSize));
+    expandButton->SetDimensions(Point(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2), Size(iconSize, iconSize));
     expandButton->SetNormalIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);
@@ -97,5 +96,4 @@ LRESULT SettingsGroupHeaderWindow::WindowProcedure(UINT message, WPARAM wParam, 
 
 SettingsGroupHeaderWindow::~SettingsGroupHeaderWindow()
 {
-    AssertCriticalWinApiResult(DeleteObject(backgroundBrush));
 }

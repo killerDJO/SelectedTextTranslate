@@ -13,23 +13,26 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
     DestroyChildWindows();
 
     int normalFontAscent = renderer->GetFontAscent(fontNormal);
-    int curY = paddingY / 2 + normalFontAscent;
+
+    RenderPosition renderPosition = RenderPosition(paddingX, paddingY / 2 + normalFontAscent);
 
     size_t countToShow = min(200, model.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(model.size());
-    renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, Point(paddingX, curY));
+    renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, renderPosition);
 
-    curY += lineHeight;
+    renderPosition = renderPosition.MoveY(lineHeight);
 
     for (size_t i = 0; i < countToShow; ++i)
     {
         DictionaryRecord record = model[i];
-        Point lineBottomRight = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, Point(paddingX * 2 + 4, curY));
-        renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, Point(lineBottomRight.X + 1, curY));
+        renderPosition = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, renderPosition.MoveX(paddingX + 4));
+        renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, renderPosition.MoveX(1));
+
+        renderPosition = renderPosition.SetX(paddingX);
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(context, this);
-        translateButton->SetDimensions(Point(paddingX, curY + 2 - normalFontAscent), Size(16, 16));
+        translateButton->SetDimensions(renderPosition.MoveY(2 - normalFontAscent).GetPosition(), Size(16, 16));
         translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
         translateButton->SetHoverIconResource(IDR_TRANSLATE);
         translateButton->OnClick.Subscribe([i, this]() -> void
@@ -39,7 +42,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
 
         AddChildWindow(translateButton);
 
-        curY += lineHeight;
+        renderPosition = renderPosition.MoveY(lineHeight);
     }
 
     return renderer->GetScaledSize();

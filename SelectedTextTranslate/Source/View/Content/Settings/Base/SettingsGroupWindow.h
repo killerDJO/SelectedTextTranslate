@@ -2,6 +2,7 @@
 #include "View\Content\Base\ContentWindow.h"
 #include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
+#include "View\Framework\Dto\Rendering\RenderDescriptor.h"
 
 class SettingsGroupWindow : public ContentWindow
 {
@@ -17,7 +18,7 @@ protected:
     SettingsGroupHeaderWindow* headerWindow;
 
     Size RenderContent(Renderer* renderer) override;
-    virtual void RenderSettingsContent(Renderer* renderer, Point contentPosition) = 0;
+    virtual void RenderSettingsContent(RenderDescriptor renderDescriptor) = 0;
 
 public:
     SettingsGroupWindow(WindowContext* context, Window* parentWindow);

@@ -3,13 +3,13 @@
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
 #include "View\Framework\ModelHolder.h"
+#include "View\Framework\Dto\Rendering\RenderDescriptor.h"
+#include "View\Framework\Dto\Rendering\RenderResult.h"
 
 class TranslateResultWindow : public ContentWindow, public ModelHolder<TranslateResult>
 {
 private:
-    HFONT fontUnderscored;
-
-    int CreateExpandButton(TranslateResultCategory category, int categoryIndex, int showedCount, int curY, Renderer* renderer);
+    RenderResult CreateExpandButton(RenderDescriptor renderDescriptor, TranslateResultCategory category, int categoryIndex, int showedCount);
 
 protected:
     Size RenderContent(Renderer* renderer) override;

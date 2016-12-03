@@ -1,5 +1,6 @@
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
+#include "View\Framework\Dto\Rendering\RenderResult.h"
 
 HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* parentWindow)
     : SettingsGroupWindow(context, parentWindow)
@@ -8,28 +9,64 @@ HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* paren
     this->OnSettingsChanged = Subscribeable<HotkeySettings>();
 }
 
-void HotkeySettingsWindow::RenderSettingsContent(Renderer* renderer, Point contentPosition)
+void HotkeySettingsWindow::RenderSettingsContent(RenderDescriptor renderDescriptor)
 {
-    int curY = contentPosition.Y + paddingY;
-    int curX = contentPosition.X;
-    curY = RenderHotkeyEditControl(renderer, L"Translate Selected Text:", curX, curY, model.GetTranslateHotkey(), [this](DWORD hotkey) -> void { this->model.SetTranslateHotkey(hotkey); });
-    curY = RenderHotkeyEditControl(renderer, L"Play Selected Text:", curX, curY, model.GetPlayTextHotkey(), [this](DWORD hotkey) -> void { this->model.SetPlayTextHotkey(hotkey); });
-    curY = RenderHotkeyEditControl(renderer, L"Zoom In:", curX, curY, model.GetZoomInHotkey(), [this](DWORD hotkey) -> void { this->model.SetZoomInHotkey(hotkey); });
-    RenderHotkeyEditControl(renderer, L"Zoom Out:", curX, curY, model.GetZoomOutHotkey(), [this](DWORD hotkey) -> void { this->model.SetZoomOutHotkey(hotkey); });
+    RenderPosition renderPosition = renderDescriptor.GetRenderPosition().MoveY(paddingY);
+    Renderer* renderer = renderDescriptor.GetRenderer();
+
+    const int controlsMargin = 7;
+
+    renderPosition = RenderHotkeyEditControl(
+        RenderDescriptor(renderer, renderPosition),
+        L"Translate Selected Text:",
+        model.GetTranslateHotkey(),
+        [this](DWORD hotkey) -> void
+        {
+            model.SetTranslateHotkey(hotkey);
+        });
+
+    renderPosition = RenderHotkeyEditControl(
+        RenderDescriptor(renderer, renderPosition.MoveY(controlsMargin)),
+        L"Play Selected Text:",
+        model.GetPlayTextHotkey(),
+        [this](DWORD hotkey) -> void
+        {
+            model.SetPlayTextHotkey(hotkey);
+        });
+
+    renderPosition = RenderHotkeyEditControl(
+        RenderDescriptor(renderer, renderPosition.MoveY(controlsMargin)),
+        L"Zoom In:",
+        model.GetZoomInHotkey(),
+        [this](DWORD hotkey) -> void
+        {
+            model.SetZoomInHotkey(hotkey);
+        });
+
+    RenderHotkeyEditControl(
+        RenderDescriptor(renderer, renderPosition.MoveY(controlsMargin)),
+        L"Zoom Out:",
+        model.GetZoomOutHotkey(),
+        [this](DWORD hotkey) -> void
+        {
+            model.SetZoomOutHotkey(hotkey);
+        });
 
     renderer->IncreaseHeight(2 * paddingY);
 }
 
-int HotkeySettingsWindow::RenderHotkeyEditControl(Renderer* renderer, wstring title, int curX, int curY, int hotkey, function<void(DWORD)> hotkeySetter)
+RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(DWORD)> hotkeySetter)
 {
     HFONT font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
-    int normalFontAscent = renderer->GetFontAscent(font);
-    Point textBottomRight = renderer->PrintText(title.c_str(), font, Colors::Black, Point(curX, curY + normalFontAscent));
+    int normalFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(font);
+    RenderPosition renderPosition = renderDescriptor.GetRenderPosition();
 
-    curY = textBottomRight.Y + 1;
+    TextRenderResult textRenderResult = renderDescriptor.GetRenderer()->PrintText(title.c_str(), font, Colors::Black, renderPosition.MoveY(normalFontAscent));
+
+    renderPosition = renderPosition.SetY(textRenderResult.GetBottomY()).MoveY(1);
 
     HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(context, this);
-    hotKeyInputWindow->SetPosition(Point(curX, curY));
+    hotKeyInputWindow->SetPosition(renderPosition.GetPosition());
     hotKeyInputWindow->SetDefaultHotkey(hotkey);
     hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, this](DWORD newHotkey) -> void
     {
@@ -38,11 +75,9 @@ int HotkeySettingsWindow::RenderHotkeyEditControl(Renderer* renderer, wstring ti
     });
     AddChildWindow(hotKeyInputWindow);
 
-    renderer->UpdateRenderedContentSize(hotKeyInputWindow);
+    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);
 
-    curY += hotKeyInputWindow->GetSize(true).Height + 7;
-
-    return curY;
+    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetSize(true).Height));
 }
 
 HotkeySettingsWindow::~HotkeySettingsWindow()

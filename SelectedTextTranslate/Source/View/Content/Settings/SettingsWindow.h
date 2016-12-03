@@ -11,8 +11,6 @@
 class SettingsWindow : public ContentWindow, public ModelHolder<Settings>
 {
 private:
-    HFONT fontSmallUnderscored;
-
     Settings globalModel;
     SettingsState settingsState;
 
@@ -22,14 +20,14 @@ private:
     HoverTextButtonWindow* cancelButton;
     HoverTextButtonWindow* resetButton;
 
-    int CreateSettingsGroups(Renderer* renderer, int curY);
-    int CreateHotkeySettingsGroup(Renderer* renderer, int curY);
+    RenderResult CreateSettingsGroups(RenderDescriptor renderDescriptor);
+    RenderResult CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor);
     template<typename TModel>
-    int InitializeSettingsGroup(Renderer* renderer, SettingsGroupWindow* settingsGroup, int curY, SettingsGroupState state, TModel model);
+    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupState state, TModel model);
 
-    void CreateControls(Renderer* renderer, int curY, int curX);
-    Point CreateSaveButtonControl(Renderer* renderer, int curY, int curX);
-    HoverTextButtonWindow* CreateTextButtonControl(Renderer* renderer, Point position, wstring text, function<void()> clickCallback);
+    void CreateControls(RenderDescriptor renderDescriptor);
+    RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
+    HoverTextButtonWindow* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, function<void()> clickCallback);
 
     void UpdateSettings(Settings settings);
     void SetButtonsState() const;

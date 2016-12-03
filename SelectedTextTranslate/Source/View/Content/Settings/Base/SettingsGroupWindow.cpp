@@ -101,7 +101,7 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 
     if (state == SettingsGroupState::Expanded)
     {
-        RenderSettingsContent(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect(true).GetBottom()));
+        RenderSettingsContent(RenderDescriptor(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect(true).GetBottom())));
         Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize(true).Width, renderer->GetSize().Height));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
     }

@@ -8,8 +8,6 @@ private:
     SettingsGroupState state;
     wstring title;
 
-    HBRUSH backgroundBrush;
-
 protected:
     Size RenderContent(Renderer* renderer) override;
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;

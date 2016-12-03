@@ -128,7 +128,7 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
 
     if (currentHotkey == 0)
     {
-        currentTextBottomRight = Point(textOffset, textOffset);
+        currentTextPoistion = Point(textOffset, textOffset);
         renderer->PrintText(
             L"Not assigned",
             font,
@@ -137,11 +137,11 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     }
     else
     {
-        currentTextBottomRight = renderer->PrintText(
+        currentTextPoistion = renderer->PrintText(
             GetHotkeyDisplayString().c_str(),
             font,
             Colors::Black,
-            Point(textOffset, fontAscent + textOffset));
+            RenderPosition(textOffset, fontAscent + textOffset));
     }
 
     return renderer->GetScaledSize();
@@ -230,7 +230,7 @@ void HotKeyInputWindow::ShowCustomCaret() const
 {
     ScaleProvider* scaleProvider = context->GetScaleProvider();
     AssertCriticalWinApiResult(CreateCaret(windowHandle, (HBITMAP)nullptr, 1, scaleProvider->Scale(lineHeight)));
-    AssertCriticalWinApiResult(SetCaretPos(scaleProvider->Scale(currentTextBottomRight.X), context->GetScaleProvider()->Scale(borderWidth + padding)));
+    AssertCriticalWinApiResult(SetCaretPos(scaleProvider->Scale(currentTextPoistion.GetX()), context->GetScaleProvider()->Scale(borderWidth + padding)));
     AssertCriticalWinApiResult(ShowCaret(windowHandle));
 }
 
