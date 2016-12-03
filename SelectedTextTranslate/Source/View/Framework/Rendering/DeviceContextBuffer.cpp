@@ -1,4 +1,4 @@
-#include "View\Framework\DeviceContextBuffer.h"
+#include "View\Framework\Rendering\DeviceContextBuffer.h"
 
 DeviceContextBuffer::DeviceContextBuffer(DeviceContextProvider* deviceContextProvider, Size deviceContextSize)
 {

@@ -1,9 +1,10 @@
 #pragma once
 #include "View\Framework\WindowContext.h"
-#include "View\Framework\DeviceContextBuffer.h"
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
 #include "View\Framework\Windows\NativeWindowHolder.h"
+#include "View\Framework\Rendering\DeviceContextBuffer.h"
+#include "View\Framework\Rendering\Renderer.h"
 
 class WindowContext;
 class Renderer;

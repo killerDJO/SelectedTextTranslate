@@ -1,8 +1,8 @@
 #pragma once
-#include "View\Content\Base\ContentWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 #include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
-#include "View\Framework\Dto\Rendering\RenderDescriptor.h"
+#include "View\Framework\Rendering\Dto\RenderDescriptor.h"
 
 class SettingsGroupWindow : public ContentWindow
 {

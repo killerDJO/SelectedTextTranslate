@@ -1,5 +1,5 @@
 #pragma once
-#include "View\Framework\Dto\Rendering\RenderPosition.h"
+#include "View\Framework\Rendering\Dto\RenderPosition.h"
 
 class RenderResult
 {

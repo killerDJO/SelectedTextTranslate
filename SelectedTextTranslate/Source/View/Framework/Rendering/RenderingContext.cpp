@@ -1,5 +1,5 @@
-#include "View\Framework\RenderingContext.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "View\Framework\Rendering\RenderingContext.h"
 
 RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider)
 {

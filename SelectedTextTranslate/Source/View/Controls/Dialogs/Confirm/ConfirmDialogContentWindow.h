@@ -1,5 +1,5 @@
 #pragma once
-#include "View\Content\Base\ContentWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 
 class ConfirmDialogContentWindow : public ContentWindow
 {

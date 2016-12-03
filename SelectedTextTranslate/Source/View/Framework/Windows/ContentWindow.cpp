@@ -1,4 +1,4 @@
-#include "View\Content\Base\ContentWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 
 ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     : ChildWindow(context, parentWindow)

@@ -1,4 +1,4 @@
-#include "View\Framework\Dto\Rendering\RenderDescriptor.h"
+#include "View\Framework\Rendering\Dto\RenderDescriptor.h"
 
 RenderDescriptor::RenderDescriptor(Renderer* renderer, RenderPosition startPosition)
 {

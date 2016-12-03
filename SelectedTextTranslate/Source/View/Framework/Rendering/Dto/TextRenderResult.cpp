@@ -1,4 +1,4 @@
-#include "View\Framework\Dto\Rendering\TextRenderResult.h"
+#include "View\Framework\Rendering\Dto\TextRenderResult.h"
 
 TextRenderResult::TextRenderResult(Size textSize, int rightX, int baselineY, int bottomY)
 {

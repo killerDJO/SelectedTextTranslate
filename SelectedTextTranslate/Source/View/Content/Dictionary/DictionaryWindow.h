@@ -1,5 +1,5 @@
 #pragma once
-#include "View\Content\Base\ContentWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 #include "Services\Dictionary\Dto\DictionaryRecord.h"
 #include "Utilities\Subscribeable.h"
 #include "View\Framework\ModelHolder.h"

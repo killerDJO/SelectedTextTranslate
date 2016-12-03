@@ -1,6 +1,6 @@
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
-#include "View\Framework\Dto\Rendering\RenderResult.h"
+#include "View\Framework\Rendering\Dto\RenderResult.h"
 
 HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* parentWindow)
     : SettingsGroupWindow(context, parentWindow)

@@ -5,8 +5,7 @@ WindowContext::WindowContext(
     ScrollProvider* scrollProvider,
     ScaleProvider* scaleProvider,
     DeviceContextProvider* deviceContextProvider,
-    DialogsProvider* dialogsProvider,
-    HotkeyProvider* hotkeyProvider,
+    MessageBus* messageBus,
     ErrorHandler* errorHandler,
     RenderingContext* renderingContext,
     Logger* logger)
@@ -18,8 +17,7 @@ WindowContext::WindowContext(
     this->renderingContext = renderingContext;
     this->errorHandler = errorHandler;
     this->logger = logger;
-    this->hotkeyProvider = hotkeyProvider;
-    this->dialogsProvider = dialogsProvider;
+    this->messageBus = messageBus;
 }
 
 HINSTANCE WindowContext::GetInstance() const
@@ -57,14 +55,9 @@ Logger* WindowContext::GetLogger() const
     return logger;
 }
 
-HotkeyProvider* WindowContext::GetHotkeyProvider() const
+MessageBus* WindowContext::GetMessageBus() const
 {
-    return hotkeyProvider;
-}
-
-DialogsProvider* WindowContext::GetDialogsProvider() const
-{
-    return dialogsProvider;
+    return messageBus;
 }
 
 WindowContext::~WindowContext()

@@ -1,10 +1,10 @@
 #pragma once
-#include "View\Content\Base\ContentWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
 #include "View\Framework\ModelHolder.h"
-#include "View\Framework\Dto\Rendering\RenderDescriptor.h"
-#include "View\Framework\Dto\Rendering\RenderResult.h"
+#include "View\Framework\Rendering\Dto\RenderDescriptor.h"
+#include "View\Framework\Rendering\Dto\RenderResult.h"
 
 class TranslateResultWindow : public ContentWindow, public ModelHolder<TranslateResult>
 {

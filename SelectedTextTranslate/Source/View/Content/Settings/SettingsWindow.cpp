@@ -3,7 +3,7 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h"
-#include "View\Framework\Dto\Rendering\RenderResult.h"
+#include "View\Framework\Rendering\Dto\RenderResult.h"
 
 SettingsWindow::SettingsWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
@@ -100,7 +100,7 @@ void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
 
     resetButton = CreateTextButtonControl(RenderDescriptor(renderDescriptor.GetRenderer(), Point(resetButtonPositionX, renderPosition.GetY())), resetButtonText, [this]() -> void
     {
-        context->GetDialogsProvider()->ShowConfirmDialog(L"Confirm settigns reset", [this] { UpdateSettings(Settings()); });
+        context->GetMessageBus()->ShowConfirmDialog(L"Confirm settigns reset", [this] { UpdateSettings(Settings()); });
     });
 
     SetButtonsState();

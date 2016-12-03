@@ -19,9 +19,6 @@
     <Filter Include="Source\View\Content">
       <UniqueIdentifier>{537636ef-40f6-455f-9a7e-1df7e17b8159}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Base">
-      <UniqueIdentifier>{3d09291e-4b90-41ff-95ac-b1f681efbb19}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\View\Content\Translation">
       <UniqueIdentifier>{0fb3ebea-d276-4722-bee8-9a167ac10542}</UniqueIdentifier>
     </Filter>
@@ -136,22 +133,22 @@
     <Filter Include="Source\View\Controls\Dialogs\Confirm">
       <UniqueIdentifier>{92fcec42-94ad-432a-997f-b5fc986876dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Framework\Dto\Rendering">
-      <UniqueIdentifier>{deeb2811-dcad-4c2d-a589-7b53d45babb6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\View\Content\Main">
       <UniqueIdentifier>{08b78e1c-f745-44f5-9112-31e9103930c8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\View\Content\Main\Dto">
       <UniqueIdentifier>{9ffbf3e1-552e-4ed1-b7f8-92ff5a5810b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Framework\Rendering">
+      <UniqueIdentifier>{7f35170c-a855-43de-8996-bc60d7749682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\Rendering\Dto">
+      <UniqueIdentifier>{8c2ec133-92d3-4ad3-b492-74dfc201211d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp">
-      <Filter>Source\View\Content\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Dictionary\DictionaryWindow.cpp">
       <Filter>Source\View\Content\Dictionary</Filter>
@@ -185,15 +182,6 @@
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp">
       <Filter>Source\View\Framework\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp">
-      <Filter>Source\View\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Renderer.cpp">
-      <Filter>Source\View\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\RenderingContext.cpp">
-      <Filter>Source\View\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Framework\WindowContext.cpp">
       <Filter>Source\View\Framework</Filter>
@@ -324,26 +312,38 @@
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.cpp">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderPosition.cpp">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Content\Main\MainWindow.cpp">
       <Filter>Source\View\Content\Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp">
       <Filter>Source\View\Content\Main\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Providers\DialogsProvider.cpp">
-      <Filter>Source\View\Framework\Providers</Filter>
+    <ClCompile Include="Source\View\Framework\Rendering\Renderer.cpp">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\RenderingContext.cpp">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\DeviceContextBuffer.cpp">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Windows\ContentWindow.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.cpp">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderPosition.cpp">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderResult.cpp">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\TextRenderResult.cpp">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\MessageBus.cpp">
+      <Filter>Source\View\Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -354,9 +354,6 @@
   <ItemGroup>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Base\ContentWindow.h">
-      <Filter>Source\View\Content\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Dictionary\DictionaryWindow.h">
       <Filter>Source\View\Content\Dictionary</Filter>
@@ -405,15 +402,6 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h">
       <Filter>Source\View\Framework\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h">
-      <Filter>Source\View\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Renderer.h">
-      <Filter>Source\View\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\RenderingContext.h">
-      <Filter>Source\View\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Framework\WindowContext.h">
       <Filter>Source\View\Framework</Filter>
@@ -559,26 +547,38 @@
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h">
-      <Filter>Source\View\Framework\Dto\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Content\Main\MainWindow.h">
       <Filter>Source\View\Content\Main</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h">
       <Filter>Source\View\Content\Main\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Providers\DialogsProvider.h">
-      <Filter>Source\View\Framework\Providers</Filter>
+    <ClInclude Include="Source\View\Framework\Rendering\Renderer.h">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\RenderingContext.h">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\DeviceContextBuffer.h">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Windows\ContentWindow.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.h">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderPosition.h">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderResult.h">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\TextRenderResult.h">
+      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\MessageBus.h">
+      <Filter>Source\View\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include "View\Content\Base\ContentWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 #include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
 
 class SettingsGroupHeaderWindow : public ContentWindow

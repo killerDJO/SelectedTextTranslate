@@ -4,9 +4,9 @@
 #include "View\Framework\Providers\ScrollProvider.h"
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
-#include "View\Framework\RenderingContext.h"
+#include "View\Framework\Rendering\RenderingContext.h"
 #include "View\Providers\HotkeyProvider.h"
-#include "View\Framework\Providers\DialogsProvider.h"
+#include "View\Framework\MessageBus.h"
 
 class ScrollProvider;
 class RenderingContext;
@@ -18,10 +18,9 @@ class WindowContext
     ScrollProvider* scrollProvider;
     ScaleProvider* scaleProvider;
     DeviceContextProvider* deviceContextProvider;
-    DialogsProvider* dialogsProvider;
+    MessageBus* messageBus;
     ErrorHandler* errorHandler;
     RenderingContext* renderingContext;
-    HotkeyProvider* hotkeyProvider;
     Logger* logger;
 
 public:
@@ -30,8 +29,7 @@ public:
         ScrollProvider* scrollProvider,
         ScaleProvider* scaleProvider,
         DeviceContextProvider* deviceContextProvider,
-        DialogsProvider* dialogsProvider,
-        HotkeyProvider* hotkeyProvider,
+        MessageBus* messageBus,
         ErrorHandler* errorHandler,
         RenderingContext* renderingContext,
         Logger* logger);
@@ -44,6 +42,5 @@ public:
     ErrorHandler* GetErrorHandler() const;
     RenderingContext* GetRenderingContext() const;
     Logger* GetLogger() const;
-    HotkeyProvider* GetHotkeyProvider() const;
-    DialogsProvider* GetDialogsProvider() const;
+    MessageBus* GetMessageBus() const;
 };

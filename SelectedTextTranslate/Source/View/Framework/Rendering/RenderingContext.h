@@ -3,7 +3,6 @@
 #include "View\Framework\Enums\FontSizes.h"
 #include "View\Framework\Enums\Colors.h"
 #include "View\Framework\Providers\ScaleProvider.h"
-#include "View\Framework\Renderer.h"
 
 class Renderer;
 class Window;

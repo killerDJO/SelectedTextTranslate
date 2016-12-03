@@ -1,12 +1,15 @@
 #include "View\Providers\HotkeyProvider.h"
 
-HotkeyProvider::HotkeyProvider(HotkeySettings settings)
+HotkeyProvider::HotkeyProvider(HotkeySettings settings, MessageBus* messageBus)
 {
     this->hotkeysRegistry = vector<HotkeyInfo>();
     this->isSuspended = false;
     this->hotkeyIdToHotkeyMap = map<int, int>();
 
     SetHotkeysSettings(settings);
+
+    messageBus->OnSuspendHotkeys.Subscribe(bind(&HotkeyProvider::SuspendHotkeys, this));
+    messageBus->OnEnableHotkeys.Subscribe(bind(&HotkeyProvider::EnableHotkeys, this));
 }
 
 void HotkeyProvider::SetHotkeysSettings(HotkeySettings settings)

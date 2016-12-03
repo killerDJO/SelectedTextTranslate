@@ -1,7 +1,6 @@
 #pragma once
-#include "View\Framework\Renderer.h"
-#include "View\Framework\Dto\Rendering\TextRenderResult.h"
-#include "View\Framework\Dto\Rendering\RenderPosition.h"
+#include "View\Framework\Rendering\Dto\RenderPosition.h"
+#include "View\Framework\Rendering\Renderer.h"
 
 class RenderDescriptor
 {

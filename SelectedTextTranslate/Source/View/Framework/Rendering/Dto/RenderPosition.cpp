@@ -1,6 +1,6 @@
-#include "View\Framework\Dto\Rendering\RenderPosition.h"
-#include "View\Framework\Dto\Rendering\TextRenderResult.h"
-#include "View\Framework\Dto\Rendering\RenderResult.h"
+#include "View\Framework\Rendering\Dto\RenderPosition.h"
+#include "View\Framework\Rendering\Dto\TextRenderResult.h"
+#include "View\Framework\Rendering\Dto\RenderResult.h"
 
 RenderPosition::RenderPosition(Point initialPosition)
 {

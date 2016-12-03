@@ -1,4 +1,4 @@
-#include "View\Framework\Dto\Rendering\RenderResult.h"
+#include "View\Framework\Rendering\Dto\RenderResult.h"
 
 RenderResult::RenderResult(RenderPosition position)
 {

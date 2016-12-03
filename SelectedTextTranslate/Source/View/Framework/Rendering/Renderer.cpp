@@ -1,4 +1,4 @@
-#include "View\Framework\Renderer.h"
+#include "View\Framework\Rendering\Renderer.h"
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 

@@ -1,5 +1,6 @@
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
+#include "View\Framework\Rendering\Dto\RenderPosition.h"
 
 DictionaryWindow::DictionaryWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)

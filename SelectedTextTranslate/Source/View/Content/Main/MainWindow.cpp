@@ -4,9 +4,11 @@
 #include "View\Content\Main\MainWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 
-MainWindow::MainWindow(WindowContext* context)
+MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
     : Window(context)
 {
+    this->hotkeyProvider = hotkeyProvider;
+
     this->className = L"STT_MAIN";
     this->currentView = ApplicationViews::None;
 
@@ -60,7 +62,7 @@ void MainWindow::Initialize()
     Minimize();
 
     context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainWindow::Minimize, this));
-    context->GetDialogsProvider()->OnConfirmRequested.Subscribe(bind(&MainWindow::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
+    context->GetMessageBus()->OnConfirmRequested.Subscribe(bind(&MainWindow::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
 void MainWindow::CreateChildWindows()
@@ -349,7 +351,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     case WM_HOTKEY:
-        context->GetHotkeyProvider()->ProcessHotkey(wParam);
+        hotkeyProvider->ProcessHotkey(wParam);
         return Window::WindowProcedure(message, wParam, lParam);
 
     case WM_ACTIVATE:
@@ -365,18 +367,18 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     {
         if (wParam == TRUE)
         {
-            context->GetHotkeyProvider()->RegisterZoomInHotkey(
+            hotkeyProvider->RegisterZoomInHotkey(
                 GetHandle(),
                 [=]() -> void { Scale(0.1); });
 
-            context->GetHotkeyProvider()->RegisterZoomOutHotkey(
+            hotkeyProvider->RegisterZoomOutHotkey(
                 GetHandle(),
                 [=]() -> void { Scale(-0.1); });
         }
         else
         {
-            context->GetHotkeyProvider()->UnregisterZoomInHotkey(GetHandle());
-            context->GetHotkeyProvider()->UnregisterZoomOutHotkey(GetHandle());
+            hotkeyProvider->UnregisterZoomInHotkey(GetHandle());
+            hotkeyProvider->UnregisterZoomOutHotkey(GetHandle());
         }
         break;
     }

@@ -1,13 +1,17 @@
 #pragma once
 #include "Utilities\Subscribeable.h"
 
-class DialogsProvider
+class MessageBus
 {
 public:
-    DialogsProvider();
-    ~DialogsProvider();
+    MessageBus();
+    ~MessageBus();
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
+    void SuspendHotkeys();
+    void EnableHotkeys();
 
     Subscribeable<wstring, function<void()>> OnConfirmRequested;
+    Subscribeable<> OnSuspendHotkeys;
+    Subscribeable<> OnEnableHotkeys;
 };

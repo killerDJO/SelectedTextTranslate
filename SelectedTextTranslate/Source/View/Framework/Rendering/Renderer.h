@@ -1,7 +1,9 @@
 #pragma once
-#include "View\Framework\RenderingContext.h"
-#include "View\Framework\DeviceContextBuffer.h"
-#include "View\Framework\Dto\Rendering\TextRenderResult.h"
+#include "View\Framework\Rendering\DeviceContextBuffer.h"
+#include "View\Framework\Rendering\RenderingContext.h"
+#include "View\Framework\Rendering\Dto\TextRenderResult.h"
+#include "View\Framework\Providers\ScaleProvider.h"
+#include "View\Framework\Enums\Colors.h"
 
 class RenderingContext;
 class ScrollProvider;

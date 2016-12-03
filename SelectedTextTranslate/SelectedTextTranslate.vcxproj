@@ -14,10 +14,10 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\View\Framework\Providers\DialogsProvider.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderPosition.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.cpp" />
+    <ClCompile Include="Source\View\Framework\MessageBus.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderPosition.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderResult.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp" />
@@ -44,14 +44,14 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.cpp" />
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp" />
-    <ClCompile Include="Source\View\Framework\DeviceContextBuffer.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScaleProvider.cpp" />
     <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\WindowDescriptor.cpp" />
-    <ClCompile Include="Source\View\Framework\Renderer.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp" />
-    <ClCompile Include="Source\View\Framework\RenderingContext.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\RenderingContext.cpp" />
     <ClCompile Include="Source\Controllers\AppController.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResult.cpp" />
     <ClCompile Include="Source\Services\Dictionary\DictionaryService.cpp" />
@@ -72,7 +72,7 @@
     </ClCompile>
     <ClCompile Include="Source\Services\Translation\TextPlayer.cpp" />
     <ClCompile Include="Source\Services\Translation\TranslationService.cpp" />
-    <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp" />
+    <ClCompile Include="Source\View\Framework\Windows\ContentWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\HeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\TranslateResultWindow.cpp" />
     <ClCompile Include="Source\View\Content\Main\MainWindow.cpp" />
@@ -81,14 +81,14 @@
     <ClCompile Include="Source\View\Content\Translation\TranslationWindow.cpp" />
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\Dto\TextRenderResult.cpp" />
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\View\Framework\Providers\DialogsProvider.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h" />
+    <ClInclude Include="Source\View\Framework\MessageBus.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderPosition.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderResult.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h" />
@@ -115,18 +115,18 @@
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h" />
-    <ClInclude Include="Source\View\Framework\DeviceContextBuffer.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\DeviceContextBuffer.h" />
     <ClInclude Include="Source\View\Framework\Enums\WindowStates.h" />
     <ClInclude Include="Source\View\Framework\Providers\DeviceContextProvider.h" />
     <ClInclude Include="Source\View\Framework\Providers\ScaleProvider.h" />
     <ClInclude Include="Source\Controllers\Enums\ApplicationViews.h" />
     <ClInclude Include="Source\View\Framework\Enums\OverflowModes.h" />
     <ClInclude Include="Source\View\Framework\Enums\ScrollBars.h" />
-    <ClInclude Include="Source\View\Framework\Renderer.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\Renderer.h" />
     <ClInclude Include="Source\View\Framework\Enums\Colors.h" />
     <ClInclude Include="Source\View\Framework\Enums\FontSizes.h" />
     <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h" />
-    <ClInclude Include="Source\View\Framework\RenderingContext.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\RenderingContext.h" />
     <ClInclude Include="Source\Controllers\AppController.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h" />
@@ -147,7 +147,7 @@
     <ClInclude Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\HoverIconButtonWindow.h" />
     <ClInclude Include="Source\View\Controls\Buttons\HoverTextButtonWindow.h" />
-    <ClInclude Include="Source\View\Content\Base\ContentWindow.h" />
+    <ClInclude Include="Source\View\Framework\Windows\ContentWindow.h" />
     <ClInclude Include="Source\View\Content\Dictionary\DictionaryWindow.h" />
     <ClInclude Include="Source\View\Content\Translation\HeaderWindow.h" />
     <ClInclude Include="Source\View\Content\Translation\TranslateResultWindow.h" />
@@ -159,7 +159,7 @@
     <ClInclude Include="Source\View\Providers\TrayIconProvider.h" />
     <ClInclude Include="Source\Utilities\Subscribeable.h" />
     <ClInclude Include="Source\Providers\SqliteProvider.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\Dto\TextRenderResult.h" />
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h" />
   </ItemGroup>
   <ItemGroup>

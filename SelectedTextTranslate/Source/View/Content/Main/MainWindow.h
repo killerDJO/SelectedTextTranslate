@@ -15,6 +15,8 @@ private:
     SettingsWindow* settingsWindow;
     ConfirmDialogWindow* confirmDialogWindow;
 
+    HotkeyProvider* hotkeyProvider;
+
     ApplicationViews currentView;
     map<ApplicationViews, ViewDescriptor> viewDescriptors;
 
@@ -41,7 +43,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainWindow(WindowContext* context);
+    MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider);
     ~MainWindow();
 
     void Initialize() override;

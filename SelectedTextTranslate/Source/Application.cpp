@@ -55,8 +55,9 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
 {
     SettingsProvider settingsProvider = SettingsProvider(logger);
     Settings settings = settingsProvider.GetSettings();
+    MessageBus messageBus = MessageBus();
 
-    HotkeyProvider hotkeyProvider = HotkeyProvider(settings.GetHotkeySettings());
+    HotkeyProvider hotkeyProvider = HotkeyProvider(settings.GetHotkeySettings(), &messageBus);
 
     TrayIconProvider trayIconProvider = TrayIconProvider(logger, &hotkeyProvider, hInstance);
 
@@ -71,7 +72,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     ScaleProvider scaleProvider = ScaleProvider();
     DeviceContextProvider deviceContextProvider = DeviceContextProvider();
     ScrollProvider scrollProvider = ScrollProvider();
-    DialogsProvider dialogsProvider = DialogsProvider();
+    
     RenderingContext renderingContext = RenderingContext(&scaleProvider, &deviceContextProvider);
 
     WindowContext windowContext = WindowContext(
@@ -79,13 +80,12 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         &scrollProvider,
         &scaleProvider,
         &deviceContextProvider,
-        &dialogsProvider,
-        &hotkeyProvider,
+        &messageBus,
         &trayIconProvider,
         &renderingContext,
         logger);
 
-    MainWindow mainWindow = MainWindow(&windowContext);
+    MainWindow mainWindow = MainWindow(&windowContext, &hotkeyProvider);
     mainWindow.SetDescriptor(GetMainWindowDescriptor(&scaleProvider));
 
     AppController appController = AppController(
