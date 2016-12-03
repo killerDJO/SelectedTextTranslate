@@ -18,13 +18,20 @@ private:
     Window* renderingRoot;
     HDC emptyDeviceContext;
 
+    void DeleteCustomObject(HGDIOBJ gdiObject) const;
+
 public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
     ~RenderingContext();
 
     HFONT CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false, bool isBold = false) const;
+    void DeleteCustomFont(HFONT font) const;
+
     HBRUSH CreateCustomBrush(Colors color) const;
+    void DeleteCustomBrush(HBRUSH brush) const;
+
     HPEN CreateCustomPen(Colors color, int strokeWidth) const;
+    void DeleteCustomPen(HPEN pen) const;
 
     Size GetTextSize(wstring text, HFONT font) const;
     TEXTMETRIC GetFontMetrics(HFONT font) const;

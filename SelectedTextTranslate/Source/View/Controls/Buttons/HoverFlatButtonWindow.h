@@ -4,6 +4,7 @@
 class HoverFlatButtonWindow : public HoverButtonWindow
 {
 private:
+    HFONT defaultFont;
     HFONT font;
     wstring text;
     int padding;

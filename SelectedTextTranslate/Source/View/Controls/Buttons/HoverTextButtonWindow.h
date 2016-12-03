@@ -4,6 +4,7 @@
 class HoverTextButtonWindow : public HoverButtonWindow
 {
 private:
+    HFONT defaultFont;
     HFONT font;
     Colors normalColor;
     Colors hoverColor;

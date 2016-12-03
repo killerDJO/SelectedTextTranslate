@@ -1,11 +1,11 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
-    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->font = nullptr;
     this->normalColor = Colors::Gray;
     this->hoverColor = Colors::Black;
     this->disabledColor = Colors::LightGray;
@@ -77,7 +77,7 @@ void HoverTextButtonWindow::SetFont(HFONT font)
 
 HFONT HoverTextButtonWindow::GetFont() const
 {
-    return font;
+    return font == nullptr ? defaultFont : font;
 }
 
 void HoverTextButtonWindow::SetText(wstring text)
@@ -100,7 +100,7 @@ void HoverTextButtonWindow::Initialize()
 
 void HoverTextButtonWindow::RenderStatesDeviceContext()
 {
-    Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), font);
+    Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), GetFont());
 
     windowSize.Width = max(windowSize.Width, textSize.Width);
     windowSize.Height = max(windowSize.Height, textSize.Height);
@@ -123,15 +123,16 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
     HBRUSH backgroudBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
     renderer->SetBackground(backgroudBrush);
 
-    int fontAscent = renderer->GetFontAscent(font);
-    renderer->PrintText(text.c_str(), font, color, Point(0, fontAscent));
+    int fontAscent = renderer->GetFontAscent(GetFont());
+    renderer->PrintText(text.c_str(), GetFont(), color, Point(0, fontAscent));
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    AssertCriticalWinApiResult(DeleteObject(backgroudBrush));
+    context->GetRenderingContext()->DeleteCustomBrush(backgroudBrush);
 }
 
 HoverTextButtonWindow::~HoverTextButtonWindow()
 {
+    context->GetRenderingContext()->DeleteCustomFont(defaultFont);
 }

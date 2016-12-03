@@ -6,6 +6,7 @@ class HotKeyInputWindow : public ChildWindow
 private:
     DWORD currentHotkey;
     RenderPosition currentTextPoistion;
+    HFONT defaultFont;
     HFONT font;
 
     int padding;

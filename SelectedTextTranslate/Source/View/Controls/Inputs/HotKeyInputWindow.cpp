@@ -7,10 +7,11 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
 {
     this->className = HOTKEY_CLASS;
     this->currentHotkey = 0;
-    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
+    this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
+    this->font = nullptr;
     this->padding = 3;
     this->borderWidth = 1;
-    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->font).tmHeight);
+    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->defaultFont).tmHeight);
     this->hasFocus = false;
 
     this->controlToDisplayNameMap = vector<pair<DWORD, wstring>>();
@@ -39,7 +40,7 @@ void HotKeyInputWindow::SetFont(HFONT font)
 
 HFONT HotKeyInputWindow::GetFont() const
 {
-    return font;
+    return font == nullptr ? defaultFont : font;
 }
 
 void HotKeyInputWindow::SetPadding(int padding)
@@ -124,14 +125,14 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     RenderBorder(renderer);
 
     int textOffset = borderWidth + padding;
-    int fontAscent = renderer->GetFontAscent(font);
+    int fontAscent = renderer->GetFontAscent(GetFont());
 
     if (currentHotkey == 0)
     {
         currentTextPoistion = Point(textOffset, textOffset);
         renderer->PrintText(
             L"Not assigned",
-            font,
+            GetFont(),
             Colors::Gray,
             Point(textOffset, fontAscent + textOffset));
     }
@@ -139,7 +140,7 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     {
         currentTextPoistion = renderer->PrintText(
             GetHotkeyDisplayString().c_str(),
-            font,
+            GetFont(),
             Colors::Black,
             RenderPosition(textOffset, fontAscent + textOffset));
     }
@@ -272,4 +273,5 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 HotKeyInputWindow::~HotKeyInputWindow()
 {
     context->GetHotkeyProvider()->EnableHotkeys();
+    context->GetRenderingContext()->DeleteCustomFont(defaultFont);
 }

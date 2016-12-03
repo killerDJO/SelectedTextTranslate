@@ -107,5 +107,5 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 
 ConfirmDialogContentWindow::~ConfirmDialogContentWindow()
 {
-    AssertCriticalWinApiResult(DeleteObject(headerFont));
+    context->GetRenderingContext()->DeleteCustomFont(headerFont);
 }

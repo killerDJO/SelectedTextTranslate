@@ -1,11 +1,11 @@
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
-    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->font = nullptr;
     this->text = wstring();
     this->padding = 3;
     this->className = L"STT_HOVERFLATBUTTON";
@@ -30,7 +30,7 @@ void HoverFlatButtonWindow::SetFont(HFONT font)
 
 HFONT HoverFlatButtonWindow::GetFont() const
 {
-    return font;
+    return font == nullptr ? defaultFont : font;
 }
 
 void HoverFlatButtonWindow::SetText(wstring text)
@@ -57,7 +57,7 @@ int HoverFlatButtonWindow::GetPadding() const
 
 int HoverFlatButtonWindow::GetTextBaseline() const
 {
-    int fontDescent = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(font).tmDescent);
+    int fontDescent = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(GetFont()).tmDescent);
     return GetSize().Height - padding - fontDescent;
 }
 
@@ -87,16 +87,17 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
         1,
         borderColor);
 
-    int fontDescent = renderer->GetFontDescent(font);
-    renderer->PrintText(text.c_str(), font, fontColor, Point(windowSize.Width / 2, windowSize.Height - padding - fontDescent), TA_CENTER);
+    int fontDescent = renderer->GetFontDescent(GetFont());
+    renderer->PrintText(text.c_str(), GetFont(), fontColor, Point(windowSize.Width / 2, windowSize.Height - padding - fontDescent), TA_CENTER);
 
     renderer->Render(deviceContext, windowSize);
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    AssertCriticalWinApiResult(DeleteObject(backgroundBrush));
+    context->GetRenderingContext()->DeleteCustomBrush(backgroundBrush);
 }
 
 HoverFlatButtonWindow::~HoverFlatButtonWindow()
 {
+    context->GetRenderingContext()->DeleteCustomFont(defaultFont);
 }
