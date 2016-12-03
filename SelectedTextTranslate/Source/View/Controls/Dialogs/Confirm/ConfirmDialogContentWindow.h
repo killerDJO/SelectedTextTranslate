@@ -4,7 +4,7 @@
 class ConfirmDialogContentWindow : public ContentWindow
 {
 private:
-    wstring text;
+    wstring title;
 
 protected:
     Size RenderContent(Renderer* renderer) override;
@@ -13,10 +13,13 @@ public:
     ConfirmDialogContentWindow(WindowContext* context, Window* parentWindow);
     ~ConfirmDialogContentWindow();
 
-    void Initialize() override;
+    void SetDescriptor(WindowDescriptor descriptor) override;
+    void SetDimensions(Point position, int width);
 
-    void SetText(wstring text);
-    wstring GetText() const;
+    void SetTitle(wstring title);
+    wstring GetTitle() const;
+
+    void Initialize() override;
 
     Subscribeable<> OnConfirm;
     Subscribeable<> OnCancel;

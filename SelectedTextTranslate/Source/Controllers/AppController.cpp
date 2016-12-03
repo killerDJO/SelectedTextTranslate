@@ -100,6 +100,7 @@ void AppController::ShowSettings() const
 {
     mainWindow->SetCurrentView(ApplicationViews::Settings);
     mainWindow->SetSettingsModel(settingsProvider->GetSettings());
+
     mainWindow->Render();
     mainWindow->Maximize();
 }
@@ -110,7 +111,7 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
     DictionaryRecord recordToTranslate = dictionaryRecords[wordInDictionaryIndex];
 
     translateResult = translationService->TranslateSentence(recordToTranslate.GetWord(), false, false);
-    
+
     mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
     mainWindow->SetTranslateResultModel(translateResult);
 

@@ -59,7 +59,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
 
     if (model.IsEmptyResult())
     {
-        translateResultWindow->Hide();
+        translateResultWindow->MakeHidden();
 
         Size backgroundSize = Size(
             max(parentWindow->GetSize().Width, headerWindow->GetSize().Width),
@@ -70,7 +70,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
     }
     else
     {
-        translateResultWindow->Show();
+        translateResultWindow->MakeVisible();
         translateResultWindow->Render();
 
         contentSize.Width = max(headerWindow->GetSize().Width, translateResultWindow->GetSize().Width);

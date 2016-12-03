@@ -1,9 +1,15 @@
 #include "View\Framework\Windows\ChildWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 ChildWindow::ChildWindow(WindowContext* context, Window* parentWindow)
     : Window(context)
 {
+    if(parentWindow == nullptr)
+    {
+        throw SelectedTextTranslateFatalException(L"Parent window must be provided.");
+    }
+
     this->parentWindow = parentWindow;
     this->isLayered = false;
 }

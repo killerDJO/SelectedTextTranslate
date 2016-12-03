@@ -69,6 +69,10 @@ wstring ExceptionHelper::GetCurrentExceptionMessage()
     {
         exceptionMessage = exception.GetFullErrorMessage();
     }
+    catch (const SelectedTextTranslateBaseException* exception)
+    {
+        exceptionMessage = exception->GetFullErrorMessage();
+    }
     catch (const exception& exception)
     {
         exceptionMessage = StringUtilities::Format(L"\tException message: '%hs'", exception.what());

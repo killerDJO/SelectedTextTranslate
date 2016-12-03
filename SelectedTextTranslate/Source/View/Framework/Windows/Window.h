@@ -54,14 +54,17 @@ public:
     virtual void SetDescriptor(WindowDescriptor descriptor);
 
     Size GetSize(bool downscale = false) const;
-    Size GetAvailableClientSize() const;
+    Size GetAvailableClientSize(bool downscale = false) const;
     Size GetContentSize() const;
     Point GetPosition(bool downscale = false) const;
     Rect GetBoundingRect(bool downscale = false) const;
 
+    void MakeVisible();
+    void MakeHidden();
+    bool IsVisible() const;
+
     void Show();
     void Hide();
-    bool IsVisible() const;
 
     void Render(bool preserveScrolls = false);
     void Draw(bool drawChildren = false);

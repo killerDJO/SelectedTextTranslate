@@ -6,6 +6,11 @@
 Window::Window(WindowContext* context)
     : NativeWindowHolder(context->GetInstance())
 {
+    if(context == nullptr)
+    {
+        throw SelectedTextTranslateFatalException(L"Window context must be provided.");
+    }
+
     this->context = context;
     this->descriptor = WindowDescriptor();
     this->activeChildWindows = vector<Window*>();
@@ -33,7 +38,7 @@ void Window::Initialize()
 {
     if(descriptor.IsEmpty())
     {
-        throw new SelectedTextTranslateException(L"Descriptor must be set for window");
+        throw SelectedTextTranslateException(L"Descriptor must be set for window");
     }
 
     if (descriptor.IsAutoScaleEnabled())
@@ -124,13 +129,14 @@ void Window::ApplyRenderedState(bool preserveScrolls)
         Window* childWindow = activeChildWindows[i];
         if (childWindow->IsVisible())
         {
-            ShowWindow(childWindow->GetHandle(), SW_SHOW);
-            childWindow->ApplyRenderedState(preserveScrolls);
+            childWindow->Show();
         }
         else
         {
-            ShowWindow(childWindow->GetHandle(), SW_HIDE);
+            childWindow->Hide();
         }
+
+        childWindow->ApplyRenderedState(preserveScrolls);
     }
 
     Draw(false);
@@ -244,15 +250,30 @@ Size Window::GetSize(bool downscale) const
     return !downscale ? windowSize : context->GetScaleProvider()->Downscale(windowSize);
 }
 
-Size Window::GetAvailableClientSize() const
+Size Window::GetAvailableClientSize(bool downscale) const
 {
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
 
     ScrollProvider* scrollProvider = context->GetScrollProvider();
-    return Size(
+    Size availablClientSize = Size(
         clientRect.right + scrollProvider->GetScrollBarSize(this, ScrollBars::Vertical),
         clientRect.bottom + scrollProvider->GetScrollBarSize(this, ScrollBars::Horizontal));
+
+    RECT windowRect;
+    AssertCriticalWinApiResult(GetWindowRect(windowHandle, &windowRect));
+    Size currentWindowSize = Size(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+
+    double scaleFactor = double(windowRect.right - windowRect.left) / windowSize.Width;
+
+    int horizontalFrame = roundToInt((currentWindowSize.Width - availablClientSize.Width) * scaleFactor);
+    int verticalFrame = roundToInt((currentWindowSize.Height - availablClientSize.Height) * scaleFactor);
+
+    Size scaledClientSize = Size(windowSize.Width - horizontalFrame, windowSize.Height - verticalFrame);
+
+    return downscale
+        ? context->GetScaleProvider()->Downscale(scaledClientSize)
+        : scaledClientSize;
 }
 
 Size Window::GetContentSize() const
@@ -273,12 +294,12 @@ Rect Window::GetBoundingRect(bool downscale) const
     return Rect(positon, size);
 }
 
-void Window::Show()
+void Window::MakeVisible()
 {
     isVisible = true;
 }
 
-void Window::Hide()
+void Window::MakeHidden()
 {
     isVisible = false;
 }
@@ -286,6 +307,20 @@ void Window::Hide()
 bool Window::IsVisible() const
 {
     return isVisible;
+}
+
+void Window::Show()
+{
+    AssertWindowInitialized();
+    MakeVisible();
+    ShowWindow(GetHandle(), SW_SHOW);
+}
+
+void Window::Hide()
+{
+    AssertWindowInitialized();
+    MakeHidden();
+    ShowWindow(GetHandle(), SW_HIDE);
 }
 
 LRESULT Window::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)

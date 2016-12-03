@@ -7,30 +7,13 @@ ConfirmDialogWindow::ConfirmDialogWindow(WindowContext* context, Window* parentW
     : ChildWindow(context, parentWindow)
 {
     this->className = L"STT_CONFIRM_DIALOG";
-}
 
-Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
-{
-    DestroyChildWindows();
+    this->dialogContentWindow = nullptr;
+    this->title = wstring();
+    this->OnConfirm = Subscribeable<>();
+    this->OnCancel = Subscribeable<>();
 
-    ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
-    overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), windowSize));
-    AddChildWindow(overlayWindow);
-    overlayWindow->Render();
-
-    ConfirmDialogContentWindow* dialogContentWindow = new ConfirmDialogContentWindow(context, this);
-
-    Size dialogContentSize = Size(220, 100);
-    int paddingX = roundToInt((windowSize.Width - dialogContentSize.Width) / 2);
-    int paddingY = 50;
-    dialogContentWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(paddingX, paddingY), dialogContentSize));
-    dialogContentWindow->SetText(L"Reset Settings?");
-    AddChildWindow(dialogContentWindow);
-    dialogContentWindow->Render();
-
-    renderer->UpdateRenderedContentSize(dialogContentWindow);
-
-    return renderer->GetScaledSize();
+    this->isLayered = false;
 }
 
 void ConfirmDialogWindow::Initialize()
@@ -39,7 +22,51 @@ void ConfirmDialogWindow::Initialize()
 
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 
-    Render();
+    SendMessage(this->parentWindow->GetHandle(), WM_KILLFOCUS, 0, 0);
+}
+
+void ConfirmDialogWindow::SetTitle(wstring title)
+{
+    this->title = title;
+
+    if(dialogContentWindow != nullptr)
+    {
+        dialogContentWindow->SetTitle(title);
+        dialogContentWindow->Render();
+    }
+}
+
+wstring ConfirmDialogWindow::GetTitle() const
+{
+    return title;
+}
+
+Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
+{
+    DestroyChildWindows();
+
+    ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
+    overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize(true)));
+    AddChildWindow(overlayWindow);
+    overlayWindow->Render();
+
+    dialogContentWindow = new ConfirmDialogContentWindow(context, this);
+
+    int dialogWidth = 200;
+    int paddingX = roundToInt((GetSize(true).Width - dialogWidth) / 2);
+    int paddingY = 50;
+    dialogContentWindow->SetDimensions(Point(paddingX, paddingY), dialogWidth);
+    dialogContentWindow->SetTitle(title);
+    dialogContentWindow->OnConfirm.Subscribe(&OnConfirm);
+    dialogContentWindow->OnConfirm.Subscribe(bind(&Window::Hide, this));
+    dialogContentWindow->OnCancel.Subscribe(&OnCancel);
+    dialogContentWindow->OnCancel.Subscribe(bind(&Window::Hide, this));
+    AddChildWindow(dialogContentWindow);
+    dialogContentWindow->Render();
+
+    renderer->UpdateRenderedContentSize(dialogContentWindow);
+
+    return renderer->GetScaledSize();
 }
 
 ConfirmDialogWindow::~ConfirmDialogWindow()

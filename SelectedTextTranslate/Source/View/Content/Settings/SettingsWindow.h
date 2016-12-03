@@ -33,6 +33,7 @@ private:
 
     void UpdateSettings(Settings settings);
     void SetButtonsState() const;
+    void SetSettingsState() const;
     SettingsGroupState ToggleSettingsGroupState(SettingsGroupState settingsGroupState) const;
 
 protected:

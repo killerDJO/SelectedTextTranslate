@@ -19,4 +19,9 @@ public:
     {
         this->model = model;
     }
+
+    virtual TModel GetModel()
+    {
+        return model;
+    }
 };

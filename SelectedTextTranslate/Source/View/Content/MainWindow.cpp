@@ -67,14 +67,14 @@ void MainWindow::CreateViews()
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
     translationWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
     translationWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
-    translationWindow->Hide();
+    translationWindow->MakeHidden();
     translationWindow->SetModel(translateResult);
 
     dictionaryWindow = new DictionaryWindow(context, this);
     dictionaryWindow->SetDescriptor(windowDescriptor);
     dictionaryWindow->OnShowTranslation.Subscribe(&OnShowTranslation);
     AddChildWindow(dictionaryWindow);
-    dictionaryWindow->Hide();
+    dictionaryWindow->MakeHidden();
     dictionaryWindow->SetModel(dictionaryRecords);
 
     settingsWindow = new SettingsWindow(context, this);
@@ -82,7 +82,7 @@ void MainWindow::CreateViews()
     settingsWindow->OnSettingsStateChanged.Subscribe(&OnSettingsStateChanged);
     settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
     AddChildWindow(settingsWindow);
-    settingsWindow->Hide();
+    settingsWindow->MakeHidden();
     settingsWindow->SetModel(settings);
 }
 
@@ -103,19 +103,13 @@ void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 void MainWindow::Minimize()
 {
-    AssertWindowInitialized();
-
-    ShowWindow(windowHandle, SW_HIDE);
     Hide();
 }
 
 void MainWindow::Maximize()
 {
-    AssertWindowInitialized();
-
-    ShowWindow(windowHandle, SW_SHOW);
-    SwitchToThisWindow(windowHandle, TRUE);
     Show();
+    SwitchToThisWindow(windowHandle, TRUE);
 }
 
 void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
@@ -153,13 +147,14 @@ Size MainWindow::RenderContent(Renderer* renderer)
 {
     for(size_t i = 0; i < activeChildWindows.size(); ++i)
     {
-        activeChildWindows[i]->Hide();
+        activeChildWindows[i]->MakeHidden();
     }
 
     Window* currentView = GetWindowToShow();
 
+    currentView->MakeVisible();
     currentView->Render();
-    currentView->Show();
+
     return currentView->GetContentSize();
 }
 
