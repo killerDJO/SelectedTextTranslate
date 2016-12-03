@@ -5,8 +5,10 @@
 #include "Services\Translation\TranslatePageParser.h"
 #include "Services\Dictionary\DictionaryService.h"
 #include "Providers\RequestProvider.h"
-#include "View\Content\MainWindow.h"
 #include "Services\Settings\SettingsProvider.h"
+#include "View\Framework\Providers\DeviceContextProvider.h"
+#include "View\Framework\Providers\ScrollProvider.h"
+#include "View\Content\Main\MainWindow.h"
 
 Application::Application()
 {

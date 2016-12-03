@@ -4,9 +4,9 @@
 #include "Services\Translation\TextPlayer.h"
 #include "Services\Translation\TextExtractor.h"
 #include "Services\Dictionary\DictionaryService.h"
-#include "View\Content\MainWindow.h"
 #include "View\Providers\TrayIconProvider.h"
 #include "Services\Settings\SettingsProvider.h"
+#include "View\Content\Main\MainWindow.h"
 
 class AppController
 {

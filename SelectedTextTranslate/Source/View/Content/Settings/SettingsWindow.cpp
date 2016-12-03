@@ -75,7 +75,7 @@ RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDe
 template<typename TModel>
 RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupState state, TModel model)
 {
-    settingsGroup->SetDimensions(renderDescriptor.GetRenderPosition().GetPosition(), 250);
+    settingsGroup->SetDimensions(renderDescriptor.GetRenderPosition().GetPosition(), 257);
     settingsGroup->SetState(state);
 
     AddChildWindow(settingsGroup);

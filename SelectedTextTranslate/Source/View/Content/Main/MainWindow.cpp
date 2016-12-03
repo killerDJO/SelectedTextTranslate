@@ -1,7 +1,7 @@
-#include "View\Content\MainWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
+#include "View\Content\Main\MainWindow.h"
 
 MainWindow::MainWindow(WindowContext* context)
     : Window(context)
@@ -20,6 +20,17 @@ MainWindow::MainWindow(WindowContext* context)
     this->OnShowTranslation = Subscribeable<int>();
     this->OnSettingsStateChanged = Subscribeable<>();
     this->OnSaveSettings = Subscribeable<Settings>();
+
+    this->viewDescriptors = map<ApplicationViews, ViewDescriptor>();
+}
+
+void MainWindow::SetDescriptor(WindowDescriptor descriptor)
+{
+    Window::SetDescriptor(descriptor);
+
+    viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
+    viewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
+    viewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(descriptor, true);
 }
 
 void MainWindow::Initialize()
@@ -55,7 +66,7 @@ void MainWindow::CreateViews()
 
     WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
-        windowSize,
+        GetAvailableClientSize(false),
         OverflowModes::Stretch,
         OverflowModes::Stretch,
         false);
@@ -141,11 +152,15 @@ void MainWindow::SetCurrentView(ApplicationViews applicationView)
     AssertWindowInitialized();
 
     currentView = applicationView;
+
+    descriptor = viewDescriptors[applicationView].GetWindowDescriptor();
+    position = descriptor.GetPosition();
+    windowSize = descriptor.GetWindowSize();
 }
 
 Size MainWindow::RenderContent(Renderer* renderer)
 {
-    for(size_t i = 0; i < activeChildWindows.size(); ++i)
+    for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
         activeChildWindows[i]->MakeHidden();
     }
@@ -160,16 +175,13 @@ Size MainWindow::RenderContent(Renderer* renderer)
 
 void MainWindow::Scale(double scaleFactorAdjustment)
 {
-    int scaledWidth = context->GetScaleProvider()->Rescale(descriptor.GetWindowSize().Width, scaleFactorAdjustment);
-    int scaledHeight = context->GetScaleProvider()->Rescale(descriptor.GetWindowSize().Height, scaleFactorAdjustment);
+    ScaleViewDescriptor(ApplicationViews::Settings, scaleFactorAdjustment);
+    ScaleViewDescriptor(ApplicationViews::Dictionary, scaleFactorAdjustment);
+    ScaleViewDescriptor(ApplicationViews::TranslateResult, scaleFactorAdjustment);
 
-    position.X = descriptor.GetPosition().X - scaledWidth + descriptor.GetWindowSize().Width;
-    position.Y = descriptor.GetPosition().Y - scaledHeight + descriptor.GetWindowSize().Height;
-    descriptor.SetPosition(position);
-
-    windowSize.Width = scaledWidth;
-    windowSize.Height =  scaledHeight;
-    descriptor.SetWindowSize(windowSize);
+    descriptor = viewDescriptors[currentView].GetWindowDescriptor();
+    position = descriptor.GetPosition();
+    windowSize = descriptor.GetWindowSize();
 
     context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAdjustment);
 
@@ -179,9 +191,25 @@ void MainWindow::Scale(double scaleFactorAdjustment)
     Render();
 }
 
+void MainWindow::ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment)
+{
+    WindowDescriptor windowDescriptor = viewDescriptors[applicationView].GetWindowDescriptor();
+
+    int scaledWidth = context->GetScaleProvider()->Rescale(windowDescriptor.GetWindowSize().Width, scaleFactorAdjustment);
+    int scaledHeight = context->GetScaleProvider()->Rescale(windowDescriptor.GetWindowSize().Height, scaleFactorAdjustment);
+
+    windowDescriptor.SetPosition(Point(
+        windowDescriptor.GetPosition().X - scaledWidth + windowDescriptor.GetWindowSize().Width,
+        windowDescriptor.GetPosition().Y - scaledHeight + windowDescriptor.GetWindowSize().Height));
+
+    windowDescriptor.SetWindowSize(Size(scaledWidth, scaledHeight));
+
+    viewDescriptors[applicationView].SetWindowDescriptor(windowDescriptor);
+}
+
 void MainWindow::Resize()
 {
-    if(windowState == WindowStates::Rendering)
+    if (windowState == WindowStates::Rendering)
     {
         return;
     }
@@ -191,7 +219,7 @@ void MainWindow::Resize()
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 
-    if(descriptor.GetWindowSize().Width == newWidth && descriptor.GetWindowSize().Height == newHeight)
+    if (descriptor.GetWindowSize().Width == newWidth && descriptor.GetWindowSize().Height == newHeight)
     {
         return;
     }
@@ -211,13 +239,11 @@ void MainWindow::Resize()
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    for (size_t i = 0; i < activeChildWindows.size(); ++i)
-    {
-        activeChildWindows[i]->Resize();
-    }
-
     Window* currentWindow = GetWindowToShow();
+    currentWindow->Resize();
     contentSize = currentWindow->GetContentSize();
+
+    viewDescriptors[currentView].SetWindowDescriptor(descriptor);
 
     ApplyRenderedState(true);
 }
@@ -229,7 +255,7 @@ Window* MainWindow::GetWindowToShow() const
         return translationWindow;
     }
 
-    if(currentView == ApplicationViews::Dictionary)
+    if (currentView == ApplicationViews::Dictionary)
     {
         return dictionaryWindow;
     }
@@ -246,60 +272,83 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-        case WM_SIZE:
-            Resize();
-            return TRUE;
+    case WM_SIZE:
+    {
+        Resize();
+        return TRUE;
+    }
 
-        case WM_SYSCOMMAND:
+    case WM_SETCURSOR:
+    {
+        if (!viewDescriptors[currentView].IsResizeable())
         {
-            switch (wParam & 0xfff0)
-            {
-                case SC_MINIMIZE:
-                case SC_CLOSE:
-                    Minimize();
-                    return 0;
-                default:
-                    break;
-            }
-
-            return DefWindowProc(windowHandle, message, wParam, lParam);
-        }
-
-        case WM_HOTKEY:
-            context->GetHotkeyProvider()->ProcessHotkey(wParam);
-            return Window::WindowProcedure(message, wParam, lParam);
-
-        case WM_ACTIVATE:
-        {
-            if(wParam == WA_INACTIVE)
-            {
-                Minimize();
-            }
+            SetCursor(LoadCursor(nullptr, IDC_ARROW));
             return TRUE;
         }
+    }
 
-        case WM_SHOWWINDOW:
+    case WM_SIZING:
+    {
+        if (!viewDescriptors[currentView].IsResizeable())
         {
-            if (wParam == TRUE)
-            {
-                context->GetHotkeyProvider()->RegisterZoomInHotkey(
-                    GetHandle(),
-                    [=]() -> void { Scale(0.1); });
+            RECT &newSize = *(LPRECT)lParam;
+            RECT windowRect;
+            GetWindowRect(windowHandle, &windowRect);
+            newSize = windowRect;
+            return 0;
+        }
+    }
 
-                context->GetHotkeyProvider()->RegisterZoomOutHotkey(
-                    GetHandle(),
-                    [=]() -> void { Scale(-0.1); });
-            }
-            else
-            {
-                context->GetHotkeyProvider()->UnregisterZoomInHotkey(GetHandle());
-                context->GetHotkeyProvider()->UnregisterZoomOutHotkey(GetHandle());
-            }
+    case WM_SYSCOMMAND:
+    {
+        switch (wParam & 0xfff0)
+        {
+        case SC_MINIMIZE:
+        case SC_CLOSE:
+            Minimize();
+            return 0;
+        default:
             break;
         }
 
-        default:
-            return Window::WindowProcedure(message, wParam, lParam);
+        return DefWindowProc(windowHandle, message, wParam, lParam);
+    }
+
+    case WM_HOTKEY:
+        context->GetHotkeyProvider()->ProcessHotkey(wParam);
+        return Window::WindowProcedure(message, wParam, lParam);
+
+    case WM_ACTIVATE:
+    {
+        if (wParam == WA_INACTIVE)
+        {
+            Minimize();
+        }
+        return TRUE;
+    }
+
+    case WM_SHOWWINDOW:
+    {
+        if (wParam == TRUE)
+        {
+            context->GetHotkeyProvider()->RegisterZoomInHotkey(
+                GetHandle(),
+                [=]() -> void { Scale(0.1); });
+
+            context->GetHotkeyProvider()->RegisterZoomOutHotkey(
+                GetHandle(),
+                [=]() -> void { Scale(-0.1); });
+        }
+        else
+        {
+            context->GetHotkeyProvider()->UnregisterZoomInHotkey(GetHandle());
+            context->GetHotkeyProvider()->UnregisterZoomOutHotkey(GetHandle());
+        }
+        break;
+    }
+
+    default:
+        return Window::WindowProcedure(message, wParam, lParam);
     }
 
     return 0;

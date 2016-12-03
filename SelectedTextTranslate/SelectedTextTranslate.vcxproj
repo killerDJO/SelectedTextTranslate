@@ -74,13 +74,14 @@
     <ClCompile Include="Source\View\Content\Base\ContentWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\HeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Translation\TranslateResultWindow.cpp" />
-    <ClCompile Include="Source\View\Content\MainWindow.cpp" />
+    <ClCompile Include="Source\View\Content\Main\MainWindow.cpp" />
     <ClCompile Include="Source\View\Framework\Windows\Window.cpp" />
     <ClCompile Include="Source\View\Framework\WindowContext.cpp" />
     <ClCompile Include="Source\View\Content\Translation\TranslationWindow.cpp" />
     <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp" />
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp" />
+    <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h" />
@@ -148,7 +149,7 @@
     <ClInclude Include="Source\View\Content\Dictionary\DictionaryWindow.h" />
     <ClInclude Include="Source\View\Content\Translation\HeaderWindow.h" />
     <ClInclude Include="Source\View\Content\Translation\TranslateResultWindow.h" />
-    <ClInclude Include="Source\View\Content\MainWindow.h" />
+    <ClInclude Include="Source\View\Content\Main\MainWindow.h" />
     <ClInclude Include="Source\View\Framework\Windows\Window.h" />
     <ClInclude Include="Source\View\Framework\Dto\WindowDescriptor.h" />
     <ClInclude Include="Source\View\Framework\WindowContext.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Source\Utilities\Subscribeable.h" />
     <ClInclude Include="Source\Providers\SqliteProvider.h" />
     <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h" />
+    <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

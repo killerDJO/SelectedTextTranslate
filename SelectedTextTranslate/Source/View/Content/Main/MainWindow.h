@@ -4,6 +4,7 @@
 #include "View\Content\Translation\TranslationWindow.h"
 #include "View\Content\Settings\SettingsWindow.h"
 #include "Controllers\Enums\ApplicationViews.h"
+#include "View\Content\Main\Dto\ViewDescriptor.h"
 
 class MainWindow : public Window
 {
@@ -13,6 +14,7 @@ private:
     SettingsWindow* settingsWindow;
 
     ApplicationViews currentView;
+    map<ApplicationViews, ViewDescriptor> viewDescriptors;
 
     TranslateResult translateResult;
     vector<DictionaryRecord> dictionaryRecords;
@@ -21,6 +23,7 @@ private:
     void CreateViews();
 
     void Scale(double scaleFactorAjustment);
+    void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
     void Resize() override;
     Window* GetWindowToShow() const;
 
@@ -34,15 +37,9 @@ public:
     MainWindow(WindowContext* context);
     ~MainWindow();
 
-    Subscribeable<> OnPlayText;
-    Subscribeable<> OnForceTranslation;
-    Subscribeable<> OnTranslateSuggestion;
-    Subscribeable<int> OnExpandTranslationResult;
-    Subscribeable<int> OnShowTranslation;
-    Subscribeable<> OnSettingsStateChanged;
-    Subscribeable<Settings> OnSaveSettings;
-
     void Initialize() override;
+
+    void SetDescriptor(WindowDescriptor descriptor) override;
 
     void Minimize();
     void Maximize();
@@ -51,4 +48,12 @@ public:
     void SetTranslateResultModel(TranslateResult translateResult);
     void SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords);
     void SetSettingsModel(Settings settings);
+
+    Subscribeable<> OnPlayText;
+    Subscribeable<> OnForceTranslation;
+    Subscribeable<> OnTranslateSuggestion;
+    Subscribeable<int> OnExpandTranslationResult;
+    Subscribeable<int> OnShowTranslation;
+    Subscribeable<> OnSettingsStateChanged;
+    Subscribeable<Settings> OnSaveSettings;
 };

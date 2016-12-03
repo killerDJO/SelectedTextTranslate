@@ -45,6 +45,9 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         renderPosition = renderPosition.MoveY(lineHeight);
     }
 
+    renderer->IncreaseWidth(paddingX);
+    renderer->IncreaseHeight(paddingY);
+
     return renderer->GetScaledSize();
 }
 
