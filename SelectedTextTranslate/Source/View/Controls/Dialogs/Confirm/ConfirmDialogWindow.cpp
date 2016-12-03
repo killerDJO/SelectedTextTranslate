@@ -46,14 +46,14 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
     DestroyChildWindows();
 
     ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
-    overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize(true)));
+    overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize()));
     AddChildWindow(overlayWindow);
     overlayWindow->Render();
 
     dialogContentWindow = new ConfirmDialogContentWindow(context, this);
 
     int dialogWidth = 200;
-    int paddingX = roundToInt((GetSize(true).Width - dialogWidth) / 2);
+    int paddingX = roundToInt((GetSize().Width - dialogWidth) / 2);
     int paddingY = 50;
     dialogContentWindow->SetDimensions(Point(paddingX, paddingY), dialogWidth);
     dialogContentWindow->SetTitle(title);

@@ -136,6 +136,9 @@
     <Filter Include="Source\View\Controls\Dialogs\Confirm">
       <UniqueIdentifier>{92fcec42-94ad-432a-997f-b5fc986876dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Framework\Dto\Rendering">
+      <UniqueIdentifier>{deeb2811-dcad-4c2d-a589-7b53d45babb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -319,16 +322,16 @@
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderPosition.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp">
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rendering\TextRenderResult.cpp">
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -547,10 +550,18 @@
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h">
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h">
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h">
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Rendering\TextRenderResult.h">
+      <Filter>Source\View\Framework\Dto\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

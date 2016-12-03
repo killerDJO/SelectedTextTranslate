@@ -58,7 +58,7 @@ int HoverFlatButtonWindow::GetPadding() const
 int HoverFlatButtonWindow::GetTextBaseline() const
 {
     int fontDescent = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(font).tmDescent);
-    return GetSize(true).Height - padding - fontDescent;
+    return GetSize().Height - padding - fontDescent;
 }
 
 void HoverFlatButtonWindow::RenderStatesDeviceContext()
@@ -79,7 +79,7 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
     HBRUSH backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
-    Size windowSize = GetSize(true);
+    Size windowSize = GetSize();
 
     renderer->DrawBorderedRect(
         Rect(Point(0, 0), windowSize),

@@ -260,7 +260,7 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 {
     Rect borderRect = Rect(
         Point(0, 0),
-        context->GetScaleProvider()->Downscale(GetAvailableClientSize()));
+        GetAvailableClientSize());
 
     renderer->DrawBorderedRect(
         borderRect,

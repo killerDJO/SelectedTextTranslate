@@ -60,8 +60,8 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    int headerWidth = GetSize(true).Width;
-    int headerHeight = GetSize(true).Height;
+    int headerWidth = GetSize().Width;
+    int headerHeight = GetSize().Height;
 
     renderer->DrawBorderedRect(Rect(Point(0, 0), Size(headerWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
 

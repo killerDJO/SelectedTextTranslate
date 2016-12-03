@@ -22,7 +22,7 @@ void ScrollProvider::InitializeScrollbars(
         return;
     }
 
-    Size clientSize = window->GetAvailableClientSize();
+    Size clientSize = window->GetAvailableClientSize(false);
 
     Size contentSize = window->GetContentSize();
     contentSize.Width -= GetScrollChar(ScrollBars::Vertical);

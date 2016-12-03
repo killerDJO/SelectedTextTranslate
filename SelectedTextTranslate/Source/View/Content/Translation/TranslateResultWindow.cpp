@@ -128,7 +128,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         AddChildWindow(expandButton);
 
         renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton);
-        return RenderResult(expandButton->GetBoundingRect(true));
+        return RenderResult(expandButton->GetBoundingRect());
     }
 
     return RenderResult(renderDescriptor.GetRenderPosition());

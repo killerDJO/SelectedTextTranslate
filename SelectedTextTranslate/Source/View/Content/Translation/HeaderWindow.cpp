@@ -1,7 +1,6 @@
 #include "View\Content\Translation\HeaderWindow.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Utilities\StringUtilities.h"
 
 HeaderWindow::HeaderWindow(WindowContext* context, Window* parentWindow)
@@ -105,7 +104,7 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
         L")",
         fontSmall,
         Colors::Gray,
-        Point(headerActionButton->GetBoundingRect(true).GetRight(), orignLineRenderResult.GetBaselineY()));
+        Point(headerActionButton->GetBoundingRect().GetRight(), orignLineRenderResult.GetBaselineY()));
 }
 
 HeaderWindow::~HeaderWindow()

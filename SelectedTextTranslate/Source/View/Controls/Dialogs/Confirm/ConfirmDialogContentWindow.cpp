@@ -59,7 +59,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
     
-    Size scaledWindowSize = GetSize(true);
+    Size scaledWindowSize = GetSize();
 
     renderer->DrawBorderedRect(Rect(Point(0, 0), scaledWindowSize), nullptr, 1, Colors::Gray);
 
@@ -95,7 +95,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
-    cancelButton->SetPosition(Point(confirmButton->GetPosition(true).X - 10 - textWidth, confirmButton->GetPosition(true).Y + confirmButton->GetTextBaseline() - cancelButtonFontAscent));
+    cancelButton->SetPosition(Point(confirmButton->GetPosition().X - 10 - textWidth, confirmButton->GetPosition().Y + confirmButton->GetTextBaseline() - cancelButtonFontAscent));
     cancelButton->OnClick.Subscribe(&OnCancel);
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);

@@ -85,7 +85,7 @@ RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDesc
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
 
-    return RenderResult(settingsGroup->GetBoundingRect(true));
+    return RenderResult(settingsGroup->GetBoundingRect());
 }
 
 void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
@@ -96,10 +96,10 @@ void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
 
     wstring resetButtonText = L"Reset";
     int resetButtonTextWidth = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetTextSize(resetButtonText, fontSmallUnderscored).Width);
-    int resetButtonPositionX = hotkeySettingsWindow->GetBoundingRect(true).GetRight() - resetButtonTextWidth;
+    int resetButtonPositionX = hotkeySettingsWindow->GetBoundingRect().GetRight() - resetButtonTextWidth;
 
     ConfirmDialogWindow* confirmResetDialogWindow = new ConfirmDialogWindow(context, this);
-    confirmResetDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize(true)));
+    confirmResetDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize()));
     confirmResetDialogWindow->SetTitle(L"Confirm settings reset?");
     confirmResetDialogWindow->MakeHidden();
     AddChildWindow(confirmResetDialogWindow);
@@ -129,7 +129,7 @@ RenderResult SettingsWindow::CreateSaveButtonControl(RenderDescriptor renderDesc
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(saveButton);
 
     return RenderResult(Point(
-        saveButton->GetSize(true).Width + saveButton->GetPosition(true).X,
+        saveButton->GetSize().Width + saveButton->GetPosition().X,
         renderDescriptor.GetRenderPosition().GetY() + saveButton->GetTextBaseline()));
 }
 

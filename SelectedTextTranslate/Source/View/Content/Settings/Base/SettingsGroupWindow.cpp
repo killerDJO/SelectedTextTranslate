@@ -94,15 +94,15 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
     headerWindow = new SettingsGroupHeaderWindow(context, this);
     headerWindow->SetTitle(GetCurrentTitle());
     headerWindow->SetState(state);
-    headerWindow->SetDimensions(Point(0, 0), GetSize(true).Width);
+    headerWindow->SetDimensions(Point(0, 0), GetSize().Width);
     headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
     AddChildWindow(headerWindow);
     headerWindow->Render();
 
     if (state == SettingsGroupState::Expanded)
     {
-        RenderSettingsContent(RenderDescriptor(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect(true).GetBottom())));
-        Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize(true).Width, renderer->GetSize().Height));
+        RenderSettingsContent(RenderDescriptor(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect().GetBottom())));
+        Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize().Width, renderer->GetSize().Height));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
     }
 
