@@ -43,8 +43,7 @@ void AppController::TranslateSelectedText()
 
     translateResult = translationService->TranslateSentence(selectedText, true, false);
 
-    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
-    mainWindow->SetTranslateResultModel(translateResult);
+    mainWindow->SetTranslateResultView(translateResult);
 
     mainWindow->Render();
     mainWindow->Maximize();
@@ -54,8 +53,7 @@ void AppController::ForceTranslateCurrentText()
 {
     translateResult = translationService->TranslateSentence(translateResult.GetSentence().GetInput(), true, true);
 
-    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
-    mainWindow->SetTranslateResultModel(translateResult);
+    mainWindow->SetTranslateResultView(translateResult);
     mainWindow->Render();
 }
 
@@ -63,15 +61,14 @@ void AppController::TranslateSuggestion()
 {
     translateResult = translationService->TranslateSentence(translateResult.GetSentence().GetSuggestion(), true, false);
 
-    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
-    mainWindow->SetTranslateResultModel(translateResult);
+    mainWindow->SetTranslateResultView(translateResult);
     mainWindow->Render();
 }
 
 void AppController::ToggleTranslateResultCategory(int translateResultCategoryIndex)
 {
     translateResult.ToggleCategory(translateResultCategoryIndex);
-    mainWindow->SetTranslateResultModel(translateResult);
+    mainWindow->SetTranslateResultView(translateResult);
     mainWindow->Render(true);
 }
 
@@ -89,8 +86,7 @@ void AppController::PlayCurrentText() const
 
 void AppController::ShowDictionary() const
 {
-    mainWindow->SetCurrentView(ApplicationViews::Dictionary);
-    mainWindow->SetDictionaryModel(dictionary->GetTopRecords(200));
+    mainWindow->SetDictionaryView(dictionary->GetTopRecords(200));
 
     mainWindow->Render();
     mainWindow->Maximize();
@@ -98,8 +94,7 @@ void AppController::ShowDictionary() const
 
 void AppController::ShowSettings() const
 {
-    mainWindow->SetCurrentView(ApplicationViews::Settings);
-    mainWindow->SetSettingsModel(settingsProvider->GetSettings());
+    mainWindow->SetSettingsView(settingsProvider->GetSettings());
 
     mainWindow->Render();
     mainWindow->Maximize();
@@ -112,9 +107,7 @@ void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
 
     translateResult = translationService->TranslateSentence(recordToTranslate.GetWord(), false, false);
 
-    mainWindow->SetCurrentView(ApplicationViews::TranslateResult);
-    mainWindow->SetTranslateResultModel(translateResult);
-
+    mainWindow->SetTranslateResultView(translateResult);
     mainWindow->Render();
 }
 
@@ -122,7 +115,7 @@ void AppController::SaveSettings(Settings settings) const
 {
     settingsProvider->UpdateSettings(settings);
     hotkeyProvider->SetHotkeysSettings(settings.GetHotkeySettings());
-    mainWindow->SetSettingsModel(settingsProvider->GetSettings());
+    mainWindow->SetSettingsView(settingsProvider->GetSettings());
     mainWindow->Render();
 }
 

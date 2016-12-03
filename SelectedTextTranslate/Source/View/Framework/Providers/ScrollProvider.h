@@ -31,6 +31,7 @@ public:
         bool showVerticalScroll,
         int initialVerticalScrollPosition = 0,
         int initialHorizontalScrollPostion = 0) const;
+    void HideScrollbars(Window* window) const;
 
     void ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const;
 

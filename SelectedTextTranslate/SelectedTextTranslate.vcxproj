@@ -14,6 +14,7 @@
     <Image Include="Resources\SelectedTextTranslate.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Framework\Providers\DialogsProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderPosition.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderResult.cpp" />
     <ClCompile Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Framework\Providers\DialogsProvider.h" />
     <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderPosition.h" />
     <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderResult.h" />
     <ClInclude Include="Source\View\Framework\Dto\Rendering\RenderDescriptor.h" />

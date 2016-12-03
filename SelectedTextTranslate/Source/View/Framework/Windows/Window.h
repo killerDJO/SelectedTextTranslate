@@ -16,8 +16,6 @@ private:
     void DrawChildWindows();
     void DestroyChildWindows(vector<Window*>& childWindows) const;
 
-    void ApplyWindowPosition(bool preserveScrolls);
-
 protected:
     WindowContext* context;
     WindowDescriptor descriptor;
@@ -36,6 +34,7 @@ protected:
     void DestroyChildWindows();
 
     void ApplyRenderedState(bool preserveScrolls);
+    void ApplyWindowPosition(bool preserveScrolls);
     Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
     virtual Point GetInitialWindowOffset();
@@ -63,8 +62,8 @@ public:
     void MakeHidden();
     bool IsVisible() const;
 
-    void Show();
-    void Hide();
+    virtual void Show();
+    virtual void Hide();
 
     void Render(bool preserveScrolls = false);
     void Draw(bool drawChildren = false);

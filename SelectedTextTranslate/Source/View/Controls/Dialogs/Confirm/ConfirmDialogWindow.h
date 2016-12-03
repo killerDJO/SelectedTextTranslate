@@ -21,6 +21,8 @@ public:
 
     void Initialize() override;
 
+    void Show() override;
+
     Subscribeable<> OnConfirm;
     Subscribeable<> OnCancel;
 };

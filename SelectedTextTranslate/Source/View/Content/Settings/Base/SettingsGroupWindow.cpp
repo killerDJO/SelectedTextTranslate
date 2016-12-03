@@ -80,10 +80,7 @@ bool SettingsGroupWindow::IsModified() const
 
 void SettingsGroupWindow::Initialize()
 {
-    descriptor = state == SettingsGroupState::Collapsed
-        ? WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.Width, lineHeight + paddingY * 2))
-        : WindowDescriptor::CreateWindowDescriptor(position, Size(windowSize.Width, 0), OverflowModes::Fixed, OverflowModes::Stretch);
-
+    descriptor = WindowDescriptor::CreateWindowDescriptor(position, Size(windowSize.Width, 0), OverflowModes::Fixed, OverflowModes::Stretch);
     ContentWindow::Initialize();
 }
 
@@ -98,6 +95,8 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
     headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
     AddChildWindow(headerWindow);
     headerWindow->Render();
+
+    renderer->UpdateRenderedContentSize(headerWindow);
 
     if (state == SettingsGroupState::Expanded)
     {

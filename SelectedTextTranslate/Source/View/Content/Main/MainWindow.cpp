@@ -2,16 +2,18 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
 #include "View\Content\Main\MainWindow.h"
+#include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 
 MainWindow::MainWindow(WindowContext* context)
     : Window(context)
 {
     this->className = L"STT_MAIN";
-    this->currentView = ApplicationViews::Hidden;
+    this->currentView = ApplicationViews::None;
 
     this->dictionaryWindow = nullptr;
     this->translationWindow = nullptr;
     this->settingsWindow = nullptr;
+    this->confirmDialogWindow = nullptr;
 
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
@@ -53,14 +55,15 @@ void MainWindow::Initialize()
     AssertCriticalWinApiResult(windowHandle);
     SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
-    CreateViews();
+    CreateChildWindows();
 
     Minimize();
 
     context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainWindow::Minimize, this));
+    context->GetDialogsProvider()->OnConfirmRequested.Subscribe(bind(&MainWindow::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
-void MainWindow::CreateViews()
+void MainWindow::CreateChildWindows()
 {
     DestroyChildWindows();
 
@@ -95,6 +98,11 @@ void MainWindow::CreateViews()
     AddChildWindow(settingsWindow);
     settingsWindow->MakeHidden();
     settingsWindow->SetModel(settings);
+
+    confirmDialogWindow = new ConfirmDialogWindow(context, this);
+    confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize()));
+    AddChildWindow(confirmDialogWindow);
+    confirmDialogWindow->MakeHidden();
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -123,28 +131,31 @@ void MainWindow::Maximize()
     SwitchToThisWindow(windowHandle, TRUE);
 }
 
-void MainWindow::SetTranslateResultModel(TranslateResult translateResult)
+void MainWindow::SetTranslateResultView(TranslateResult translateResult)
 {
     AssertWindowInitialized();
 
     this->translateResult = translateResult;
     this->translationWindow->SetModel(translateResult);
+    SetCurrentView(ApplicationViews::TranslateResult);
 }
 
-void MainWindow::SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords)
+void MainWindow::SetDictionaryView(vector<DictionaryRecord> dictionaryRecords)
 {
     AssertWindowInitialized();
 
     this->dictionaryRecords = dictionaryRecords;
     this->dictionaryWindow->SetModel(dictionaryRecords);
+    SetCurrentView(ApplicationViews::Dictionary);
 }
 
-void MainWindow::SetSettingsModel(Settings settings)
+void MainWindow::SetSettingsView(Settings settings)
 {
     AssertWindowInitialized();
 
     this->settings = settings;
     this->settingsWindow->SetModel(settings);
+    SetCurrentView(ApplicationViews::Settings);
 }
 
 void MainWindow::SetCurrentView(ApplicationViews applicationView)
@@ -160,17 +171,22 @@ void MainWindow::SetCurrentView(ApplicationViews applicationView)
 
 Size MainWindow::RenderContent(Renderer* renderer)
 {
+    if(currentView == ApplicationViews::None)
+    {
+        throw SelectedTextTranslateFatalException(L"View must set before rendering.");
+    }
+
     for (size_t i = 0; i < activeChildWindows.size(); ++i)
     {
         activeChildWindows[i]->MakeHidden();
     }
 
-    Window* currentView = GetWindowToShow();
+    Window* windowToShow = GetWindowToShow();
 
-    currentView->MakeVisible();
-    currentView->Render();
+    windowToShow->MakeVisible();
+    windowToShow->Render();
 
-    return currentView->GetContentSize();
+    return windowToShow->GetContentSize();
 }
 
 void MainWindow::Scale(double scaleFactorAdjustment)
@@ -187,7 +203,7 @@ void MainWindow::Scale(double scaleFactorAdjustment)
 
     deviceContextBuffer->Resize(windowSize);
 
-    CreateViews();
+    CreateChildWindows();
     Render();
 }
 
@@ -268,6 +284,24 @@ Window* MainWindow::GetWindowToShow() const
     throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", currentView));
 }
 
+void MainWindow::ShowConfirmDialog(wstring title, function<void()> onConfirm)
+{
+    confirmDialogWindow->SetTitle(title);
+    confirmDialogWindow->OnConfirm.UnsubscribeAll();
+    confirmDialogWindow->OnConfirm.Subscribe(onConfirm);
+    confirmDialogWindow->OnConfirm.Subscribe(bind(&MainWindow::ApplyWindowPosition, this, true));
+    confirmDialogWindow->OnCancel.UnsubscribeAll();
+    confirmDialogWindow->OnCancel.Subscribe(bind(&MainWindow::ApplyWindowPosition, this, true));
+    confirmDialogWindow->Render();
+    confirmDialogWindow->Show();
+    context->GetScrollProvider()->HideScrollbars(this);
+}
+
+bool MainWindow::IsResizeLocked()
+{
+    return confirmDialogWindow->IsVisible() || !viewDescriptors[currentView].IsResizeable();
+}
+
 LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -280,7 +314,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SETCURSOR:
     {
-        if (!viewDescriptors[currentView].IsResizeable())
+        if (IsResizeLocked())
         {
             SetCursor(LoadCursor(nullptr, IDC_ARROW));
             return TRUE;
@@ -289,7 +323,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SIZING:
     {
-        if (!viewDescriptors[currentView].IsResizeable())
+        if (IsResizeLocked())
         {
             RECT &newSize = *(LPRECT)lParam;
             RECT windowRect;

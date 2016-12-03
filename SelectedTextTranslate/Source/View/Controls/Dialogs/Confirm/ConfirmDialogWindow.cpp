@@ -21,8 +21,12 @@ void ConfirmDialogWindow::Initialize()
     ChildWindow::Initialize();
 
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
+}
 
-    SendMessage(this->parentWindow->GetHandle(), WM_KILLFOCUS, 0, 0);
+void ConfirmDialogWindow::Show()
+{
+    ChildWindow::Show();
+    AssertWinApiResult(SetFocus(windowHandle));
 }
 
 void ConfirmDialogWindow::SetTitle(wstring title)

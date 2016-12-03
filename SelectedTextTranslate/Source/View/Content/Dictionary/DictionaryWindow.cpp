@@ -21,10 +21,10 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(model.size());
     renderer->PrintText(title.c_str(), fontItalic, Colors::Gray, renderPosition);
 
-    renderPosition = renderPosition.MoveY(lineHeight);
-
     for (size_t i = 0; i < countToShow; ++i)
     {
+        renderPosition = renderPosition.MoveY(lineHeight);
+
         DictionaryRecord record = model[i];
         renderPosition = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, renderPosition.MoveX(paddingX + 4));
         renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, renderPosition.MoveX(1));
@@ -41,12 +41,9 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         });
 
         AddChildWindow(translateButton);
-
-        renderPosition = renderPosition.MoveY(lineHeight);
     }
 
     renderer->IncreaseWidth(paddingX);
-    renderer->IncreaseHeight(paddingY);
 
     return renderer->GetScaledSize();
 }

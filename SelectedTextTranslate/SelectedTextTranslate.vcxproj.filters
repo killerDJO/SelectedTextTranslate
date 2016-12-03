@@ -342,6 +342,9 @@
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp">
       <Filter>Source\View\Content\Main\Dto</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Framework\Providers\DialogsProvider.cpp">
+      <Filter>Source\View\Framework\Providers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -573,6 +576,9 @@
     </ClInclude>
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h">
       <Filter>Source\View\Content\Main\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Providers\DialogsProvider.h">
+      <Filter>Source\View\Framework\Providers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

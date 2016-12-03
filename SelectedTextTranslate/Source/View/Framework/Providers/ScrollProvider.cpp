@@ -52,14 +52,20 @@ void ScrollProvider::InitializeScrollbars(
     }
 }
 
+void ScrollProvider::HideScrollbars(Window* window) const
+{
+    InitializeScrollbar(window->GetHandle(), 0, 1, ScrollBars::Horizontal, 0);
+    InitializeScrollbar(window->GetHandle(), 0, 1, ScrollBars::Vertical, 0);
+}
+
 void ScrollProvider::ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const
 {
-    if(message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll)
+    if(message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Horizontal))
     {
         ProcessScroll(window, wParam, lParam, ScrollBars::Horizontal);
     }
 
-    if (message == WM_VSCROLL && window->GetDescriptor().GetOverflowY() == OverflowModes::Scroll)
+    if (message == WM_VSCROLL && window->GetDescriptor().GetOverflowY() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Vertical))
     {
         ProcessScroll(window, wParam, lParam, ScrollBars::Vertical);
     }

@@ -5,6 +5,7 @@
 #include "View\Content\Settings\SettingsWindow.h"
 #include "Controllers\Enums\ApplicationViews.h"
 #include "View\Content\Main\Dto\ViewDescriptor.h"
+#include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 
 class MainWindow : public Window
 {
@@ -12,6 +13,7 @@ private:
     TranslationWindow* translationWindow;
     DictionaryWindow* dictionaryWindow;
     SettingsWindow* settingsWindow;
+    ConfirmDialogWindow* confirmDialogWindow;
 
     ApplicationViews currentView;
     map<ApplicationViews, ViewDescriptor> viewDescriptors;
@@ -20,12 +22,17 @@ private:
     vector<DictionaryRecord> dictionaryRecords;
     Settings settings;
 
-    void CreateViews();
+    void CreateChildWindows();
 
     void Scale(double scaleFactorAjustment);
     void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
     void Resize() override;
+
+    void SetCurrentView(ApplicationViews applicationView);
     Window* GetWindowToShow() const;
+
+    void ShowConfirmDialog(wstring title, function<void()> onConfirm);
+    bool IsResizeLocked();
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
@@ -44,10 +51,9 @@ public:
     void Minimize();
     void Maximize();
 
-    void SetCurrentView(ApplicationViews applicationView);
-    void SetTranslateResultModel(TranslateResult translateResult);
-    void SetDictionaryModel(vector<DictionaryRecord> dictionaryRecords);
-    void SetSettingsModel(Settings settings);
+    void SetTranslateResultView(TranslateResult translateResult);
+    void SetDictionaryView(vector<DictionaryRecord> dictionaryRecords);
+    void SetSettingsView(Settings settings);
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
