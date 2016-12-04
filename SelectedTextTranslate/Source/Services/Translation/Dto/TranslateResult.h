@@ -8,6 +8,21 @@ using namespace nlohmann;
 class TranslateResult
 {
 private:
+    static const char* SentenceKey;
+    static const char* CategoriesKey;
+
+    static const char* TranslationKey;
+    static const char* OriginKey;
+    static const char* InputKey;
+    static const char* SuggestionKey;
+
+    static const char* EntriesKey;
+    static const char* BaseFormKey;
+    static const char* PartOfSpeechKey;
+    static const char* WordKey;
+    static const char* ScoreKey;
+    static const char* ReverseTranslationsKey;
+
     bool isEmptyResult;
     TranslateResultSentence sentence;
     vector<TranslateResultCategory> translateCategories;

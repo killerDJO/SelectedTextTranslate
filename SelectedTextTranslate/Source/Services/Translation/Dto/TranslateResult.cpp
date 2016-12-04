@@ -2,6 +2,21 @@
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 
+const char* TranslateResult::SentenceKey = "sentence";
+const char* TranslateResult::CategoriesKey = "categories";
+
+const char* TranslateResult::TranslationKey = "translation";
+const char* TranslateResult::OriginKey = "origin";
+const char* TranslateResult::InputKey = "input";
+const char* TranslateResult::SuggestionKey = "suggestion";
+
+const char* TranslateResult::EntriesKey = "entries";
+const char* TranslateResult::BaseFormKey = "baseForm";
+const char* TranslateResult::PartOfSpeechKey = "partOfSpeech";
+const char* TranslateResult::WordKey = "word";
+const char* TranslateResult::ScoreKey = "score";
+const char* TranslateResult::ReverseTranslationsKey = "reverseTranslations";
+
 TranslateResult::TranslateResult(TranslateResultSentence sentence, vector<TranslateResultCategory> translateCategories)
 {
     this->isEmptyResult = false;
@@ -61,12 +76,12 @@ void TranslateResult::ToggleCategory(int translateResultCategoryIndex)
 
 wstring TranslateResult::SerializeToJson(TranslateResult translateResult)
 {
-    json sentenceJson = 
+    json sentenceJson =
     {
-        { "translation", StringUtilities::GetUtf8String(translateResult.GetSentence().GetTranslation()) },
-        { "origin", StringUtilities::GetUtf8String(translateResult.GetSentence().GetOrigin()) },
-        { "input", StringUtilities::GetUtf8String(translateResult.GetSentence().GetInput()) },
-        { "suggestion", StringUtilities::GetUtf8String(translateResult.GetSentence().GetSuggestion()) }
+        { TranslationKey, StringUtilities::GetUtf8String(translateResult.GetSentence().GetTranslation()) },
+        { OriginKey, StringUtilities::GetUtf8String(translateResult.GetSentence().GetOrigin()) },
+        { InputKey, StringUtilities::GetUtf8String(translateResult.GetSentence().GetInput()) },
+        { SuggestionKey, StringUtilities::GetUtf8String(translateResult.GetSentence().GetSuggestion()) }
     };
 
     json categoriesJson;
@@ -74,16 +89,16 @@ wstring TranslateResult::SerializeToJson(TranslateResult translateResult)
     {
         TranslateResultCategory category = translateResult.GetTranslateCategories()[i];
         json categoryJson;
-        categoryJson["baseForm"] = StringUtilities::GetUtf8String(category.GetBaseForm());
-        categoryJson["partOfSpeech"] = StringUtilities::GetUtf8String(category.GetPartOfSpeech());
+        categoryJson[BaseFormKey] = StringUtilities::GetUtf8String(category.GetBaseForm());
+        categoryJson[PartOfSpeechKey] = StringUtilities::GetUtf8String(category.GetPartOfSpeech());
 
         json categoryEntriesJson;
         for (size_t j = 0; j < category.GetEntries().size(); ++j)
         {
             TranslateResultCategoryEntry categoryEntry = category.GetEntries()[j];
             json categoryEntryJson;
-            categoryEntryJson["word"] = StringUtilities::GetUtf8String(categoryEntry.GetWord());
-            categoryEntryJson["score"] = categoryEntry.GetScore();
+            categoryEntryJson[WordKey] = StringUtilities::GetUtf8String(categoryEntry.GetWord());
+            categoryEntryJson[ScoreKey] = categoryEntry.GetScore();
 
             json reverseTranslationsJson;
             for (size_t k = 0; k < categoryEntry.GetReverseTranslations().size(); ++k)
@@ -91,19 +106,19 @@ wstring TranslateResult::SerializeToJson(TranslateResult translateResult)
                 reverseTranslationsJson[k] = StringUtilities::GetUtf8String(categoryEntry.GetReverseTranslations()[k]);
             }
 
-            categoryEntryJson["reverseTranslations"] = reverseTranslationsJson;
+            categoryEntryJson[ReverseTranslationsKey] = reverseTranslationsJson;
 
             categoryEntriesJson[j] = categoryEntryJson;
         }
 
-        categoryJson["entries"] = categoryEntriesJson;
+        categoryJson[EntriesKey] = categoryEntriesJson;
 
         categoriesJson[i] = categoryJson;
     }
 
     json translateResultJson;
-    translateResultJson["sentence"] = sentenceJson;
-    translateResultJson["categories"] = categoriesJson;
+    translateResultJson[SentenceKey] = sentenceJson;
+    translateResultJson[CategoriesKey] = categoriesJson;
 
     string json = translateResultJson.dump();
     return StringUtilities::GetUtf16String(json);
@@ -125,14 +140,14 @@ TranslateResult TranslateResult::ParseFromJson(wstring json)
     return TranslateResult(sentence, categories);
 }
 
-TranslateResultSentence TranslateResult::ParseTranslateResultSentence(nlohmann::json root)
+TranslateResultSentence TranslateResult::ParseTranslateResultSentence(json root)
 {
-    nlohmann::json sentenceJson = root["sentence"];
+    json sentenceJson = root[SentenceKey];
 
-    wstring translation = StringUtilities::GetJsonString(sentenceJson["translation"]);
-    wstring origin = StringUtilities::GetJsonString(sentenceJson["origin"]);
-    wstring input = StringUtilities::GetJsonString(sentenceJson["input"]);
-    wstring suggestion = StringUtilities::GetJsonString(sentenceJson["suggestion"]);
+    wstring translation = StringUtilities::GetJsonString(sentenceJson[TranslationKey]);
+    wstring origin = StringUtilities::GetJsonString(sentenceJson[OriginKey]);
+    wstring input = StringUtilities::GetJsonString(sentenceJson[InputKey]);
+    wstring suggestion = StringUtilities::GetJsonString(sentenceJson[SuggestionKey]);
 
     return TranslateResultSentence(translation, origin, input, suggestion);
 }
@@ -141,30 +156,30 @@ vector<TranslateResultCategory> TranslateResult::ParseTranslateCategories(json r
 {
     vector<TranslateResultCategory> categories;
 
-    if (!root["categories"].is_array())
+    if (!root[CategoriesKey].is_array())
     {
         return categories;
     }
 
-    json categoriesJson = root["categories"];
+    json categoriesJson = root[CategoriesKey];
 
     for (size_t i = 0; i < categoriesJson.size(); ++i)
     {
         json categoryJson = categoriesJson[i];
 
-        wstring partOfSpeech = StringUtilities::GetJsonString(categoryJson["partOfSpeech"]);
-        wstring baseForm = StringUtilities::GetJsonString(categoryJson["baseForm"]);
+        wstring partOfSpeech = StringUtilities::GetJsonString(categoryJson[PartOfSpeechKey]);
+        wstring baseForm = StringUtilities::GetJsonString(categoryJson[BaseFormKey]);
 
         vector<TranslateResultCategoryEntry> translateResultDictionaryEntries;
-        json entriesJson = categoryJson["entries"];
+        json entriesJson = categoryJson[EntriesKey];
         for (size_t j = 0; j < entriesJson.size(); ++j)
         {
             json entryJson = entriesJson[j];
-            wstring word = StringUtilities::GetJsonString(entryJson["word"]);
-            double score = entryJson["score"].get<double>();
+            wstring word = StringUtilities::GetJsonString(entryJson[WordKey]);
+            double score = entryJson[ScoreKey].get<double>();
 
             vector<wstring> reverseTransltions;
-            json reverseTranslationsJson = entryJson["reverseTranslations"];
+            json reverseTranslationsJson = entryJson[ReverseTranslationsKey];
             for (size_t k = 0; k < reverseTranslationsJson.size(); ++k)
             {
                 reverseTransltions.push_back(StringUtilities::GetJsonString(reverseTranslationsJson[k]));

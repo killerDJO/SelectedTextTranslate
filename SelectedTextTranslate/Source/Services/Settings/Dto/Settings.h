@@ -1,12 +1,17 @@
 #pragma once
 #include "Services\Settings\Dto\HotkeySettings.h"
-#include "json.hpp"
 
 using namespace nlohmann;
 
 class Settings
 {
 private:
+    static const char* HotkeySettingsKey;
+    static const char* TranslateHotkeyKey;
+    static const char* PlayTextHotkeyKey;
+    static const char* ZoomInHotkeyKey;
+    static const char* ZoomOutHotkeyKey;
+
     HotkeySettings hotkeySettings;
 
     static HotkeySettings ParseHotkeySettings(json hotkeySettingsJson);
