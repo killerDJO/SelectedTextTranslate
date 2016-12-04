@@ -38,7 +38,7 @@ Settings SettingsProvider::GetSettings() const
     {
         return Settings::ParseFromJson(json);
     }
-    catch (json::json_exception exception)
+    catch (exception exception)
     {
         logger->LogFormatted(LogLevels::Error, L"Error loading settings. Exception: %hs. ", exception.what());
         return CreateDefaultSettings();

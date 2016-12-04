@@ -1,4 +1,5 @@
 #include "Services\Settings\Dto\Settings.h"
+#include "Utilities\StringUtilities.h"
 
 Settings::Settings(HotkeySettings hotkeySettings)
 {
@@ -22,43 +23,44 @@ void Settings::SetHotkeySettings(HotkeySettings hotkeySettings)
 
 wstring Settings::SerializeToJson(Settings settings)
 {
-    json::value settingsJson;
+    json settingsJson =
+    {
+        { "hotkeySettings", SerializeHotkeySettings(settings.GetHotkeySettings()) }
+    };
 
-    settingsJson[L"hotkeySettings"] = SerializeHotkeySettings(settings.GetHotkeySettings());
-
-    return settingsJson.serialize();
+    return StringUtilities::GetUtf16String(settingsJson.dump(4));
 }
 
-json::value Settings::SerializeHotkeySettings(HotkeySettings hotkeySettings)
+json Settings::SerializeHotkeySettings(HotkeySettings hotkeySettings)
 {
-    json::value hotkeySettingsJson;
-    hotkeySettingsJson[L"translateHotkey"] = json::value::number((uint32_t)hotkeySettings.GetTranslateHotkey());
-    hotkeySettingsJson[L"playTextHotkey"] = json::value::number((uint32_t)hotkeySettings.GetPlayTextHotkey());
-    hotkeySettingsJson[L"zoomInHotkey"] = json::value::number((uint32_t)hotkeySettings.GetZoomInHotkey());
-    hotkeySettingsJson[L"zoomOutHotkey"] = json::value::number((uint32_t)hotkeySettings.GetZoomOutHotkey());
-    return hotkeySettingsJson;
+    return
+    {
+        { "translateHotkey", hotkeySettings.GetTranslateHotkey() },
+        { "playTextHotkey", hotkeySettings.GetPlayTextHotkey() },
+        { "zoomInHotkey", hotkeySettings.GetZoomInHotkey() },
+        { "zoomOutHotkey", hotkeySettings.GetZoomOutHotkey() }
+    };
 }
 
-Settings Settings::ParseFromJson(wstring json)
+Settings Settings::ParseFromJson(wstring jsonContent)
 {
-    json::value settingsJson = json::value::parse(json);
-
-    if (settingsJson.is_null())
+    json settingsJson = json::parse(StringUtilities::GetUtf8String(jsonContent).c_str());
+    if (settingsJson.empty())
     {
         return Settings();
     }
 
-    HotkeySettings hotkeySettings = ParseHotkeySettings(settingsJson[L"hotkeySettings"]);
+    HotkeySettings hotkeySettings = ParseHotkeySettings(settingsJson["hotkeySettings"]);
 
     return Settings(hotkeySettings);
 }
 
-HotkeySettings Settings::ParseHotkeySettings(json::value hotkeySettingsJson)
+HotkeySettings Settings::ParseHotkeySettings(json hotkeySettingsJson)
 {
-    DWORD translateHotkey = hotkeySettingsJson[L"translateHotkey"].as_integer();
-    DWORD playTextHotkey = hotkeySettingsJson[L"playTextHotkey"].as_integer();
-    DWORD zoomInHotkey = hotkeySettingsJson[L"zoomInHotkey"].as_integer();
-    DWORD zoomOutHotkey = hotkeySettingsJson[L"zoomOutHotkey"].as_integer();
+    DWORD translateHotkey = hotkeySettingsJson["translateHotkey"].get<DWORD>();
+    DWORD playTextHotkey = hotkeySettingsJson["playTextHotkey"].get<DWORD>();
+    DWORD zoomInHotkey = hotkeySettingsJson["zoomInHotkey"].get<DWORD>();
+    DWORD zoomOutHotkey = hotkeySettingsJson["zoomOutHotkey"].get<DWORD>();
 
     return HotkeySettings(translateHotkey, playTextHotkey, zoomInHotkey, zoomOutHotkey);
 }

@@ -1,8 +1,9 @@
 #pragma once
 #include "Services\Translation\Dto\TranslateResultCategory.h"
 #include "Services\Translation\Dto\TranslateResultSentence.h"
+#include "json.hpp"
 
-using namespace web;
+using namespace nlohmann;
 
 class TranslateResult
 {
@@ -11,8 +12,8 @@ private:
     TranslateResultSentence sentence;
     vector<TranslateResultCategory> translateCategories;
 
-    static TranslateResultSentence ParseTranslateResultSentence(json::value root);
-    static vector<TranslateResultCategory> ParseTranslateCategories(json::value root);
+    static TranslateResultSentence ParseTranslateResultSentence(nlohmann::json root);
+    static vector<TranslateResultCategory> ParseTranslateCategories(nlohmann::json root);
 
 public:
     TranslateResult(TranslateResultSentence sentence, vector<TranslateResultCategory> translateCategories);

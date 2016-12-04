@@ -183,6 +183,9 @@
     <ProjectReference Include="..\Libs\gumbo-parser\visualc\gumbo.vcxproj">
       <Project>{2661fa5e-acc3-4d27-8fd2-9dbb0414eedc}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Libs\json\json.vcxproj">
+      <Project>{a3abae48-e3c1-4341-85e1-0cdd1e6047a2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Libs\sqlite\sqlite.vcxproj">
       <Project>{8a2c4663-754d-49c7-9947-882c2bbc52a7}</Project>
     </ProjectReference>
@@ -246,7 +249,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;..\libs\StackWalker</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;..\libs\StackWalker;..\libs\json</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
@@ -273,7 +276,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;..\libs\StackWalker</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\gumbo-parser\src;..\libs\duktape\src;..\libs\sqlite;..\libs\StackWalker;..\libs\json</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <ExceptionHandling>Async</ExceptionHandling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>

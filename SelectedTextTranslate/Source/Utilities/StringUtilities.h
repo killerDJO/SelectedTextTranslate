@@ -9,6 +9,8 @@ public:
     static string GetUtf8String(wstring text);
     static string GetUtf8StringFromChar(const wchar_t* text);
 
+    static wstring GetJsonString(nlohmann::json value);
+
     static wchar_t* CopyWideChar(wstring text);
 
     static wstring Format(const wstring format, ...);

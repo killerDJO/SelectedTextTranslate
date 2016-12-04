@@ -73,5 +73,8 @@ LRESULT NativeWindowHolder::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
 
 NativeWindowHolder::~NativeWindowHolder()
 {
-    AssertCriticalWinApiResult(DestroyWindow(windowHandle));
+    if(windowHandle != nullptr)
+    {
+        AssertCriticalWinApiResult(DestroyWindow(windowHandle));
+    }
 }

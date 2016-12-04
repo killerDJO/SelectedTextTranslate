@@ -71,11 +71,6 @@ void TrayIconProvider::CreateTrayIcon()
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
 }
 
-void TrayIconProvider::DestroyTrayIcon()
-{
-    AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_DELETE, &notifyIconData));
-}
-
 void TrayIconProvider::ShowError(wstring message)
 {
     wstring truncatedMessage = message.substr(0, min(255, message.length()));
@@ -156,6 +151,11 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
     }
 
     return NativeWindowHolder::WindowProcedure(message, wParam, lParam);
+}
+
+void TrayIconProvider::DestroyTrayIcon()
+{
+    Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
 }
 
 TrayIconProvider::~TrayIconProvider()

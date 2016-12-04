@@ -26,7 +26,7 @@ TranslateResult TranslationService::TranslateSentence(wstring sentence, bool inc
     {
         result = GetTranslatorResponse(trimmedSentence, incrementTranslationsCount, forceTranslation);
     }
-    catch (json::json_exception exception)
+    catch (exception exception)
     {
         throw SelectedTextTranslateException(L"Error parsing json response. Exception: " + StringUtilities::GetUtf16String(exception.what()) + L".");
     }
@@ -158,22 +158,22 @@ wstring TranslationService::GetHash(wstring sentence) const
 //  <irrelevant>,
 //  [<irrelevant>, <suggestion>, <irrelevant>, null, null, <irrelevant>],
 //]
-TranslateResult TranslationService::ParseJSONResponse(wstring json, wstring input) const
+TranslateResult TranslationService::ParseJSONResponse(wstring jsonResponse, wstring input) const
 {
-    if (json.empty())
+    if (jsonResponse.empty())
     {
         throw SelectedTextTranslateException(L"Error. Unable to parse JSON. JSON value is empty.");
     }
 
     // Normalize json response
-    StringUtilities::ReplaceAll(json, L",,", L",null,");
-    StringUtilities::ReplaceAll(json, L"[,", L"[null,");
+    StringUtilities::ReplaceAll(jsonResponse, L",,", L",null,");
+    StringUtilities::ReplaceAll(jsonResponse, L"[,", L"[null,");
 
-    json::value root = json::value::parse(json);
+    json root = json::parse(StringUtilities::GetUtf8String(jsonResponse).c_str());
 
     if (root.is_null())
     {
-        throw SelectedTextTranslateException(StringUtilities::Format(L"Error. Unable to parse JSON. Json value = '%ls'.", json));
+        throw SelectedTextTranslateException(StringUtilities::Format(L"Error. Unable to parse JSON. Json value = '%ls'.", jsonResponse));
     }
 
     TranslateResultSentence sentence = ParseTranslateResultSentence(root, input);
@@ -188,37 +188,37 @@ TranslateResult TranslationService::ParseJSONResponse(wstring json, wstring inpu
     return TranslateResult(sentence, categories);
 }
 
-TranslateResultSentence TranslationService::ParseTranslateResultSentence(json::value root, wstring input) const
+TranslateResultSentence TranslationService::ParseTranslateResultSentence(json root, wstring input) const
 {
     wstring translation;
     wstring origin;
-    json::array sentences = root[0][0].as_array();
+    json sentences = root[0][0];
     if (sentences.size() > 0)
     {
-        translation = sentences[0].as_string();
-        origin = sentences[1].as_string();
+        translation = StringUtilities::GetJsonString(sentences[0]);
+        origin = StringUtilities::GetJsonString(sentences[1]);
     }
 
     wstring suggestion;
     if (!root[7].is_null())
     {
-        json::array suggestionHolder = root[7].as_array();
-        suggestion = suggestionHolder[1].as_string();
+        json suggestionHolder = root[7];
+        suggestion = StringUtilities::GetJsonString(suggestionHolder[1]);
     }
 
     return TranslateResultSentence(translation, origin, input, suggestion);
 }
 
-vector<TranslateResultCategory> TranslationService::ParseTranslateCategories(json::value root) const
+vector<TranslateResultCategory> TranslationService::ParseTranslateCategories(json root) const
 {
     vector<TranslateResultCategory> categories;
 
-    json::array dict = root[1].as_array();
+    json dict = root[1];
 
     for (size_t i = 0; i < dict.size(); ++i)
     {
-        wstring partOfSpeech = dict[i][0].as_string();
-        wstring baseForm = dict[i][3].as_string();
+        wstring partOfSpeech = StringUtilities::GetJsonString(dict[i][0]);
+        wstring baseForm = StringUtilities::GetJsonString(dict[i][3]);
 
         if (!dict[i][2].is_array())
         {
@@ -226,13 +226,13 @@ vector<TranslateResultCategory> TranslationService::ParseTranslateCategories(jso
         }
 
         vector<TranslateResultCategoryEntry> translateResultDictionaryEntries;
-        json::array entries = dict[i][2].as_array();
+        json entries = dict[i][2];
         for (size_t j = 0; j < entries.size(); ++j)
         {
-            wstring word = entries[j][0].as_string();
+            wstring word = StringUtilities::GetJsonString(entries[j][0]);
 
-            double score = entries[j][3].is_double()
-                ? entries[j][3].as_double()
+            double score = entries[j][3].is_number_float()
+                ? entries[j][3].get<double>()
                 : 0;
 
             if (!entries[j][1].is_array())
@@ -241,10 +241,10 @@ vector<TranslateResultCategory> TranslationService::ParseTranslateCategories(jso
             }
 
             vector<wstring> reverseTransltions;
-            json::array reverseTranslationsJson = entries[j][1].as_array();
+            json reverseTranslationsJson = entries[j][1];
             for (size_t k = 0; k < reverseTranslationsJson.size(); ++k)
             {
-                reverseTransltions.push_back(reverseTranslationsJson[k].as_string());
+                reverseTransltions.push_back(StringUtilities::GetJsonString(reverseTranslationsJson[k]));
             }
 
             translateResultDictionaryEntries.push_back(TranslateResultCategoryEntry(word, reverseTransltions, score));

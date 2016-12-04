@@ -1,15 +1,16 @@
 #pragma once
 #include "Services\Settings\Dto\HotkeySettings.h"
+#include "json.hpp"
 
-using namespace web;
+using namespace nlohmann;
 
 class Settings
 {
 private:
     HotkeySettings hotkeySettings;
 
-    static HotkeySettings ParseHotkeySettings(json::value hotkeySettingsJson);
-    static json::value SerializeHotkeySettings(HotkeySettings hotkeySettings);
+    static HotkeySettings ParseHotkeySettings(json hotkeySettingsJson);
+    static json SerializeHotkeySettings(HotkeySettings hotkeySettings);
 
 public:
     Settings(HotkeySettings hotkeySettings);
@@ -20,7 +21,7 @@ public:
     void SetHotkeySettings(HotkeySettings hotkeySettings);
 
     static wstring SerializeToJson(Settings settings);
-    static Settings ParseFromJson(wstring json);
+    static Settings ParseFromJson(wstring jsonContent);
 
     bool EqualTo(Settings settings) const;
 };

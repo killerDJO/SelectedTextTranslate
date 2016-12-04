@@ -32,17 +32,13 @@
 #include <sstream>
 #include <functional>
 #include <cctype>
-
 #include <concurrent_queue.h>
 
-#include <cpprest\json.h>
+#include <json.hpp>
 #include <cpprest\http_client.h>
-
 #include "sqlite3.h"
-
 #include "duk_config.h"
 #include "duktape.h"
-
 #include "gumbo.h"
 
 #include "..\Resources\resource.h"

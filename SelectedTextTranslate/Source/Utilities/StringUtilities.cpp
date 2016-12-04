@@ -53,6 +53,11 @@ string StringUtilities::GetUtf8StringFromChar(const wchar_t* text)
     return result;
 }
 
+wstring StringUtilities::GetJsonString(nlohmann::json value)
+{
+    return GetUtf16String(value.get<string>());
+}
+
 wchar_t* StringUtilities::CopyWideChar(wstring text)
 {
     int len = wcslen(text.c_str());
