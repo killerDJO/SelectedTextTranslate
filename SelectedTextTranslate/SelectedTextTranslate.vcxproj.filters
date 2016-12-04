@@ -580,7 +580,9 @@
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h">
       <Filter>Source\View\Content\Settings\Base\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h">
+      <Filter>Source\View\Content\Settings\Base\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

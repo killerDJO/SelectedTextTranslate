@@ -63,16 +63,15 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
             max(parentWindow->GetSize().Width, headerWindow->GetSize().Width),
             parentWindow->GetSize().Height - headerHeight);
         renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), backgroundBrush);
-
-        renderer->UpdateRenderedContentSize(headerWindow);
+        contentSize = headerWindow->GetSize(false);
     }
     else
     {
         translateResultWindow->MakeVisible();
         translateResultWindow->Render();
 
-        contentSize.Width = max(headerWindow->GetSize().Width, translateResultWindow->GetSize().Width);
-        contentSize.Height = headerWindow->GetSize().Height + translateResultWindow->GetSize().Height;
+        contentSize.Width = max(headerWindow->GetSize(false).Width, translateResultWindow->GetSize(false).Width);
+        contentSize.Height = headerWindow->GetSize(false).Height + translateResultWindow->GetSize(false).Height;
     }
 
     RenderSeparator(renderer, max(windowSize.Width, contentSize.Width));
@@ -82,7 +81,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
 
 void TranslationWindow::Resize()
 {
-    Size parentSize = parentWindow->GetSize();
+    Size parentSize = parentWindow->GetSize(false);
     descriptor.SetWindowSize(parentSize);
 
     windowSize.Width = max(parentSize.Width, windowSize.Width);
