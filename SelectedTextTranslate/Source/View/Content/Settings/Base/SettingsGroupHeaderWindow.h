@@ -1,11 +1,13 @@
 #pragma once
 #include "View\Framework\Windows\ContentWindow.h"
-#include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
+#include "View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h"
+#include "View\Content\Settings\Base\Enums\SettingsGroupContentState.h"
 
 class SettingsGroupHeaderWindow : public ContentWindow
 {
 private:
-    SettingsGroupState state;
+    SettingsGroupVisibilityState visibilityState;
+    SettingsGroupContentState contentState;
     wstring title;
 
 protected:
@@ -23,8 +25,11 @@ public:
     void SetTitle(wstring title);
     wstring GetTitle() const;
 
-    void SetState(SettingsGroupState state);
-    SettingsGroupState GetState() const;
+    void SetContentState(SettingsGroupContentState contentState);
+    SettingsGroupContentState GetContentState() const;
+
+    void SetVisibilityState(SettingsGroupVisibilityState visibilityState);
+    SettingsGroupVisibilityState GetVisibilityState() const;
 
     void Initialize() override;
 

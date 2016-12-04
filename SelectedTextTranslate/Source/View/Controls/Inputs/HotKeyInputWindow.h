@@ -14,6 +14,7 @@ private:
     int lineHeight;
 
     bool hasFocus;
+    bool isValid;
 
     vector<pair<DWORD, wstring>> controlToDisplayNameMap;
 
@@ -47,8 +48,12 @@ public:
     void SetLineHeight(int lineHeight);
     int GetLineHeight() const;
 
-    void SetDefaultHotkey(DWORD hotkey);
-    DWORD GetDefaultHotKey() const;
+    void SetHotkey(DWORD hotkey);
+    DWORD GetHotKey() const;
+
+    void MakeValid();
+    void MakeInvalid();
+    bool IsValid() const;
 
     void Initialize() override;
 

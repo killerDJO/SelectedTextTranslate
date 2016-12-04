@@ -514,9 +514,6 @@
     <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.h">
       <Filter>Source\View\Content\Settings\Hotkeys</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupState.h">
-      <Filter>Source\View\Content\Settings\Base\Enums</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h">
       <Filter>Source\View\Content\Settings\Dto</Filter>
     </ClInclude>
@@ -580,6 +577,10 @@
     <ClInclude Include="Source\View\Framework\MessageBus.h">
       <Filter>Source\View\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h">
+      <Filter>Source\View\Content\Settings\Base\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

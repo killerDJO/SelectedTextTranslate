@@ -6,12 +6,13 @@
 SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
 {
-    this->state = SettingsGroupState::Collapsed;
+    this->contentState = SettingsGroupContentState::Default;
+    this->visibilityState = SettingsGroupVisibilityState::Collapsed;
+
     this->title = wstring();
     this->paddingX = this->paddingY = 5;
     this->className = L"STT_SETTINGS_GROUP";
     this->headerWindow = nullptr;
-    this->isModified = false;
 }
 
 void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -36,46 +37,30 @@ wstring SettingsGroupWindow::GetTitle() const
     return title;
 }
 
-void SettingsGroupWindow::SetState(SettingsGroupState state)
+SettingsGroupContentState SettingsGroupWindow::GetContentState() const
 {
-    AssertWindowNotInitialized();
-    this->state = state;
+    return contentState;
 }
 
-SettingsGroupState SettingsGroupWindow::GetState() const
+void SettingsGroupWindow::SetVisibilityState(SettingsGroupVisibilityState visibilityState)
 {
-    return state;
-}
-
-void SettingsGroupWindow::SetModifiedState()
-{
-    isModified = true;
+    this->visibilityState = visibilityState;
     UpdateModificationState();
 }
 
-void SettingsGroupWindow::SetNotModifiedState()
+SettingsGroupVisibilityState SettingsGroupWindow::GetVisibilityState() const
 {
-    isModified = false;
-    UpdateModificationState();
+    return visibilityState;
 }
 
 void SettingsGroupWindow::UpdateModificationState() const
 {
     if (windowState != WindowStates::New)
     {
-        headerWindow->SetTitle(GetCurrentTitle());
+        headerWindow->SetContentState(contentState);
+        headerWindow->SetVisibilityState(visibilityState);
         headerWindow->Render();
     }
-}
-
-wstring SettingsGroupWindow::GetCurrentTitle() const
-{
-    return title + (IsModified() ? L"*" : L"");
-}
-
-bool SettingsGroupWindow::IsModified() const
-{
-    return isModified;
 }
 
 void SettingsGroupWindow::Initialize()
@@ -84,13 +69,19 @@ void SettingsGroupWindow::Initialize()
     ContentWindow::Initialize();
 }
 
+bool SettingsGroupWindow::IsValid() const
+{
+    return contentState != SettingsGroupContentState::Invalid;
+}
+
 Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
     headerWindow = new SettingsGroupHeaderWindow(context, this);
-    headerWindow->SetTitle(GetCurrentTitle());
-    headerWindow->SetState(state);
+    headerWindow->SetTitle(title);
+    headerWindow->SetContentState(contentState);
+    headerWindow->SetVisibilityState(visibilityState);
     headerWindow->SetDimensions(Point(0, 0), GetSize().Width);
     headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
     AddChildWindow(headerWindow);
@@ -98,12 +89,14 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 
     renderer->UpdateRenderedContentSize(headerWindow);
 
-    if (state == SettingsGroupState::Expanded)
+    if (visibilityState == SettingsGroupVisibilityState::Expanded)
     {
         RenderSettingsContent(RenderDescriptor(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect().GetBottom())));
         Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize().Width, renderer->GetSize().Height));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
     }
+
+    ComputeContentState();
 
     return renderer->GetScaledSize();
 }

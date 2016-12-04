@@ -1,6 +1,5 @@
 #pragma once
 #include "View\Framework\Windows\ContentWindow.h"
-#include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 #include "View\Framework\Rendering\Dto\RenderDescriptor.h"
 
@@ -8,12 +7,12 @@ class SettingsGroupWindow : public ContentWindow
 {
 private:
     void UpdateModificationState() const;
-    wstring GetCurrentTitle() const;
 
 protected:
-    SettingsGroupState state;
+    SettingsGroupVisibilityState visibilityState;
+    SettingsGroupContentState contentState;
+
     wstring title;
-    bool isModified;
 
     SettingsGroupHeaderWindow* headerWindow;
 
@@ -30,14 +29,15 @@ public:
     void SetTitle(wstring title);
     wstring GetTitle() const;
 
-    void SetState(SettingsGroupState state);
-    SettingsGroupState GetState() const;
+    SettingsGroupContentState GetContentState() const;
 
-    void SetModifiedState();
-    void SetNotModifiedState();
-    bool IsModified() const;
+    void SetVisibilityState(SettingsGroupVisibilityState visibilityState);
+    SettingsGroupVisibilityState GetVisibilityState() const;
 
     void Initialize() override;
+
+    bool IsValid() const;
+    virtual void ComputeContentState() = 0;
 
     Subscribeable<> OnSettingsToggled;
 };

@@ -62,6 +62,5 @@ public:
     Subscribeable<> OnTranslateSuggestion;
     Subscribeable<int> OnExpandTranslationResult;
     Subscribeable<int> OnShowTranslation;
-    Subscribeable<> OnSettingsStateChanged;
     Subscribeable<Settings> OnSaveSettings;
 };

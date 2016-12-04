@@ -1,4 +1,3 @@
-#include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 
@@ -9,12 +8,20 @@ HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* paren
     this->OnSettingsChanged = Subscribeable<HotkeySettings>();
 }
 
+void HotkeySettingsWindow::SetModel(HotkeySettings model)
+{
+    ModelHolder<HotkeySettings>::SetModel(model);
+    globalModel = model;
+}
+
 void HotkeySettingsWindow::RenderSettingsContent(RenderDescriptor renderDescriptor)
 {
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition().MoveY(paddingY);
     Renderer* renderer = renderDescriptor.GetRenderer();
 
     const int controlsMargin = 7;
+
+    hotkeyInputWindows.clear();
 
     renderPosition = RenderHotkeyEditControl(
         RenderDescriptor(renderer, renderPosition),
@@ -67,17 +74,86 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 
     HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(context, this);
     hotKeyInputWindow->SetPosition(renderPosition.GetPosition());
-    hotKeyInputWindow->SetDefaultHotkey(hotkey);
-    hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, this](DWORD newHotkey) -> void
+    hotKeyInputWindow->SetHotkey(hotkey);
+    hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, this](DWORD newHotkey)
     {
         hotkeySetter(newHotkey);
-        this->OnSettingsChanged.Notify(model);
+        ComputeContentState();
+        OnSettingsChanged.Notify(model);
     });
     AddChildWindow(hotKeyInputWindow);
+    hotkeyInputWindows.push_back(hotKeyInputWindow);
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);
 
     return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetSize().Height));
+}
+
+void HotkeySettingsWindow::ComputeContentState()
+{
+    bool isModified = !model.EqualTo(globalModel);
+    bool isValid = IsModelValid();
+
+    ValidateHotkeyInputs();
+
+    if(!isValid)
+    {
+        contentState = SettingsGroupContentState::Invalid;
+    }
+    else if(isModified)
+    {
+        contentState = SettingsGroupContentState::Modified;
+    }
+    else
+    {
+        contentState = SettingsGroupContentState::Default;
+    }
+
+    headerWindow->SetContentState(contentState);
+    headerWindow->Render();
+}
+
+void HotkeySettingsWindow::ValidateHotkeyInputs()
+{
+    for (size_t i = 0; i < hotkeyInputWindows.size(); ++i)
+    {
+        hotkeyInputWindows[i]->MakeValid();
+    }
+
+    for (size_t i = 0; i < hotkeyInputWindows.size(); ++i)
+    {
+        for (size_t j = i + 1; j < hotkeyInputWindows.size(); ++j)
+        {
+            if (hotkeyInputWindows[i]->GetHotKey() == hotkeyInputWindows[j]->GetHotKey())
+            {
+                hotkeyInputWindows[i]->MakeInvalid();
+                hotkeyInputWindows[j]->MakeInvalid();
+            }
+        }
+
+        hotkeyInputWindows[i]->Render();
+    }
+}
+
+bool HotkeySettingsWindow::IsModelValid() const
+{
+    bool isValid = true;
+
+    vector<DWORD> hotkeys = vector<DWORD>();
+    hotkeys.push_back(model.GetTranslateHotkey());
+    hotkeys.push_back(model.GetPlayTextHotkey());
+    hotkeys.push_back(model.GetZoomInHotkey());
+    hotkeys.push_back(model.GetZoomOutHotkey());
+
+    for (size_t i = 0; i < hotkeys.size(); ++i)
+    {
+        for (size_t j = i + 1; j < hotkeys.size(); ++j)
+        {
+            isValid = isValid && hotkeys[i] != hotkeys[j];
+        }
+    }
+
+    return isValid;
 }
 
 HotkeySettingsWindow::~HotkeySettingsWindow()

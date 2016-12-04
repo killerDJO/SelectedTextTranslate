@@ -13,6 +13,7 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
     this->borderWidth = 1;
     this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->defaultFont).tmHeight);
     this->hasFocus = false;
+    this->isValid = true;
 
     this->controlToDisplayNameMap = vector<pair<DWORD, wstring>>();
     this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_CONTROL, L"CTRL"));
@@ -76,15 +77,30 @@ int HotKeyInputWindow::GetLineHeight() const
     return lineHeight;
 }
 
-void HotKeyInputWindow::SetDefaultHotkey(DWORD hotkey)
+void HotKeyInputWindow::SetHotkey(DWORD hotkey)
 {
     AssertWindowNotInitialized();
     currentHotkey = hotkey;
 }
 
-DWORD HotKeyInputWindow::GetDefaultHotKey() const
+DWORD HotKeyInputWindow::GetHotKey() const
 {
     return currentHotkey;
+}
+
+void HotKeyInputWindow::MakeValid()
+{
+    isValid = true;
+}
+
+void HotKeyInputWindow::MakeInvalid()
+{
+    isValid = false;
+}
+
+bool HotKeyInputWindow::IsValid() const
+{
+    return isValid;
 }
 
 void HotKeyInputWindow::Initialize()
@@ -263,11 +279,17 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
         Point(0, 0),
         GetAvailableClientSize());
 
-    renderer->DrawBorderedRect(
-        borderRect,
-        nullptr,
-        borderWidth,
-        hasFocus ? Colors::Blue : Colors::Gray);
+    Colors borderColor = Colors::Gray;
+    if(!isValid)
+    {
+        borderColor = Colors::Red;
+    }
+    else if(hasFocus)
+    {
+        borderColor = Colors::Blue;
+    }
+
+    renderer->DrawBorderedRect(borderRect, nullptr, borderWidth, borderColor);
 }
 
 HotKeyInputWindow::~HotKeyInputWindow()

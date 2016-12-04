@@ -1,6 +1,6 @@
 #pragma once
 
-enum class SettingsGroupState
+enum class SettingsGroupVisibilityState
 {
     Expanded = 1,
     Collapsed = 2

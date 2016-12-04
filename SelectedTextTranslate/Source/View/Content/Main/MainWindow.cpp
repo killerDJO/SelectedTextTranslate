@@ -22,7 +22,6 @@ MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
     this->OnTranslateSuggestion = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
     this->OnShowTranslation = Subscribeable<int>();
-    this->OnSettingsStateChanged = Subscribeable<>();
     this->OnSaveSettings = Subscribeable<Settings>();
 
     this->viewDescriptors = map<ApplicationViews, ViewDescriptor>();
@@ -95,7 +94,7 @@ void MainWindow::CreateChildWindows()
 
     settingsWindow = new SettingsWindow(context, this);
     settingsWindow->SetDescriptor(windowDescriptor);
-    settingsWindow->OnSettingsStateChanged.Subscribe(&OnSettingsStateChanged);
+    settingsWindow->OnSettingsStateChanged.Subscribe(bind(&MainWindow::Render, this, true));
     settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
     AddChildWindow(settingsWindow);
     settingsWindow->MakeHidden();

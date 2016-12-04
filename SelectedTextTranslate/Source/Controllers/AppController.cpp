@@ -28,7 +28,6 @@ void AppController::Initialize()
     mainWindow->OnExpandTranslationResult.Subscribe(bind(&AppController::ToggleTranslateResultCategory, this, placeholders::_1));
     mainWindow->OnShowTranslation.Subscribe(bind(&AppController::TranslateWordFromDictionary, this, placeholders::_1));
     mainWindow->OnSaveSettings.Subscribe(bind(&AppController::SaveSettings, this, placeholders::_1));
-    mainWindow->OnSettingsStateChanged.Subscribe(bind(&AppController::ShowSettings, this));
 
     trayIconProvider->OnExit.Subscribe(bind(&AppController::Exit, this));
     trayIconProvider->OnPlaySelectedText.Subscribe(bind(&AppController::PlaySelectedText, this));

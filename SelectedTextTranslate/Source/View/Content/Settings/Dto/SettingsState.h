@@ -1,15 +1,15 @@
 #pragma once
-#include "View\Content\Settings\Base\Enums\SettingsGroupState.h"
+#include "View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h"
 
 class SettingsState
 {
 private:
-    SettingsGroupState hotkeySettingsGroupState;
+    SettingsGroupVisibilityState hotkeySettingsGroupVisibilityState;
 
 public:
     SettingsState();
     ~SettingsState();
 
-    SettingsGroupState GetHotkeySettingsGroupState() const;
-    void SetHotkeySettingsGroupState(SettingsGroupState hotkeySettingsGroupState);
+    SettingsGroupVisibilityState GetHotkeySettingsGroupVisibilityState() const;
+    void SetHotkeySettingsGroupVisibilityState(SettingsGroupVisibilityState hotkeySettingsGroupState);
 };

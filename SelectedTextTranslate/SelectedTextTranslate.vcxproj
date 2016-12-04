@@ -85,6 +85,7 @@
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h" />
     <ClInclude Include="Source\View\Framework\MessageBus.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderPosition.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderResult.h" />
@@ -94,7 +95,7 @@
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h" />
     <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h" />
     <ClInclude Include="Source\View\Framework\ModelHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />

@@ -2,17 +2,17 @@
 
 SettingsState::SettingsState()
 {
-    this->hotkeySettingsGroupState = SettingsGroupState::Expanded;
+    this->hotkeySettingsGroupVisibilityState = SettingsGroupVisibilityState::Expanded;
 }
 
-SettingsGroupState SettingsState::GetHotkeySettingsGroupState() const
+SettingsGroupVisibilityState SettingsState::GetHotkeySettingsGroupVisibilityState() const
 {
-    return hotkeySettingsGroupState;
+    return hotkeySettingsGroupVisibilityState;
 }
 
-void SettingsState::SetHotkeySettingsGroupState(SettingsGroupState hotkeySettingsGroupState)
+void SettingsState::SetHotkeySettingsGroupVisibilityState(SettingsGroupVisibilityState hotkeySettingsGroupVisibilityState)
 {
-    this->hotkeySettingsGroupState = hotkeySettingsGroupState;
+    this->hotkeySettingsGroupVisibilityState = hotkeySettingsGroupVisibilityState;
 }
 
 SettingsState::~SettingsState()

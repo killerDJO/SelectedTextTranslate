@@ -5,7 +5,8 @@
 SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
 {
-    this->state = SettingsGroupState::Collapsed;
+    this->contentState = SettingsGroupContentState::Default;
+    this->visibilityState = SettingsGroupVisibilityState::Collapsed;
     this->title = wstring();
     this->paddingX = this->paddingY = 5;
     this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->fontNormal).tmHeight);
@@ -34,15 +35,24 @@ wstring SettingsGroupHeaderWindow::GetTitle() const
     return title;
 }
 
-void SettingsGroupHeaderWindow::SetState(SettingsGroupState state)
+void SettingsGroupHeaderWindow::SetContentState(SettingsGroupContentState contentState)
 {
-    AssertWindowNotInitialized();
-    this->state = state;
+    this->contentState = contentState;
 }
 
-SettingsGroupState SettingsGroupHeaderWindow::GetState() const
+SettingsGroupContentState SettingsGroupHeaderWindow::GetContentState() const
 {
-    return state;
+    return contentState;
+}
+
+void SettingsGroupHeaderWindow::SetVisibilityState(SettingsGroupVisibilityState visibilityState)
+{
+    this->visibilityState = visibilityState;
+}
+
+SettingsGroupVisibilityState SettingsGroupHeaderWindow::GetVisibilityState() const
+{
+    return visibilityState;
 }
 
 void SettingsGroupHeaderWindow::Initialize()
@@ -69,13 +79,21 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontAscent);
 
     renderPosition = renderer->PrintText(title, fontNormal, Colors::Black, renderPosition);
+    if(contentState == SettingsGroupContentState::Modified)
+    {
+        renderPosition = renderer->PrintText(L"*", fontNormal, Colors::Black, renderPosition);
+    }
+    else if(contentState == SettingsGroupContentState::Invalid)
+    {
+        renderPosition = renderer->PrintText(L"*", fontNormal, Colors::Red, renderPosition);
+    }
 
     int iconSize = fontAscent;
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
     expandButton->SetDimensions(Point(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2), Size(iconSize, iconSize));
-    expandButton->SetNormalIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
-    expandButton->SetHoverIconResource(state == SettingsGroupState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
+    expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
+    expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);
     expandButton->OnClick.Subscribe(&OnSettingsToggled);
     AddChildWindow(expandButton);

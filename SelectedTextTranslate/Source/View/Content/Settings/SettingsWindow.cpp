@@ -16,11 +16,6 @@ SettingsWindow::SettingsWindow(WindowContext* context, Window* parentWindow)
     this->resetButton = nullptr;
 }
 
-void SettingsWindow::Initialize()
-{
-    ContentWindow::Initialize();
-}
-
 void SettingsWindow::SetModel(Settings model)
 {
     ModelHolder<Settings>::SetModel(model);
@@ -40,6 +35,8 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
 
     CreateControls(RenderDescriptor(renderer, renderPosition));
 
+    SetButtonsState();
+
     renderer->IncreaseWidth(paddingX);
     renderer->IncreaseHeight(paddingY);
 
@@ -54,18 +51,17 @@ RenderResult SettingsWindow::CreateSettingsGroups(RenderDescriptor renderDescrip
 RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
     hotkeySettingsWindow = new HotkeySettingsWindow(context, this);
-    RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsWindow, settingsState.GetHotkeySettingsGroupState(), model.GetHotkeySettings());
+    RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsWindow, settingsState.GetHotkeySettingsGroupVisibilityState(), model.GetHotkeySettings());
 
     hotkeySettingsWindow->OnSettingsChanged.Subscribe([this](HotkeySettings settings) -> void
     {
         model.SetHotkeySettings(settings);
         SetButtonsState();
-        SetSettingsState();
     });
 
     hotkeySettingsWindow->OnSettingsToggled.Subscribe([this]() -> void
     {
-        settingsState.SetHotkeySettingsGroupState(ToggleSettingsGroupState(settingsState.GetHotkeySettingsGroupState()));
+        settingsState.SetHotkeySettingsGroupVisibilityState(ToggleSettingsGroupState(settingsState.GetHotkeySettingsGroupVisibilityState()));
         OnSettingsStateChanged.Notify();
     });
 
@@ -73,10 +69,10 @@ RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDe
 }
 
 template<typename TModel>
-RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupState state, TModel model)
+RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state, TModel model)
 {
     settingsGroup->SetDimensions(renderDescriptor.GetRenderPosition().GetPosition(), 257);
-    settingsGroup->SetState(state);
+    settingsGroup->SetVisibilityState(state);
 
     AddChildWindow(settingsGroup);
     dynamic_cast<ModelHolder<TModel>*>(settingsGroup)->SetModel(model);
@@ -147,23 +143,33 @@ void SettingsWindow::UpdateSettings(Settings settings)
     hotkeySettingsWindow->SetModel(model.GetHotkeySettings());
     hotkeySettingsWindow->Render(false);
     SetButtonsState();
-    SetSettingsState();
 }
 
 void SettingsWindow::SetButtonsState() const
 {
-    if (model.EqualTo(globalModel))
+    bool areSettingsModified = !model.EqualTo(globalModel);
+    bool areSettingsValid = hotkeySettingsWindow->IsValid();
+
+    if (areSettingsModified)
     {
-        saveButton->Disable();
-        cancelButton->Disable();
+        cancelButton->Enable();
     }
     else
     {
-        cancelButton->Enable();
-        saveButton->Enable();
+        cancelButton->Disable();
     }
 
-    if (model.EqualTo(Settings()))
+    if (areSettingsModified && areSettingsValid)
+    {
+        saveButton->Enable();
+    }
+    else
+    {
+        saveButton->Disable();
+    }
+
+    bool isResetPossible = model.EqualTo(Settings());
+    if (isResetPossible)
     {
         resetButton->Disable();
     }
@@ -173,23 +179,11 @@ void SettingsWindow::SetButtonsState() const
     }
 }
 
-void SettingsWindow::SetSettingsState() const
+SettingsGroupVisibilityState SettingsWindow::ToggleSettingsGroupState(SettingsGroupVisibilityState settingsGroupState) const
 {
-    if (!globalModel.GetHotkeySettings().EqualTo(hotkeySettingsWindow->GetModel()))
-    {
-        hotkeySettingsWindow->SetModifiedState();
-    }
-    else
-    {
-        hotkeySettingsWindow->SetNotModifiedState();
-    }
-}
-
-SettingsGroupState SettingsWindow::ToggleSettingsGroupState(SettingsGroupState settingsGroupState) const
-{
-    return settingsGroupState == SettingsGroupState::Expanded
-        ? SettingsGroupState::Collapsed
-        : SettingsGroupState::Expanded;
+    return settingsGroupState == SettingsGroupVisibilityState::Expanded
+        ? SettingsGroupVisibilityState::Collapsed
+        : SettingsGroupVisibilityState::Expanded;
 }
 
 SettingsWindow::~SettingsWindow()
