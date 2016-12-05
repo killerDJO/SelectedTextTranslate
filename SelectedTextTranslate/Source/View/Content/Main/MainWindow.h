@@ -19,12 +19,14 @@ private:
 
     ApplicationViews currentView;
     map<ApplicationViews, ViewDescriptor> viewDescriptors;
+    Size minSize;
 
     TranslateResult translateResult;
     vector<DictionaryRecord> dictionaryRecords;
     Settings settings;
 
     void CreateChildWindows();
+    void SetViewWindowDescriptor(Window* viewWindow, ApplicationViews view);
 
     void Scale(double scaleFactorAjustment);
     void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);

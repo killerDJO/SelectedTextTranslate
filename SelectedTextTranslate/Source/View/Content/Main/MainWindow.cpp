@@ -34,6 +34,7 @@ void MainWindow::SetDescriptor(WindowDescriptor descriptor)
     viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
     viewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
     viewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(descriptor, true);
+    minSize = descriptor.GetWindowSize();
 }
 
 void MainWindow::Initialize()
@@ -68,15 +69,8 @@ void MainWindow::CreateChildWindows()
 {
     DestroyChildWindows();
 
-    WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
-        Point(0, 0),
-        GetAvailableClientSize(false),
-        OverflowModes::Stretch,
-        OverflowModes::Stretch,
-        false);
-
     translationWindow = new TranslationWindow(context, this);
-    translationWindow->SetDescriptor(windowDescriptor);
+    SetViewWindowDescriptor(translationWindow, ApplicationViews::TranslateResult);
     AddChildWindow(translationWindow);
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
@@ -86,14 +80,14 @@ void MainWindow::CreateChildWindows()
     translationWindow->SetModel(translateResult);
 
     dictionaryWindow = new DictionaryWindow(context, this);
-    dictionaryWindow->SetDescriptor(windowDescriptor);
+    SetViewWindowDescriptor(dictionaryWindow, ApplicationViews::Dictionary);
     dictionaryWindow->OnShowTranslation.Subscribe(&OnShowTranslation);
     AddChildWindow(dictionaryWindow);
     dictionaryWindow->MakeHidden();
     dictionaryWindow->SetModel(dictionaryRecords);
 
     settingsWindow = new SettingsWindow(context, this);
-    settingsWindow->SetDescriptor(windowDescriptor);
+    SetViewWindowDescriptor(settingsWindow, ApplicationViews::Settings);
     settingsWindow->OnSettingsStateChanged.Subscribe(bind(&MainWindow::Render, this, true));
     settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
     AddChildWindow(settingsWindow);
@@ -104,6 +98,17 @@ void MainWindow::CreateChildWindows()
     confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize()));
     AddChildWindow(confirmDialogWindow);
     confirmDialogWindow->MakeHidden();
+}
+
+void MainWindow::SetViewWindowDescriptor(Window* viewWindow, ApplicationViews view)
+{
+    WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+        Point(0, 0),
+        viewDescriptors[view].GetWindowDescriptor().GetWindowSize(),
+        OverflowModes::Stretch,
+        OverflowModes::Stretch,
+        false);
+    viewWindow->SetDescriptor(windowDescriptor);
 }
 
 void MainWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -192,15 +197,25 @@ Size MainWindow::RenderContent(Renderer* renderer)
 
 void MainWindow::Scale(double scaleFactorAdjustment)
 {
+    ScaleProvider* scaleProvider = context->GetScaleProvider();
+
+    if(!scaleProvider->IsScalingAllowed(scaleFactorAdjustment))
+    {
+        return;
+    }
+
     ScaleViewDescriptor(ApplicationViews::Settings, scaleFactorAdjustment);
     ScaleViewDescriptor(ApplicationViews::Dictionary, scaleFactorAdjustment);
     ScaleViewDescriptor(ApplicationViews::TranslateResult, scaleFactorAdjustment);
+    minSize = Size(
+        scaleProvider->Rescale(minSize.Width, scaleFactorAdjustment),
+        scaleProvider->Rescale(minSize.Height, scaleFactorAdjustment));
 
     descriptor = viewDescriptors[currentView].GetWindowDescriptor();
     position = descriptor.GetPosition();
     windowSize = descriptor.GetWindowSize();
 
-    context->GetScaleProvider()->AdjustScaleFactor(scaleFactorAdjustment);
+    scaleProvider->AdjustScaleFactor(scaleFactorAdjustment);
 
     deviceContextBuffer->Resize(windowSize);
 
@@ -320,13 +335,18 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
             SetCursor(LoadCursor(nullptr, IDC_ARROW));
             return TRUE;
         }
+
+        return Window::WindowProcedure(message, wParam, lParam);
     }
 
     case WM_SIZING:
     {
-        if (IsResizeLocked())
+        RECT &newSize = *(LPRECT)lParam;
+        int newWidth = newSize.right - newSize.left;
+        int newHeight = newSize.bottom - newSize.top;
+
+        if (IsResizeLocked() || newWidth < minSize.Width || newHeight < minSize.Height)
         {
-            RECT &newSize = *(LPRECT)lParam;
             RECT windowRect;
             GetWindowRect(windowHandle, &windowRect);
             newSize = windowRect;

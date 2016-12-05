@@ -1,5 +1,6 @@
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 
 ScaleProvider::ScaleProvider()
 {
@@ -72,7 +73,18 @@ int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const
 
 void ScaleProvider::AdjustScaleFactor(double scaleFactorAdjustment)
 {
+    if(!IsScalingAllowed(scaleFactorAdjustment))
+    {
+        throw SelectedTextTranslateException(L"Scaling to this size is not allowed");
+    }
+
     scaleFactor += scaleFactorAdjustment;
+}
+
+bool ScaleProvider::IsScalingAllowed(double scaleFactorAdjustment) const
+{
+    double newScaleFactor = scaleFactor + scaleFactorAdjustment;
+    return newScaleFactor >= 0.9 && newScaleFactor <= 2;
 }
 
 ScaleProvider::~ScaleProvider()

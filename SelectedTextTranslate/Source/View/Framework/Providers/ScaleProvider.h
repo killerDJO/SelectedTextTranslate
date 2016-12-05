@@ -23,4 +23,5 @@ public:
 
     int Rescale(int value, double scaleFactorAdjustment) const;
     void AdjustScaleFactor(double scaleFactorAdjustment);
+    bool IsScalingAllowed(double scaleFactorAdjustment) const;
 };
