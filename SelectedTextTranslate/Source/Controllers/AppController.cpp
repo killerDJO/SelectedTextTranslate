@@ -34,6 +34,8 @@ void AppController::Initialize()
     trayIconProvider->OnShowDictionary.Subscribe(bind(&AppController::ShowDictionary, this));
     trayIconProvider->OnShowSettings.Subscribe(bind(&AppController::ShowSettings, this));
     trayIconProvider->OnTranslateSelectedText.Subscribe(bind(&AppController::TranslateSelectedText, this));
+    trayIconProvider->OnSuspend.Subscribe(bind(&AppController::Suspend, this));
+    trayIconProvider->OnEnable.Subscribe(bind(&AppController::Enable, this));
 }
 
 void AppController::TranslateSelectedText()
@@ -116,6 +118,16 @@ void AppController::SaveSettings(Settings settings) const
     hotkeyProvider->SetHotkeysSettings(settings.GetHotkeySettings());
     mainWindow->SetSettingsView(settingsProvider->GetSettings());
     mainWindow->Render();
+}
+
+void AppController::Suspend() const
+{
+    trayIconProvider->SetSuspendedState();
+}
+
+void AppController::Enable() const
+{
+    trayIconProvider->SetEnabledState();
 }
 
 void AppController::Exit() const

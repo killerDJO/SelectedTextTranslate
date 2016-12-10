@@ -18,6 +18,23 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvide
     this->OnTranslateSelectedText = Subscribeable<>();
     this->OnShowDictionary = Subscribeable<>();
     this->OnShowSettings = Subscribeable<>();
+    this->OnSuspend = Subscribeable<>();
+    this->OnEnable = Subscribeable<>();
+
+    this->menuActionsToSubscribeableMap = map<int, Subscribeable<>*>();
+    this->InitializeMenuActionsToSubscribeableMap();
+
+    this->isSuspended = false;
+}
+
+void TrayIconProvider::InitializeMenuActionsToSubscribeableMap()
+{
+    menuActionsToSubscribeableMap[MenuExitItemId] = &OnExit;
+    menuActionsToSubscribeableMap[MenuTranslateItemId] = &OnTranslateSelectedText;
+    menuActionsToSubscribeableMap[MenuDictionaryItemId] = &OnShowDictionary;
+    menuActionsToSubscribeableMap[MenuSettingsItemId] = &OnShowSettings;
+    menuActionsToSubscribeableMap[MenuSuspendItemId] = &OnSuspend;
+    menuActionsToSubscribeableMap[MenuEnableItemId] = &OnEnable;
 }
 
 void TrayIconProvider::Initialize()
@@ -30,15 +47,7 @@ void TrayIconProvider::Initialize()
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
     AssertWinApiResult(WM_TASKBARCREATED);
 
-    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [this]() -> void
-    {
-        return OnTranslateSelectedText.Notify();
-    });
-    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [this]() -> void
-    {
-        return OnPlaySelectedText.Notify();
-    });
-
+    RegisterHotkeys();
     CreateMenu();
     CreateTrayIcon();
 }
@@ -51,6 +60,17 @@ void TrayIconProvider::CreateMenu()
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuTranslateItemId, TEXT("Translate from clipboard")));
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuDictionaryItemId, TEXT("Dictionary")));
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuSettingsItemId, TEXT("Settings")));
+    AssertCriticalWinApiResult(AppendMenu(menu, MF_SEPARATOR, NULL, nullptr));
+
+    if(isSuspended)
+    {
+        AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuEnableItemId, TEXT("Enable")));
+    }
+    else
+    {
+        AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuSuspendItemId, TEXT("Suspend")));
+    }
+
     AssertCriticalWinApiResult(AppendMenu(menu, MF_SEPARATOR, NULL, nullptr));
     AssertCriticalWinApiResult(AppendMenu(menu, MF_STRING, MenuExitItemId, TEXT("Exit")));
 }
@@ -71,6 +91,30 @@ void TrayIconProvider::CreateTrayIcon()
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
 }
 
+void TrayIconProvider::SetTrayIconImage(DWORD imageResource)
+{
+    notifyIconData.hIcon = LoadIcon(instance, MAKEINTRESOURCE(imageResource));
+    AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));
+}
+
+void TrayIconProvider::RegisterHotkeys()
+{
+    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [this]() -> void
+    {
+        return OnTranslateSelectedText.Notify();
+    });
+    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [this]() -> void
+    {
+        return OnPlaySelectedText.Notify();
+    });
+}
+
+void TrayIconProvider::UnregisterHotkeys() const
+{
+    hotkeyProvider->UnregisterPlayTextHotkey(windowHandle);
+    hotkeyProvider->UnregisterTranslateHotkey(windowHandle);
+}
+
 void TrayIconProvider::ShowError(wstring message)
 {
     wstring truncatedMessage = message.substr(0, min(255, message.length()));
@@ -82,6 +126,24 @@ void TrayIconProvider::ShowError(wstring message)
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));
 
     OnErrorShow.Notify();
+}
+
+void TrayIconProvider::SetSuspendedState()
+{
+    isSuspended = true;
+    UnregisterHotkeys();
+    DestroyTrayIconMenu();
+    CreateMenu();
+    SetTrayIconImage(IDI_APP_ICON_DISABLED);
+}
+
+void TrayIconProvider::SetEnabledState()
+{
+    isSuspended = false;
+    RegisterHotkeys();
+    DestroyTrayIconMenu();
+    CreateMenu();
+    SetTrayIconImage(IDI_APP_ICON);
 }
 
 LRESULT TrayIconProvider::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
@@ -118,22 +180,7 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
             AssertWinApiResult(GetCursorPos(&curPoint));
             SetForegroundWindow(windowHandle);
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
-            if (clicked == MenuExitItemId)
-            {
-                OnExit.Notify();
-            }
-            if (clicked == MenuTranslateItemId)
-            {
-                OnTranslateSelectedText.Notify();
-            }
-            if (clicked == MenuDictionaryItemId)
-            {
-                OnShowDictionary.Notify();
-            }
-            if (clicked == MenuSettingsItemId)
-            {
-                OnShowSettings.Notify();
-            }
+            menuActionsToSubscribeableMap[clicked]->Notify();
         }
 
         return 0;
@@ -158,7 +205,13 @@ void TrayIconProvider::DestroyTrayIcon()
     Shell_NotifyIcon(NIM_DELETE, &notifyIconData);
 }
 
+void TrayIconProvider::DestroyTrayIconMenu() const
+{
+    AssertCriticalWinApiResult(DestroyMenu(menu));
+}
+
 TrayIconProvider::~TrayIconProvider()
 {
     DestroyTrayIcon();
+    DestroyTrayIconMenu();
 }

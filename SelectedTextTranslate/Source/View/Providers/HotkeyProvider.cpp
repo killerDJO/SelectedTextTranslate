@@ -16,8 +16,8 @@ void HotkeyProvider::SetHotkeysSettings(HotkeySettings settings)
 {
     hotkeyIdToHotkeyMap[TranslateHotkeyId] = settings.GetTranslateHotkey();
     hotkeyIdToHotkeyMap[PlayTextHotkeyId] = settings.GetPlayTextHotkey();
-    hotkeyIdToHotkeyMap[ZoomInHotkeyPrimaryId] = settings.GetZoomInHotkey();
-    hotkeyIdToHotkeyMap[ZoomOutHotkeyPrimaryId] = settings.GetZoomOutHotkey();
+    hotkeyIdToHotkeyMap[ZoomInHotkeyId] = settings.GetZoomInHotkey();
+    hotkeyIdToHotkeyMap[ZoomOutHotkeyId] = settings.GetZoomOutHotkey();
 
     SuspendHotkeys();
     UpdateHotkeysInfo();
@@ -60,22 +60,32 @@ void HotkeyProvider::RegisterPlayTextHotkey(HWND windowHandle, function<void()> 
 
 void HotkeyProvider::RegisterZoomInHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomInHotkeyPrimaryId, hotkeyIdToHotkeyMap[ZoomInHotkeyPrimaryId]));
+    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomInHotkeyId, hotkeyIdToHotkeyMap[ZoomInHotkeyId]));
 }
 
 void HotkeyProvider::RegisterZoomOutHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
-    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomOutHotkeyPrimaryId, hotkeyIdToHotkeyMap[ZoomOutHotkeyPrimaryId]));
+    RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomOutHotkeyId, hotkeyIdToHotkeyMap[ZoomOutHotkeyId]));
 }
 
 void HotkeyProvider::UnregisterZoomInHotkey(HWND windowHandle)
 {
-    UnregisterCustomHotkey(windowHandle, ZoomInHotkeyPrimaryId);
+    UnregisterCustomHotkey(windowHandle, ZoomInHotkeyId);
 }
 
 void HotkeyProvider::UnregisterZoomOutHotkey(HWND windowHandle)
 {
-    UnregisterCustomHotkey(windowHandle, ZoomOutHotkeyPrimaryId);
+    UnregisterCustomHotkey(windowHandle, ZoomOutHotkeyId);
+}
+
+void HotkeyProvider::UnregisterTranslateHotkey(HWND windowHandle)
+{
+    UnregisterCustomHotkey(windowHandle, TranslateHotkeyId);
+}
+
+void HotkeyProvider::UnregisterPlayTextHotkey(HWND windowHandle)
+{
+    UnregisterCustomHotkey(windowHandle, PlayTextHotkeyId);
 }
 
 void HotkeyProvider::SuspendHotkeys()

@@ -51,5 +51,8 @@ public:
 
     void SaveSettings(Settings settings) const;
 
+    void Suspend() const;
+    void Enable() const;
+
     void Exit() const;
 };

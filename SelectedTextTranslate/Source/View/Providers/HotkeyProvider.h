@@ -8,8 +8,8 @@ class HotkeyProvider
 private:
     const int TranslateHotkeyId = 3003;
     const int PlayTextHotkeyId = 3004;
-    const int ZoomInHotkeyPrimaryId = 3006;
-    const int ZoomOutHotkeyPrimaryId = 3007;
+    const int ZoomInHotkeyId = 3006;
+    const int ZoomOutHotkeyId = 3007;
 
     map<int, int> hotkeyIdToHotkeyMap;
     vector<HotkeyInfo> hotkeysRegistry;
@@ -33,6 +33,8 @@ public:
 
     void UnregisterZoomInHotkey(HWND windowHandle);
     void UnregisterZoomOutHotkey(HWND windowHandle);
+    void UnregisterTranslateHotkey(HWND windowHandle);
+    void UnregisterPlayTextHotkey(HWND windowHandle);
 
     void SuspendHotkeys();
     void EnableHotkeys();

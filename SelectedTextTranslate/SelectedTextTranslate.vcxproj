@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico" />
+    <Image Include="Resources\SelectedTextTranslateDisabled.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\View\Framework\MessageBus.cpp" />

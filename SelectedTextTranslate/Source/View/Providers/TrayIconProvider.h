@@ -14,17 +14,30 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     const int MenuTranslateItemId = 3002;
     const int MenuDictionaryItemId = 3005;
     const int MenuSettingsItemId = 3006;
+    const int MenuSuspendItemId = 3007;
+    const int MenuEnableItemId = 3008;
+
+    map<int, Subscribeable<>*> menuActionsToSubscribeableMap;
 
     UINT WM_TASKBARCREATED;
     HMENU menu;
     NOTIFYICONDATA notifyIconData;
+    bool isSuspended;
 
     Logger* logger;
     HotkeyProvider* hotkeyProvider;
 
+    void InitializeMenuActionsToSubscribeableMap();
+
     void CreateMenu();
-    void DestroyTrayIcon();
+    void DestroyTrayIconMenu() const;
+
     void CreateTrayIcon();
+    void DestroyTrayIcon();
+    void SetTrayIconImage(DWORD imageResource);
+
+    void RegisterHotkeys();
+    void UnregisterHotkeys() const;
 
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -37,9 +50,15 @@ public:
 
     void ShowError(wstring message) override;
 
+    void SetSuspendedState();
+    void SetEnabledState();
+
     Subscribeable<> OnExit;
     Subscribeable<> OnPlaySelectedText;
     Subscribeable<> OnTranslateSelectedText;
     Subscribeable<> OnShowDictionary;
     Subscribeable<> OnShowSettings;
+
+    Subscribeable<> OnSuspend;
+    Subscribeable<> OnEnable;
 };

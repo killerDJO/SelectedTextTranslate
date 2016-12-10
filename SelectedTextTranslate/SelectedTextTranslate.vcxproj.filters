@@ -350,6 +350,9 @@
     <Image Include="Resources\SelectedTextTranslate.ico">
       <Filter>Resources</Filter>
     </Image>
+    <Image Include="Resources\SelectedTextTranslateDisabled.ico">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resources\resource.h">
