@@ -74,13 +74,13 @@ Colors HoverTextButtonWindow::GetBackgroundColor() const
     return backgroundColor;
 }
 
-void HoverTextButtonWindow::SetFont(HFONT font)
+void HoverTextButtonWindow::SetFont(Font* font)
 {
     AssertWindowNotInitialized();
     this->font = font;
 }
 
-HFONT HoverTextButtonWindow::GetFont() const
+Font* HoverTextButtonWindow::GetFont() const
 {
     return font == nullptr ? defaultFont : font;
 }
@@ -120,8 +120,8 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    HBRUSH backgroudBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
-    renderer->SetBackground(backgroudBrush);
+    Brush* backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
+    renderer->SetBackground(backgroundBrush);
 
     double fontAscent = renderer->GetFontAscent(GetFont());
     renderer->PrintText(text.c_str(), GetFont(), color, PointReal(0, fontAscent));
@@ -129,10 +129,10 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    context->GetRenderingContext()->DeleteCustomBrush(backgroudBrush);
+    delete backgroundBrush;
 }
 
 HoverTextButtonWindow::~HoverTextButtonWindow()
 {
-    context->GetRenderingContext()->DeleteCustomFont(defaultFont);
+    delete defaultFont;
 }

@@ -4,8 +4,8 @@
 class HoverFlatButtonWindow : public HoverButtonWindow
 {
 private:
-    HFONT defaultFont;
-    HFONT font;
+    Font* defaultFont;
+    Font* font;
     wstring text;
 
     int paddingX;
@@ -26,8 +26,8 @@ public:
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetPosition(Point position);
 
-    void SetFont(HFONT font);
-    HFONT GetFont() const;
+    void SetFont(Font* font);
+    Font* GetFont() const;
 
     void SetText(wstring text);
     wstring GetText() const;

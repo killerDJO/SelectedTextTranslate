@@ -111,5 +111,5 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 
 ConfirmDialogContentWindow::~ConfirmDialogContentWindow()
 {
-    context->GetRenderingContext()->DeleteCustomFont(headerFont);
+    delete headerFont;
 }

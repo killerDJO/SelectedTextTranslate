@@ -24,13 +24,13 @@ void HoverFlatButtonWindow::SetPosition(Point position)
     this->position = position;
 }
 
-void HoverFlatButtonWindow::SetFont(HFONT font)
+void HoverFlatButtonWindow::SetFont(Font* font)
 {
     AssertWindowNotInitialized();
     this->font = font;
 }
 
-HFONT HoverFlatButtonWindow::GetFont() const
+Font* HoverFlatButtonWindow::GetFont() const
 {
     return font == nullptr ? defaultFont : font;
 }
@@ -113,7 +113,7 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    HBRUSH backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
+    Brush* backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
 
     SizeReal downscaledWindowSize = context->GetScaleProvider()->Downscale(GetSize());
 
@@ -129,10 +129,10 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    context->GetRenderingContext()->DeleteCustomBrush(backgroundBrush);
+    delete backgroundBrush;
 }
 
 HoverFlatButtonWindow::~HoverFlatButtonWindow()
 {
-    context->GetRenderingContext()->DeleteCustomFont(defaultFont);
+    delete defaultFont;
 }

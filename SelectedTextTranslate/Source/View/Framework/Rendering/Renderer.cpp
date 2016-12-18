@@ -2,17 +2,19 @@
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "View\Framework\Dto\Point\PointReal.h"
+#include "View\Framework\Rendering\Objects\Brush.h"
+#include "View\Framework\Rendering\Objects\Font.h"
 
 Renderer::Renderer(RenderingContext* renderingContext, ScaleProvider* scaleProvider)
 {
     this->renderingContext = renderingContext;
     this->scaleProvider = scaleProvider;
     this->originalSize = Size(0, 0);
-    this->backgroundBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    this->backgroundBrush = renderingContext->CreateCustomBrush(Colors::White);
     this->renderActions = vector<function<void(HDC)>>();
 }
 
-TextRenderResult Renderer::PrintText(wstring text, HFONT font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment)
+TextRenderResult Renderer::PrintText(wstring text, Font* font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment)
 {
     PointReal position = renderPosition.GetPosition();
     Point scaledPosition = scaleProvider->Scale(position);
@@ -20,7 +22,7 @@ TextRenderResult Renderer::PrintText(wstring text, HFONT font, Colors color, Ren
     // Copy text to prevent preliminary dispose by calling code.
     wchar_t* copiedText = StringUtilities::CopyWideChar(text);
     auto printTextAction = [=](HDC deviceContext) -> void {
-        AssertCriticalWinApiResult(SelectObject(deviceContext, font));
+        AssertCriticalWinApiResult(SelectObject(deviceContext, font->GetHandle()));
         ExceptionHelper::ThrowOnWinapiError(SetTextColor(deviceContext, (COLORREF)color), true, CLR_INVALID);
         ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | horizontalAlignment), true, GDI_ERROR);
         AssertCriticalWinApiResult(SetBkMode(deviceContext, TRANSPARENT));
@@ -47,7 +49,7 @@ TextRenderResult Renderer::PrintText(wstring text, HFONT font, Colors color, Ren
     return TextRenderResult(downscaledSize, rightX, position.GetY(), bottomY);
 }
 
-void Renderer::DrawRect(RectReal rect, HBRUSH brush)
+void Renderer::DrawRect(RectReal rect, Brush* brush)
 {
     Rect scaledRect = scaleProvider->Scale(rect);
 
@@ -58,7 +60,7 @@ void Renderer::DrawRect(RectReal rect, HBRUSH brush)
     gdiRect.bottom = scaledRect.GetBottom();
 
     auto drawRectAction = [=](HDC hdc) -> void {
-        AssertCriticalWinApiResult(FillRect(hdc, &gdiRect, brush));
+        AssertCriticalWinApiResult(FillRect(hdc, &gdiRect, brush->GetHandle()));
     };
     renderActions.push_back(drawRectAction);
 
@@ -68,7 +70,7 @@ void Renderer::DrawRect(RectReal rect, HBRUSH brush)
     );
 }
 
-void Renderer::DrawBorderedRect(RectReal rect, HBRUSH brush, double borderWidth, Colors borderColor)
+void Renderer::DrawBorderedRect(RectReal rect, Brush* brush, double borderWidth, Colors borderColor)
 {
     int scaledBorderWidth = scaleProvider->Scale(borderWidth);
     Rect scaledRect = scaleProvider->Scale(rect);
@@ -81,18 +83,18 @@ void Renderer::DrawBorderedRect(RectReal rect, HBRUSH brush, double borderWidth,
         scaledRect.GetHeight() - borderAjustments
     );
 
-    HPEN borderPen = renderingContext->CreateCustomPen(borderColor, scaledBorderWidth);
+    Pen* borderPen = renderingContext->CreateCustomPen(borderColor, scaledBorderWidth);
     HBRUSH contentBrush = brush != nullptr
-        ? brush
+        ? brush->GetHandle()
         : (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 
     auto drawRectAction = [=](HDC hdc) -> void {
-        AssertCriticalWinApiResult(SelectObject(hdc, borderPen));
+        AssertCriticalWinApiResult(SelectObject(hdc, borderPen->GetHandle()));
         AssertCriticalWinApiResult(SelectObject(hdc, contentBrush));
 
         AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.GetX(), scaledRect.GetY(), scaledRect.GetRight(), scaledRect.GetBottom()));
 
-        AssertCriticalWinApiResult(DeleteObject(borderPen));
+        delete borderPen;
     };
     renderActions.push_back(drawRectAction);
 
@@ -102,7 +104,7 @@ void Renderer::DrawBorderedRect(RectReal rect, HBRUSH brush, double borderWidth,
     );
 }
 
-void Renderer::SetBackground(HBRUSH backgroundBrush)
+void Renderer::SetBackground(Brush* backgroundBrush)
 {
     this->backgroundBrush = backgroundBrush;
 }
@@ -115,25 +117,25 @@ void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) con
     rect.bottom = deviceContextSize.GetHeight();
     rect.right = deviceContextSize.GetWidth();
 
-    AssertCriticalWinApiResult(FillRect(deviceContext, &rect, backgroundBrush));
+    AssertCriticalWinApiResult(FillRect(deviceContext, &rect, backgroundBrush->GetHandle()));
 }
 
-double Renderer::GetFontAscent(HFONT font) const
+double Renderer::GetFontAscent(Font* font) const
 {
     return scaleProvider->Downscale(renderingContext->GetFontAscent(font));
 }
 
-double Renderer::GetFontDescent(HFONT font) const
+double Renderer::GetFontDescent(Font* font) const
 {
     return scaleProvider->Downscale(renderingContext->GetFontDescent(font));
 }
 
-double Renderer::GetFontStrokeHeight(HFONT font) const
+double Renderer::GetFontStrokeHeight(Font* font) const
 {
     return scaleProvider->Downscale(renderingContext->GetFontStrokeHeight(font));
 }
 
-double Renderer::GetFontHeight(HFONT font) const
+double Renderer::GetFontHeight(Font* font) const
 {
     return scaleProvider->Downscale(renderingContext->GetFontHeight(font));
 }

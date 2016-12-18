@@ -3,6 +3,9 @@
 
 class ConfirmDialogOverlayWindow : public ChildWindow
 {
+private:
+    Brush* backgroundBrush;
+
 protected:
     Size RenderContent(Renderer* renderer) override;
 

@@ -10,9 +10,9 @@ RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextPr
     this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(1, 1));
 }
 
-Size RenderingContext::GetTextSize(wstring text, HFONT font) const
+Size RenderingContext::GetTextSize(wstring text, Font* font) const
 {
-    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font));
+    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font->GetHandle()));
 
     SIZE textSize;
     AssertCriticalWinApiResult(GetTextExtentPoint32(emptyDeviceContext, text.c_str(), text.length(), &textSize));
@@ -20,9 +20,9 @@ Size RenderingContext::GetTextSize(wstring text, HFONT font) const
     return Size(textSize.cx, textSize.cy);
 }
 
-TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
+TEXTMETRIC RenderingContext::GetFontMetrics(Font* font) const
 {
-    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font));
+    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font->GetHandle()));
 
     TEXTMETRIC tm;
     AssertCriticalWinApiResult(GetTextMetrics(emptyDeviceContext, &tm));
@@ -30,23 +30,23 @@ TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
     return tm;
 }
 
-int RenderingContext::GetFontHeight(HFONT font) const
+int RenderingContext::GetFontHeight(Font* font) const
 {
     return GetFontMetrics(font).tmHeight;
 }
 
-int RenderingContext::GetFontStrokeHeight(HFONT font) const
+int RenderingContext::GetFontStrokeHeight(Font* font) const
 {
     TEXTMETRIC textmetric = GetFontMetrics(font);
     return textmetric.tmAscent - textmetric.tmInternalLeading;
 }
 
-int RenderingContext::GetFontDescent(HFONT font) const
+int RenderingContext::GetFontDescent(Font* font) const
 {
     return GetFontMetrics(font).tmDescent;
 }
 
-int RenderingContext::GetFontAscent(HFONT font) const
+int RenderingContext::GetFontAscent(Font* font) const
 {
     return GetFontMetrics(font).tmAscent;
 }
@@ -82,7 +82,7 @@ bool RenderingContext::IsRenderingRoot(Window* window) const
     return window == renderingRoot;
 }
 
-HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool isUnderscored, bool isBold) const
+Font* RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool isUnderscored, bool isBold) const
 {
     int fontSizeInPixels = 10;
 
@@ -112,43 +112,19 @@ HFONT RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool
     HFONT font = CreateFont(logicalFontSize, 0, 0, 0, boldValue, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
     AssertCriticalWinApiResult(font);
 
-    return font;
+    return new Font(font);
 }
 
-void RenderingContext::DeleteCustomFont(HFONT font) const
-{
-    DeleteCustomObject(font);
-}
-
-HBRUSH RenderingContext::CreateCustomBrush(Colors color) const
+Brush* RenderingContext::CreateCustomBrush(Colors color) const
 {
     HBRUSH brush = CreateSolidBrush((COLORREF)color);
     AssertCriticalWinApiResult(brush);
-    return brush;
+    return new Brush(brush);
 }
 
-void RenderingContext::DeleteCustomBrush(HBRUSH brush) const
-{
-    DeleteCustomObject(brush);
-}
-
-HPEN RenderingContext::CreateCustomPen(Colors color, int strokeWidth) const
+Pen* RenderingContext::CreateCustomPen(Colors color, int strokeWidth) const
 {
     HPEN pen = CreatePen(PS_SOLID, strokeWidth, (COLORREF)color);
     AssertCriticalWinApiResult(pen);
-    return pen;
-}
-
-void RenderingContext::DeleteCustomPen(HPEN pen) const
-{
-    DeleteCustomObject(pen);
-}
-
-void RenderingContext::DeleteCustomObject(HGDIOBJ gdiObject) const
-{
-    AssertCriticalWinApiResult(DeleteObject(gdiObject));
-}
-
-RenderingContext::~RenderingContext()
-{
+    return new Pen(pen);
 }

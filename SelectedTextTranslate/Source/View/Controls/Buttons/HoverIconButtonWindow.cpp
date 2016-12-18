@@ -10,7 +10,7 @@ HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, Window* par
 {
     this->hoverIconResource = 0;
     this->normalIconResource = 0;
-    this->backgroundBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    this->backgroundBrush = nullptr;
     this->className = L"STT_HOVERICONBUTTON";
 }
 
@@ -47,13 +47,13 @@ DWORD HoverIconButtonWindow::GetHoverIconResource() const
     return hoverIconResource;
 }
 
-void HoverIconButtonWindow::SetBackgroundBrush(HBRUSH backgroundBrush)
+void HoverIconButtonWindow::SetBackgroundBrush(Brush* backgroundBrush)
 {
     AssertWindowNotInitialized();
     this->backgroundBrush = backgroundBrush;
 }
 
-HBRUSH HoverIconButtonWindow::GetBackgroundBrush() const
+Brush* HoverIconButtonWindow::GetBackgroundBrush() const
 {
     return backgroundBrush;
 }

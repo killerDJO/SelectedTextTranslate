@@ -1,14 +1,12 @@
 #pragma once
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
-#include "View\Framework\Dto\Point\PointReal.h"
-#include "View\Framework\Dto\Size\SizeReal.h"
 
 class HoverIconButtonWindow : public HoverButtonWindow
 {
 private:
     DWORD normalIconResource;
     DWORD hoverIconResource;
-    HBRUSH backgroundBrush;
+    Brush* backgroundBrush;
 
     void RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const;
 
@@ -30,8 +28,8 @@ public:
     DWORD GetNormalIconResource() const;
     void SetHoverIconResource(DWORD hoverIconResource);
     DWORD GetHoverIconResource() const;
-    void SetBackgroundBrush(HBRUSH backgroundBrush);
-    HBRUSH GetBackgroundBrush() const;
+    void SetBackgroundBrush(Brush* backgroundBrush);
+    Brush* GetBackgroundBrush() const;
 
     void Initialize() override;
 };

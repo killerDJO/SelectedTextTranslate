@@ -10,6 +10,8 @@
 class RenderingContext;
 class ScrollProvider;
 class Window;
+class Brush;
+class Font;
 
 class Renderer
 {
@@ -19,7 +21,7 @@ private:
 
     Size originalSize;
 
-    HBRUSH backgroundBrush;
+    Brush* backgroundBrush;
 
     vector<function<void(HDC)>> renderActions;
 
@@ -29,15 +31,15 @@ public:
     Renderer(RenderingContext* renderingContext, ScaleProvider* scaleProvider);
     ~Renderer();
 
-    TextRenderResult PrintText(const wstring text, HFONT font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment = TA_LEFT);
-    void DrawRect(RectReal rect, HBRUSH brush);
-    void DrawBorderedRect(RectReal rect, HBRUSH brush, double borderWidth, Colors borderColor);
-    void SetBackground(HBRUSH backgroundBrush);
+    TextRenderResult PrintText(const wstring text, Font* font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment = TA_LEFT);
+    void DrawRect(RectReal rect, Brush* brush);
+    void DrawBorderedRect(RectReal rect, Brush* brush, double borderWidth, Colors borderColor);
+    void SetBackground(Brush* backgroundBrush);
 
-    double GetFontAscent(HFONT font) const;
-    double GetFontDescent(HFONT font) const;
-    double GetFontStrokeHeight(HFONT font) const;
-    double GetFontHeight(HFONT font) const;
+    double GetFontAscent(Font* font) const;
+    double GetFontDescent(Font* font) const;
+    double GetFontStrokeHeight(Font* font) const;
+    double GetFontHeight(Font* font) const;
 
     Size GetScaledSize() const;
     SizeReal GetSize() const;

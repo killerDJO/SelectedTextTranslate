@@ -57,12 +57,12 @@ Size ContentWindow::RenderContent(Renderer* renderer)
 
 ContentWindow::~ContentWindow()
 {
-    context->GetRenderingContext()->DeleteCustomFont(fontNormal);
-    context->GetRenderingContext()->DeleteCustomFont(fontHeader);
-    context->GetRenderingContext()->DeleteCustomFont(fontItalic);
-    context->GetRenderingContext()->DeleteCustomFont(fontSmallUnderscored);
-    context->GetRenderingContext()->DeleteCustomFont(fontSmall);
-    context->GetRenderingContext()->DeleteCustomBrush(lightGrayBrush);
-    context->GetRenderingContext()->DeleteCustomBrush(grayBrush);
-    context->GetRenderingContext()->DeleteCustomBrush(backgroundBrush);
+    delete fontNormal;
+    delete fontHeader;
+    delete fontItalic;
+    delete fontSmallUnderscored;
+    delete fontSmall;
+    delete lightGrayBrush;
+    delete grayBrush;
+    delete backgroundBrush;
 }

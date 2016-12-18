@@ -109,7 +109,7 @@ void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
 RenderResult SettingsWindow::CreateSaveButtonControl(RenderDescriptor renderDescriptor)
 {
     saveButton = new HoverFlatButtonWindow(context, this);
-    saveButton->SetPosition(context->GetScaleProvider()->Scale(renderDescriptor.GetRenderPosition().GetPosition()));
+    saveButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition(context->GetScaleProvider()));
     saveButton->SetText(L"Save");
     saveButton->OnClick.Subscribe([this]() -> void
     {

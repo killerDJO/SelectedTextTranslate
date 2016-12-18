@@ -6,6 +6,7 @@ HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* paren
 {
     this->title = L"Hotkeys";
     this->OnSettingsChanged = Subscribeable<HotkeySettings>();
+    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
 }
 
 void HotkeySettingsWindow::SetModel(HotkeySettings model)
@@ -64,10 +65,9 @@ void HotkeySettingsWindow::RenderSettingsContent(RenderDescriptor renderDescript
 
 RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(DWORD)> hotkeySetter)
 {
-    HFONT font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
-    double normalFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(font);
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition();
 
+    double normalFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(font);
     TextRenderResult textRenderResult = renderDescriptor.GetRenderer()->PrintText(title.c_str(), font, Colors::Black, renderPosition.MoveY(normalFontAscent));
 
     renderPosition = renderPosition.SetY(textRenderResult.GetBottomY()).MoveY(1);
@@ -158,4 +158,5 @@ bool HotkeySettingsWindow::IsModelValid() const
 
 HotkeySettingsWindow::~HotkeySettingsWindow()
 {
+    delete font;
 }

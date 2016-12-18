@@ -4,8 +4,8 @@
 class HoverTextButtonWindow : public HoverButtonWindow
 {
 private:
-    HFONT defaultFont;
-    HFONT font;
+    Font* defaultFont;
+    Font* font;
     Colors normalColor;
     Colors hoverColor;
     Colors disabledColor;
@@ -36,8 +36,8 @@ public:
     void SetBackgroundColor(Colors backgroundColor);
     Colors GetBackgroundColor() const;
 
-    void SetFont(HFONT font);
-    HFONT GetFont() const;
+    void SetFont(Font* font);
+    Font* GetFont() const;
 
     void SetText(wstring text);
     wstring GetText() const;

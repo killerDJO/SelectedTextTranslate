@@ -6,8 +6,8 @@ class HotKeyInputWindow : public ChildWindow
 private:
     DWORD currentHotkey;
     RenderPosition currentTextPoistion;
-    HFONT defaultFont;
-    HFONT font;
+    Font* defaultFont;
+    Font* font;
 
     int padding;
     int borderWidth;
@@ -36,8 +36,8 @@ public:
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetPosition(Point position);
 
-    void SetFont(HFONT font);
-    HFONT GetFont() const;
+    void SetFont(Font* font);
+    Font* GetFont() const;
 
     void SetPadding(int padding);
     int GetPadding() const;

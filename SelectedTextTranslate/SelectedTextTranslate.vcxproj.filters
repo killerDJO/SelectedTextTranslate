@@ -154,6 +154,9 @@
     <Filter Include="Source\View\Framework\Dto\Rect">
       <UniqueIdentifier>{d3da5678-f2d1-4962-bed9-4c07e9f0896a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Framework\Rendering\Objects">
+      <UniqueIdentifier>{a00cfe2b-63b0-4580-953a-a607aa7ef2af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -371,6 +374,15 @@
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Dto\Size\SizeReal.cpp">
       <Filter>Source\View\Framework\Dto\Size</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Objects\Pen.cpp">
+      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Objects\Font.cpp">
+      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\Objects\Brush.cpp">
+      <Filter>Source\View\Framework\Rendering\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -630,6 +642,15 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\Dto\Size\SizeReal.h">
       <Filter>Source\View\Framework\Dto\Size</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Objects\Pen.h">
+      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Objects\Font.h">
+      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\Objects\Brush.h">
+      <Filter>Source\View\Framework\Rendering\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

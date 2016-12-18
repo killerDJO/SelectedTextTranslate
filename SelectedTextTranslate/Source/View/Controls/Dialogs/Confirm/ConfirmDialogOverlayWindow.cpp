@@ -6,6 +6,7 @@ ConfirmDialogOverlayWindow::ConfirmDialogOverlayWindow(WindowContext* context, W
 {
     this->className = L"STT_CONFIRM_DIALOG_OVERLAY";
     this->isLayered = true;
+    this->backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(Colors::White);
 }
 
 void ConfirmDialogOverlayWindow::Initialize()
@@ -17,10 +18,11 @@ void ConfirmDialogOverlayWindow::Initialize()
 
 Size ConfirmDialogOverlayWindow::RenderContent(Renderer* renderer)
 {
-    renderer->DrawRect(RectReal(PointReal(0, 0), context->GetScaleProvider()->Downscale(GetSize())), (HBRUSH)GetStockObject(WHITE_BRUSH));
+    renderer->DrawRect(RectReal(PointReal(0, 0), context->GetScaleProvider()->Downscale(GetSize())), backgroundBrush);
     return windowSize;
 }
 
 ConfirmDialogOverlayWindow::~ConfirmDialogOverlayWindow()
 {
+    delete backgroundBrush;
 }

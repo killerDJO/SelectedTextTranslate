@@ -33,13 +33,13 @@ void HotKeyInputWindow::SetPosition(Point position)
     this->position = position;
 }
 
-void HotKeyInputWindow::SetFont(HFONT font)
+void HotKeyInputWindow::SetFont(Font* font)
 {
     AssertWindowNotInitialized();
     this->font = font;
 }
 
-HFONT HotKeyInputWindow::GetFont() const
+Font* HotKeyInputWindow::GetFont() const
 {
     return font == nullptr ? defaultFont : font;
 }
@@ -296,5 +296,5 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 HotKeyInputWindow::~HotKeyInputWindow()
 {
     context->GetMessageBus()->EnableHotkeys();
-    context->GetRenderingContext()->DeleteCustomFont(defaultFont);
+    delete defaultFont;
 }

@@ -7,6 +7,7 @@
 class HotkeySettingsWindow : public SettingsGroupWindow, public ModelHolder<HotkeySettings>
 {
 private:
+    Font* font;
     HotkeySettings globalModel;
     vector<HotKeyInputWindow*> hotkeyInputWindows;
 

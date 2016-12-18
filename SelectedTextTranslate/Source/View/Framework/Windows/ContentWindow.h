@@ -8,15 +8,15 @@ protected:
     int paddingY;
     double lineHeight;
 
-    HFONT fontNormal;
-    HFONT fontHeader;
-    HFONT fontItalic;
-    HFONT fontSmall;
-    HFONT fontSmallUnderscored;
+    Font* fontNormal;
+    Font* fontHeader;
+    Font* fontItalic;
+    Font* fontSmall;
+    Font* fontSmallUnderscored;
 
-    HBRUSH grayBrush;
-    HBRUSH lightGrayBrush;
-    HBRUSH backgroundBrush;
+    Brush* grayBrush;
+    Brush* lightGrayBrush;
+    Brush* backgroundBrush;
 
     Size RenderContent(Renderer* renderer) override;
 

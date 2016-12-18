@@ -3,6 +3,9 @@
 #include "View\Framework\Enums\FontSizes.h"
 #include "View\Framework\Enums\Colors.h"
 #include "View\Framework\Providers\ScaleProvider.h"
+#include "View\Framework\Rendering\Objects\Pen.h"
+#include "View\Framework\Rendering\Objects\Font.h"
+#include "View\Framework\Rendering\Objects\Brush.h"
 
 class Renderer;
 class Window;
@@ -17,28 +20,21 @@ private:
     Window* renderingRoot;
     HDC emptyDeviceContext;
 
-    void DeleteCustomObject(HGDIOBJ gdiObject) const;
-    TEXTMETRIC GetFontMetrics(HFONT font) const;
+    TEXTMETRIC GetFontMetrics(Font* font) const;
 
 public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
-    ~RenderingContext();
 
-    HFONT CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false, bool isBold = false) const;
-    void DeleteCustomFont(HFONT font) const;
+    Font* CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false, bool isBold = false) const;
+    Brush* CreateCustomBrush(Colors color) const;
+    Pen* CreateCustomPen(Colors color, int strokeWidth) const;
 
-    HBRUSH CreateCustomBrush(Colors color) const;
-    void DeleteCustomBrush(HBRUSH brush) const;
+    Size GetTextSize(wstring text, Font* font) const;
 
-    HPEN CreateCustomPen(Colors color, int strokeWidth) const;
-    void DeleteCustomPen(HPEN pen) const;
-
-    Size GetTextSize(wstring text, HFONT font) const;
-
-    int GetFontHeight(HFONT font) const;
-    int GetFontStrokeHeight(HFONT font) const;
-    int GetFontDescent(HFONT font) const;
-    int GetFontAscent(HFONT font) const;
+    int GetFontHeight(Font* font) const;
+    int GetFontStrokeHeight(Font* font) const;
+    int GetFontDescent(Font* font) const;
+    int GetFontAscent(Font* font) const;
 
     Renderer* GetRenderer();
     void ReleaseRenderer(Renderer* renderer) const;
