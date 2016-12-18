@@ -20,35 +20,14 @@ Size RenderingContext::GetTextSize(wstring text, Font* font) const
     return Size(textSize.cx, textSize.cy);
 }
 
-TEXTMETRIC RenderingContext::GetFontMetrics(Font* font) const
+TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
 {
-    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font->GetHandle()));
+    AssertCriticalWinApiResult(SelectObject(emptyDeviceContext, font));
 
     TEXTMETRIC tm;
     AssertCriticalWinApiResult(GetTextMetrics(emptyDeviceContext, &tm));
 
     return tm;
-}
-
-int RenderingContext::GetFontHeight(Font* font) const
-{
-    return GetFontMetrics(font).tmHeight;
-}
-
-int RenderingContext::GetFontStrokeHeight(Font* font) const
-{
-    TEXTMETRIC textmetric = GetFontMetrics(font);
-    return textmetric.tmAscent - textmetric.tmInternalLeading;
-}
-
-int RenderingContext::GetFontDescent(Font* font) const
-{
-    return GetFontMetrics(font).tmDescent;
-}
-
-int RenderingContext::GetFontAscent(Font* font) const
-{
-    return GetFontMetrics(font).tmAscent;
 }
 
 Renderer* RenderingContext::GetRenderer()
@@ -112,7 +91,9 @@ Font* RenderingContext::CreateCustomFont(FontSizes fontSize, bool isItalic, bool
     HFONT font = CreateFont(logicalFontSize, 0, 0, 0, boldValue, italicValue, underscoredValue, 0, 0, 0, 0, PROOF_QUALITY, 0, TEXT("Arial"));
     AssertCriticalWinApiResult(font);
 
-    return new Font(font);
+    TEXTMETRIC textmetric = GetFontMetrics(font);
+
+    return new Font(font, textmetric.tmHeight, textmetric.tmAscent - textmetric.tmInternalLeading, textmetric.tmDescent, textmetric.tmAscent);
 }
 
 Brush* RenderingContext::CreateCustomBrush(Colors color) const

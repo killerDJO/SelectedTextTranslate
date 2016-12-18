@@ -12,7 +12,7 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
     this->padding = context->GetScaleProvider()->Scale(3);
     this->borderWidth = context->GetScaleProvider()->Scale(1);
     this->width = context->GetScaleProvider()->Scale(200);
-    this->lineHeight = context->GetRenderingContext()->GetFontHeight(this->defaultFont);
+    this->lineHeight = this->defaultFont->GetHeight();
     this->hasFocus = false;
     this->isValid = true;
 
@@ -143,7 +143,7 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     RenderBorder(renderer);
 
     int textOffset = borderWidth + padding;
-    int fontAscent = context->GetRenderingContext()->GetFontAscent(GetFont());
+    int fontAscent = GetFont()->GetAscent();
 
     if (currentHotkey == 0)
     {

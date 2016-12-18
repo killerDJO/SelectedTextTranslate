@@ -13,9 +13,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    int normalFontAscent = context->GetRenderingContext()->GetFontAscent(fontNormal);
-
-    RenderPosition renderPosition = RenderPosition(paddingX, paddingY / 2 + normalFontAscent);
+    RenderPosition renderPosition = RenderPosition(paddingX, paddingY / 2 + fontNormal->GetAscent());
 
     size_t countToShow = min(200, model.size());
 
@@ -34,7 +32,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(context, this);
         translateButton->SetDimensions(
-            renderPosition.MoveY(- normalFontAscent).MoveY(1, context->GetScaleProvider()).GetPosition(),
+            renderPosition.MoveY(-fontNormal->GetAscent()).MoveY(1, context->GetScaleProvider()).GetPosition(),
             context->GetScaleProvider()->Scale(Size(16, 16)));
         translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
         translateButton->SetHoverIconResource(IDR_TRANSLATE);

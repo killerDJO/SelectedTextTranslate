@@ -123,8 +123,7 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
     Brush* backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
     renderer->SetBackground(backgroundBrush);
 
-    int fontAscent = context->GetRenderingContext()->GetFontAscent(GetFont());
-    renderer->PrintText(text.c_str(), GetFont(), color, Point(0, fontAscent));
+    renderer->PrintText(text.c_str(), GetFont(), color, Point(0, GetFont()->GetAscent()));
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);

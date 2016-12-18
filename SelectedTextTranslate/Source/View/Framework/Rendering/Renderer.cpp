@@ -31,15 +31,14 @@ TextRenderResult Renderer::PrintText(wstring text, Font* font, Colors color, Ren
     renderActions.push_back(printTextAction);
 
     Size textSize = renderingContext->GetTextSize(text.c_str(), font);
-    int fontAscent = renderingContext->GetFontAscent(font);
 
     originalSize = Size(
         max(originalSize.GetWidth(), position.GetX() + textSize.GetWidth()),
-        max(originalSize.GetHeight(), position.GetY() + textSize.GetHeight() - fontAscent)
+        max(originalSize.GetHeight(), position.GetY() + textSize.GetHeight() - font->GetAscent())
     );
 
     int rightX = position.GetX() + textSize.GetWidth();
-    int bottomY = position.GetY() - fontAscent + textSize.GetHeight();
+    int bottomY = position.GetY() - font->GetAscent() + textSize.GetHeight();
 
     return TextRenderResult(textSize, rightX, position.GetY(), bottomY);
 }

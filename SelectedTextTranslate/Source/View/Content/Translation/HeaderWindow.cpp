@@ -28,8 +28,6 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
 
 Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 {
-    int smallFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmall);
-
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 
     TranslateResultSentence sentence = model.GetSentence();
@@ -37,7 +35,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
     renderPosition = renderPosition.MoveY(lineHeight);
 
-    int imageSize = smallFontAscent;
+    int imageSize = fontSmall->GetAscent();
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
     audioButton->SetDimensions(
         renderPosition.MoveY(-imageSize).MoveY(2, context->GetScaleProvider()).GetPosition(),
@@ -67,8 +65,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
 Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
 {
-    int fontHeight = context->GetRenderingContext()->GetFontStrokeHeight(fontHeader);
-    int curY = windowSize.GetHeight() / 2 + fontHeight / 2;
+    int curY = windowSize.GetHeight() / 2 + fontHeader->GetHeight() / 2;
 
     renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, RenderPosition(paddingX, curY));
 
@@ -93,10 +90,9 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
         Colors::Gray,
         renderDescriptor.GetRenderPosition());
 
-    int smallFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmall);
     HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
     headerActionButton->SetFont(fontSmallUnderscored);
-    headerActionButton->SetPosition(originLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition());
+    headerActionButton->SetPosition(originLineRenderResult.GetRenderPosition().MoveY(-fontSmall->GetAscent()).GetPosition());
     headerActionButton->SetText(actionText);
     headerActionButton->OnClick.Subscribe(actionCallback);
 

@@ -70,12 +70,11 @@ int HoverFlatButtonWindow::GetPaddingY() const
 
 Size HoverFlatButtonWindow::GetComputedSize() const
 {
-    int fontStrokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(GetFont()) + 1;
     Size textSize = context->GetRenderingContext()->GetTextSize(text, GetFont());
 
     return Size(
         textSize.GetWidth() + paddingX * 2,
-        fontStrokeHeight + (paddingY + borderWidth) * 2);
+        GetFont()->GetStrokeHeight() + 1 + (paddingY + borderWidth) * 2);
 }
 
 void HoverFlatButtonWindow::Initialize()
@@ -91,8 +90,7 @@ void HoverFlatButtonWindow::Initialize()
 
 int HoverFlatButtonWindow::GetTextBaseline() const
 {
-    int fontStrokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(GetFont());
-    return fontStrokeHeight + paddingY + borderWidth;
+    return GetFont()->GetStrokeHeight() + paddingY + borderWidth;
 }
 
 void HoverFlatButtonWindow::RenderStatesDeviceContext()

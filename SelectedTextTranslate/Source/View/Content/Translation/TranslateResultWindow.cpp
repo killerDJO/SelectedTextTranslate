@@ -71,7 +71,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
 
             int k = entry.GetScore() >= 0.05 ? 0 : (entry.GetScore() >= 0.0025 ? 1 : 2);
             int rateUnit = context->GetScaleProvider()->Scale(8);
-            int strokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(fontNormal);
+            int strokeHeight = fontNormal->GetStrokeHeight();
 
             Rect rect = Rect(
                 paddingX + k * rateUnit,

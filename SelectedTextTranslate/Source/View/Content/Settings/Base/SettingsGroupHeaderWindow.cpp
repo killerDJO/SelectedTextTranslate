@@ -10,7 +10,7 @@ SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Win
     this->title = wstring();
     this->paddingX = this->paddingY = context->GetScaleProvider()->Scale(5);
     this->borderWidth = context->GetScaleProvider()->Scale(1);
-    this->lineHeight = context->GetRenderingContext()->GetFontHeight(this->fontNormal);
+    this->lineHeight = this->fontNormal->GetHeight();
     this->className = L"STT_SETTINGS_GROUP_HEADER";
 }
 
@@ -74,8 +74,7 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 
     renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize()), backgroundBrush, borderWidth, Colors::Gray);
 
-    int fontAscent = context->GetRenderingContext()->GetFontAscent(fontNormal);
-    RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontAscent);
+    RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontNormal->GetAscent());
 
     renderPosition = renderer->PrintText(title, fontNormal, Colors::Black, renderPosition);
     if(contentState == SettingsGroupContentState::Modified)
@@ -87,7 +86,7 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
         renderPosition = renderer->PrintText(L"*", fontNormal, Colors::Red, renderPosition);
     }
 
-    int iconSize = fontAscent;
+    int iconSize = fontNormal->GetAscent();
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
     expandButton->SetDimensions(

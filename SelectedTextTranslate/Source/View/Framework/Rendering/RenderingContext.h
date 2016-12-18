@@ -20,7 +20,7 @@ private:
     Window* renderingRoot;
     HDC emptyDeviceContext;
 
-    TEXTMETRIC GetFontMetrics(Font* font) const;
+    TEXTMETRIC GetFontMetrics(HFONT font) const;
 
 public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
@@ -30,11 +30,6 @@ public:
     Pen* CreateCustomPen(Colors color, int strokeWidth) const;
 
     Size GetTextSize(wstring text, Font* font) const;
-
-    int GetFontHeight(Font* font) const;
-    int GetFontStrokeHeight(Font* font) const;
-    int GetFontDescent(Font* font) const;
-    int GetFontAscent(Font* font) const;
 
     Renderer* GetRenderer();
     void ReleaseRenderer(Renderer* renderer) const;

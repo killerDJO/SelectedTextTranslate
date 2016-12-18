@@ -132,8 +132,7 @@ HoverTextButtonWindow* SettingsWindow::CreateTextButtonControl(RenderDescriptor 
     HoverTextButtonWindow* button = new HoverTextButtonWindow(context, this);
     button->SetFont(fontSmallUnderscored);
 
-    int fontAscent = context->GetRenderingContext()->GetFontAscent(button->GetFont());
-    button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-fontAscent).GetPosition());
+    button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-button->GetFont()->GetAscent()).GetPosition());
     button->SetText(text);
     button->OnClick.Subscribe(clickCallback);
     AddChildWindow(button);

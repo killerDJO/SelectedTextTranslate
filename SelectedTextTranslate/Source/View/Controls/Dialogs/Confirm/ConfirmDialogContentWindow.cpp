@@ -65,15 +65,13 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
-    int headerFontAscent = context->GetRenderingContext()->GetFontAscent(headerFont);
-    renderer->PrintText(title, headerFont, Colors::Black, renderPosition.MoveY(headerFontAscent));
+    renderer->PrintText(title, headerFont, Colors::Black, renderPosition.MoveY(headerFont->GetAscent()));
 
     renderPosition = renderPosition.SetY(lineHeight).SetX(0);
     renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(GetSize().GetWidth(), borderWidth)), grayBrush);
 
-    int smallFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmall);
     renderPosition = renderPosition
-        .SetY(roundToInt(1.5 * lineHeight) + smallFontAscent)
+        .SetY(roundToInt(1.5 * lineHeight) + fontSmall->GetAscent())
         .SetX(paddingX);
     renderer->PrintText(L"Do you want to perform this action?", fontSmall, Colors::Black, renderPosition);
 
@@ -93,14 +91,13 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     confirmButton->EnableLayeredMode();
     AddChildWindow(confirmButton);
 
-    int cancelButtonFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmallUnderscored);
     int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
     cancelButton->SetPosition(Point(
         confirmButton->GetPosition().GetX() - paddingX - textWidth,
-        confirmButton->GetPosition().GetY() + confirmButton->GetTextBaseline() - cancelButtonFontAscent));
+        confirmButton->GetPosition().GetY() + confirmButton->GetTextBaseline() - fontSmallUnderscored->GetAscent()));
     cancelButton->OnClick.Subscribe(&OnCancel);
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);

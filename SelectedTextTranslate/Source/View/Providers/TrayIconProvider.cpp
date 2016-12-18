@@ -180,7 +180,11 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
             AssertWinApiResult(GetCursorPos(&curPoint));
             SetForegroundWindow(windowHandle);
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
-            menuActionsToSubscribeableMap[clicked]->Notify();
+            
+            if(clicked != 0)
+            {
+                menuActionsToSubscribeableMap[clicked]->Notify();
+            }
         }
 
         return 0;

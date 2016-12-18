@@ -67,8 +67,11 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 {
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition();
 
-    int normalFontAscent = context->GetRenderingContext()->GetFontAscent(font);
-    TextRenderResult textRenderResult = renderDescriptor.GetRenderer()->PrintText(title.c_str(), font, Colors::Black, renderPosition.MoveY(normalFontAscent));
+    TextRenderResult textRenderResult = renderDescriptor.GetRenderer()->PrintText(
+        title.c_str(),
+        font,
+        Colors::Black,
+        renderPosition.MoveY(font->GetAscent()));
 
     renderPosition = renderPosition
         .SetY(textRenderResult.GetBottomY())
