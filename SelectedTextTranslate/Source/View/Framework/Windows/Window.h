@@ -57,18 +57,10 @@ public:
     virtual void SetDescriptor(WindowDescriptor descriptor);
 
     Size GetContentSize() const;
-
-    Size GetScaledSize() const;
-    SizeReal GetDownscaledSize() const;
-
-    Size GetScaledAvailableClientSize() const;
-    SizeReal GetDownscaledAvailableClientSize() const;
-
-    Point GetScaledPosition() const;
-    PointReal GetDownscaledPosition() const;
-
-    Rect GetScaledBoundingRect() const;
-    RectReal GetDownscaledBoundingRect() const;
+    Size GetSize() const;
+    Size GetAvailableClientSize() const;
+    Point GetPosition() const;
+    Rect GetBoundingRect() const;
 
     void MakeVisible();
     void MakeHidden();

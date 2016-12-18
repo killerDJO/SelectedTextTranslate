@@ -24,7 +24,7 @@ public:
     ~HoverIconButtonWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetDimensions(PointReal position, SizeReal size);
+    void SetDimensions(Point position, Size size);
 
     void SetNormalIconResource(DWORD normalIconResource);
     DWORD GetNormalIconResource() const;

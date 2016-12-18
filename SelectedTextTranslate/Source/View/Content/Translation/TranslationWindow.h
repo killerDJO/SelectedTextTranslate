@@ -7,6 +7,7 @@ class TranslationWindow : public ContentWindow, public ModelHolder<TranslateResu
 {
 private:
     const int headerHeight = 50;
+    const int separatorHeight = 1;
 
     HeaderWindow* headerWindow;
     TranslateResultWindow* translateResultWindow;

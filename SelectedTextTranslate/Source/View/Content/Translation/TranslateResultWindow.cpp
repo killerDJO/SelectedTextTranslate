@@ -118,7 +118,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         }
 
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(context, this);
-        expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
+        expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition(context->GetScaleProvider()));
         expandButton->SetFont(fontSmallUnderscored);
         expandButton->SetText(text);
         expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
@@ -129,7 +129,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         AddChildWindow(expandButton);
 
         renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton);
-        return RenderResult(expandButton->GetDownscaledBoundingRect());
+        return RenderResult(context->GetScaleProvider()->Downscale(expandButton->GetBoundingRect()));
     }
 
     return RenderResult(renderDescriptor.GetRenderPosition());

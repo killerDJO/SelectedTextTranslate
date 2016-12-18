@@ -18,11 +18,11 @@ void SettingsGroupHeaderWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void SettingsGroupHeaderWindow::SetDimensions(PointReal position, double width)
+void SettingsGroupHeaderWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
-    this->position = context->GetScaleProvider()->Scale(position);
-    this->windowSize = context->GetScaleProvider()->Scale(SizeReal(width, 0));
+    this->position = position;
+    this->windowSize = Size(width, 0);
 }
 
 void SettingsGroupHeaderWindow::SetTitle(wstring title)
@@ -71,8 +71,9 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    double headerWidth = GetDownscaledSize().GetWidth();
-    double headerHeight = GetDownscaledSize().GetHeight();
+    SizeReal downscaledSize = context->GetScaleProvider()->Downscale(GetSize());
+    double headerWidth = downscaledSize.GetWidth();
+    double headerHeight = downscaledSize.GetHeight();
 
     renderer->DrawBorderedRect(RectReal(PointReal(0, 0), SizeReal(headerWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
 
@@ -92,7 +93,9 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
     double iconSize = fontAscent;
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
-    expandButton->SetDimensions(PointReal(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2), SizeReal(iconSize, iconSize));
+    expandButton->SetDimensions(
+        context->GetScaleProvider()->Scale(PointReal(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2)),
+        context->GetScaleProvider()->Scale(SizeReal(iconSize, iconSize)));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);

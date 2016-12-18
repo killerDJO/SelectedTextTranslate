@@ -27,10 +27,10 @@ void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HotKeyInputWindow::SetPosition(PointReal position)
+void HotKeyInputWindow::SetPosition(Point position)
 {
     AssertWindowNotInitialized();
-    this->position = context->GetScaleProvider()->Scale(position);
+    this->position = position;
 }
 
 void HotKeyInputWindow::SetFont(HFONT font)
@@ -278,7 +278,7 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 {
     RectReal borderRect = RectReal(
         PointReal(0, 0),
-        GetDownscaledAvailableClientSize());
+        context->GetScaleProvider()->Downscale(GetAvailableClientSize()));
 
     Colors borderColor = Colors::Gray;
     if(!isValid)

@@ -73,7 +73,7 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
     renderPosition = renderPosition.SetY(textRenderResult.GetBottomY()).MoveY(1);
 
     HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(context, this);
-    hotKeyInputWindow->SetPosition(renderPosition.GetPosition());
+    hotKeyInputWindow->SetPosition(renderPosition.GetPosition(context->GetScaleProvider()));
     hotKeyInputWindow->SetHotkey(hotkey);
     hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, this](DWORD newHotkey)
     {
@@ -86,7 +86,7 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);
 
-    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetDownscaledSize().GetHeight()));
+    return RenderResult(renderPosition.MoveY(context->GetScaleProvider()->Downscale(hotKeyInputWindow->GetSize().GetHeight())));
 }
 
 void HotkeySettingsWindow::ComputeContentState()

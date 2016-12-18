@@ -39,7 +39,9 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
     double imageSize = smallFontAscent;
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
-    audioButton->SetDimensions(renderPosition.MoveY(- imageSize + 2).GetPosition(), SizeReal(imageSize, imageSize));
+    audioButton->SetDimensions(
+        renderPosition.MoveY(- imageSize + 2).GetPosition(context->GetScaleProvider()),
+        context->GetScaleProvider()->Scale(SizeReal(imageSize, imageSize)));
     audioButton->SetHoverIconResource(IDR_AUDIO);
     audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
@@ -94,17 +96,18 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
     double smallFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(fontSmall);
     HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
     headerActionButton->SetFont(fontSmallUnderscored);
-    headerActionButton->SetPosition(orignLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition());
+    headerActionButton->SetPosition(orignLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition(context->GetScaleProvider()));
     headerActionButton->SetText(actionText);
     headerActionButton->OnClick.Subscribe(actionCallback);
 
     AddChildWindow(headerActionButton);
 
+    RectReal downscaledActionButtonRect = context->GetScaleProvider()->Downscale(headerActionButton->GetBoundingRect());
     renderDescriptor.GetRenderer()->PrintText(
         L")",
         fontSmall,
         Colors::Gray,
-        PointReal(headerActionButton->GetDownscaledBoundingRect().GetRight(), orignLineRenderResult.GetBaselineY()));
+        PointReal(downscaledActionButtonRect.GetRight(), orignLineRenderResult.GetBaselineY()));
 }
 
 HeaderWindow::~HeaderWindow()

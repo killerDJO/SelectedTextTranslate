@@ -53,13 +53,13 @@ RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDe
     hotkeySettingsWindow = new HotkeySettingsWindow(context, this);
     RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsWindow, settingsState.GetHotkeySettingsGroupVisibilityState(), model.GetHotkeySettings());
 
-    hotkeySettingsWindow->OnSettingsChanged.Subscribe([this](HotkeySettings settings) -> void
+    hotkeySettingsWindow->OnSettingsChanged.Subscribe([this](HotkeySettings settings)
     {
         model.SetHotkeySettings(settings);
         SetButtonsState();
     });
 
-    hotkeySettingsWindow->OnSettingsToggled.Subscribe([this]() -> void
+    hotkeySettingsWindow->OnSettingsToggled.Subscribe([this]()
     {
         settingsState.SetHotkeySettingsGroupVisibilityState(ToggleSettingsGroupState(settingsState.GetHotkeySettingsGroupVisibilityState()));
         OnSettingsStateChanged.Notify();
@@ -71,7 +71,10 @@ RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDe
 template<typename TModel>
 RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state, TModel model)
 {
-    settingsGroup->SetDimensions(renderDescriptor.GetRenderPosition().GetPosition(), 257);
+    settingsGroup->SetDimensions(
+        renderDescriptor.GetRenderPosition().GetPosition(context->GetScaleProvider()),
+        context->GetScaleProvider()->Scale(257));
+
     settingsGroup->SetVisibilityState(state);
 
     AddChildWindow(settingsGroup);
@@ -81,7 +84,7 @@ RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDesc
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
 
-    return RenderResult(settingsGroup->GetDownscaledBoundingRect());
+    return RenderResult(context->GetScaleProvider()->Downscale(settingsGroup->GetBoundingRect()));
 }
 
 void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
@@ -90,9 +93,10 @@ void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
 
     cancelButton = CreateTextButtonControl(RenderDescriptor(renderDescriptor.GetRenderer(), renderPosition.MoveX(7)), L"Cancel", bind(&SettingsWindow::UpdateSettings, this, globalModel));
 
+    RectReal downscaledHotkeySettingsBoundingRect = context->GetScaleProvider()->Downscale(hotkeySettingsWindow->GetBoundingRect());
     wstring resetButtonText = L"Reset";
     double resetButtonTextWidth = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetTextSize(resetButtonText, fontSmallUnderscored).GetWidth());
-    double resetButtonPositionX = hotkeySettingsWindow->GetDownscaledBoundingRect().GetRight() - resetButtonTextWidth;
+    double resetButtonPositionX = downscaledHotkeySettingsBoundingRect.GetRight() - resetButtonTextWidth;
 
     resetButton = CreateTextButtonControl(RenderDescriptor(renderDescriptor.GetRenderer(), PointReal(resetButtonPositionX, renderPosition.GetY())), resetButtonText, [this]() -> void
     {
@@ -105,7 +109,7 @@ void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
 RenderResult SettingsWindow::CreateSaveButtonControl(RenderDescriptor renderDescriptor)
 {
     saveButton = new HoverFlatButtonWindow(context, this);
-    saveButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
+    saveButton->SetPosition(context->GetScaleProvider()->Scale(renderDescriptor.GetRenderPosition().GetPosition()));
     saveButton->SetText(L"Save");
     saveButton->OnClick.Subscribe([this]() -> void
     {
@@ -115,8 +119,9 @@ RenderResult SettingsWindow::CreateSaveButtonControl(RenderDescriptor renderDesc
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(saveButton);
 
+    RectReal downscaledSaveButtonBoundingRect = context->GetScaleProvider()->Downscale(saveButton->GetBoundingRect());
     return RenderResult(PointReal(
-        saveButton->GetDownscaledSize().GetWidth() + saveButton->GetDownscaledPosition().GetX(),
+        downscaledSaveButtonBoundingRect.GetRight(),
         renderDescriptor.GetRenderPosition().GetY() + saveButton->GetTextBaseline()));
 }
 
@@ -126,7 +131,7 @@ HoverTextButtonWindow* SettingsWindow::CreateTextButtonControl(RenderDescriptor 
     button->SetFont(fontSmallUnderscored);
 
     double fontAscent = renderDescriptor.GetRenderer()->GetFontAscent(button->GetFont());
-    button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-fontAscent).GetPosition());
+    button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-fontAscent).GetPosition(context->GetScaleProvider()));
     button->SetText(text);
     button->OnClick.Subscribe(clickCallback);
     AddChildWindow(button);

@@ -19,10 +19,10 @@ void HoverIconButtonWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HoverIconButtonWindow::SetDimensions(PointReal position, SizeReal size)
+void HoverIconButtonWindow::SetDimensions(Point position, Size size)
 {
     AssertWindowNotInitialized();
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptorDownscaled(context->GetScaleProvider(), position, size);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
 }
 
 void HoverIconButtonWindow::SetNormalIconResource(DWORD normalIconResource)

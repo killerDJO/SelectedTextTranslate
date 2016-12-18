@@ -71,6 +71,11 @@ PointReal ScaleProvider::Downscale(Point point) const
     return PointReal(Downscale(point.GetX()), Downscale(point.GetY()));
 }
 
+RectReal ScaleProvider::Downscale(Rect rect) const
+{
+    return RectReal(Downscale(rect.GetPosition()), Downscale(rect.GetSize()));
+}
+
 int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const
 {
     return roundToInt(Downscale(value) * (scaleFactor + scaleFactorAdjustment));

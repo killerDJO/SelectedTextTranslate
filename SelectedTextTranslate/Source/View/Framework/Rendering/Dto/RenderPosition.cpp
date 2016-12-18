@@ -2,6 +2,7 @@
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 #include "View\Framework\Dto\Point\PointReal.h"
+#include "View\Framework\Providers\ScaleProvider.h"
 
 RenderPosition::RenderPosition(PointReal initialPosition)
 {
@@ -31,6 +32,11 @@ RenderPosition::RenderPosition()
 PointReal RenderPosition::GetPosition() const
 {
     return position;
+}
+
+Point RenderPosition::GetPosition(ScaleProvider* scaleProvider) const
+{
+    return scaleProvider->Scale(GetPosition());
 }
 
 double RenderPosition::GetY() const

@@ -179,7 +179,7 @@ void Renderer::IncreaseHeight(double heightToAdd)
 
 void Renderer::UpdateRenderedContentSize(Window* window)
 {
-    Rect windowRect = window->GetScaledBoundingRect();
+    Rect windowRect = window->GetBoundingRect();
     originalSize = Size(
         max(originalSize.GetWidth(), windowRect.GetRight()),
         max(originalSize.GetHeight(), windowRect.GetBottom())

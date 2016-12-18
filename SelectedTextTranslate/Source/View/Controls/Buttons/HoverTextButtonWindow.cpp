@@ -19,14 +19,13 @@ void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HoverTextButtonWindow::SetPosition(PointReal position)
+void HoverTextButtonWindow::SetPosition(Point position)
 {
     AssertWindowNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
-    this->descriptor = WindowDescriptor::CreateWindowDescriptorDownscaled(
-        context->GetScaleProvider(),
+    this->descriptor = WindowDescriptor::CreateWindowDescriptor(
         position,
-        SizeReal(1, 1),
+        Size(1, 1),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
 }

@@ -95,7 +95,7 @@ void MainWindow::CreateChildWindows()
     settingsWindow->SetModel(settings);
 
     confirmDialogWindow = new ConfirmDialogWindow(context, this);
-    confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetScaledAvailableClientSize()));
+    confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize()));
     AddChildWindow(confirmDialogWindow);
     confirmDialogWindow->MakeHidden();
 }

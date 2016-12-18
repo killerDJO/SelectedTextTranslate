@@ -31,6 +31,7 @@ public:
     double Downscale(int value) const;
     SizeReal Downscale(Size size) const;
     PointReal Downscale(Point size) const;
+    RectReal Downscale(Rect rect) const;
 
     int Rescale(int value, double scaleFactorAdjustment) const;
     void AdjustScaleFactor(double scaleFactorAdjustment);

@@ -1,6 +1,8 @@
 #pragma once
 #include "View\Framework\Dto\Point\PointReal.h"
+#include "View\Framework\Dto\Point\Point.h"
 
+class ScaleProvider;
 class RenderResult;
 class TextRenderResult;
 
@@ -17,6 +19,7 @@ public:
     RenderPosition(double x, double y);
 
     PointReal GetPosition() const;
+    Point GetPosition(ScaleProvider* scaleProvider) const;
     double GetY() const;
     double GetX() const;
 

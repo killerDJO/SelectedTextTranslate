@@ -24,7 +24,7 @@ public:
     void Initialize() override;
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetPosition(PointReal position);
+    void SetPosition(Point position);
 
     void SetFont(HFONT font);
     HFONT GetFont() const;
@@ -37,6 +37,8 @@ public:
 
     void SetPaddingY(int paddingY);
     int GetPaddingY() const;
+
+    Size GetComputedSize() const;
 
     double GetTextBaseline() const;
 };

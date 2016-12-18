@@ -34,7 +34,7 @@ public:
     virtual ~HotKeyInputWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetPosition(PointReal position);
+    void SetPosition(Point position);
 
     void SetFont(HFONT font);
     HFONT GetFont() const;

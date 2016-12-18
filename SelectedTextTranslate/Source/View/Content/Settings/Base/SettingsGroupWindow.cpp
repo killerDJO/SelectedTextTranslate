@@ -20,11 +20,11 @@ void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void SettingsGroupWindow::SetDimensions(PointReal position, double width)
+void SettingsGroupWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
-    this->position = context->GetScaleProvider()->Scale(position);
-    this->windowSize = context->GetScaleProvider()->Scale(SizeReal(width, 0));
+    this->position = position;
+    this->windowSize = Size(width, 0);
 }
 
 void SettingsGroupWindow::SetTitle(wstring title)
@@ -82,17 +82,19 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
     headerWindow->SetTitle(title);
     headerWindow->SetContentState(contentState);
     headerWindow->SetVisibilityState(visibilityState);
-    headerWindow->SetDimensions(PointReal(0, 0), GetDownscaledSize().GetWidth());
+    headerWindow->SetDimensions(Point(0, 0), GetSize().GetWidth());
     headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
     AddChildWindow(headerWindow);
     headerWindow->Render();
 
     renderer->UpdateRenderedContentSize(headerWindow);
 
+    SizeReal downscaledSize = context->GetScaleProvider()->Downscale(GetSize());
     if (visibilityState == SettingsGroupVisibilityState::Expanded)
     {
-        RenderSettingsContent(RenderDescriptor(renderer, PointReal(paddingX * 2, headerWindow->GetDownscaledBoundingRect().GetBottom())));
-        RectReal contentBorderRect = RectReal(PointReal(0, 0), SizeReal(GetDownscaledSize().GetWidth(), renderer->GetSize().GetHeight()));
+        RectReal downscaledHeaderBoundingRect = context->GetScaleProvider()->Downscale(headerWindow->GetBoundingRect());
+        RenderSettingsContent(RenderDescriptor(renderer, PointReal(paddingX * 2, downscaledHeaderBoundingRect.GetBottom())));
+        RectReal contentBorderRect = RectReal(PointReal(0, 0), SizeReal(downscaledSize.GetWidth(), renderer->GetSize().GetHeight()));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
     }
 

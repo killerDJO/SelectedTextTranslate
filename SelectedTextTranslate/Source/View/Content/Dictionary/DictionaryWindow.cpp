@@ -33,7 +33,9 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         renderPosition = renderPosition.SetX(paddingX);
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(context, this);
-        translateButton->SetDimensions(renderPosition.MoveY(2 - normalFontAscent).GetPosition(), SizeReal(16, 16));
+        translateButton->SetDimensions(
+            renderPosition.MoveY(2 - normalFontAscent).GetPosition(context->GetScaleProvider()),
+            context->GetScaleProvider()->Scale(SizeReal(16, 16)));
         translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
         translateButton->SetHoverIconResource(IDR_TRANSLATE);
         translateButton->OnClick.Subscribe([i, this]() -> void

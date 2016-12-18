@@ -246,17 +246,12 @@ DWORD Window::GetScrollStyle() const
     return scrollStyle;
 }
 
-Size Window::GetScaledSize() const
+Size Window::GetSize() const
 {
     return windowSize;
 }
 
-SizeReal Window::GetDownscaledSize() const
-{
-    return context->GetScaleProvider()->Downscale(windowSize);
-}
-
-Size Window::GetScaledAvailableClientSize() const
+Size Window::GetAvailableClientSize() const
 {
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
@@ -280,37 +275,21 @@ Size Window::GetScaledAvailableClientSize() const
     return scaledClientSize;
 }
 
-SizeReal Window::GetDownscaledAvailableClientSize() const
-{
-    return context->GetScaleProvider()->Downscale(GetScaledAvailableClientSize());
-}
-
 Size Window::GetContentSize() const
 {
     return contentSize;
 }
 
-Point Window::GetScaledPosition() const
+Point Window::GetPosition() const
 {
     return position;
 }
 
-PointReal Window::GetDownscaledPosition() const
+Rect Window::GetBoundingRect() const
 {
-    return context->GetScaleProvider()->Downscale(GetScaledPosition());
-}
-
-Rect Window::GetScaledBoundingRect() const
-{
-    Point positon = GetScaledPosition();
-    Size size = GetScaledSize();
+    Point positon = GetPosition();
+    Size size = GetSize();
     return Rect(positon, size);
-}
-
-RectReal Window::GetDownscaledBoundingRect() const
-{
-    ScaleProvider* scaleProvider = context->GetScaleProvider();
-    return RectReal(scaleProvider->Downscale(GetScaledPosition()), scaleProvider->Downscale(GetScaledSize()));
 }
 
 void Window::MakeVisible()
