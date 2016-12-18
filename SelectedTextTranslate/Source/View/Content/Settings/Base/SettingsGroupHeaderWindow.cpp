@@ -8,8 +8,9 @@ SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Win
     this->contentState = SettingsGroupContentState::Default;
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
     this->title = wstring();
-    this->paddingX = this->paddingY = 5;
-    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontHeight(this->fontNormal));
+    this->paddingX = this->paddingY = context->GetScaleProvider()->Scale(5);
+    this->borderWidth = context->GetScaleProvider()->Scale(1);
+    this->lineHeight = context->GetRenderingContext()->GetFontHeight(this->fontNormal);
     this->className = L"STT_SETTINGS_GROUP_HEADER";
 }
 
@@ -57,8 +58,8 @@ SettingsGroupVisibilityState SettingsGroupHeaderWindow::GetVisibilityState() con
 
 void SettingsGroupHeaderWindow::Initialize()
 {
-    double headerHeight = lineHeight + paddingY * 2;
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.GetWidth(), context->GetScaleProvider()->Scale(headerHeight)));
+    int headerHeight = lineHeight + paddingY * 2;
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.GetWidth(), headerHeight));
     ContentWindow::Initialize();
 }
 
@@ -71,13 +72,9 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    SizeReal downscaledSize = context->GetScaleProvider()->Downscale(GetSize());
-    double headerWidth = downscaledSize.GetWidth();
-    double headerHeight = downscaledSize.GetHeight();
+    renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize()), backgroundBrush, borderWidth, Colors::Gray);
 
-    renderer->DrawBorderedRect(RectReal(PointReal(0, 0), SizeReal(headerWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
-
-    double fontAscent = renderer->GetFontAscent(fontNormal);
+    int fontAscent = context->GetRenderingContext()->GetFontAscent(fontNormal);
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontAscent);
 
     renderPosition = renderer->PrintText(title, fontNormal, Colors::Black, renderPosition);
@@ -90,19 +87,19 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
         renderPosition = renderer->PrintText(L"*", fontNormal, Colors::Red, renderPosition);
     }
 
-    double iconSize = fontAscent;
+    int iconSize = fontAscent;
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
     expandButton->SetDimensions(
-        context->GetScaleProvider()->Scale(PointReal(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2)),
-        context->GetScaleProvider()->Scale(SizeReal(iconSize, iconSize)));
+        Point(GetSize().GetWidth() - iconSize - paddingX, renderPosition.GetY() - iconSize + context->GetScaleProvider()->Scale(2)),
+        Size(iconSize, iconSize));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);
     expandButton->OnClick.Subscribe(&OnSettingsToggled);
     AddChildWindow(expandButton);
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 LRESULT SettingsGroupHeaderWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)

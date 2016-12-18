@@ -10,7 +10,8 @@ SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentW
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
 
     this->title = wstring();
-    this->paddingX = this->paddingY = 5;
+    this->paddingX = this->paddingY = context->GetScaleProvider()->Scale(5);
+    this->borderWidth = context->GetScaleProvider()->Scale(1);
     this->className = L"STT_SETTINGS_GROUP";
     this->headerWindow = nullptr;
 }
@@ -89,18 +90,16 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 
     renderer->UpdateRenderedContentSize(headerWindow);
 
-    SizeReal downscaledSize = context->GetScaleProvider()->Downscale(GetSize());
     if (visibilityState == SettingsGroupVisibilityState::Expanded)
     {
-        RectReal downscaledHeaderBoundingRect = context->GetScaleProvider()->Downscale(headerWindow->GetBoundingRect());
-        RenderSettingsContent(RenderDescriptor(renderer, PointReal(paddingX * 2, downscaledHeaderBoundingRect.GetBottom())));
-        RectReal contentBorderRect = RectReal(PointReal(0, 0), SizeReal(downscaledSize.GetWidth(), renderer->GetSize().GetHeight()));
-        renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
+        RenderSettingsContent(RenderDescriptor(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect().GetBottom())));
+        Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize().GetWidth(), renderer->GetSize().GetHeight()));
+        renderer->DrawBorderedRect(contentBorderRect, nullptr, borderWidth, Colors::Gray);
     }
 
     ComputeContentState();
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 SettingsGroupWindow::~SettingsGroupWindow()

@@ -1,6 +1,6 @@
 #pragma once
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
-#include "View\Framework\Dto\Rect\RectReal.h"
+#include "View\Framework\Dto\Positioning\Rect.h"
 
 class RenderResult
 {
@@ -9,7 +9,7 @@ private:
 
 public:
     RenderResult(RenderPosition position);
-    RenderResult(RectReal boundingRect);
+    RenderResult(Rect boundingRect);
 
     RenderPosition GetRenderPosition() const;
 };

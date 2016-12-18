@@ -56,12 +56,10 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
 
     dialogContentWindow = new ConfirmDialogContentWindow(context, this);
 
-    int dialogWidth = 200;
-    double paddingX = (context->GetScaleProvider()->Downscale(GetSize()).GetWidth() - dialogWidth) / 2;
-    int paddingY = 50;
-    dialogContentWindow->SetDimensions(
-        context->GetScaleProvider()->Scale(PointReal(paddingX, paddingY)),
-        context->GetScaleProvider()->Scale(dialogWidth));
+    int dialogContentWidth = context->GetScaleProvider()->Scale(200);
+    int paddingX = roundToInt((GetSize().GetWidth() - dialogContentWidth) / 2);
+    int paddingY = context->GetScaleProvider()->Scale(50);
+    dialogContentWindow->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
     dialogContentWindow->SetTitle(title);
     dialogContentWindow->OnConfirm.Subscribe(&OnConfirm);
     dialogContentWindow->OnConfirm.Subscribe(bind(&Window::Hide, this));
@@ -72,7 +70,7 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
 
     renderer->UpdateRenderedContentSize(dialogContentWindow);
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 ConfirmDialogWindow::~ConfirmDialogWindow()

@@ -5,12 +5,11 @@
 #include "View\Framework\Windows\NativeWindowHolder.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\Renderer.h"
-#include "View\Framework\Dto\Point\PointReal.h"
-#include "View\Framework\Dto\Size\SizeReal.h"
-#include "View\Framework\Dto\Rect\RectReal.h"
 
 class WindowContext;
 class Renderer;
+class Rect;
+class Size;
 
 class Window : public NativeWindowHolder
 {

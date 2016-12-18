@@ -9,9 +9,10 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
     this->currentHotkey = 0;
     this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
     this->font = nullptr;
-    this->padding = 3;
-    this->borderWidth = 1;
-    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontHeight(this->defaultFont));
+    this->padding = context->GetScaleProvider()->Scale(3);
+    this->borderWidth = context->GetScaleProvider()->Scale(1);
+    this->width = context->GetScaleProvider()->Scale(200);
+    this->lineHeight = context->GetRenderingContext()->GetFontHeight(this->defaultFont);
     this->hasFocus = false;
     this->isValid = true;
 
@@ -66,13 +67,13 @@ int HotKeyInputWindow::GetBorderWidth() const
     return borderWidth;
 }
 
-void HotKeyInputWindow::SetLineHeight(double lineHeight)
+void HotKeyInputWindow::SetLineHeight(int lineHeight)
 {
     AssertWindowNotInitialized();
     this->lineHeight = lineHeight;
 }
 
-double HotKeyInputWindow::GetLineHeight() const
+int HotKeyInputWindow::GetLineHeight() const
 {
     return lineHeight;
 }
@@ -105,8 +106,8 @@ bool HotKeyInputWindow::IsValid() const
 
 void HotKeyInputWindow::Initialize()
 {
-    SizeReal hotkeyInputSize = SizeReal(200, lineHeight + padding * 2 + borderWidth * 2);
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, context->GetScaleProvider()->Scale(hotkeyInputSize));
+    Size hotkeyInputSize = Size(width, lineHeight + padding * 2 + borderWidth * 2);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, hotkeyInputSize);
 
     // Ensure that the common control DLL is loaded.
     INITCOMMONCONTROLSEX icex;
@@ -142,16 +143,16 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     RenderBorder(renderer);
 
     int textOffset = borderWidth + padding;
-    double fontAscent = renderer->GetFontAscent(GetFont());
+    int fontAscent = context->GetRenderingContext()->GetFontAscent(GetFont());
 
     if (currentHotkey == 0)
     {
-        currentTextPoistion = PointReal(textOffset, textOffset);
+        currentTextPoistion = Point(textOffset, textOffset);
         renderer->PrintText(
             L"Not assigned",
             GetFont(),
             Colors::Gray,
-            PointReal(textOffset, fontAscent + textOffset));
+            Point(textOffset, fontAscent + textOffset));
     }
     else
     {
@@ -162,7 +163,7 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
             RenderPosition(textOffset, fontAscent + textOffset));
     }
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
@@ -246,9 +247,8 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
 void HotKeyInputWindow::ShowCustomCaret() const
 {
-    ScaleProvider* scaleProvider = context->GetScaleProvider();
-    AssertCriticalWinApiResult(CreateCaret(windowHandle, (HBITMAP)nullptr, 1, scaleProvider->Scale(lineHeight)));
-    AssertCriticalWinApiResult(SetCaretPos(scaleProvider->Scale(currentTextPoistion.GetX()), context->GetScaleProvider()->Scale(borderWidth + padding)));
+    AssertCriticalWinApiResult(CreateCaret(windowHandle, (HBITMAP)nullptr, 1, lineHeight));
+    AssertCriticalWinApiResult(SetCaretPos(currentTextPoistion.GetX(), borderWidth + padding));
     AssertCriticalWinApiResult(ShowCaret(windowHandle));
 }
 
@@ -276,9 +276,9 @@ wstring HotKeyInputWindow::GetHotkeyDisplayString() const
 
 void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 {
-    RectReal borderRect = RectReal(
-        PointReal(0, 0),
-        context->GetScaleProvider()->Downscale(GetAvailableClientSize()));
+    Rect borderRect = Rect(
+        Point(0, 0),
+        GetAvailableClientSize());
 
     Colors borderColor = Colors::Gray;
     if(!isValid)

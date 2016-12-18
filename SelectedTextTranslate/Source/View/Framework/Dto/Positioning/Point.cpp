@@ -1,4 +1,4 @@
-#include "View\Framework\Dto\Point\Point.h"
+#include "View\Framework\Dto\Positioning\\Point.h"
 
 Point::Point()
 {

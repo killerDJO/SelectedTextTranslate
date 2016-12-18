@@ -1,10 +1,9 @@
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
-#include "View\Framework\Dto\Point\PointReal.h"
 #include "View\Framework\Providers\ScaleProvider.h"
 
-RenderPosition::RenderPosition(PointReal initialPosition)
+RenderPosition::RenderPosition(Point initialPosition)
 {
     position = initialPosition;
 }
@@ -19,52 +18,67 @@ RenderPosition::RenderPosition(RenderResult renderResult)
     position = renderResult.GetRenderPosition().GetPosition();
 }
 
-RenderPosition::RenderPosition(double x, double y)
-    : RenderPosition(PointReal(x, y))
+RenderPosition::RenderPosition(int x, int y)
+    : RenderPosition(Point(x, y))
 {
 }
 
 RenderPosition::RenderPosition()
-    : RenderPosition(PointReal(0, 0))
+    : RenderPosition(Point(0, 0))
 {
 }
 
-PointReal RenderPosition::GetPosition() const
+Point RenderPosition::GetPosition() const
 {
     return position;
 }
 
-Point RenderPosition::GetPosition(ScaleProvider* scaleProvider) const
-{
-    return scaleProvider->Scale(GetPosition());
-}
-
-double RenderPosition::GetY() const
+int RenderPosition::GetY() const
 {
     return position.GetY();
 }
 
-double RenderPosition::GetX() const
+int RenderPosition::GetX() const
 {
     return position.GetX();
 }
 
-RenderPosition RenderPosition::SetX(double x) const
+RenderPosition RenderPosition::SetX(int x) const
 {
-    return RenderPosition(PointReal(x, position.GetY()));
+    return RenderPosition(Point(x, position.GetY()));
 }
 
-RenderPosition RenderPosition::SetY(double y) const
+RenderPosition RenderPosition::SetX(int x, ScaleProvider* scaleProvider) const
 {
-    return RenderPosition(PointReal(position.GetX(), y));
+    return SetX(scaleProvider->Scale(x));
 }
 
-RenderPosition RenderPosition::MoveX(double x) const
+RenderPosition RenderPosition::SetY(int y) const
 {
-    return RenderPosition(PointReal(position.GetX() + x, position.GetY()));
+    return RenderPosition(Point(position.GetX(), y));
 }
 
-RenderPosition RenderPosition::MoveY(double y) const
+RenderPosition RenderPosition::SetY(int y, ScaleProvider* scaleProvider) const
 {
-    return RenderPosition(PointReal(position.GetX(), position.GetY() + y));
+    return SetY(scaleProvider->Scale(y));
+}
+
+RenderPosition RenderPosition::MoveX(int x) const
+{
+    return RenderPosition(Point(position.GetX() + x, position.GetY()));
+}
+
+RenderPosition RenderPosition::MoveX(int x, ScaleProvider* scaleProvider) const
+{
+    return MoveX(scaleProvider->Scale(x));
+}
+
+RenderPosition RenderPosition::MoveY(int y) const
+{
+    return RenderPosition(Point(position.GetX(), position.GetY() + y));
+}
+
+RenderPosition RenderPosition::MoveY(int y, ScaleProvider* scaleProvider) const
+{
+    return MoveY(scaleProvider->Scale(y));
 }

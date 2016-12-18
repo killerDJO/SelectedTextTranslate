@@ -3,9 +3,9 @@
 ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     : ChildWindow(context, parentWindow)
 {
-    this->lineHeight = 20;
-    this->paddingX = 15;
-    this->paddingY = 15;
+    this->lineHeight = context->GetScaleProvider()->Scale(20);
+    this->paddingX = context->GetScaleProvider()->Scale(15);
+    this->paddingY = context->GetScaleProvider()->Scale(15);
 
     this->fontNormal = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
     this->fontHeader = context->GetRenderingContext()->CreateCustomFont(FontSizes::Large);
@@ -20,12 +20,12 @@ ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     this->className = L"STT_CONTENT";
 }
 
-double ContentWindow::GetLineHeight() const
+int ContentWindow::GetLineHeight() const
 {
     return lineHeight;
 }
 
-void ContentWindow::SetLineHeight(double lineHeight)
+void ContentWindow::SetLineHeight(int lineHeight)
 {
     this->lineHeight = lineHeight;
 }

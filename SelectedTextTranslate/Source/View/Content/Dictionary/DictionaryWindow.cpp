@@ -13,7 +13,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
     ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
-    double normalFontAscent = renderer->GetFontAscent(fontNormal);
+    int normalFontAscent = context->GetRenderingContext()->GetFontAscent(fontNormal);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY / 2 + normalFontAscent);
 
@@ -27,15 +27,15 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         renderPosition = renderPosition.MoveY(lineHeight);
 
         DictionaryRecord record = model[i];
-        renderPosition = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, renderPosition.MoveX(paddingX + 4));
-        renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, renderPosition.MoveX(1));
+        renderPosition = renderer->PrintText(record.GetWord().c_str(), fontNormal, Colors::Black, renderPosition.MoveX(paddingX));
+        renderer->PrintText(wstring(L" (" + to_wstring(record.GetCount()) + L")").c_str(), fontNormal, Colors::Gray, renderPosition);
 
         renderPosition = renderPosition.SetX(paddingX);
 
         HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(context, this);
         translateButton->SetDimensions(
-            renderPosition.MoveY(2 - normalFontAscent).GetPosition(context->GetScaleProvider()),
-            context->GetScaleProvider()->Scale(SizeReal(16, 16)));
+            renderPosition.MoveY(- normalFontAscent).MoveY(1, context->GetScaleProvider()).GetPosition(),
+            context->GetScaleProvider()->Scale(Size(16, 16)));
         translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
         translateButton->SetHoverIconResource(IDR_TRANSLATE);
         translateButton->OnClick.Subscribe([i, this]() -> void
@@ -48,7 +48,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
 
     renderer->IncreaseWidth(paddingX);
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 DictionaryWindow::~DictionaryWindow()

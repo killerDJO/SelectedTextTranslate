@@ -92,7 +92,7 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     Gdiplus::Graphics graphics(deviceContext);
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
-    
+
     if(backgroundBrush != nullptr)
     {
         renderer->SetBackground(backgroundBrush);

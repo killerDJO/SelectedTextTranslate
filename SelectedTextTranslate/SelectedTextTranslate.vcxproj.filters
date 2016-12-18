@@ -145,17 +145,11 @@
     <Filter Include="Source\View\Framework\Rendering\Dto">
       <UniqueIdentifier>{8c2ec133-92d3-4ad3-b492-74dfc201211d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Framework\Dto\Point">
-      <UniqueIdentifier>{0b2307f2-0b0c-466e-a771-1a1c61a99cbe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Dto\Size">
-      <UniqueIdentifier>{91b54104-ac34-4d0d-a0f2-da53842a92b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Dto\Rect">
-      <UniqueIdentifier>{d3da5678-f2d1-4962-bed9-4c07e9f0896a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\View\Framework\Rendering\Objects">
       <UniqueIdentifier>{a00cfe2b-63b0-4580-953a-a607aa7ef2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\Dto\Positioning">
+      <UniqueIdentifier>{29c3bb8c-c1e8-4606-bd33-6a4742e02671}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -357,24 +351,6 @@
     <ClCompile Include="Source\View\Framework\MessageBus.cpp">
       <Filter>Source\View\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Point\Point.cpp">
-      <Filter>Source\View\Framework\Dto\Point</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Point\PointReal.cpp">
-      <Filter>Source\View\Framework\Dto\Point</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rect\Rect.cpp">
-      <Filter>Source\View\Framework\Dto\Rect</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Rect\RectReal.cpp">
-      <Filter>Source\View\Framework\Dto\Rect</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Size\Size.cpp">
-      <Filter>Source\View\Framework\Dto\Size</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Size\SizeReal.cpp">
-      <Filter>Source\View\Framework\Dto\Size</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Framework\Rendering\Objects\Pen.cpp">
       <Filter>Source\View\Framework\Rendering\Objects</Filter>
     </ClCompile>
@@ -383,6 +359,15 @@
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Rendering\Objects\Brush.cpp">
       <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Positioning\Point.cpp">
+      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Positioning\Rect.cpp">
+      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Positioning\Size.cpp">
+      <Filter>Source\View\Framework\Dto\Positioning</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -625,24 +610,6 @@
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h">
       <Filter>Source\View\Content\Settings\Base\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Point\Point.h">
-      <Filter>Source\View\Framework\Dto\Point</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Point\PointReal.h">
-      <Filter>Source\View\Framework\Dto\Point</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rect\Rect.h">
-      <Filter>Source\View\Framework\Dto\Rect</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Rect\RectReal.h">
-      <Filter>Source\View\Framework\Dto\Rect</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Size\Size.h">
-      <Filter>Source\View\Framework\Dto\Size</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Size\SizeReal.h">
-      <Filter>Source\View\Framework\Dto\Size</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\Rendering\Objects\Pen.h">
       <Filter>Source\View\Framework\Rendering\Objects</Filter>
     </ClInclude>
@@ -651,6 +618,15 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\Rendering\Objects\Brush.h">
       <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Positioning\Point.h">
+      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Positioning\Rect.h">
+      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Positioning\Size.h">
+      <Filter>Source\View\Framework\Dto\Positioning</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

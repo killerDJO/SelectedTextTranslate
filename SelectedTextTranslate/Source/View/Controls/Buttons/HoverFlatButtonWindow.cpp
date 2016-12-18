@@ -7,9 +7,9 @@ HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* par
     this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
     this->text = wstring();
-    this->paddingX = 10;
-    this->paddingY = 5;
-    this->borderWidth = 1;
+    this->paddingX = context->GetScaleProvider()->Scale(10);
+    this->paddingY = context->GetScaleProvider()->Scale(5);
+    this->borderWidth = context->GetScaleProvider()->Scale(1);
     this->className = L"STT_HOVERFLATBUTTON";
 }
 
@@ -70,17 +70,16 @@ int HoverFlatButtonWindow::GetPaddingY() const
 
 Size HoverFlatButtonWindow::GetComputedSize() const
 {
-    int fontStrokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(GetFont());
+    int fontStrokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(GetFont()) + 1;
     Size textSize = context->GetRenderingContext()->GetTextSize(text, GetFont());
 
     return Size(
-        textSize.GetWidth() + context->GetScaleProvider()->Scale(paddingX) * 2,
-        fontStrokeHeight + context->GetScaleProvider()->Scale(paddingY + borderWidth) * 2);
+        textSize.GetWidth() + paddingX * 2,
+        fontStrokeHeight + (paddingY + borderWidth) * 2);
 }
 
 void HoverFlatButtonWindow::Initialize()
 {
-  
     descriptor = WindowDescriptor::CreateWindowDescriptor(
         position,
         GetComputedSize(),
@@ -90,9 +89,9 @@ void HoverFlatButtonWindow::Initialize()
     HoverButtonWindow::Initialize();
 }
 
-double HoverFlatButtonWindow::GetTextBaseline() const
+int HoverFlatButtonWindow::GetTextBaseline() const
 {
-    double fontStrokeHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontStrokeHeight(GetFont()));
+    int fontStrokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(GetFont());
     return fontStrokeHeight + paddingY + borderWidth;
 }
 
@@ -115,15 +114,18 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
 
     Brush* backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
 
-    SizeReal downscaledWindowSize = context->GetScaleProvider()->Downscale(GetSize());
-
     renderer->DrawBorderedRect(
-        RectReal(PointReal(0, 0), downscaledWindowSize),
+        Rect(Point(0, 0), GetSize()),
         backgroundBrush,
         borderWidth,
         borderColor);
 
-    renderer->PrintText(text.c_str(), GetFont(), fontColor, PointReal(downscaledWindowSize.GetWidth() / 2, GetTextBaseline()), TA_CENTER);
+    renderer->PrintText(
+        text.c_str(),
+        GetFont(),
+        fontColor,
+        Point(GetSize().GetWidth() / 2, GetTextBaseline()),
+        TA_CENTER);
 
     renderer->Render(deviceContext, GetSize());
 

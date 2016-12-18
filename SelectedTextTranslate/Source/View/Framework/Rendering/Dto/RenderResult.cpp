@@ -5,8 +5,8 @@ RenderResult::RenderResult(RenderPosition position)
     this->position = position;
 }
 
-RenderResult::RenderResult(RectReal boundingRect)
-    : RenderResult(PointReal(boundingRect.GetRight(), boundingRect.GetBottom()))
+RenderResult::RenderResult(Rect boundingRect)
+    : RenderResult(Point(boundingRect.GetRight(), boundingRect.GetBottom()))
 {
 }
 

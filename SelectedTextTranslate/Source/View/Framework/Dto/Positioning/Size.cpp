@@ -1,4 +1,4 @@
-#include "View\Framework\Dto\Size\Size.h"
+#include "View\Framework\Dto\Positioning\Size.h"
 
 Size::Size()
 {

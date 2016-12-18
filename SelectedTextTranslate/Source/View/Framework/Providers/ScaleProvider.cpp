@@ -26,21 +26,6 @@ int ScaleProvider::Scale(double value) const
     return roundToInt(value * scaleFactor);
 }
 
-Rect ScaleProvider::Scale(RectReal rect) const
-{
-    return Rect(Scale(rect.GetPosition()), Scale(rect.GetSize()));
-}
-
-Size ScaleProvider::Scale(SizeReal size) const
-{
-    return Size(roundToInt(Scale(size.GetWidth())), roundToInt(Scale(size.GetHeight())));
-}
-
-Point ScaleProvider::Scale(PointReal point) const
-{
-    return Point(Scale(point.GetX()), Scale(point.GetY()));
-}
-
 Size ScaleProvider::Scale(Size size) const
 {
     return Size(Scale(size.GetWidth()), Scale(size.GetHeight()));
@@ -59,21 +44,6 @@ double ScaleProvider::Downscale(int value) const
 double ScaleProvider::Downscale(double value) const
 {
     return value / scaleFactor;
-}
-
-SizeReal ScaleProvider::Downscale(Size size) const
-{
-    return SizeReal(Downscale(size.GetWidth()), Downscale(size.GetHeight()));
-}
-
-PointReal ScaleProvider::Downscale(Point point) const
-{
-    return PointReal(Downscale(point.GetX()), Downscale(point.GetY()));
-}
-
-RectReal ScaleProvider::Downscale(Rect rect) const
-{
-    return RectReal(Downscale(rect.GetPosition()), Downscale(rect.GetSize()));
 }
 
 int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const

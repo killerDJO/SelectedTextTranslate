@@ -6,6 +6,8 @@
 class SettingsGroupHeaderWindow : public ContentWindow
 {
 private:
+    int borderWidth;
+
     SettingsGroupVisibilityState visibilityState;
     SettingsGroupContentState contentState;
     wstring title;

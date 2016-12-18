@@ -1,6 +1,6 @@
 #pragma once
-#include "View\Framework\Dto\Point\Point.h"
-#include "View\Framework\Dto\Size\Size.h"
+#include "View\Framework\Dto\Positioning\Point.h"
+#include "View\Framework\Dto\Positioning\Size.h"
 
 class Rect
 {

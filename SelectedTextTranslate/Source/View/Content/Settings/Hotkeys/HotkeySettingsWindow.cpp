@@ -67,13 +67,15 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 {
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition();
 
-    double normalFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(font);
+    int normalFontAscent = context->GetRenderingContext()->GetFontAscent(font);
     TextRenderResult textRenderResult = renderDescriptor.GetRenderer()->PrintText(title.c_str(), font, Colors::Black, renderPosition.MoveY(normalFontAscent));
 
-    renderPosition = renderPosition.SetY(textRenderResult.GetBottomY()).MoveY(1);
+    renderPosition = renderPosition
+        .SetY(textRenderResult.GetBottomY())
+        .MoveY(1);
 
     HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(context, this);
-    hotKeyInputWindow->SetPosition(renderPosition.GetPosition(context->GetScaleProvider()));
+    hotKeyInputWindow->SetPosition(renderPosition.GetPosition());
     hotKeyInputWindow->SetHotkey(hotkey);
     hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, this](DWORD newHotkey)
     {
@@ -86,7 +88,7 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);
 
-    return RenderResult(renderPosition.MoveY(context->GetScaleProvider()->Downscale(hotKeyInputWindow->GetSize().GetHeight())));
+    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetSize().GetHeight()));
 }
 
 void HotkeySettingsWindow::ComputeContentState()

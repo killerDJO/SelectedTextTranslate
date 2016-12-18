@@ -18,12 +18,9 @@
     <ClCompile Include="Source\View\Framework\Rendering\Objects\Brush.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Objects\Font.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Objects\Pen.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Point\PointReal.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Point\Point.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Rect\Rect.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Rect\RectReal.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Size\Size.cpp" />
-    <ClCompile Include="Source\View\Framework\Dto\Size\SizeReal.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Positioning\Point.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Positioning\Rect.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Positioning\Size.cpp" />
     <ClCompile Include="Source\View\Framework\MessageBus.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderPosition.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderResult.cpp" />
@@ -98,12 +95,9 @@
     <ClInclude Include="Source\View\Framework\Rendering\Objects\Brush.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Objects\Font.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Objects\Pen.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Point\PointReal.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rect\Rect.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Rect\RectReal.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Size\Size.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Size\SizeReal.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Positioning\Rect.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Positioning\Size.h" />
     <ClInclude Include="Source\View\Framework\MessageBus.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderPosition.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderResult.h" />
@@ -180,7 +174,7 @@
     <ClInclude Include="Source\Providers\SqliteProvider.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\TextRenderResult.h" />
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h" />
-    <ClInclude Include="Source\View\Framework\Dto\Point\Point.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Positioning\Point.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

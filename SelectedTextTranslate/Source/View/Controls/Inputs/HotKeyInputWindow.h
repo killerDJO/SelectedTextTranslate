@@ -11,7 +11,8 @@ private:
 
     int padding;
     int borderWidth;
-    double lineHeight;
+    int lineHeight;
+    int width;
 
     bool hasFocus;
     bool isValid;
@@ -45,8 +46,8 @@ public:
     void SetBorderWidth(int borderWidth);
     int GetBorderWidth() const;
 
-    void SetLineHeight(double lineHeight);
-    double GetLineHeight() const;
+    void SetLineHeight(int lineHeight);
+    int GetLineHeight() const;
 
     void SetHotkey(DWORD hotkey);
     DWORD GetHotKey() const;

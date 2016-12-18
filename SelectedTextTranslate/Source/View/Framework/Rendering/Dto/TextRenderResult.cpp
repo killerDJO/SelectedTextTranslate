@@ -1,6 +1,6 @@
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 
-TextRenderResult::TextRenderResult(SizeReal textSize, double rightX, double baselineY, double bottomY)
+TextRenderResult::TextRenderResult(Size textSize, int rightX, int baselineY, int bottomY)
 {
     this->textSize = textSize;
     this->baselineY = baselineY;
@@ -8,29 +8,29 @@ TextRenderResult::TextRenderResult(SizeReal textSize, double rightX, double base
     this->bottomY = bottomY;
 }
 
-SizeReal TextRenderResult::GetTextSize() const
+Size TextRenderResult::GetTextSize() const
 {
     return textSize;
 }
 
-double TextRenderResult::GetBaselineY() const
+int TextRenderResult::GetBaselineY() const
 {
     return baselineY;
 }
 
-double TextRenderResult::GetBottomY() const
+int TextRenderResult::GetBottomY() const
 {
     return bottomY;
 }
 
-double TextRenderResult::GetRightX() const
+int TextRenderResult::GetRightX() const
 {
     return rightX;
 }
 
-PointReal TextRenderResult::GetRight() const
+Point TextRenderResult::GetRight() const
 {
-    return PointReal(rightX, baselineY);
+    return Point(rightX, baselineY);
 }
 
 RenderPosition TextRenderResult::GetRenderPosition() const

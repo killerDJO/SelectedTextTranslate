@@ -6,7 +6,7 @@ class ContentWindow : public ChildWindow
 protected:
     int paddingX;
     int paddingY;
-    double lineHeight;
+    int lineHeight;
 
     Font* fontNormal;
     Font* fontHeader;
@@ -24,8 +24,8 @@ public:
     ContentWindow(WindowContext* context, Window* parentWindow);
     ~ContentWindow() override;
 
-    double GetLineHeight() const;
-    void SetLineHeight(double lineHeight);
+    int GetLineHeight() const;
+    void SetLineHeight(int lineHeight);
 
     int GetPaddingX() const;
     void SetPaddingX(int paddingX);

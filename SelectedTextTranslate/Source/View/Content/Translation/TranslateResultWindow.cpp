@@ -56,7 +56,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
             vector<wstring> reverseTranslations = entry.GetReverseTranslations();
             if (reverseTranslations.size() != 0)
             {
-                renderPosition = renderer->PrintText(L" - ", fontNormal, Colors::Gray, renderPosition.MoveX(2));
+                renderPosition = renderer->PrintText(L" - ", fontNormal, Colors::Gray, renderPosition.MoveX(2, context->GetScaleProvider()));
                 for (size_t k = 0; k < reverseTranslations.size(); ++k)
                 {
                     wstring text = wstring(reverseTranslations[k]);
@@ -70,19 +70,19 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
             }
 
             int k = entry.GetScore() >= 0.05 ? 0 : (entry.GetScore() >= 0.0025 ? 1 : 2);
-            int rateUnit = 8;
-            double strokeHeight = renderer->GetFontStrokeHeight(fontNormal);
+            int rateUnit = context->GetScaleProvider()->Scale(8);
+            int strokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(fontNormal);
 
-            RectReal rect = RectReal(
+            Rect rect = Rect(
                 paddingX + k * rateUnit,
-                renderPosition.GetY() - strokeHeight + 2,
+                renderPosition.GetY() - strokeHeight + context->GetScaleProvider()->Scale(2),
                 (3 - k) * rateUnit,
-                strokeHeight - 2);
+                strokeHeight - context->GetScaleProvider()->Scale(2));
 
             renderer->DrawRect(rect, lightGrayBrush);
         }
 
-        renderPosition = renderPosition.MoveY(7).SetX(paddingX * 3);
+        renderPosition = renderPosition.MoveY(7, context->GetScaleProvider()).SetX(paddingX * 3);
         renderPosition = CreateExpandButton(RenderDescriptor(renderer, renderPosition), category, i, showedEntries.size());
 
         renderPosition = renderPosition.MoveY(lineHeight).SetX(paddingX);
@@ -91,7 +91,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
     renderer->IncreaseWidth(paddingX);
     renderer->IncreaseHeight(paddingY);
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 RenderResult TranslateResultWindow::CreateExpandButton(
@@ -118,7 +118,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         }
 
         HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(context, this);
-        expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition(context->GetScaleProvider()));
+        expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
         expandButton->SetFont(fontSmallUnderscored);
         expandButton->SetText(text);
         expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
@@ -129,7 +129,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         AddChildWindow(expandButton);
 
         renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton);
-        return RenderResult(context->GetScaleProvider()->Downscale(expandButton->GetBoundingRect()));
+        return RenderResult(expandButton->GetBoundingRect());
     }
 
     return RenderResult(renderDescriptor.GetRenderPosition());

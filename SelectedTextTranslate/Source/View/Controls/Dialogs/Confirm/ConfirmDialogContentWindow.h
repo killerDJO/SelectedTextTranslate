@@ -4,6 +4,9 @@
 class ConfirmDialogContentWindow : public ContentWindow
 {
 private:
+    int height;
+    int borderWidth;
+
     wstring title;
 
     Font* headerFont;

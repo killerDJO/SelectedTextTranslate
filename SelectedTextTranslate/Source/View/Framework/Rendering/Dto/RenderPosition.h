@@ -1,6 +1,5 @@
 #pragma once
-#include "View\Framework\Dto\Point\PointReal.h"
-#include "View\Framework\Dto\Point\Point.h"
+#include "View\Framework\Dto\Positioning\Point.h"
 
 class ScaleProvider;
 class RenderResult;
@@ -9,23 +8,26 @@ class TextRenderResult;
 class RenderPosition
 {
 private:
-    PointReal position;
+    Point position;
 
 public:
     RenderPosition();
-    RenderPosition(PointReal initialPosition);
+    RenderPosition(Point initialPosition);
     RenderPosition(TextRenderResult textRenderResult);
     RenderPosition(RenderResult renderResult);
-    RenderPosition(double x, double y);
+    RenderPosition(int x, int y);
 
-    PointReal GetPosition() const;
-    Point GetPosition(ScaleProvider* scaleProvider) const;
-    double GetY() const;
-    double GetX() const;
+    Point GetPosition() const;
+    int GetY() const;
+    int GetX() const;
 
-    RenderPosition SetX(double x) const;
-    RenderPosition SetY(double y) const;
+    RenderPosition SetX(int x) const;
+    RenderPosition SetX(int x, ScaleProvider* scaleProvider) const;
+    RenderPosition SetY(int y) const;
+    RenderPosition SetY(int y, ScaleProvider* scaleProvider) const;
 
-    RenderPosition MoveX(double x) const;
-    RenderPosition MoveY(double y) const;
+    RenderPosition MoveX(int x) const;
+    RenderPosition MoveX(int x, ScaleProvider* scaleProvider) const;
+    RenderPosition MoveY(int y) const;
+    RenderPosition MoveY(int y, ScaleProvider* scaleProvider) const;
 };

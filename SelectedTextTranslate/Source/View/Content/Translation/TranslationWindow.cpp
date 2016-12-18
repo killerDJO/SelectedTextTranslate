@@ -9,6 +9,9 @@ TranslationWindow::TranslationWindow(WindowContext* context, Window* parentWindo
     this->OnTranslateSuggestion = Subscribeable<>();
     this->OnExpandTranslationResult = Subscribeable<int>();
 
+    this->headerHeight = context->GetScaleProvider()->Scale(50);
+    this->separatorHeight = context->GetScaleProvider()->Scale(1);
+
     this->headerWindow = nullptr;
     this->translateResultWindow = nullptr;
 }
@@ -19,7 +22,7 @@ void TranslationWindow::Initialize()
 
     WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
-        context->GetScaleProvider()->Scale(SizeReal(0, headerHeight)),
+        Size(0, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
     headerWindow = new HeaderWindow(context, this);
@@ -30,7 +33,7 @@ void TranslationWindow::Initialize()
     AddChildWindow(headerWindow);
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
-        Point(0, headerWindow->GetBoundingRect().GetBottom() + context->GetScaleProvider()->Scale(separatorHeight)),
+        Point(0, headerWindow->GetBoundingRect().GetBottom() + separatorHeight),
         Size(0, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
@@ -59,12 +62,11 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
     {
         translateResultWindow->MakeHidden();
 
-        SizeReal donwscaledHeaderWindowSize = context->GetScaleProvider()->Downscale(headerWindow->GetSize());
-        SizeReal donwscaledParentWindowSize = context->GetScaleProvider()->Downscale(parentWindow->GetSize());
-        SizeReal backgroundSize = SizeReal(
-            max(donwscaledParentWindowSize.GetWidth(), donwscaledHeaderWindowSize.GetWidth()),
-            donwscaledParentWindowSize.GetHeight() - headerHeight);
-        renderer->DrawRect(RectReal(PointReal(0, headerHeight), backgroundSize), backgroundBrush);
+        Size backgroundSize = Size(
+            max(parentWindow->GetSize().GetWidth(), headerWindow->GetSize().GetWidth()),
+            parentWindow->GetSize().GetHeight() - headerHeight);
+        renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), backgroundBrush);
+
         contentSize = headerWindow->GetSize();
     }
     else
@@ -103,7 +105,7 @@ void TranslationWindow::Resize()
 
     if(model.IsEmptyResult())
     {
-        renderer->DrawRect(RectReal(0, headerHeight, windowSize.GetWidth(), windowSize.GetHeight() - headerHeight), lightGrayBrush);
+        renderer->DrawRect(Rect(0, headerHeight, windowSize.GetWidth(), windowSize.GetHeight() - headerHeight), lightGrayBrush);
     }
 
     RenderSeparator(renderer, max(contentSize.GetWidth(), windowSize.GetWidth()));
@@ -116,8 +118,7 @@ void TranslationWindow::Resize()
 
 void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const
 {
-    double scaledWidth = context->GetScaleProvider()->Downscale(width);
-    renderer->DrawRect(RectReal(0, headerHeight, scaledWidth, separatorHeight), lightGrayBrush);
+    renderer->DrawRect(Rect(0, headerHeight, width, separatorHeight), lightGrayBrush);
 }
 
 TranslationWindow::~TranslationWindow()

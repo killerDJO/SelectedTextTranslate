@@ -1,4 +1,4 @@
-#include "View\Framework\Dto\Rect\Rect.h"
+#include "View\Framework\Dto\Positioning\Rect.h"
 
 Rect::Rect()
 {

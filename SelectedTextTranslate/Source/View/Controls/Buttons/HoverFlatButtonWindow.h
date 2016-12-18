@@ -40,5 +40,5 @@ public:
 
     Size GetComputedSize() const;
 
-    double GetTextBaseline() const;
+    int GetTextBaseline() const;
 };

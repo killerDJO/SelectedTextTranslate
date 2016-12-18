@@ -6,6 +6,8 @@
 class SettingsGroupWindow : public ContentWindow
 {
 private:
+    int borderWidth;
+
     void UpdateModificationState() const;
 
 protected:

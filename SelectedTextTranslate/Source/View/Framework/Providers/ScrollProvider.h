@@ -1,7 +1,7 @@
 #pragma once
 #include "View\Framework\Enums\ScrollBars.h"
 #include "View\Framework\Windows\Window.h"
-#include "View\Framework\Dto\Size\Size.h"
+#include "View\Framework\Dto\Positioning\Size.h"
 
 class Window;
 

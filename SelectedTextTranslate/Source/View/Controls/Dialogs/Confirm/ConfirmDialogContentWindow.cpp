@@ -10,9 +10,11 @@ ConfirmDialogContentWindow::ConfirmDialogContentWindow(WindowContext* context, W
 {
     this->className = L"STT_CONFIRM_DIALOG_CONTENT";
     this->isLayered = true;
-    this->paddingX = 10;
-    this->paddingY = 5;
-    this->lineHeight = 25;
+    this->paddingX = context->GetScaleProvider()->Scale(10);
+    this->paddingY = context->GetScaleProvider()->Scale(5);
+    this->lineHeight = context->GetScaleProvider()->Scale(25);
+    this->borderWidth = context->GetScaleProvider()->Scale(1);
+    this->height = context->GetScaleProvider()->Scale(103);
 
     this->headerFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, false, false, true);
 
@@ -50,7 +52,7 @@ wstring ConfirmDialogContentWindow::GetTitle() const
 
 void ConfirmDialogContentWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.GetWidth(), context->GetScaleProvider()->Scale(103)));
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.GetWidth(), height));
     ChildWindow::Initialize();
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
@@ -59,47 +61,46 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    SizeReal dowscaledWindowSize = context->GetScaleProvider()->Downscale(GetSize());
-
-    renderer->DrawBorderedRect(RectReal(PointReal(0, 0), dowscaledWindowSize), nullptr, 1, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize()), nullptr, borderWidth, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
-    double headerFontAscent = renderer->GetFontAscent(headerFont);
+    int headerFontAscent = context->GetRenderingContext()->GetFontAscent(headerFont);
     renderer->PrintText(title, headerFont, Colors::Black, renderPosition.MoveY(headerFontAscent));
 
     renderPosition = renderPosition.SetY(lineHeight).SetX(0);
-    renderer->DrawRect(RectReal(renderPosition.GetPosition(), SizeReal(dowscaledWindowSize.GetWidth(), 1)), grayBrush);
+    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(GetSize().GetWidth(), borderWidth)), grayBrush);
 
-    double fontAscent = renderer->GetFontAscent(fontSmall);
-    renderPosition = renderPosition.SetY(lineHeight + fontAscent + 10).SetX(paddingX);
+    int smallFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmall);
+    renderPosition = renderPosition
+        .SetY(roundToInt(1.5 * lineHeight) + smallFontAscent)
+        .SetX(paddingX);
     renderer->PrintText(L"Do you want to perform this action?", fontSmall, Colors::Black, renderPosition);
 
     renderPosition = renderPosition.SetY(roundToInt(lineHeight * 2.5)).SetX(0);
     renderer->DrawBorderedRect(
-        RectReal(renderPosition.GetPosition(), SizeReal(dowscaledWindowSize.GetWidth(), dowscaledWindowSize.GetHeight() - renderPosition.GetY())),
+        Rect(renderPosition.GetPosition(), Size(GetSize().GetWidth(), GetSize().GetHeight() - renderPosition.GetY())),
         backgroundBrush,
-        1,
+        borderWidth,
         Colors::Gray);
 
     HoverFlatButtonWindow* confirmButton = new HoverFlatButtonWindow(context, this);
     confirmButton->SetText(L"Confirm");
-    confirmButton->SetPosition(context->GetScaleProvider()->Scale(PointReal(
-        dowscaledWindowSize.GetWidth() - paddingX - context->GetScaleProvider()->Downscale(confirmButton->GetComputedSize().GetWidth()),
-        renderPosition.GetY() + paddingX)));
+    confirmButton->SetPosition(Point(
+        GetSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
+        renderPosition.GetY() + paddingX));
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();
     AddChildWindow(confirmButton);
 
-    PointReal downscaledConfirmButtonPosition = context->GetScaleProvider()->Downscale(confirmButton->GetPosition());
-    double cancelButtonFontAscent = renderer->GetFontAscent(fontSmallUnderscored);
-    double textWidth = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth());
+    int cancelButtonFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmallUnderscored);
+    int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
-    cancelButton->SetPosition(context->GetScaleProvider()->Scale(PointReal(
-        downscaledConfirmButtonPosition.GetX() - 10 - textWidth,
-        downscaledConfirmButtonPosition.GetY() + confirmButton->GetTextBaseline() - cancelButtonFontAscent)));
+    cancelButton->SetPosition(Point(
+        confirmButton->GetPosition().GetX() - paddingX - textWidth,
+        confirmButton->GetPosition().GetY() + confirmButton->GetTextBaseline() - cancelButtonFontAscent));
     cancelButton->OnClick.Subscribe(&OnCancel);
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);

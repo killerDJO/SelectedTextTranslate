@@ -28,7 +28,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
 
 Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 {
-    double smallFontAscent = renderer->GetFontAscent(fontSmall);
+    int smallFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmall);
 
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 
@@ -37,17 +37,17 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
     renderPosition = renderPosition.MoveY(lineHeight);
 
-    double imageSize = smallFontAscent;
+    int imageSize = smallFontAscent;
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
     audioButton->SetDimensions(
-        renderPosition.MoveY(- imageSize + 2).GetPosition(context->GetScaleProvider()),
-        context->GetScaleProvider()->Scale(SizeReal(imageSize, imageSize)));
+        renderPosition.MoveY(-imageSize).MoveY(2, context->GetScaleProvider()).GetPosition(),
+        Size(imageSize, imageSize));
     audioButton->SetHoverIconResource(IDR_AUDIO);
     audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
     AddChildWindow(audioButton);
 
-    renderPosition = renderPosition.MoveX(imageSize + 2);
+    renderPosition = renderPosition.MoveX(imageSize).MoveX(2, context->GetScaleProvider());
     renderPosition = renderer->PrintText(sentence.GetOrigin(), fontSmall, Colors::Gray, renderPosition);
 
     RenderDescriptor actionRenderDescriptor = RenderDescriptor(renderer, renderPosition.MoveX(1));
@@ -62,17 +62,17 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
     renderer->IncreaseWidth(paddingX);
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
 {
-    double fontHeight = renderer->GetFontStrokeHeight(fontHeader);
-    double curY = context->GetScaleProvider()->Downscale(windowSize.GetHeight() / 2) + fontHeight / 2;
+    int fontHeight = context->GetRenderingContext()->GetFontStrokeHeight(fontHeader);
+    int curY = windowSize.GetHeight() / 2 + fontHeight / 2;
 
     renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, RenderPosition(paddingX, curY));
 
-    return renderer->GetScaledSize();
+    return renderer->GetSize();
 }
 
 void HeaderWindow::PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput)
@@ -87,27 +87,26 @@ void HeaderWindow::PrintSuggestion(RenderDescriptor renderDescriptor, wstring su
 
 void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback)
 {
-    TextRenderResult orignLineRenderResult = renderDescriptor.GetRenderer()->PrintText(
+    TextRenderResult originLineRenderResult = renderDescriptor.GetRenderer()->PrintText(
         StringUtilities::Format(L" (%ls ", actionDescription.c_str()),
         fontSmall,
         Colors::Gray,
         renderDescriptor.GetRenderPosition());
 
-    double smallFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(fontSmall);
+    int smallFontAscent = context->GetRenderingContext()->GetFontAscent(fontSmall);
     HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
     headerActionButton->SetFont(fontSmallUnderscored);
-    headerActionButton->SetPosition(orignLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition(context->GetScaleProvider()));
+    headerActionButton->SetPosition(originLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition());
     headerActionButton->SetText(actionText);
     headerActionButton->OnClick.Subscribe(actionCallback);
 
     AddChildWindow(headerActionButton);
 
-    RectReal downscaledActionButtonRect = context->GetScaleProvider()->Downscale(headerActionButton->GetBoundingRect());
     renderDescriptor.GetRenderer()->PrintText(
         L")",
         fontSmall,
         Colors::Gray,
-        PointReal(downscaledActionButtonRect.GetRight(), orignLineRenderResult.GetBaselineY()));
+        Point(headerActionButton->GetBoundingRect().GetRight(), originLineRenderResult.GetBaselineY()));
 }
 
 HeaderWindow::~HeaderWindow()

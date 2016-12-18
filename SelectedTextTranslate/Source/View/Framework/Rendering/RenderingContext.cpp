@@ -53,7 +53,7 @@ int RenderingContext::GetFontAscent(Font* font) const
 
 Renderer* RenderingContext::GetRenderer()
 {
-    return new Renderer(this, scaleProvider);
+    return new Renderer(this);
 }
 
 void RenderingContext::ReleaseRenderer(Renderer* renderer) const
