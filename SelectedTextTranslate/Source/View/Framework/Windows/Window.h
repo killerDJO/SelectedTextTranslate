@@ -5,6 +5,9 @@
 #include "View\Framework\Windows\NativeWindowHolder.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\Renderer.h"
+#include "View\Framework\Dto\Point\PointReal.h"
+#include "View\Framework\Dto\Size\SizeReal.h"
+#include "View\Framework\Dto\Rect\RectReal.h"
 
 class WindowContext;
 class Renderer;
@@ -53,11 +56,19 @@ public:
     WindowDescriptor GetDescriptor() const;
     virtual void SetDescriptor(WindowDescriptor descriptor);
 
-    Size GetSize(bool downscale = true) const;
-    Size GetAvailableClientSize(bool downscale = true) const;
     Size GetContentSize() const;
-    Point GetPosition(bool downscale = true) const;
-    Rect GetBoundingRect(bool downscale = true) const;
+
+    Size GetScaledSize() const;
+    SizeReal GetDownscaledSize() const;
+
+    Size GetScaledAvailableClientSize() const;
+    SizeReal GetDownscaledAvailableClientSize() const;
+
+    Point GetScaledPosition() const;
+    PointReal GetDownscaledPosition() const;
+
+    Rect GetScaledBoundingRect() const;
+    RectReal GetDownscaledBoundingRect() const;
 
     void MakeVisible();
     void MakeHidden();

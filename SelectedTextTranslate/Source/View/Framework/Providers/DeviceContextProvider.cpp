@@ -12,8 +12,8 @@ HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
 
     BITMAPINFO i;
     ZeroMemory(&i.bmiHeader, sizeof(BITMAPINFOHEADER));
-    i.bmiHeader.biWidth = deviceContextSize.Width;
-    i.bmiHeader.biHeight = deviceContextSize.Height;
+    i.bmiHeader.biWidth = deviceContextSize.GetWidth();
+    i.bmiHeader.biHeight = deviceContextSize.GetHeight();
     i.bmiHeader.biPlanes = 1;
     i.bmiHeader.biBitCount = 24;
     i.bmiHeader.biSizeImage = 0;
@@ -22,7 +22,7 @@ HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
     i.bmiHeader.biClrImportant = 0;
     VOID *pvBits;
 
-    if(deviceContextSize.Width != 0 && deviceContextSize.Height != 0)
+    if (deviceContextSize.GetWidth() != 0 && deviceContextSize.GetHeight() != 0)
     {
         HBITMAP bitmap = CreateDIBSection(hdc, &i, DIB_RGB_COLORS, &pvBits, nullptr, 0);
         AssertCriticalWinApiResult(bitmap);
@@ -42,9 +42,5 @@ void DeviceContextProvider::ResizeDeviceContext(HDC &deviceContext, Size newDevi
 
 void DeviceContextProvider::CopyDeviceContext(HDC source, HDC target, Size deviceContextSize) const
 {
-    AssertCriticalWinApiResult(BitBlt(target, 0, 0, deviceContextSize.Width, deviceContextSize.Height, source, 0, 0, SRCCOPY));
-}
-
-DeviceContextProvider::~DeviceContextProvider()
-{
+    AssertCriticalWinApiResult(BitBlt(target, 0, 0, deviceContextSize.GetWidth(), deviceContextSize.GetHeight(), source, 0, 0, SRCCOPY));
 }

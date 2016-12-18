@@ -1,10 +1,10 @@
 #pragma once
+#include "View\Framework\Dto\Size\Size.h"
 
 class DeviceContextProvider
 {
 public:
     DeviceContextProvider();
-    ~DeviceContextProvider();
 
     HDC CreateDeviceContext(Size deviceContextSize) const;
 

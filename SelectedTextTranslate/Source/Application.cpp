@@ -22,7 +22,7 @@ int Application::Run(HINSTANCE hInstance) const
         FatalAppExit(0, TEXT("SelectedTextTranslate already started!"));
     }
 
-    GdiplusStartupInput gdiplusStartupInput;
+    Gdiplus::GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR gdiplusToken;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
@@ -46,7 +46,7 @@ int Application::Run(HINSTANCE hInstance) const
     ReleaseMutex(mutex);
     CloseHandle(mutex);
 
-    GdiplusShutdown(gdiplusToken);
+    Gdiplus::GdiplusShutdown(gdiplusToken);
 
     return result;
 }
@@ -133,8 +133,7 @@ WindowDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvid
         Point(x, y),
         Size(width, height),
         OverflowModes::Scroll,
-        OverflowModes::Scroll,
-        false);
+        OverflowModes::Scroll);
 
     return descriptor;
 }

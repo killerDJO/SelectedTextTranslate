@@ -1,0 +1,27 @@
+#include "View\Framework\Dto\Size\Size.h"
+
+Size::Size()
+{
+    this->width = this->height = 0;
+}
+
+Size::Size(int width, int height)
+{
+    this->width = width;
+    this->height = height;
+}
+
+int Size::GetWidth() const
+{
+    return width;
+}
+
+int Size::GetHeight() const
+{
+    return height;
+}
+
+bool Size::Equals(Size size) const
+{
+    return size.width == width && size.height == height;
+}

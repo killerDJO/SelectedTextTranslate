@@ -46,10 +46,10 @@ void MainWindow::Initialize()
         className,
         nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        descriptor.GetPosition().X,
-        descriptor.GetPosition().Y,
-        descriptor.GetWindowSize().Width,
-        descriptor.GetWindowSize().Height,
+        descriptor.GetPosition().GetX(),
+        descriptor.GetPosition().GetY(),
+        descriptor.GetWindowSize().GetWidth(),
+        descriptor.GetWindowSize().GetHeight(),
         nullptr,
         nullptr,
         context->GetInstance(),
@@ -95,7 +95,7 @@ void MainWindow::CreateChildWindows()
     settingsWindow->SetModel(settings);
 
     confirmDialogWindow = new ConfirmDialogWindow(context, this);
-    confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize()));
+    confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetScaledAvailableClientSize()));
     AddChildWindow(confirmDialogWindow);
     confirmDialogWindow->MakeHidden();
 }
@@ -106,8 +106,7 @@ void MainWindow::SetViewWindowDescriptor(Window* viewWindow, ApplicationViews vi
         Point(0, 0),
         viewDescriptors[view].GetWindowDescriptor().GetWindowSize(),
         OverflowModes::Stretch,
-        OverflowModes::Stretch,
-        false);
+        OverflowModes::Stretch);
     viewWindow->SetDescriptor(windowDescriptor);
 }
 
@@ -208,8 +207,8 @@ void MainWindow::Scale(double scaleFactorAdjustment)
     ScaleViewDescriptor(ApplicationViews::Dictionary, scaleFactorAdjustment);
     ScaleViewDescriptor(ApplicationViews::TranslateResult, scaleFactorAdjustment);
     minSize = Size(
-        scaleProvider->Rescale(minSize.Width, scaleFactorAdjustment),
-        scaleProvider->Rescale(minSize.Height, scaleFactorAdjustment));
+        scaleProvider->Rescale(minSize.GetWidth(), scaleFactorAdjustment),
+        scaleProvider->Rescale(minSize.GetHeight(), scaleFactorAdjustment));
 
     descriptor = viewDescriptors[currentView].GetWindowDescriptor();
     position = descriptor.GetPosition();
@@ -227,12 +226,12 @@ void MainWindow::ScaleViewDescriptor(ApplicationViews applicationView, double sc
 {
     WindowDescriptor windowDescriptor = viewDescriptors[applicationView].GetWindowDescriptor();
 
-    int scaledWidth = context->GetScaleProvider()->Rescale(windowDescriptor.GetWindowSize().Width, scaleFactorAdjustment);
-    int scaledHeight = context->GetScaleProvider()->Rescale(windowDescriptor.GetWindowSize().Height, scaleFactorAdjustment);
+    int scaledWidth = context->GetScaleProvider()->Rescale(windowDescriptor.GetWindowSize().GetWidth(), scaleFactorAdjustment);
+    int scaledHeight = context->GetScaleProvider()->Rescale(windowDescriptor.GetWindowSize().GetHeight(), scaleFactorAdjustment);
 
     windowDescriptor.SetPosition(Point(
-        windowDescriptor.GetPosition().X - scaledWidth + windowDescriptor.GetWindowSize().Width,
-        windowDescriptor.GetPosition().Y - scaledHeight + windowDescriptor.GetWindowSize().Height));
+        windowDescriptor.GetPosition().GetX() - scaledWidth + windowDescriptor.GetWindowSize().GetWidth(),
+        windowDescriptor.GetPosition().GetY() - scaledHeight + windowDescriptor.GetWindowSize().GetHeight()));
 
     windowDescriptor.SetWindowSize(Size(scaledWidth, scaledHeight));
 
@@ -251,17 +250,15 @@ void MainWindow::Resize()
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 
-    if (descriptor.GetWindowSize().Width == newWidth && descriptor.GetWindowSize().Height == newHeight)
+    if (descriptor.GetWindowSize().GetWidth() == newWidth && descriptor.GetWindowSize().GetHeight() == newHeight)
     {
         return;
     }
 
-    windowSize.Width = newWidth;
-    windowSize.Height = newHeight;
+    windowSize = Size(newWidth, newHeight);
     descriptor.SetWindowSize(windowSize);
 
-    position.X = windowRect.left;
-    position.Y = windowRect.top;
+    position = Point(windowRect.left, windowRect.top);
     descriptor.SetPosition(position);
 
     deviceContextBuffer->Resize(windowSize);
@@ -345,7 +342,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         int newWidth = newSize.right - newSize.left;
         int newHeight = newSize.bottom - newSize.top;
 
-        if (IsResizeLocked() || newWidth < minSize.Width || newHeight < minSize.Height)
+        if (IsResizeLocked() || newWidth < minSize.GetWidth() || newHeight < minSize.GetHeight())
         {
             RECT windowRect;
             GetWindowRect(windowHandle, &windowRect);
@@ -388,11 +385,11 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         {
             hotkeyProvider->RegisterZoomInHotkey(
                 GetHandle(),
-                [=]() -> void { Scale(0.1); });
+                [=]() -> void { Scale(0.05); });
 
             hotkeyProvider->RegisterZoomOutHotkey(
                 GetHandle(),
-                [=]() -> void { Scale(-0.1); });
+                [=]() -> void { Scale(-0.05); });
         }
         else
         {

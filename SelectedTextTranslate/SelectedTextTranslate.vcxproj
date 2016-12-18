@@ -15,6 +15,12 @@
     <Image Include="Resources\SelectedTextTranslateDisabled.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Framework\Dto\Point\PointReal.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Point\Point.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Rect\Rect.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Rect\RectReal.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Size\Size.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\Size\SizeReal.cpp" />
     <ClCompile Include="Source\View\Framework\MessageBus.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderPosition.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderResult.cpp" />
@@ -86,7 +92,12 @@
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Framework\Dto\Point\PointReal.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rect\Rect.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rect\RectReal.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Size\Size.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Size\SizeReal.h" />
     <ClInclude Include="Source\View\Framework\MessageBus.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderPosition.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderResult.h" />
@@ -163,6 +174,7 @@
     <ClInclude Include="Source\Providers\SqliteProvider.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Dto\TextRenderResult.h" />
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Point\Point.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

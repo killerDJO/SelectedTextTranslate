@@ -1,8 +1,9 @@
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
+#include "View\Framework\Dto\Point\PointReal.h"
 
-RenderPosition::RenderPosition(Point initialPosition)
+RenderPosition::RenderPosition(PointReal initialPosition)
 {
     position = initialPosition;
 }
@@ -17,51 +18,47 @@ RenderPosition::RenderPosition(RenderResult renderResult)
     position = renderResult.GetRenderPosition().GetPosition();
 }
 
-RenderPosition::RenderPosition(int x, int y)
-    : RenderPosition(Point(x, y))
+RenderPosition::RenderPosition(double x, double y)
+    : RenderPosition(PointReal(x, y))
 {
 }
 
 RenderPosition::RenderPosition()
-    : RenderPosition(Point(0, 0))
+    : RenderPosition(PointReal(0, 0))
 {
 }
 
-Point RenderPosition::GetPosition() const
+PointReal RenderPosition::GetPosition() const
 {
     return position;
 }
 
-int RenderPosition::GetY() const
+double RenderPosition::GetY() const
 {
-    return position.Y;
+    return position.GetY();
 }
 
-int RenderPosition::GetX() const
+double RenderPosition::GetX() const
 {
-    return position.X;
+    return position.GetX();
 }
 
-RenderPosition RenderPosition::SetX(int x) const
+RenderPosition RenderPosition::SetX(double x) const
 {
-    return RenderPosition(Point(x, position.Y));
+    return RenderPosition(PointReal(x, position.GetY()));
 }
 
-RenderPosition RenderPosition::SetY(int y) const
+RenderPosition RenderPosition::SetY(double y) const
 {
-    return RenderPosition(Point(position.X, y));
+    return RenderPosition(PointReal(position.GetX(), y));
 }
 
-RenderPosition RenderPosition::MoveX(int x) const
+RenderPosition RenderPosition::MoveX(double x) const
 {
-    return RenderPosition(Point(position.X + x, position.Y));
+    return RenderPosition(PointReal(position.GetX() + x, position.GetY()));
 }
 
-RenderPosition RenderPosition::MoveY(int y) const
+RenderPosition RenderPosition::MoveY(double y) const
 {
-    return RenderPosition(Point(position.X, position.Y + y));
-}
-
-RenderPosition::~RenderPosition()
-{
+    return RenderPosition(PointReal(position.GetX(), position.GetY() + y));
 }

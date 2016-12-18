@@ -17,38 +17,43 @@ void ScrollProvider::InitializeScrollbars(
     int initialVerticalScrollPosition,
     int initialHorizontalScrollPostion) const
 {
-    if(!initializeVerticalScroll && !initializeHorizontalScroll)
+    if (!initializeVerticalScroll && !initializeHorizontalScroll)
     {
         return;
     }
 
-    Size clientSize = window->GetAvailableClientSize(false);
+    Size clientSize = window->GetScaledAvailableClientSize();
 
     Size contentSize = window->GetContentSize();
-    contentSize.Width -= GetScrollChar(ScrollBars::Vertical);
-    contentSize.Height -= GetScrollChar(ScrollBars::Horizontal);
+    contentSize = Size(
+        contentSize.GetWidth() - GetScrollChar(ScrollBars::Vertical),
+        contentSize.GetHeight() - GetScrollChar(ScrollBars::Horizontal));
 
-    bool horizontalScrollVisible = initializeHorizontalScroll && clientSize.Width < contentSize.Width;
-    bool verticalScrollVisible = initializeVerticalScroll && clientSize.Height < contentSize.Height;
+    bool horizontalScrollVisible = initializeHorizontalScroll && clientSize.GetWidth() < contentSize.GetWidth();
+    bool verticalScrollVisible = initializeVerticalScroll && clientSize.GetHeight() < contentSize.GetHeight();
 
-    if(horizontalScrollVisible)
+    if (horizontalScrollVisible)
     {
-        clientSize.Height -= horizontalScrollBarHeight;
+        clientSize = Size(
+            clientSize.GetWidth(),
+            clientSize.GetHeight() - horizontalScrollBarHeight);
     }
 
     if (verticalScrollVisible)
     {
-        clientSize.Width -= verticalScrollBarWidth;
+        clientSize = Size(
+            clientSize.GetWidth() - verticalScrollBarWidth,
+            clientSize.GetHeight());
     }
 
-    if(initializeHorizontalScroll)
+    if (initializeHorizontalScroll)
     {
-        InitializeScrollbar(window->GetHandle(), contentSize.Width, clientSize.Width, ScrollBars::Horizontal, initialHorizontalScrollPostion);
+        InitializeScrollbar(window->GetHandle(), contentSize.GetWidth(), clientSize.GetWidth(), ScrollBars::Horizontal, initialHorizontalScrollPostion);
     }
 
-    if(initializeVerticalScroll)
+    if (initializeVerticalScroll)
     {
-        InitializeScrollbar(window->GetHandle(), contentSize.Height, clientSize.Height, ScrollBars::Vertical, initialVerticalScrollPosition);
+        InitializeScrollbar(window->GetHandle(), contentSize.GetHeight(), clientSize.GetHeight(), ScrollBars::Vertical, initialVerticalScrollPosition);
     }
 }
 
@@ -60,7 +65,7 @@ void ScrollProvider::HideScrollbars(Window* window) const
 
 void ScrollProvider::ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const
 {
-    if(message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Horizontal))
+    if (message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Horizontal))
     {
         ProcessScroll(window, wParam, lParam, ScrollBars::Horizontal);
     }
@@ -115,7 +120,7 @@ int ScrollProvider::GetCurrentScrollPostion(Window* window, ScrollBars scrollBar
 
 int ScrollProvider::GetCurrentScrollOffset(Window* window, ScrollBars scrollBar) const
 {
-    if(!IsScrollBarVisible(window, scrollBar))
+    if (!IsScrollBarVisible(window, scrollBar))
     {
         return 0;
     }
@@ -195,8 +200,8 @@ Size ScrollProvider::AlignWithScrollingGrid(Size size) const
     int scrollCharX = GetScrollChar(ScrollBars::Horizontal);
     int scrollCharY = GetScrollChar(ScrollBars::Vertical);
     return Size(
-        roundToInt(ceil(size.Width * 1.0 / scrollCharX) * scrollCharX),
-        roundToInt(ceil(size.Height * 1.0 / scrollCharY) * scrollCharY));
+        roundToInt(ceil(size.GetWidth() * 1.0 / scrollCharX) * scrollCharX),
+        roundToInt(ceil(size.GetHeight() * 1.0 / scrollCharY) * scrollCharY));
 }
 
 void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const
@@ -252,8 +257,4 @@ int ScrollProvider::GetScrollChar(ScrollBars scrollBar) const
     return scrollBar == ScrollBars::Vertical
         ? scrollCharY
         : scrollCharX;
-}
-
-ScrollProvider::~ScrollProvider()
-{
 }

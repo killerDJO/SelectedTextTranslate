@@ -7,7 +7,9 @@ HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* par
     this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
     this->text = wstring();
-    this->padding = 3;
+    this->paddingX = 10;
+    this->paddingY = 5;
+    this->borderWidth = 1;
     this->className = L"STT_HOVERFLATBUTTON";
 }
 
@@ -16,10 +18,10 @@ void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HoverFlatButtonWindow::SetDimensions(Point position, Size size)
+void HoverFlatButtonWindow::SetPosition(PointReal position)
 {
     AssertWindowNotInitialized();
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
+    this->position = context->GetScaleProvider()->Scale(position);
 }
 
 void HoverFlatButtonWindow::SetFont(HFONT font)
@@ -44,21 +46,47 @@ wstring HoverFlatButtonWindow::GetText() const
     return text;
 }
 
-void HoverFlatButtonWindow::SetPadding(int padding)
+void HoverFlatButtonWindow::SetPaddingX(int paddingX)
 {
     AssertWindowNotInitialized();
-    this->padding = padding;
+    this->paddingX = paddingX;
 }
 
-int HoverFlatButtonWindow::GetPadding() const
+int HoverFlatButtonWindow::GetPaddingX() const
 {
-    return padding;
+    return paddingX;
 }
 
-int HoverFlatButtonWindow::GetTextBaseline() const
+void HoverFlatButtonWindow::SetPaddingY(int paddingY)
 {
-    int fontDescent = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(GetFont()).tmDescent);
-    return GetSize().Height - padding - fontDescent;
+    AssertWindowNotInitialized();
+    this->paddingY = paddingY;
+}
+
+int HoverFlatButtonWindow::GetPaddingY() const
+{
+    return paddingY;
+}
+
+void HoverFlatButtonWindow::Initialize()
+{
+    int fontStrokeHeight = context->GetRenderingContext()->GetFontStrokeHeight(GetFont());
+    Size textSize = context->GetRenderingContext()->GetTextSize(text, GetFont());
+    descriptor = WindowDescriptor::CreateWindowDescriptor(
+        position,
+        Size(
+            textSize.GetWidth() + context->GetScaleProvider()->Scale(paddingX) * 2,
+            fontStrokeHeight + context->GetScaleProvider()->Scale(paddingY + borderWidth) * 2),
+        OverflowModes::Fixed,
+        OverflowModes::Fixed);
+
+    HoverButtonWindow::Initialize();
+}
+
+double HoverFlatButtonWindow::GetTextBaseline() const
+{
+    double fontStrokeHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontStrokeHeight(GetFont()));
+    return fontStrokeHeight + paddingY + borderWidth;
 }
 
 void HoverFlatButtonWindow::RenderStatesDeviceContext()
@@ -79,18 +107,16 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
     HBRUSH backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
-    Size windowSize = GetSize();
 
     renderer->DrawBorderedRect(
-        Rect(Point(0, 0), windowSize),
+        RectReal(PointReal(0, 0), GetDownscaledSize()),
         backgroundBrush,
-        1,
+        borderWidth,
         borderColor);
 
-    int fontDescent = renderer->GetFontDescent(GetFont());
-    renderer->PrintText(text.c_str(), GetFont(), fontColor, Point(windowSize.Width / 2, windowSize.Height - padding - fontDescent), TA_CENTER);
+    renderer->PrintText(text.c_str(), GetFont(), fontColor, PointReal(GetDownscaledSize().GetWidth() / 2, GetTextBaseline()), TA_CENTER);
 
-    renderer->Render(deviceContext, windowSize);
+    renderer->Render(deviceContext, GetScaledSize());
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 

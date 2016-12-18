@@ -345,6 +345,24 @@
     <ClCompile Include="Source\View\Framework\MessageBus.cpp">
       <Filter>Source\View\Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Size\Size.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Size\SizeReal.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Point\Point.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Point\PointReal.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rect\Rect.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\Rect\RectReal.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -586,6 +604,12 @@
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h">
       <Filter>Source\View\Content\Settings\Base\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\Point\Point.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Point\PointReal.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Size\Size.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Size\SizeReal.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rect\Rect.h" />
+    <ClInclude Include="Source\View\Framework\Dto\Rect\RectReal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

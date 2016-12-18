@@ -34,9 +34,9 @@ void ExceptionHelper::ThrowOnWinapiError(bool isFatal)
     }
 }
 
-void ExceptionHelper::ThrowOnGdiPlusError(Status status, bool isFatal)
+void ExceptionHelper::ThrowOnGdiPlusError(Gdiplus::Status status, bool isFatal)
 {
-    if(status != Ok)
+    if(status != Gdiplus::Ok)
     {
         wstring message = StringUtilities::Format(L"Error calling GDI+ function. Status: %d.", status);
         
@@ -58,7 +58,7 @@ wstring ExceptionHelper::GetCurrentExceptionMessage()
 
     if(exceptionPointer == nullptr)
     {
-        exceptionMessage = wstring();
+        return wstring();
     }
 
     try

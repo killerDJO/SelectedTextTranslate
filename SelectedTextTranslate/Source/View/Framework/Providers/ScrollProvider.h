@@ -1,6 +1,7 @@
 #pragma once
 #include "View\Framework\Enums\ScrollBars.h"
 #include "View\Framework\Windows\Window.h"
+#include "View\Framework\Dto\Size\Size.h"
 
 class Window;
 
@@ -23,7 +24,6 @@ private:
 
 public:
     ScrollProvider();
-    ~ScrollProvider();
 
     void InitializeScrollbars(
         Window* window,

@@ -20,12 +20,12 @@ ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     this->className = L"STT_CONTENT";
 }
 
-int ContentWindow::GetLineHeight() const
+double ContentWindow::GetLineHeight() const
 {
     return lineHeight;
 }
 
-void ContentWindow::SetLineHeight(int lineHeight)
+void ContentWindow::SetLineHeight(double lineHeight)
 {
     this->lineHeight = lineHeight;
 }

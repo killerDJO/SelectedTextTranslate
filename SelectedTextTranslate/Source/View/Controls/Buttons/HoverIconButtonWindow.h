@@ -1,5 +1,7 @@
 #pragma once
 #include "View\Controls\Buttons\Base\HoverButtonWindow.h"
+#include "View\Framework\Dto\Point\PointReal.h"
+#include "View\Framework\Dto\Size\SizeReal.h"
 
 class HoverIconButtonWindow : public HoverButtonWindow
 {
@@ -8,9 +10,9 @@ private:
     DWORD hoverIconResource;
     HBRUSH backgroundBrush;
 
-    void RenderStateDeviceContext(HDC deviceContext, DWORD iconResource);
+    void RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const;
 
-    Metafile* LoadMetafileFromResource(DWORD resourceId) const;
+    Gdiplus::Metafile* LoadMetafileFromResource(DWORD resourceId) const;
 
     static map<tuple<DWORD, int, int>, HDC> iconsCache;
 
@@ -22,7 +24,7 @@ public:
     ~HoverIconButtonWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetDimensions(Point position, Size size);
+    void SetDimensions(PointReal position, SizeReal size);
 
     void SetNormalIconResource(DWORD normalIconResource);
     DWORD GetNormalIconResource() const;

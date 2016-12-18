@@ -22,7 +22,7 @@ public:
     ~HoverTextButtonWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetPosition(Point position);
+    void SetPosition(PointReal position);
 
     void SetNormalColor(Colors normalColor);
     Colors GetNormalColor() const;
@@ -41,6 +41,4 @@ public:
 
     void SetText(wstring text);
     wstring GetText() const;
-
-    void Initialize() override;
 };

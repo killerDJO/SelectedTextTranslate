@@ -13,7 +13,7 @@
 #include <mmsystem.h>
 #include <shellapi.h>
 #include <objidl.h>
-#include <gdiplus.h>
+#include "gdiplus.h"
 
 #include <stdlib.h>
 #include <malloc.h>
@@ -44,4 +44,3 @@
 #include "..\Resources\resource.h"
 
 using namespace std;
-using namespace Gdiplus;

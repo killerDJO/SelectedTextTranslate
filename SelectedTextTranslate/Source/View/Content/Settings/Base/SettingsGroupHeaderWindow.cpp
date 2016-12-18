@@ -9,7 +9,7 @@ SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Win
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
     this->title = wstring();
     this->paddingX = this->paddingY = 5;
-    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->fontNormal).tmHeight);
+    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontHeight(this->fontNormal));
     this->className = L"STT_SETTINGS_GROUP_HEADER";
 }
 
@@ -18,11 +18,11 @@ void SettingsGroupHeaderWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void SettingsGroupHeaderWindow::SetDimensions(Point position, int width)
+void SettingsGroupHeaderWindow::SetDimensions(PointReal position, double width)
 {
     AssertWindowNotInitialized();
-    this->position = position;
-    this->windowSize = Size(width, 0);
+    this->position = context->GetScaleProvider()->Scale(position);
+    this->windowSize = context->GetScaleProvider()->Scale(SizeReal(width, 0));
 }
 
 void SettingsGroupHeaderWindow::SetTitle(wstring title)
@@ -57,7 +57,8 @@ SettingsGroupVisibilityState SettingsGroupHeaderWindow::GetVisibilityState() con
 
 void SettingsGroupHeaderWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.Width, lineHeight + paddingY * 2));
+    double headerHeight = lineHeight + paddingY * 2;
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.GetWidth(), context->GetScaleProvider()->Scale(headerHeight)));
     ContentWindow::Initialize();
 }
 
@@ -70,12 +71,12 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
 
-    int headerWidth = GetSize().Width;
-    int headerHeight = GetSize().Height;
+    double headerWidth = GetDownscaledSize().GetWidth();
+    double headerHeight = GetDownscaledSize().GetHeight();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), Size(headerWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
+    renderer->DrawBorderedRect(RectReal(PointReal(0, 0), SizeReal(headerWidth, headerHeight)), backgroundBrush, 1, Colors::Gray);
 
-    int fontAscent = renderer->GetFontAscent(fontNormal);
+    double fontAscent = renderer->GetFontAscent(fontNormal);
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontAscent);
 
     renderPosition = renderer->PrintText(title, fontNormal, Colors::Black, renderPosition);
@@ -88,10 +89,10 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
         renderPosition = renderer->PrintText(L"*", fontNormal, Colors::Red, renderPosition);
     }
 
-    int iconSize = fontAscent;
+    double iconSize = fontAscent;
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
-    expandButton->SetDimensions(Point(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2), Size(iconSize, iconSize));
+    expandButton->SetDimensions(PointReal(headerWidth - iconSize - paddingX, renderPosition.GetY() - iconSize + 2), SizeReal(iconSize, iconSize));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);

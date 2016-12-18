@@ -41,11 +41,6 @@ void Window::Initialize()
         throw SelectedTextTranslateException(L"Descriptor must be set for window");
     }
 
-    if (descriptor.IsAutoScaleEnabled())
-    {
-        descriptor = context->GetScaleProvider()->Scale(descriptor);
-    }
-
     deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), descriptor.GetWindowSize());
 
     windowSize = descriptor.GetWindowSize();
@@ -68,14 +63,14 @@ void Window::Render(bool preserveScrolls)
     contentSize = RenderToBuffer();
     windowSize = descriptor.GetWindowSize();
 
-    if (descriptor.GetOverflowX() == OverflowModes::Stretch && contentSize.Width > descriptor.GetWindowSize().Width)
+    if (descriptor.GetOverflowX() == OverflowModes::Stretch && contentSize.GetWidth() > descriptor.GetWindowSize().GetWidth())
     {
-        windowSize.Width = contentSize.Width;
+        windowSize = Size(contentSize.GetWidth(), windowSize.GetHeight());
     }
 
-    if (descriptor.GetOverflowY() == OverflowModes::Stretch && contentSize.Height > descriptor.GetWindowSize().Height)
+    if (descriptor.GetOverflowY() == OverflowModes::Stretch && contentSize.GetHeight() > descriptor.GetWindowSize().GetHeight())
     {
-        windowSize.Height = contentSize.Height;
+        windowSize = Size(windowSize.GetWidth(), contentSize.GetHeight());
     }
 
     windowState = WindowStates::Rendered;
@@ -95,12 +90,12 @@ Size Window::RenderToBuffer()
     Size renderedSize = RenderContent(renderer);
 
     Size deviceContextBufferSize = deviceContextBuffer->GetSize();
-    int requiredDcWidth = descriptor.GetOverflowX() != OverflowModes::Fixed && renderedSize.Width > deviceContextBufferSize.Width
-        ? renderedSize.Width
-        : deviceContextBufferSize.Width;
-    int requiredDcHeight = descriptor.GetOverflowY() != OverflowModes::Fixed && renderedSize.Height > deviceContextBufferSize.Height
-        ? renderedSize.Height
-        : deviceContextBufferSize.Height;
+    int requiredDcWidth = descriptor.GetOverflowX() != OverflowModes::Fixed && renderedSize.GetWidth() > deviceContextBufferSize.GetWidth()
+        ? renderedSize.GetWidth()
+        : deviceContextBufferSize.GetWidth();
+    int requiredDcHeight = descriptor.GetOverflowY() != OverflowModes::Fixed && renderedSize.GetHeight() > deviceContextBufferSize.GetHeight()
+        ? renderedSize.GetHeight()
+        : deviceContextBufferSize.GetHeight();
 
     Size requiredDcSize(requiredDcWidth, requiredDcHeight);
 
@@ -155,7 +150,13 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
     }
 
     Point offset = GetInitialWindowOffset();
-    AssertCriticalWinApiResult(MoveWindow(windowHandle, descriptor.GetPosition().X - offset.X, descriptor.GetPosition().Y - offset.Y, windowSize.Width, windowSize.Height, FALSE));
+    AssertCriticalWinApiResult(MoveWindow(
+        windowHandle,
+        descriptor.GetPosition().GetX() - offset.GetX(),
+        descriptor.GetPosition().GetY() - offset.GetY(),
+        windowSize.GetWidth(),
+        windowSize.GetHeight(),
+        FALSE));
 
     // Important to initialize scroll only after window has been moved
     context->GetScrollProvider()->InitializeScrollbars(
@@ -245,12 +246,17 @@ DWORD Window::GetScrollStyle() const
     return scrollStyle;
 }
 
-Size Window::GetSize(bool downscale) const
+Size Window::GetScaledSize() const
 {
-    return !downscale ? windowSize : context->GetScaleProvider()->Downscale(windowSize);
+    return windowSize;
 }
 
-Size Window::GetAvailableClientSize(bool downscale) const
+SizeReal Window::GetDownscaledSize() const
+{
+    return context->GetScaleProvider()->Downscale(windowSize);
+}
+
+Size Window::GetScaledAvailableClientSize() const
 {
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
@@ -264,16 +270,19 @@ Size Window::GetAvailableClientSize(bool downscale) const
     AssertCriticalWinApiResult(GetWindowRect(windowHandle, &windowRect));
     Size currentWindowSize = Size(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
-    double scaleFactor = double(windowRect.right - windowRect.left) / windowSize.Width;
+    double scaleFactor = double(windowRect.right - windowRect.left) / windowSize.GetWidth();
 
-    int horizontalFrame = roundToInt((currentWindowSize.Width - availablClientSize.Width) * scaleFactor);
-    int verticalFrame = roundToInt((currentWindowSize.Height - availablClientSize.Height) * scaleFactor);
+    int horizontalFrame = roundToInt((currentWindowSize.GetWidth() - availablClientSize.GetWidth()) * scaleFactor);
+    int verticalFrame = roundToInt((currentWindowSize.GetHeight() - availablClientSize.GetHeight()) * scaleFactor);
 
-    Size scaledClientSize = Size(windowSize.Width - horizontalFrame, windowSize.Height - verticalFrame);
+    Size scaledClientSize = Size(windowSize.GetWidth() - horizontalFrame, windowSize.GetHeight() - verticalFrame);
 
-    return downscale
-        ? context->GetScaleProvider()->Downscale(scaledClientSize)
-        : scaledClientSize;
+    return scaledClientSize;
+}
+
+SizeReal Window::GetDownscaledAvailableClientSize() const
+{
+    return context->GetScaleProvider()->Downscale(GetScaledAvailableClientSize());
 }
 
 Size Window::GetContentSize() const
@@ -281,17 +290,27 @@ Size Window::GetContentSize() const
     return contentSize;
 }
 
-Point Window::GetPosition(bool downscale) const
+Point Window::GetScaledPosition() const
 {
-    ScaleProvider* scaleProvider = context->GetScaleProvider();
-    return !downscale ? position : Point(scaleProvider->Downscale(position.X), scaleProvider->Downscale(position.Y));
+    return position;
 }
 
-Rect Window::GetBoundingRect(bool downscale) const
+PointReal Window::GetDownscaledPosition() const
 {
-    Point positon = GetPosition(downscale);
-    Size size = GetSize(downscale);
+    return context->GetScaleProvider()->Downscale(GetScaledPosition());
+}
+
+Rect Window::GetScaledBoundingRect() const
+{
+    Point positon = GetScaledPosition();
+    Size size = GetScaledSize();
     return Rect(positon, size);
+}
+
+RectReal Window::GetDownscaledBoundingRect() const
+{
+    ScaleProvider* scaleProvider = context->GetScaleProvider();
+    return RectReal(scaleProvider->Downscale(GetScaledPosition()), scaleProvider->Downscale(GetScaledSize()));
 }
 
 void Window::MakeVisible()

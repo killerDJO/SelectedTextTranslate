@@ -6,6 +6,7 @@
 #include "Controllers\Enums\ApplicationViews.h"
 #include "View\Content\Main\Dto\ViewDescriptor.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "View\Providers\HotkeyProvider.h"
 
 class MainWindow : public Window
 {

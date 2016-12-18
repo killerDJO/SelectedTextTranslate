@@ -24,7 +24,13 @@ Size HoverButtonWindow::RenderContent(Renderer* renderer)
 
     context->GetDeviceContextProvider()->CopyDeviceContext(sourceDC, deviceContextBuffer->GetDeviceContext(), windowSize);
 
-    AssertCriticalWinApiResult(MoveWindow(windowHandle, descriptor.GetPosition().X, descriptor.GetPosition().Y, windowSize.Width, windowSize.Height, FALSE));
+    AssertCriticalWinApiResult(MoveWindow(
+        windowHandle,
+        descriptor.GetPosition().GetX(),
+        descriptor.GetPosition().GetY(),
+        windowSize.GetWidth(),
+        windowSize.GetHeight(),
+        FALSE));
 
     return windowSize;
 }

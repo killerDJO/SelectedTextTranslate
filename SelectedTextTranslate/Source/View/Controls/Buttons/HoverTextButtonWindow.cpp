@@ -19,10 +19,16 @@ void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HoverTextButtonWindow::SetPosition(Point position)
+void HoverTextButtonWindow::SetPosition(PointReal position)
 {
     AssertWindowNotInitialized();
-    this->position = position;
+    // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
+    this->descriptor = WindowDescriptor::CreateWindowDescriptorDownscaled(
+        context->GetScaleProvider(),
+        position,
+        SizeReal(1, 1),
+        OverflowModes::Stretch,
+        OverflowModes::Stretch);
 }
 
 void HoverTextButtonWindow::SetNormalColor(Colors normalColor)
@@ -91,19 +97,14 @@ wstring HoverTextButtonWindow::GetText() const
     return text;
 }
 
-void HoverTextButtonWindow::Initialize()
-{
-    // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
-    descriptor = WindowDescriptor::CreateWindowDescriptor(position, Size(1, 1), OverflowModes::Stretch, OverflowModes::Stretch);
-    HoverButtonWindow::Initialize();
-}
-
 void HoverTextButtonWindow::RenderStatesDeviceContext()
 {
     Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), GetFont());
 
-    windowSize.Width = max(windowSize.Width, textSize.Width);
-    windowSize.Height = max(windowSize.Height, textSize.Height);
+    windowSize = Size(
+        max(windowSize.GetWidth(), textSize.GetWidth()),
+        max(windowSize.GetHeight(), textSize.GetHeight())
+    );
 
     stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
     stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
@@ -123,8 +124,8 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
     HBRUSH backgroudBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
     renderer->SetBackground(backgroudBrush);
 
-    int fontAscent = renderer->GetFontAscent(GetFont());
-    renderer->PrintText(text.c_str(), GetFont(), color, Point(0, fontAscent));
+    double fontAscent = renderer->GetFontAscent(GetFont());
+    renderer->PrintText(text.c_str(), GetFont(), color, PointReal(0, fontAscent));
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
     context->GetRenderingContext()->ReleaseRenderer(renderer);

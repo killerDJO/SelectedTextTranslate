@@ -28,7 +28,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
 
 Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 {
-    int smallFontAscent = renderer->GetFontAscent(fontSmall);
+    double smallFontAscent = renderer->GetFontAscent(fontSmall);
 
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 
@@ -37,9 +37,9 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
     renderPosition = renderPosition.MoveY(lineHeight);
 
-    int imageSize = smallFontAscent;
+    double imageSize = smallFontAscent;
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
-    audioButton->SetDimensions(renderPosition.MoveY(- imageSize + 2).GetPosition(), Size(imageSize, imageSize));
+    audioButton->SetDimensions(renderPosition.MoveY(- imageSize + 2).GetPosition(), SizeReal(imageSize, imageSize));
     audioButton->SetHoverIconResource(IDR_AUDIO);
     audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
@@ -65,8 +65,8 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
 Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
 {
-    int fontHeight = renderer->GetFontStrokeHeight(fontHeader);
-    int curY = context->GetScaleProvider()->Downscale(windowSize.Height / 2) + fontHeight / 2;
+    double fontHeight = renderer->GetFontStrokeHeight(fontHeader);
+    double curY = context->GetScaleProvider()->Downscale(windowSize.GetHeight() / 2) + fontHeight / 2;
 
     renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, RenderPosition(paddingX, curY));
 
@@ -91,7 +91,7 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
         Colors::Gray,
         renderDescriptor.GetRenderPosition());
 
-    int smallFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(fontSmall);
+    double smallFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(fontSmall);
     HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
     headerActionButton->SetFont(fontSmallUnderscored);
     headerActionButton->SetPosition(orignLineRenderResult.GetRenderPosition().MoveY(-smallFontAscent).GetPosition());
@@ -104,7 +104,7 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
         L")",
         fontSmall,
         Colors::Gray,
-        Point(headerActionButton->GetBoundingRect().GetRight(), orignLineRenderResult.GetBaselineY()));
+        PointReal(headerActionButton->GetDownscaledBoundingRect().GetRight(), orignLineRenderResult.GetBaselineY()));
 }
 
 HeaderWindow::~HeaderWindow()

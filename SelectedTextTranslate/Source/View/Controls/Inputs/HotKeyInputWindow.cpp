@@ -11,7 +11,7 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
     this->font = nullptr;
     this->padding = 3;
     this->borderWidth = 1;
-    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontMetrics(this->defaultFont).tmHeight);
+    this->lineHeight = context->GetScaleProvider()->Downscale(context->GetRenderingContext()->GetFontHeight(this->defaultFont));
     this->hasFocus = false;
     this->isValid = true;
 
@@ -27,10 +27,10 @@ void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HotKeyInputWindow::SetPosition(Point position)
+void HotKeyInputWindow::SetPosition(PointReal position)
 {
     AssertWindowNotInitialized();
-    this->position = position;
+    this->position = context->GetScaleProvider()->Scale(position);
 }
 
 void HotKeyInputWindow::SetFont(HFONT font)
@@ -66,13 +66,13 @@ int HotKeyInputWindow::GetBorderWidth() const
     return borderWidth;
 }
 
-void HotKeyInputWindow::SetLineHeight(int lineHeight)
+void HotKeyInputWindow::SetLineHeight(double lineHeight)
 {
     AssertWindowNotInitialized();
     this->lineHeight = lineHeight;
 }
 
-int HotKeyInputWindow::GetLineHeight() const
+double HotKeyInputWindow::GetLineHeight() const
 {
     return lineHeight;
 }
@@ -105,7 +105,8 @@ bool HotKeyInputWindow::IsValid() const
 
 void HotKeyInputWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(200, lineHeight + padding * 2 + borderWidth * 2));
+    SizeReal hotkeyInputSize = SizeReal(200, lineHeight + padding * 2 + borderWidth * 2);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, context->GetScaleProvider()->Scale(hotkeyInputSize));
 
     // Ensure that the common control DLL is loaded.
     INITCOMMONCONTROLSEX icex;
@@ -141,16 +142,16 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     RenderBorder(renderer);
 
     int textOffset = borderWidth + padding;
-    int fontAscent = renderer->GetFontAscent(GetFont());
+    double fontAscent = renderer->GetFontAscent(GetFont());
 
     if (currentHotkey == 0)
     {
-        currentTextPoistion = Point(textOffset, textOffset);
+        currentTextPoistion = PointReal(textOffset, textOffset);
         renderer->PrintText(
             L"Not assigned",
             GetFont(),
             Colors::Gray,
-            Point(textOffset, fontAscent + textOffset));
+            PointReal(textOffset, fontAscent + textOffset));
     }
     else
     {
@@ -275,9 +276,9 @@ wstring HotKeyInputWindow::GetHotkeyDisplayString() const
 
 void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 {
-    Rect borderRect = Rect(
-        Point(0, 0),
-        GetAvailableClientSize());
+    RectReal borderRect = RectReal(
+        PointReal(0, 0),
+        GetDownscaledAvailableClientSize());
 
     Colors borderColor = Colors::Gray;
     if(!isValid)

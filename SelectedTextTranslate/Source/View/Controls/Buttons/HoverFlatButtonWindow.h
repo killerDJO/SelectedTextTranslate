@@ -7,7 +7,10 @@ private:
     HFONT defaultFont;
     HFONT font;
     wstring text;
-    int padding;
+
+    int paddingX;
+    int paddingY;
+    int borderWidth;
 
     void RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const;
 
@@ -18,8 +21,10 @@ public:
     HoverFlatButtonWindow(WindowContext* context, Window* parentWindow);
     ~HoverFlatButtonWindow();
 
+    void Initialize() override;
+
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetDimensions(Point position, Size size);
+    void SetPosition(PointReal position);
 
     void SetFont(HFONT font);
     HFONT GetFont() const;
@@ -27,8 +32,11 @@ public:
     void SetText(wstring text);
     wstring GetText() const;
 
-    void SetPadding(int padding);
-    int GetPadding() const;
+    void SetPaddingX(int paddingX);
+    int GetPaddingX() const;
 
-    int GetTextBaseline() const;
+    void SetPaddingY(int paddingY);
+    int GetPaddingY() const;
+
+    double GetTextBaseline() const;
 };

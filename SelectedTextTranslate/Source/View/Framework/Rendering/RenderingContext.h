@@ -18,6 +18,7 @@ private:
     HDC emptyDeviceContext;
 
     void DeleteCustomObject(HGDIOBJ gdiObject) const;
+    TEXTMETRIC GetFontMetrics(HFONT font) const;
 
 public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
@@ -33,7 +34,11 @@ public:
     void DeleteCustomPen(HPEN pen) const;
 
     Size GetTextSize(wstring text, HFONT font) const;
-    TEXTMETRIC GetFontMetrics(HFONT font) const;
+
+    int GetFontHeight(HFONT font) const;
+    int GetFontStrokeHeight(HFONT font) const;
+    int GetFontDescent(HFONT font) const;
+    int GetFontAscent(HFONT font) const;
 
     Renderer* GetRenderer();
     void ReleaseRenderer(Renderer* renderer) const;

@@ -1,6 +1,7 @@
 #include "View\Framework\Rendering\Renderer.h"
 #include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "View\Framework\Dto\Point\PointReal.h"
 
 Renderer::Renderer(RenderingContext* renderingContext, ScaleProvider* scaleProvider)
 {
@@ -13,7 +14,7 @@ Renderer::Renderer(RenderingContext* renderingContext, ScaleProvider* scaleProvi
 
 TextRenderResult Renderer::PrintText(wstring text, HFONT font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment)
 {
-    Point position = renderPosition.GetPosition();
+    PointReal position = renderPosition.GetPosition();
     Point scaledPosition = scaleProvider->Scale(position);
 
     // Copy text to prevent preliminary dispose by calling code.
@@ -24,34 +25,36 @@ TextRenderResult Renderer::PrintText(wstring text, HFONT font, Colors color, Ren
         ExceptionHelper::ThrowOnWinapiError(SetTextAlign(deviceContext, TA_BASELINE | horizontalAlignment), true, GDI_ERROR);
         AssertCriticalWinApiResult(SetBkMode(deviceContext, TRANSPARENT));
 
-        AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.X, scaledPosition.Y, copiedText, wcslen(copiedText)));
+        AssertCriticalWinApiResult(TextOut(deviceContext, scaledPosition.GetX(), scaledPosition.GetY(), copiedText, wcslen(copiedText)));
 
         delete copiedText;
     };
     renderActions.push_back(printTextAction);
 
     Size textSize = renderingContext->GetTextSize(text.c_str(), font);
-    int fontAscent = renderingContext->GetFontMetrics(font).tmAscent;
+    int fontAscent = renderingContext->GetFontAscent(font);
 
-    originalSize.Width = max(originalSize.Width, scaledPosition.X + textSize.Width);
-    originalSize.Height = max(originalSize.Height, scaledPosition.Y + textSize.Height - fontAscent);
+    originalSize = Size(
+        max(originalSize.GetWidth(), scaledPosition.GetX() + textSize.GetWidth()),
+        max(originalSize.GetHeight(), scaledPosition.GetY() + textSize.GetHeight() - fontAscent)
+    );
 
-    Size downscaledSize = scaleProvider->Downscale(textSize);
+    SizeReal downscaledSize = scaleProvider->Downscale(textSize);
 
-    int rightX = position.X + downscaledSize.Width;
-    int bottomY = position.Y - scaleProvider->Downscale(fontAscent) + downscaledSize.Height;
+    double rightX = position.GetX() + downscaledSize.GetWidth();
+    double bottomY = position.GetY() - scaleProvider->Downscale(fontAscent) + downscaledSize.GetHeight();
 
-    return TextRenderResult(downscaledSize, rightX, position.Y, bottomY);
+    return TextRenderResult(downscaledSize, rightX, position.GetY(), bottomY);
 }
 
-void Renderer::DrawRect(Rect rect, HBRUSH brush)
+void Renderer::DrawRect(RectReal rect, HBRUSH brush)
 {
     Rect scaledRect = scaleProvider->Scale(rect);
 
     RECT gdiRect;
-    gdiRect.left = scaledRect.X;
+    gdiRect.left = scaledRect.GetX();
     gdiRect.right = scaledRect.GetRight();
-    gdiRect.top = scaledRect.Y;
+    gdiRect.top = scaledRect.GetY();
     gdiRect.bottom = scaledRect.GetBottom();
 
     auto drawRectAction = [=](HDC hdc) -> void {
@@ -59,22 +62,26 @@ void Renderer::DrawRect(Rect rect, HBRUSH brush)
     };
     renderActions.push_back(drawRectAction);
 
-    originalSize.Width = max(originalSize.Width, scaledRect.Width);
-    originalSize.Height = max(originalSize.Height, scaledRect.Height);
+    originalSize = Size(
+        max(originalSize.GetWidth(), scaledRect.GetWidth()),
+        max(originalSize.GetHeight(), scaledRect.GetHeight())
+    );
 }
 
-void Renderer::DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors borderColor)
+void Renderer::DrawBorderedRect(RectReal rect, HBRUSH brush, double borderWidth, Colors borderColor)
 {
     int scaledBorderWidth = scaleProvider->Scale(borderWidth);
     Rect scaledRect = scaleProvider->Scale(rect);
 
     int borderAjustments = scaledBorderWidth / 2;
-    scaledRect.X = scaledRect.X + borderAjustments;
-    scaledRect.Y = scaledRect.Y + borderAjustments;
-    scaledRect.Width = scaledRect.Width - borderAjustments;
-    scaledRect.Height = scaledRect.Height - borderAjustments;
+    scaledRect = Rect(
+        scaledRect.GetX() + borderAjustments,
+        scaledRect.GetY() + borderAjustments,
+        scaledRect.GetWidth() - borderAjustments,
+        scaledRect.GetHeight() - borderAjustments
+    );
 
-    HPEN borderPen = renderingContext->CreateCustomPen(borderColor, borderWidth);
+    HPEN borderPen = renderingContext->CreateCustomPen(borderColor, scaledBorderWidth);
     HBRUSH contentBrush = brush != nullptr
         ? brush
         : (HBRUSH)GetStockObject(HOLLOW_BRUSH);
@@ -83,14 +90,16 @@ void Renderer::DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors
         AssertCriticalWinApiResult(SelectObject(hdc, borderPen));
         AssertCriticalWinApiResult(SelectObject(hdc, contentBrush));
 
-        AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.X, scaledRect.Y, scaledRect.GetRight(), scaledRect.GetBottom()));
+        AssertCriticalWinApiResult(Rectangle(hdc, scaledRect.GetX(), scaledRect.GetY(), scaledRect.GetRight(), scaledRect.GetBottom()));
 
         AssertCriticalWinApiResult(DeleteObject(borderPen));
     };
     renderActions.push_back(drawRectAction);
 
-    originalSize.Width = max(originalSize.Width, scaledRect.Width);
-    originalSize.Height = max(originalSize.Height, scaledRect.Height);
+    originalSize = Size(
+        max(originalSize.GetWidth(), scaledRect.GetWidth()),
+        max(originalSize.GetHeight(), scaledRect.GetHeight())
+    );
 }
 
 void Renderer::SetBackground(HBRUSH backgroundBrush)
@@ -103,31 +112,30 @@ void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) con
     RECT rect;
     rect.top = 0;
     rect.left = 0;
-    rect.bottom = deviceContextSize.Height;
-    rect.right = deviceContextSize.Width;
+    rect.bottom = deviceContextSize.GetHeight();
+    rect.right = deviceContextSize.GetWidth();
 
     AssertCriticalWinApiResult(FillRect(deviceContext, &rect, backgroundBrush));
 }
 
-int Renderer::GetFontAscent(HFONT font) const
+double Renderer::GetFontAscent(HFONT font) const
 {
-    return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmAscent);
+    return scaleProvider->Downscale(renderingContext->GetFontAscent(font));
 }
 
-int Renderer::GetFontDescent(HFONT font) const
+double Renderer::GetFontDescent(HFONT font) const
 {
-    return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmDescent);
+    return scaleProvider->Downscale(renderingContext->GetFontDescent(font));
 }
 
-int Renderer::GetFontStrokeHeight(HFONT font) const
+double Renderer::GetFontStrokeHeight(HFONT font) const
 {
-    TEXTMETRIC textMetrics = renderingContext->GetFontMetrics(font);
-    return scaleProvider->Downscale(textMetrics.tmAscent - textMetrics.tmInternalLeading);
+    return scaleProvider->Downscale(renderingContext->GetFontStrokeHeight(font));
 }
 
-int Renderer::GetFontHeight(HFONT font) const
+double Renderer::GetFontHeight(HFONT font) const
 {
-    return scaleProvider->Downscale(renderingContext->GetFontMetrics(font).tmHeight);
+    return scaleProvider->Downscale(renderingContext->GetFontHeight(font));
 }
 
 Size Renderer::GetScaledSize() const
@@ -135,7 +143,7 @@ Size Renderer::GetScaledSize() const
     return originalSize;
 }
 
-Size Renderer::GetSize() const
+SizeReal Renderer::GetSize() const
 {
     return scaleProvider->Downscale(originalSize);
 }
@@ -155,21 +163,27 @@ void Renderer::Render(DeviceContextBuffer* deviceContextBuffer)
     Render(deviceContextBuffer->GetDeviceContext(), deviceContextBuffer->GetSize());
 }
 
-void Renderer::IncreaseWidth(int widthToAdd)
+void Renderer::IncreaseWidth(double widthToAdd)
 {
-    originalSize.Width += scaleProvider->Scale(widthToAdd);
+    originalSize = Size(
+        originalSize.GetWidth() + scaleProvider->Scale(widthToAdd),
+        originalSize.GetHeight());
 }
 
-void Renderer::IncreaseHeight(int heightToAdd)
+void Renderer::IncreaseHeight(double heightToAdd)
 {
-    originalSize.Height += scaleProvider->Scale(heightToAdd);
+    originalSize = Size(
+        originalSize.GetWidth(),
+        originalSize.GetHeight() + scaleProvider->Scale(heightToAdd));
 }
 
 void Renderer::UpdateRenderedContentSize(Window* window)
 {
-    Rect windowRect = window->GetBoundingRect(false);
-    originalSize.Width = max(originalSize.Width, windowRect.GetRight());
-    originalSize.Height = max(originalSize.Height, windowRect.GetBottom());
+    Rect windowRect = window->GetScaledBoundingRect();
+    originalSize = Size(
+        max(originalSize.GetWidth(), windowRect.GetRight()),
+        max(originalSize.GetHeight(), windowRect.GetBottom())
+    );
 }
 
 Renderer::~Renderer()

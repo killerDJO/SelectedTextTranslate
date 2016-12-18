@@ -20,7 +20,3 @@ RenderPosition RenderDescriptor::GetRenderPosition() const
 {
     return position;
 }
-
-RenderDescriptor::~RenderDescriptor()
-{
-}

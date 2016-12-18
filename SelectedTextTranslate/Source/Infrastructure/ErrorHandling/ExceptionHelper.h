@@ -22,7 +22,7 @@ public:
     static void ThrowOnWinapiError(void* resultValue, bool isFatal, void* invalidValue = nullptr);
     static void ThrowOnWinapiError(DWORD resultValue, bool isFatal, DWORD invalidValue = 0);
 
-    static void ThrowOnGdiPlusError(Status status, bool isFatal = true);
+    static void ThrowOnGdiPlusError(Gdiplus::Status status, bool isFatal = true);
 
     static void SetupStructuredExceptionsTranslation();
 

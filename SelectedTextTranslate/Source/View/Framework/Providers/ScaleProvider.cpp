@@ -18,52 +18,57 @@ void ScaleProvider::ComputeScaleFactor()
 
 int ScaleProvider::Scale(int value) const
 {
+    return Scale((double)value);
+}
+
+int ScaleProvider::Scale(double value) const
+{
     return roundToInt(value * scaleFactor);
 }
 
-Rect ScaleProvider::Scale(Rect rect) const
+Rect ScaleProvider::Scale(RectReal rect) const
 {
-    Rect scaledRect;
-    scaledRect.X = Scale(rect.X);
-    scaledRect.Y = Scale(rect.Y);
-    scaledRect.Width = Scale(rect.Width);
-    scaledRect.Height = Scale(rect.Height);
-    return scaledRect;
+    return Rect(Scale(rect.GetPosition()), Scale(rect.GetSize()));
+}
+
+Size ScaleProvider::Scale(SizeReal size) const
+{
+    return Size(roundToInt(Scale(size.GetWidth())), roundToInt(Scale(size.GetHeight())));
+}
+
+Point ScaleProvider::Scale(PointReal point) const
+{
+    return Point(Scale(point.GetX()), Scale(point.GetY()));
 }
 
 Size ScaleProvider::Scale(Size size) const
 {
-    return Size(Scale(size.Width), Scale(size.Height));
+    return Size(Scale(size.GetWidth()), Scale(size.GetHeight()));
 }
 
 Point ScaleProvider::Scale(Point point) const
 {
-    return Point(Scale(point.X), Scale(point.Y));
+    return Point(Scale(point.GetX()), Scale(point.GetY()));
 }
 
-WindowDescriptor ScaleProvider::Scale(WindowDescriptor windowDescriptor) const
+double ScaleProvider::Downscale(int value) const
 {
-    return WindowDescriptor::CreateWindowDescriptor(
-        Scale(windowDescriptor.GetPosition()),
-        Scale(windowDescriptor.GetWindowSize()),
-        windowDescriptor.GetOverflowX(),
-        windowDescriptor.GetOverflowY(),
-        windowDescriptor.IsAutoScaleEnabled(),
-        windowDescriptor.GetName()
-    );
+    return Downscale((double)value);
 }
 
-int ScaleProvider::Downscale(int value) const
+double ScaleProvider::Downscale(double value) const
 {
-    return roundToInt(value / scaleFactor);
+    return value / scaleFactor;
 }
 
-Size ScaleProvider::Downscale(Size size) const
+SizeReal ScaleProvider::Downscale(Size size) const
 {
-    Size downscaledSize;
-    downscaledSize.Width = Downscale(size.Width);
-    downscaledSize.Height = Downscale(size.Height);
-    return downscaledSize;
+    return SizeReal(Downscale(size.GetWidth()), Downscale(size.GetHeight()));
+}
+
+PointReal ScaleProvider::Downscale(Point point) const
+{
+    return PointReal(Downscale(point.GetX()), Downscale(point.GetY()));
 }
 
 int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const
@@ -73,7 +78,7 @@ int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const
 
 void ScaleProvider::AdjustScaleFactor(double scaleFactorAdjustment)
 {
-    if(!IsScalingAllowed(scaleFactorAdjustment))
+    if (!IsScalingAllowed(scaleFactorAdjustment))
     {
         throw SelectedTextTranslateException(L"Scaling to this size is not allowed");
     }

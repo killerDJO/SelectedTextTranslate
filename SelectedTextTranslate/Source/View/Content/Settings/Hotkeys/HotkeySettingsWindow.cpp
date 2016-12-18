@@ -65,7 +65,7 @@ void HotkeySettingsWindow::RenderSettingsContent(RenderDescriptor renderDescript
 RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(DWORD)> hotkeySetter)
 {
     HFONT font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
-    int normalFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(font);
+    double normalFontAscent = renderDescriptor.GetRenderer()->GetFontAscent(font);
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition();
 
     TextRenderResult textRenderResult = renderDescriptor.GetRenderer()->PrintText(title.c_str(), font, Colors::Black, renderPosition.MoveY(normalFontAscent));
@@ -86,7 +86,7 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);
 
-    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetSize().Height));
+    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetDownscaledSize().GetHeight()));
 }
 
 void HotkeySettingsWindow::ComputeContentState()

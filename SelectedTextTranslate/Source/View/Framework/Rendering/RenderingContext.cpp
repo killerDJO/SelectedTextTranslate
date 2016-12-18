@@ -30,6 +30,27 @@ TEXTMETRIC RenderingContext::GetFontMetrics(HFONT font) const
     return tm;
 }
 
+int RenderingContext::GetFontHeight(HFONT font) const
+{
+    return GetFontMetrics(font).tmHeight;
+}
+
+int RenderingContext::GetFontStrokeHeight(HFONT font) const
+{
+    TEXTMETRIC textmetric = GetFontMetrics(font);
+    return textmetric.tmAscent - textmetric.tmInternalLeading;
+}
+
+int RenderingContext::GetFontDescent(HFONT font) const
+{
+    return GetFontMetrics(font).tmDescent;
+}
+
+int RenderingContext::GetFontAscent(HFONT font) const
+{
+    return GetFontMetrics(font).tmAscent;
+}
+
 Renderer* RenderingContext::GetRenderer()
 {
     return new Renderer(this, scaleProvider);
@@ -113,7 +134,7 @@ void RenderingContext::DeleteCustomBrush(HBRUSH brush) const
 
 HPEN RenderingContext::CreateCustomPen(Colors color, int strokeWidth) const
 {
-    HPEN pen = CreatePen(PS_SOLID, scaleProvider->Scale(strokeWidth), (COLORREF)color);
+    HPEN pen = CreatePen(PS_SOLID, strokeWidth, (COLORREF)color);
     AssertCriticalWinApiResult(pen);
     return pen;
 }

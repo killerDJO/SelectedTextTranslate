@@ -20,11 +20,11 @@ void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void SettingsGroupWindow::SetDimensions(Point position, int width)
+void SettingsGroupWindow::SetDimensions(PointReal position, double width)
 {
     AssertWindowNotInitialized();
-    this->position = position;
-    this->windowSize = Size(width, 0);
+    this->position = context->GetScaleProvider()->Scale(position);
+    this->windowSize = context->GetScaleProvider()->Scale(SizeReal(width, 0));
 }
 
 void SettingsGroupWindow::SetTitle(wstring title)
@@ -65,7 +65,7 @@ void SettingsGroupWindow::UpdateModificationState() const
 
 void SettingsGroupWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateWindowDescriptor(position, Size(windowSize.Width, 0), OverflowModes::Fixed, OverflowModes::Stretch);
+    descriptor = WindowDescriptor::CreateWindowDescriptor(position, windowSize, OverflowModes::Fixed, OverflowModes::Stretch);
     ContentWindow::Initialize();
 }
 
@@ -82,7 +82,7 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
     headerWindow->SetTitle(title);
     headerWindow->SetContentState(contentState);
     headerWindow->SetVisibilityState(visibilityState);
-    headerWindow->SetDimensions(Point(0, 0), GetSize().Width);
+    headerWindow->SetDimensions(PointReal(0, 0), GetDownscaledSize().GetWidth());
     headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
     AddChildWindow(headerWindow);
     headerWindow->Render();
@@ -91,8 +91,8 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 
     if (visibilityState == SettingsGroupVisibilityState::Expanded)
     {
-        RenderSettingsContent(RenderDescriptor(renderer, Point(paddingX * 2, headerWindow->GetBoundingRect().GetBottom())));
-        Rect contentBorderRect = Rect(Point(0, 0), Size(GetSize().Width, renderer->GetSize().Height));
+        RenderSettingsContent(RenderDescriptor(renderer, PointReal(paddingX * 2, headerWindow->GetDownscaledBoundingRect().GetBottom())));
+        RectReal contentBorderRect = RectReal(PointReal(0, 0), SizeReal(GetDownscaledSize().GetWidth(), renderer->GetSize().GetHeight()));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, 1, Colors::Gray);
     }
 

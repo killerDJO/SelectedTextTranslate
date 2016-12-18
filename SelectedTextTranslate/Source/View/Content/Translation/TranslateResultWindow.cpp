@@ -71,13 +71,13 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
 
             int k = entry.GetScore() >= 0.05 ? 0 : (entry.GetScore() >= 0.0025 ? 1 : 2);
             int rateUnit = 8;
-            int strokeHeight = renderer->GetFontStrokeHeight(fontNormal);
+            double strokeHeight = renderer->GetFontStrokeHeight(fontNormal);
 
-            Rect rect;
-            rect.Y = renderPosition.GetY() - strokeHeight + 2;
-            rect.X = paddingX + k * rateUnit;
-            rect.Width = (3 - k) * rateUnit;
-            rect.Height = strokeHeight - 2;
+            RectReal rect = RectReal(
+                paddingX + k * rateUnit,
+                renderPosition.GetY() - strokeHeight + 2,
+                (3 - k) * rateUnit,
+                strokeHeight - 2);
 
             renderer->DrawRect(rect, lightGrayBrush);
         }
@@ -129,7 +129,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         AddChildWindow(expandButton);
 
         renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton);
-        return RenderResult(expandButton->GetBoundingRect());
+        return RenderResult(expandButton->GetDownscaledBoundingRect());
     }
 
     return RenderResult(renderDescriptor.GetRenderPosition());

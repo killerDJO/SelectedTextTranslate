@@ -17,7 +17,7 @@ void ConfirmDialogOverlayWindow::Initialize()
 
 Size ConfirmDialogOverlayWindow::RenderContent(Renderer* renderer)
 {
-    renderer->DrawRect(Rect(Point(0, 0), windowSize), (HBRUSH)GetStockObject(WHITE_BRUSH));
+    renderer->DrawRect(RectReal(PointReal(0, 0), GetDownscaledSize()), (HBRUSH)GetStockObject(WHITE_BRUSH));
     return windowSize;
 }
 

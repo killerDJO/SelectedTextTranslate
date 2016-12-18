@@ -2,6 +2,7 @@
 #include "View\Content\Settings\Base\SettingsGroupWindow.h"
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "View\Framework\ModelHolder.h"
+#include "Services\Settings\Dto\HotkeySettings.h"
 
 class HotkeySettingsWindow : public SettingsGroupWindow, public ModelHolder<HotkeySettings>
 {

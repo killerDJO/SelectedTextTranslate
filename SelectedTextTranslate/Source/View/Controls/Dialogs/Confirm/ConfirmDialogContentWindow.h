@@ -16,7 +16,7 @@ public:
     ~ConfirmDialogContentWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetDimensions(Point position, int width);
+    void SetDimensions(PointReal position, double width);
 
     void SetTitle(wstring title);
     wstring GetTitle() const;

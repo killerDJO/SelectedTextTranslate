@@ -4,8 +4,6 @@
 #include "View\Framework\Providers\ScrollProvider.h"
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
-#include "View\Framework\Rendering\RenderingContext.h"
-#include "View\Providers\HotkeyProvider.h"
 #include "View\Framework\MessageBus.h"
 
 class ScrollProvider;

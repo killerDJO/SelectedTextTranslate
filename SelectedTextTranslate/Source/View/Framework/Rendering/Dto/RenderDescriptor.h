@@ -11,7 +11,6 @@ private:
 public:
     RenderDescriptor(Renderer* renderer, RenderPosition startPosition);
     RenderDescriptor(Renderer* renderer, TextRenderResult textRenderResult);
-    ~RenderDescriptor();
 
     Renderer* GetRenderer() const;
     RenderPosition GetRenderPosition() const;

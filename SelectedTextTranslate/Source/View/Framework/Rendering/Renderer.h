@@ -4,6 +4,8 @@
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Enums\Colors.h"
+#include "View\Framework\Dto\Size\SizeReal.h"
+#include "View\Framework\Dto\Rect\RectReal.h"
 
 class RenderingContext;
 class ScrollProvider;
@@ -28,20 +30,20 @@ public:
     ~Renderer();
 
     TextRenderResult PrintText(const wstring text, HFONT font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment = TA_LEFT);
-    void DrawRect(Rect rect, HBRUSH brush);
-    void DrawBorderedRect(Rect rect, HBRUSH brush, int borderWidth, Colors borderColor);
+    void DrawRect(RectReal rect, HBRUSH brush);
+    void DrawBorderedRect(RectReal rect, HBRUSH brush, double borderWidth, Colors borderColor);
     void SetBackground(HBRUSH backgroundBrush);
 
-    int GetFontAscent(HFONT font) const;
-    int GetFontDescent(HFONT font) const;
-    int GetFontStrokeHeight(HFONT font) const;
-    int GetFontHeight(HFONT font) const;
+    double GetFontAscent(HFONT font) const;
+    double GetFontDescent(HFONT font) const;
+    double GetFontStrokeHeight(HFONT font) const;
+    double GetFontHeight(HFONT font) const;
 
     Size GetScaledSize() const;
-    Size GetSize() const;
+    SizeReal GetSize() const;
 
-    void IncreaseWidth(int widthToAdd);
-    void IncreaseHeight(int heightToAdd);
+    void IncreaseWidth(double widthToAdd);
+    void IncreaseHeight(double heightToAdd);
     void UpdateRenderedContentSize(Window* window);
 
     void Render(HDC deviceContext, Size deviceContextSize);

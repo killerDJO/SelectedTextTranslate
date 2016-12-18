@@ -1,5 +1,6 @@
 #pragma once
 #include "View\Framework\Providers\DeviceContextProvider.h"
+#include "View\Framework\Dto\Size\Size.h"
 
 class DeviceContextBuffer
 {

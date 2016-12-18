@@ -25,12 +25,12 @@ void ConfirmDialogContentWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void ConfirmDialogContentWindow::SetDimensions(Point position, int width)
+void ConfirmDialogContentWindow::SetDimensions(PointReal position, double width)
 {
     AssertWindowNotInitialized();
 
-    this->position = position;
-    this->windowSize = Size(width, 0);
+    this->position = context->GetScaleProvider()->Scale(position);
+    this->windowSize = Size(context->GetScaleProvider()->Scale(width), 0);
 }
 
 void ConfirmDialogContentWindow::SetTitle(wstring title)
@@ -50,7 +50,7 @@ wstring ConfirmDialogContentWindow::GetTitle() const
 
 void ConfirmDialogContentWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.Width, 103));
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(windowSize.GetWidth(), context->GetScaleProvider()->Scale(103)));
     ChildWindow::Initialize();
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
@@ -58,44 +58,43 @@ void ConfirmDialogContentWindow::Initialize()
 Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
-    
-    Size scaledWindowSize = GetSize();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), scaledWindowSize), nullptr, 1, Colors::Gray);
+    SizeReal scaledWindowSize = GetDownscaledSize();
+
+    renderer->DrawBorderedRect(RectReal(PointReal(0, 0), scaledWindowSize), nullptr, 1, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
-    int headerFontAscent = renderer->GetFontAscent(headerFont);
+    double headerFontAscent = renderer->GetFontAscent(headerFont);
     renderer->PrintText(title, headerFont, Colors::Black, renderPosition.MoveY(headerFontAscent));
 
     renderPosition = renderPosition.SetY(lineHeight).SetX(0);
-    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(scaledWindowSize.Width, 1)), grayBrush);
+    renderer->DrawRect(RectReal(renderPosition.GetPosition(), SizeReal(scaledWindowSize.GetWidth(), 1)), grayBrush);
 
-    int fontAscent = renderer->GetFontAscent(fontSmall);
+    double fontAscent = renderer->GetFontAscent(fontSmall);
     renderPosition = renderPosition.SetY(lineHeight + fontAscent + 10).SetX(paddingX);
     renderer->PrintText(L"Do you want to perform this action?", fontSmall, Colors::Black, renderPosition);
 
     renderPosition = renderPosition.SetY(roundToInt(lineHeight * 2.5)).SetX(0);
     renderer->DrawBorderedRect(
-        Rect(Rect(renderPosition.GetPosition(), Size(scaledWindowSize.Width, scaledWindowSize.Height - renderPosition.GetY()))),
+        RectReal(renderPosition.GetPosition(), SizeReal(scaledWindowSize.GetWidth(), scaledWindowSize.GetHeight() - renderPosition.GetY())),
         backgroundBrush,
         1,
         Colors::Gray);
 
-    Size confirmButtonSize = Size(60, 21);
     HoverFlatButtonWindow* confirmButton = new HoverFlatButtonWindow(context, this);
     confirmButton->SetText(L"Confirm");
-    confirmButton->SetDimensions(Point(scaledWindowSize.Width - paddingX - confirmButtonSize.Width, renderPosition.GetY() + paddingX), confirmButtonSize);
+    confirmButton->SetPosition(PointReal(scaledWindowSize.GetWidth() - paddingX - 60, renderPosition.GetY() + paddingX));
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();
     AddChildWindow(confirmButton);
 
-    int cancelButtonFontAscent = renderer->GetFontAscent(fontSmallUnderscored);
-    int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).Width;
+    double cancelButtonFontAscent = renderer->GetFontAscent(fontSmallUnderscored);
+    int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
-    cancelButton->SetPosition(Point(confirmButton->GetPosition().X - 10 - textWidth, confirmButton->GetPosition().Y + confirmButton->GetTextBaseline() - cancelButtonFontAscent));
+    cancelButton->SetPosition(PointReal(confirmButton->GetDownscaledPosition().GetX() - 10 - textWidth, confirmButton->GetDownscaledPosition().GetY() + confirmButton->GetTextBaseline() - cancelButtonFontAscent));
     cancelButton->OnClick.Subscribe(&OnCancel);
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);

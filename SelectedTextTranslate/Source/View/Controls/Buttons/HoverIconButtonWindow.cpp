@@ -19,10 +19,10 @@ void HoverIconButtonWindow::SetDescriptor(WindowDescriptor descriptor)
     throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
 }
 
-void HoverIconButtonWindow::SetDimensions(Point position, Size size)
+void HoverIconButtonWindow::SetDimensions(PointReal position, SizeReal size)
 {
     AssertWindowNotInitialized();
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptorDownscaled(context->GetScaleProvider(), position, size);
 }
 
 void HoverIconButtonWindow::SetNormalIconResource(DWORD normalIconResource)
@@ -78,9 +78,9 @@ void HoverIconButtonWindow::RenderStatesDeviceContext()
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverIconResource);
 }
 
-void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource)
+void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const
 {
-    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, windowSize.Width, windowSize.Height);
+    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, windowSize.GetWidth(), windowSize.GetHeight());
 
     if (iconsCache.count(cacheKey) != 0)
     {
@@ -89,7 +89,7 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
         return;
     }
 
-    Graphics graphics(deviceContext);
+    Gdiplus::Graphics graphics(deviceContext);
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
     
@@ -101,16 +101,16 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
+    Gdiplus::Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
 
-    AssertGdiPlusResult(graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic));
-    AssertGdiPlusResult(graphics.SetSmoothingMode(SmoothingModeHighQuality));
-    AssertGdiPlusResult(graphics.SetPixelOffsetMode(PixelOffsetModeHighQuality));
+    AssertGdiPlusResult(graphics.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic));
+    AssertGdiPlusResult(graphics.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality));
+    AssertGdiPlusResult(graphics.SetPixelOffsetMode(Gdiplus::PixelOffsetModeHighQuality));
 
     BOOL converstionSucceded;
     AssertGdiPlusResult(iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded));
 
-    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, windowSize.Width, windowSize.Height));
+    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, windowSize.GetWidth(), windowSize.GetHeight()));
 
     delete iconMetafile;
 
@@ -119,7 +119,7 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     iconsCache[cacheKey] = cachedDC;
 }
 
-Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) const
+Gdiplus::Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) const
 {
     HRSRC hResource = FindResource(context->GetInstance(), MAKEINTRESOURCE(resourceId), RT_RCDATA);
     AssertCriticalWinApiResult(hResource);
@@ -139,10 +139,10 @@ Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) cons
     CopyMemory(pBuffer, pResourceData, imageSize);
 
     IStream* pStream = nullptr;
-    Metafile* metafile;
+    Gdiplus::Metafile* metafile;
     if (CreateStreamOnHGlobal(globalBuffer, FALSE, &pStream) == S_OK)
     {
-        metafile = new Metafile(pStream);
+        metafile = new Gdiplus::Metafile(pStream);
         pStream->Release();
     }
     else

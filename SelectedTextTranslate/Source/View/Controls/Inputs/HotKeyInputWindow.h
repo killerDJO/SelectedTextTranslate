@@ -11,7 +11,7 @@ private:
 
     int padding;
     int borderWidth;
-    int lineHeight;
+    double lineHeight;
 
     bool hasFocus;
     bool isValid;
@@ -34,7 +34,7 @@ public:
     virtual ~HotKeyInputWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
-    void SetPosition(Point position);
+    void SetPosition(PointReal position);
 
     void SetFont(HFONT font);
     HFONT GetFont() const;
@@ -45,8 +45,8 @@ public:
     void SetBorderWidth(int borderWidth);
     int GetBorderWidth() const;
 
-    void SetLineHeight(int lineHeight);
-    int GetLineHeight() const;
+    void SetLineHeight(double lineHeight);
+    double GetLineHeight() const;
 
     void SetHotkey(DWORD hotkey);
     DWORD GetHotKey() const;
