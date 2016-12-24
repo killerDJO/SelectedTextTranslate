@@ -51,6 +51,12 @@ void Window::Initialize()
     windowState = WindowStates::Initialized;
 }
 
+void Window::InitializeAndRender(bool preserveScrolls)
+{
+    Initialize();
+    Render();
+}
+
 void Window::Render(bool preserveScrolls)
 {
     AssertWindowInitialized();
@@ -204,7 +210,6 @@ void Window::DrawChildWindows()
 
 void Window::AddChildWindow(Window* childWindow)
 {
-    childWindow->Initialize();
     activeChildWindows.push_back(childWindow);
 }
 

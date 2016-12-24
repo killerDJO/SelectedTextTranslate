@@ -96,7 +96,7 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
     expandButton->SetBackgroundBrush(backgroundBrush);
     expandButton->OnClick.Subscribe(&OnSettingsToggled);
-    AddChildWindow(expandButton);
+    expandButton->InitializeAndRender();
 
     return renderer->GetSize();
 }

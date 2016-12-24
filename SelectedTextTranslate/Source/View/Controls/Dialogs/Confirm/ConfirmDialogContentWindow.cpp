@@ -1,9 +1,9 @@
-#include "View\Framework\Windows\ChildWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
+#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "View\Framework\Windows\ChildWindow.h"
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 ConfirmDialogContentWindow::ConfirmDialogContentWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
@@ -67,7 +67,10 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 
     renderer->PrintText(title, headerFont, Colors::Black, renderPosition.MoveY(headerFont->GetAscent()));
 
-    renderPosition = renderPosition.SetY(lineHeight).SetX(0);
+    renderPosition = renderPosition
+        .SetY(lineHeight)
+        .SetX(0);
+
     renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(GetSize().GetWidth(), borderWidth)), grayBrush);
 
     renderPosition = renderPosition
@@ -89,7 +92,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
         renderPosition.GetY() + paddingX));
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();
-    AddChildWindow(confirmButton);
+    confirmButton->InitializeAndRender();
 
     int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
@@ -101,8 +104,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     cancelButton->OnClick.Subscribe(&OnCancel);
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);
-    AddChildWindow(cancelButton);
-    cancelButton->Draw();
+    cancelButton->InitializeAndRender();
 
     return currentWindowSize;
 }

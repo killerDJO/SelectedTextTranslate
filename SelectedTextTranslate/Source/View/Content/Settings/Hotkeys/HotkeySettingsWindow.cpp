@@ -86,7 +86,7 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
         ComputeContentState();
         OnSettingsChanged.Notify(model);
     });
-    AddChildWindow(hotKeyInputWindow);
+    hotKeyInputWindow->InitializeAndRender();
     hotkeyInputWindows.push_back(hotKeyInputWindow);
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);

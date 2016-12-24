@@ -70,15 +70,11 @@ RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDe
 template<typename TModel>
 RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state, TModel model)
 {
-    settingsGroup->SetDimensions(
-        renderDescriptor.GetRenderPosition().GetPosition(),
-        context->GetScaleProvider()->Scale(257));
-
+    settingsGroup->SetDimensions(renderDescriptor.GetRenderPosition().GetPosition(), context->GetScaleProvider()->Scale(257));
     settingsGroup->SetVisibilityState(state);
 
-    AddChildWindow(settingsGroup);
+    settingsGroup->Initialize();
     dynamic_cast<ModelHolder<TModel>*>(settingsGroup)->SetModel(model);
-
     settingsGroup->Render();
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
@@ -117,7 +113,7 @@ RenderResult SettingsWindow::CreateSaveButtonControl(RenderDescriptor renderDesc
     {
         this->OnSaveSettings.Notify(model);
     });
-    AddChildWindow(saveButton);
+    saveButton->InitializeAndRender();
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(saveButton);
 
@@ -134,7 +130,7 @@ HoverTextButtonWindow* SettingsWindow::CreateTextButtonControl(RenderDescriptor 
     button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-button->GetFont()->GetAscent()).GetPosition());
     button->SetText(text);
     button->OnClick.Subscribe(clickCallback);
-    AddChildWindow(button);
+    button->InitializeAndRender();
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(button);
 

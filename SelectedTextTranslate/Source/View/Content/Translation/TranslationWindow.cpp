@@ -30,7 +30,7 @@ void TranslationWindow::Initialize()
     headerWindow->OnPlayText.Subscribe(&OnPlayText);
     headerWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     headerWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
-    AddChildWindow(headerWindow);
+    headerWindow->Initialize();
 
     WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, headerWindow->GetBoundingRect().GetBottom() + separatorHeight),
@@ -40,7 +40,7 @@ void TranslationWindow::Initialize()
     translateResultWindow = new TranslateResultWindow(context, this);
     translateResultWindow->SetDescriptor(translateResultWindowDescriptor);
     translateResultWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
-    AddChildWindow(translateResultWindow);
+    translateResultWindow->Initialize();
 }
 
 void TranslationWindow::SetModel(TranslateResult translateResult)

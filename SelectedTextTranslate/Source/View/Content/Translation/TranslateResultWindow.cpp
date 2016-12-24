@@ -124,8 +124,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         {
             return OnExpandTranslationResult.Notify(categoryIndex);
         });
-
-        AddChildWindow(expandButton);
+        expandButton->InitializeAndRender();
 
         renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton);
         return RenderResult(expandButton->GetBoundingRect());

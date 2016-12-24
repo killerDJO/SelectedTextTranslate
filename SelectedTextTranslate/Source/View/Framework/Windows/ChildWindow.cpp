@@ -12,6 +12,8 @@ ChildWindow::ChildWindow(WindowContext* context, Window* parentWindow)
 
     this->parentWindow = parentWindow;
     this->isLayered = false;
+
+    parentWindow->AddChildWindow(this);
 }
 
 void ChildWindow::Initialize()

@@ -1,7 +1,7 @@
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 ConfirmDialogWindow::ConfirmDialogWindow(WindowContext* context, Window* parentWindow)
     : ChildWindow(context, parentWindow)
@@ -51,23 +51,22 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
 
     ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
     overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize()));
-    AddChildWindow(overlayWindow);
-    overlayWindow->Render();
-
-    dialogContentWindow = new ConfirmDialogContentWindow(context, this);
+    overlayWindow->InitializeAndRender();
 
     int dialogContentWidth = context->GetScaleProvider()->Scale(200);
     int paddingX = roundToInt((GetSize().GetWidth() - dialogContentWidth) / 2);
     int paddingY = context->GetScaleProvider()->Scale(50);
+
+    dialogContentWindow = new ConfirmDialogContentWindow(context, this);
     dialogContentWindow->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
     dialogContentWindow->SetTitle(title);
     dialogContentWindow->OnConfirm.Subscribe(&OnConfirm);
     dialogContentWindow->OnConfirm.Subscribe(bind(&Window::Hide, this));
     dialogContentWindow->OnCancel.Subscribe(&OnCancel);
     dialogContentWindow->OnCancel.Subscribe(bind(&Window::Hide, this));
-    AddChildWindow(dialogContentWindow);
-    dialogContentWindow->Render();
+    dialogContentWindow->InitializeAndRender();
 
+    renderer->UpdateRenderedContentSize(overlayWindow);
     renderer->UpdateRenderedContentSize(dialogContentWindow);
 
     return renderer->GetSize();

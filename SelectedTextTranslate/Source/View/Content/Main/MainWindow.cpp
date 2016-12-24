@@ -71,33 +71,33 @@ void MainWindow::CreateChildWindows()
 
     translationWindow = new TranslationWindow(context, this);
     SetViewWindowDescriptor(translationWindow, ApplicationViews::TranslateResult);
-    AddChildWindow(translationWindow);
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
     translationWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
     translationWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     translationWindow->MakeHidden();
+    translationWindow->Initialize();
     translationWindow->SetModel(translateResult);
 
     dictionaryWindow = new DictionaryWindow(context, this);
     SetViewWindowDescriptor(dictionaryWindow, ApplicationViews::Dictionary);
     dictionaryWindow->OnShowTranslation.Subscribe(&OnShowTranslation);
-    AddChildWindow(dictionaryWindow);
     dictionaryWindow->MakeHidden();
+    dictionaryWindow->Initialize();
     dictionaryWindow->SetModel(dictionaryRecords);
 
     settingsWindow = new SettingsWindow(context, this);
     SetViewWindowDescriptor(settingsWindow, ApplicationViews::Settings);
     settingsWindow->OnSettingsStateChanged.Subscribe(bind(&MainWindow::Render, this, true));
     settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
-    AddChildWindow(settingsWindow);
     settingsWindow->MakeHidden();
+    settingsWindow->Initialize();
     settingsWindow->SetModel(settings);
 
     confirmDialogWindow = new ConfirmDialogWindow(context, this);
     confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetAvailableClientSize()));
-    AddChildWindow(confirmDialogWindow);
     confirmDialogWindow->MakeHidden();
+    confirmDialogWindow->Initialize();
 }
 
 void MainWindow::SetViewWindowDescriptor(Window* viewWindow, ApplicationViews view)

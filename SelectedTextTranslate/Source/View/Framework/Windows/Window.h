@@ -31,7 +31,6 @@ protected:
 
     DWORD GetScrollStyle() const;
 
-    void AddChildWindow(Window* childWindow);
     void DestroyChildWindows();
 
     void ApplyRenderedState(bool preserveScrolls);
@@ -66,9 +65,12 @@ public:
     virtual void Show();
     virtual void Hide();
 
+    void AddChildWindow(Window* childWindow);
+
     void Render(bool preserveScrolls = false);
     void Draw(bool drawChildren = false);
-
     void Initialize() override;
+    void InitializeAndRender(bool preserveScrolls = false);
+
     virtual void Resize();
 };

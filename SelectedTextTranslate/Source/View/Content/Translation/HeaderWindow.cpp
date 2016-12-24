@@ -42,7 +42,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     audioButton->SetHoverIconResource(IDR_AUDIO);
     audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
-    AddChildWindow(audioButton);
+    audioButton->InitializeAndRender();
 
     renderPosition = renderPosition.MoveX(imageSize).MoveX(2, context->GetScaleProvider());
     renderPosition = renderer->PrintText(sentence.GetOrigin(), fontSmall, Colors::Gray, renderPosition);
@@ -94,8 +94,7 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
     headerActionButton->SetPosition(originLineRenderResult.GetRenderPosition().MoveY(-fontSmall->GetAscent()).GetPosition());
     headerActionButton->SetText(actionText);
     headerActionButton->OnClick.Subscribe(actionCallback);
-
-    AddChildWindow(headerActionButton);
+    headerActionButton->InitializeAndRender();
 
     renderDescriptor.GetRenderer()->PrintText(
         L")",

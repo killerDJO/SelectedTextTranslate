@@ -13,9 +13,7 @@ HoverButtonWindow::HoverButtonWindow(WindowContext* context, Window* parentWindo
 void HoverButtonWindow::Initialize()
 {
     ChildWindow::Initialize();
-
     RenderStatesDeviceContexts();
-    Render();
 }
 
 Size HoverButtonWindow::RenderContent(Renderer* renderer)

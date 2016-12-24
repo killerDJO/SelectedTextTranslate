@@ -39,8 +39,7 @@ Size DictionaryWindow::RenderContent(Renderer* renderer)
         {
             return OnShowTranslation.Notify(i);
         });
-
-        AddChildWindow(translateButton);
+        translateButton->InitializeAndRender();
     }
 
     renderer->IncreaseWidth(paddingX);

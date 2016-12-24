@@ -85,8 +85,7 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
     headerWindow->SetVisibilityState(visibilityState);
     headerWindow->SetDimensions(Point(0, 0), GetSize().GetWidth());
     headerWindow->OnSettingsToggled.Subscribe(&OnSettingsToggled);
-    AddChildWindow(headerWindow);
-    headerWindow->Render();
+    headerWindow->InitializeAndRender();
 
     renderer->UpdateRenderedContentSize(headerWindow);
 
