@@ -50,11 +50,6 @@ void ContentWindow::SetPaddingY(int paddingY)
     this->paddingY = paddingY;
 }
 
-Size ContentWindow::RenderContent(Renderer* renderer)
-{
-    return Size(0, 0);
-}
-
 ContentWindow::~ContentWindow()
 {
     delete fontNormal;

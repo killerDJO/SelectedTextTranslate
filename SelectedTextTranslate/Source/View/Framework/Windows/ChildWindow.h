@@ -12,7 +12,6 @@ protected:
 
 public:
     ChildWindow(WindowContext* context, Window* parentWindow);
-    ~ChildWindow() override;
 
     void Initialize() override;
 

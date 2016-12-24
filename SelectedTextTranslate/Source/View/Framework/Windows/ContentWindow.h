@@ -18,8 +18,6 @@ protected:
     Brush* lightGrayBrush;
     Brush* backgroundBrush;
 
-    Size RenderContent(Renderer* renderer) override;
-
 public:
     ContentWindow(WindowContext* context, Window* parentWindow);
     ~ContentWindow() override;

@@ -1,7 +1,7 @@
 #pragma once
-#include "View\Providers\Dto\HotkeyInfo.h"
 #include "Services\Settings\Dto\HotkeySettings.h"
 #include "View\Framework\MessageBus.h"
+#include "View\Providers\Dto\HotkeyInfo.h"
 
 class HotkeyProvider
 {
@@ -21,7 +21,6 @@ private:
 
 public:
     HotkeyProvider(HotkeySettings settings, MessageBus* messageBus);
-    ~HotkeyProvider();
 
     void SetHotkeysSettings(HotkeySettings settings);
 

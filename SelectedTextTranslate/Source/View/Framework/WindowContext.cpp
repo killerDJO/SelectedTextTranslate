@@ -59,7 +59,3 @@ MessageBus* WindowContext::GetMessageBus() const
 {
     return messageBus;
 }
-
-WindowContext::~WindowContext()
-{
-}

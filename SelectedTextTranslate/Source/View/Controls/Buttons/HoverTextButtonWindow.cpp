@@ -100,16 +100,16 @@ void HoverTextButtonWindow::RenderStatesDeviceContext()
 {
     Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), GetFont());
 
-    windowSize = Size(
-        max(windowSize.GetWidth(), textSize.GetWidth()),
-        max(windowSize.GetHeight(), textSize.GetHeight())
+    currentWindowSize = Size(
+        max(currentWindowSize.GetWidth(), textSize.GetWidth()),
+        max(currentWindowSize.GetHeight(), textSize.GetHeight())
     );
 
-    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
-    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
-    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(windowSize);
+    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
+    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
+    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
-    deviceContextBuffer->Resize(windowSize);
+    deviceContextBuffer->Resize(currentWindowSize);
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverColor);

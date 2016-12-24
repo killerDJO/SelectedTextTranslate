@@ -9,7 +9,6 @@ TranslateResultWindow::TranslateResultWindow(WindowContext* context, Window* par
 
 Size TranslateResultWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);

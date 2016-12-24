@@ -1,7 +1,7 @@
 #include "View\Framework\Windows\Window.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 Window::Window(WindowContext* context)
     : NativeWindowHolder(context->GetInstance())
@@ -43,7 +43,7 @@ void Window::Initialize()
 
     deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), descriptor.GetWindowSize());
 
-    windowSize = descriptor.GetWindowSize();
+    currentWindowSize = descriptor.GetWindowSize();
     position = descriptor.GetPosition();
     contentSize = Size(0, 0);
 
@@ -56,21 +56,21 @@ void Window::Render(bool preserveScrolls)
     AssertWindowInitialized();
 
     RenderingContext* renderingContext = context->GetRenderingContext();
-    renderingContext->BeginRender(this);
 
+    renderingContext->BeginRender(this);
     windowState = WindowStates::Rendering;
 
     contentSize = RenderToBuffer();
-    windowSize = descriptor.GetWindowSize();
+    currentWindowSize = descriptor.GetWindowSize();
 
     if (descriptor.GetOverflowX() == OverflowModes::Stretch && contentSize.GetWidth() > descriptor.GetWindowSize().GetWidth())
     {
-        windowSize = Size(contentSize.GetWidth(), windowSize.GetHeight());
+        currentWindowSize = Size(contentSize.GetWidth(), currentWindowSize.GetHeight());
     }
 
     if (descriptor.GetOverflowY() == OverflowModes::Stretch && contentSize.GetHeight() > descriptor.GetWindowSize().GetHeight())
     {
-        windowSize = Size(windowSize.GetWidth(), contentSize.GetHeight());
+        currentWindowSize = Size(currentWindowSize.GetWidth(), contentSize.GetHeight());
     }
 
     windowState = WindowStates::Rendered;
@@ -90,6 +90,7 @@ Size Window::RenderToBuffer()
     Size renderedSize = RenderContent(renderer);
 
     Size deviceContextBufferSize = deviceContextBuffer->GetSize();
+
     int requiredDcWidth = descriptor.GetOverflowX() != OverflowModes::Fixed && renderedSize.GetWidth() > deviceContextBufferSize.GetWidth()
         ? renderedSize.GetWidth()
         : deviceContextBufferSize.GetWidth();
@@ -154,8 +155,8 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
         windowHandle,
         descriptor.GetPosition().GetX() - offset.GetX(),
         descriptor.GetPosition().GetY() - offset.GetY(),
-        windowSize.GetWidth(),
-        windowSize.GetHeight(),
+        currentWindowSize.GetWidth(),
+        currentWindowSize.GetHeight(),
         FALSE));
 
     // Important to initialize scroll only after window has been moved
@@ -188,7 +189,7 @@ void Window::Draw(bool drawChildren)
 
     HDC deviceContext = GetDC(windowHandle);
     AssertCriticalWinApiResult(deviceContext);
-    deviceContextBuffer->Render(deviceContext, windowSize);
+    deviceContextBuffer->Render(deviceContext, currentWindowSize);
     AssertCriticalWinApiResult(ReleaseDC(windowHandle, deviceContext));
 }
 
@@ -248,7 +249,7 @@ DWORD Window::GetScrollStyle() const
 
 Size Window::GetSize() const
 {
-    return windowSize;
+    return currentWindowSize;
 }
 
 Size Window::GetAvailableClientSize() const
@@ -265,12 +266,13 @@ Size Window::GetAvailableClientSize() const
     AssertCriticalWinApiResult(GetWindowRect(windowHandle, &windowRect));
     Size currentWindowSize = Size(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
-    double scaleFactor = double(windowRect.right - windowRect.left) / windowSize.GetWidth();
+    // Important to compute the future window size in case wind has been scaled but changes not yet applied
+    double scaleFactor = double(windowRect.right - windowRect.left) / currentWindowSize.GetWidth();
 
     int horizontalFrame = roundToInt((currentWindowSize.GetWidth() - availablClientSize.GetWidth()) * scaleFactor);
     int verticalFrame = roundToInt((currentWindowSize.GetHeight() - availablClientSize.GetHeight()) * scaleFactor);
 
-    Size scaledClientSize = Size(windowSize.GetWidth() - horizontalFrame, windowSize.GetHeight() - verticalFrame);
+    Size scaledClientSize = Size(currentWindowSize.GetWidth() - horizontalFrame, currentWindowSize.GetHeight() - verticalFrame);
 
     return scaledClientSize;
 }
@@ -385,6 +387,7 @@ void Window::AssertWindowNotInitialized() const
 Window::~Window()
 {
     delete deviceContextBuffer;
+
     DestroyChildWindows(activeChildWindows);
     DestroyChildWindows(destroyBeforeDrawList);
 

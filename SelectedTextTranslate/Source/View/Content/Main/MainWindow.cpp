@@ -171,7 +171,7 @@ void MainWindow::SetCurrentView(ApplicationViews applicationView)
 
     descriptor = viewDescriptors[applicationView].GetWindowDescriptor();
     position = descriptor.GetPosition();
-    windowSize = descriptor.GetWindowSize();
+    currentWindowSize = descriptor.GetWindowSize();
 }
 
 Size MainWindow::RenderContent(Renderer* renderer)
@@ -212,11 +212,11 @@ void MainWindow::Scale(double scaleFactorAdjustment)
 
     descriptor = viewDescriptors[currentView].GetWindowDescriptor();
     position = descriptor.GetPosition();
-    windowSize = descriptor.GetWindowSize();
+    currentWindowSize = descriptor.GetWindowSize();
 
     scaleProvider->AdjustScaleFactor(scaleFactorAdjustment);
 
-    deviceContextBuffer->Resize(windowSize);
+    deviceContextBuffer->Resize(currentWindowSize);
 
     CreateChildWindows();
     Render();
@@ -255,13 +255,13 @@ void MainWindow::Resize()
         return;
     }
 
-    windowSize = Size(newWidth, newHeight);
-    descriptor.SetWindowSize(windowSize);
+    currentWindowSize = Size(newWidth, newHeight);
+    descriptor.SetWindowSize(currentWindowSize);
 
     position = Point(windowRect.left, windowRect.top);
     descriptor.SetPosition(position);
 
-    deviceContextBuffer->Resize(windowSize);
+    deviceContextBuffer->Resize(currentWindowSize);
 
     // Clear background
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();

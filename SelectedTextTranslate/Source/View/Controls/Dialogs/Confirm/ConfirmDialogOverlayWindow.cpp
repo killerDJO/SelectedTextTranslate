@@ -19,7 +19,7 @@ void ConfirmDialogOverlayWindow::Initialize()
 Size ConfirmDialogOverlayWindow::RenderContent(Renderer* renderer)
 {
     renderer->DrawRect(Rect(Point(0, 0), GetSize()), backgroundBrush);
-    return windowSize;
+    return currentWindowSize;
 }
 
 ConfirmDialogOverlayWindow::~ConfirmDialogOverlayWindow()

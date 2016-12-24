@@ -25,7 +25,7 @@ void SettingsGroupWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
     this->position = position;
-    this->windowSize = Size(width, 0);
+    this->currentWindowSize = Size(width, 0);
 }
 
 void SettingsGroupWindow::SetTitle(wstring title)
@@ -66,7 +66,7 @@ void SettingsGroupWindow::UpdateModificationState() const
 
 void SettingsGroupWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateWindowDescriptor(position, windowSize, OverflowModes::Fixed, OverflowModes::Stretch);
+    descriptor = WindowDescriptor::CreateWindowDescriptor(position, currentWindowSize, OverflowModes::Fixed, OverflowModes::Stretch);
     ContentWindow::Initialize();
 }
 

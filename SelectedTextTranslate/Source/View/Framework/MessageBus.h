@@ -5,7 +5,6 @@ class MessageBus
 {
 public:
     MessageBus();
-    ~MessageBus();
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
     void SuspendHotkeys();

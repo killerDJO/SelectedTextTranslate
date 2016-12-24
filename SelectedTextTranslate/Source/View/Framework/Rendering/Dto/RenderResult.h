@@ -1,6 +1,6 @@
 #pragma once
-#include "View\Framework\Rendering\Dto\RenderPosition.h"
 #include "View\Framework\Dto\Positioning\Rect.h"
+#include "View\Framework\Rendering\Dto\RenderPosition.h"
 
 class RenderResult
 {

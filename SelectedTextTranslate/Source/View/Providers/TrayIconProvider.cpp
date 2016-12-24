@@ -1,11 +1,12 @@
 #include "View\Providers\TrayIconProvider.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance)
     : NativeWindowHolder(instance), ErrorHandler(logger)
 {
     this->className = L"STT_TRAY";
+
     this->windowHandle = nullptr;
     this->menu = nullptr;
     this->WM_TASKBARCREATED = 0;
@@ -21,7 +22,6 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvide
     this->OnSuspend = Subscribeable<>();
     this->OnEnable = Subscribeable<>();
 
-    this->menuActionsToSubscribeableMap = map<int, Subscribeable<>*>();
     this->InitializeMenuActionsToSubscribeableMap();
 
     this->isSuspended = false;
@@ -29,6 +29,8 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvide
 
 void TrayIconProvider::InitializeMenuActionsToSubscribeableMap()
 {
+    this->menuActionsToSubscribeableMap = map<int, Subscribeable<>*>();
+
     menuActionsToSubscribeableMap[MenuExitItemId] = &OnExit;
     menuActionsToSubscribeableMap[MenuTranslateItemId] = &OnTranslateSelectedText;
     menuActionsToSubscribeableMap[MenuDictionaryItemId] = &OnShowDictionary;
@@ -40,6 +42,7 @@ void TrayIconProvider::InitializeMenuActionsToSubscribeableMap()
 void TrayIconProvider::Initialize()
 {
     NativeWindowHolder::Initialize();
+
     windowHandle = CreateWindow(className, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, nullptr);
     AssertCriticalWinApiResult(windowHandle);
     SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
@@ -180,7 +183,7 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
             AssertWinApiResult(GetCursorPos(&curPoint));
             SetForegroundWindow(windowHandle);
             UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
-            
+
             if(clicked != 0)
             {
                 menuActionsToSubscribeableMap[clicked]->Notify();

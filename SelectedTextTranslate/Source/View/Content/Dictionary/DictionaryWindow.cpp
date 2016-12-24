@@ -10,7 +10,6 @@ DictionaryWindow::DictionaryWindow(WindowContext* context, Window* parentWindow)
 
 Size DictionaryWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY / 2 + fontNormal->GetAscent());

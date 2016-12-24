@@ -24,7 +24,6 @@ void SettingsWindow::SetModel(Settings model)
 
 Size SettingsWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderContent(renderer);
     DestroyChildWindows();
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);

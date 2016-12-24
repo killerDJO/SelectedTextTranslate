@@ -200,8 +200,8 @@ Size ScrollProvider::AlignWithScrollingGrid(Size size) const
     int scrollCharX = GetScrollChar(ScrollBars::Horizontal);
     int scrollCharY = GetScrollChar(ScrollBars::Vertical);
     return Size(
-        roundToInt(ceil(size.GetWidth() * 1.0 / scrollCharX) * scrollCharX),
-        roundToInt(ceil(size.GetHeight() * 1.0 / scrollCharY) * scrollCharY));
+        roundToInt(ceil((double)size.GetWidth() / scrollCharX) * scrollCharX),
+        roundToInt(ceil((double)size.GetHeight() / scrollCharY) * scrollCharY));
 }
 
 void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const

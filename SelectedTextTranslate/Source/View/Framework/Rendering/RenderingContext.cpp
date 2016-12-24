@@ -1,5 +1,5 @@
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "View\Framework\Rendering\RenderingContext.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 RenderingContext::RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider)
 {
@@ -108,4 +108,9 @@ Pen* RenderingContext::CreateCustomPen(Colors color, int strokeWidth) const
     HPEN pen = CreatePen(PS_SOLID, strokeWidth, (COLORREF)color);
     AssertCriticalWinApiResult(pen);
     return new Pen(pen);
+}
+
+RenderingContext::~RenderingContext()
+{
+    deviceContextProvider->DeleteDeviceContext(emptyDeviceContext);
 }

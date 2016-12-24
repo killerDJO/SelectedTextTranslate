@@ -14,7 +14,6 @@ public:
     HotkeyInfo();
     HotkeyInfo(HWND windowHandle, function<void()> pressedCallback, int hotkeyId, UINT modifiers, UINT virtualCode);
     HotkeyInfo(HWND windowHandle, function<void()> pressedCallback, int hotkeyId, int hotkey);
-    ~HotkeyInfo();
 
     HWND GetWindowHandle() const;
     function<void()> GetPressedCallback() const;

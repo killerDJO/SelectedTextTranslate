@@ -36,19 +36,9 @@ Point ScaleProvider::Scale(Point point) const
     return Point(Scale(point.GetX()), Scale(point.GetY()));
 }
 
-double ScaleProvider::Downscale(int value) const
-{
-    return Downscale((double)value);
-}
-
-double ScaleProvider::Downscale(double value) const
-{
-    return value / scaleFactor;
-}
-
 int ScaleProvider::Rescale(int value, double scaleFactorAdjustment) const
 {
-    return roundToInt(Downscale(value) * (scaleFactor + scaleFactorAdjustment));
+    return roundToInt((value / scaleFactor) * (scaleFactor + scaleFactorAdjustment));
 }
 
 void ScaleProvider::AdjustScaleFactor(double scaleFactorAdjustment)
@@ -65,8 +55,4 @@ bool ScaleProvider::IsScalingAllowed(double scaleFactorAdjustment) const
 {
     double newScaleFactor = scaleFactor + scaleFactorAdjustment;
     return newScaleFactor >= 0.9 && newScaleFactor <= 2;
-}
-
-ScaleProvider::~ScaleProvider()
-{
 }

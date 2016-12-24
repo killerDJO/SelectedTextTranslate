@@ -64,14 +64,14 @@ LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
 
-    // This message should be processed in order to enable scrolling to work.
+    // This message should be processed in order to enable scrolling.
     // Its sent to child windows after ScrollWindow on parent is called.
     case WM_MOVE:
     {
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
         AssertCriticalWinApiResult(GetWindowRect(windowHandle, &rcWindow));
-        AssertCriticalWinApiResult(MoveWindow(windowHandle, pos.x, pos.y, windowSize.GetWidth(), windowSize.GetHeight(), FALSE));
+        AssertCriticalWinApiResult(MoveWindow(windowHandle, pos.x, pos.y, currentWindowSize.GetWidth(), currentWindowSize.GetHeight(), FALSE));
         position = Point(pos.x, pos.y);
 
         return TRUE;
@@ -86,8 +86,4 @@ LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     default:
         return Window::WindowProcedure(message, wParam, lParam);
     }
-}
-
-ChildWindow::~ChildWindow()
-{
 }

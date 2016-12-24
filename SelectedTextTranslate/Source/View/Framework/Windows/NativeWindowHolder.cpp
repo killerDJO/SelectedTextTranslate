@@ -1,6 +1,6 @@
 #include "View\Framework\Windows\NativeWindowHolder.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
 {

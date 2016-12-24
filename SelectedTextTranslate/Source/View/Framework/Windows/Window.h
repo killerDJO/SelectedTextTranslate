@@ -1,15 +1,13 @@
 #pragma once
-#include "View\Framework\WindowContext.h"
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
-#include "View\Framework\Windows\NativeWindowHolder.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\Renderer.h"
+#include "View\Framework\Windows\NativeWindowHolder.h"
+#include "View\Framework\WindowContext.h"
 
 class WindowContext;
 class Renderer;
-class Rect;
-class Size;
 
 class Window : public NativeWindowHolder
 {
@@ -22,7 +20,7 @@ private:
 protected:
     WindowContext* context;
     WindowDescriptor descriptor;
-    Size windowSize;
+    Size currentWindowSize;
     Size contentSize;
     Point position;
     WindowStates windowState;

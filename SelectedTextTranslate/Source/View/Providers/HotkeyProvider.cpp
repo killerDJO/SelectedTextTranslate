@@ -124,7 +124,3 @@ void HotkeyProvider::ProcessHotkey(DWORD hotkeyId)
         }
     }
 }
-
-HotkeyProvider::~HotkeyProvider()
-{
-}

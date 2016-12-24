@@ -1,7 +1,7 @@
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
-#include "View\Framework\Rendering\Dto\TextRenderResult.h"
-#include "View\Framework\Rendering\Dto\RenderResult.h"
 #include "View\Framework\Providers\ScaleProvider.h"
+#include "View\Framework\Rendering\Dto\RenderResult.h"
+#include "View\Framework\Rendering\Dto\TextRenderResult.h"
 
 RenderPosition::RenderPosition(Point initialPosition)
 {

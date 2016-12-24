@@ -21,7 +21,3 @@ void MessageBus::EnableHotkeys()
 {
     OnEnableHotkeys.Notify();
 }
-
-MessageBus::~MessageBus()
-{
-}

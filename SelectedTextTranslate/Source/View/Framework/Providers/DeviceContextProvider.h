@@ -4,9 +4,8 @@
 class DeviceContextProvider
 {
 public:
-    DeviceContextProvider();
-
     HDC CreateDeviceContext(Size deviceContextSize) const;
+    void DeleteDeviceContext(HDC deviceContext) const;
 
     void ResizeDeviceContext(HDC& deviceContext, Size newDeviceContextSize) const;
 

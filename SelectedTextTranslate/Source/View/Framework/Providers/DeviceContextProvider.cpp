@@ -1,10 +1,6 @@
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-DeviceContextProvider::DeviceContextProvider()
-{
-}
-
 HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
 {
     HDC hdc = CreateCompatibleDC(nullptr);
@@ -34,9 +30,14 @@ HDC DeviceContextProvider::CreateDeviceContext(Size deviceContextSize) const
     return hdc;
 }
 
-void DeviceContextProvider::ResizeDeviceContext(HDC &deviceContext, Size newDeviceContextSize) const
+void DeviceContextProvider::DeleteDeviceContext(HDC deviceContext) const
 {
     AssertCriticalWinApiResult(DeleteDC(deviceContext));
+}
+
+void DeviceContextProvider::ResizeDeviceContext(HDC &deviceContext, Size newDeviceContextSize) const
+{
+    DeleteDeviceContext(deviceContext);
     deviceContext = CreateDeviceContext(newDeviceContextSize);
 }
 

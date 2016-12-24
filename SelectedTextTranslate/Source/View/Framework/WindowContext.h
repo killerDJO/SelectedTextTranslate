@@ -1,9 +1,9 @@
 #pragma once
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
 #include "Infrastructure\Logging\Logger.h"
-#include "View\Framework\Providers\ScrollProvider.h"
-#include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
+#include "View\Framework\Providers\ScaleProvider.h"
+#include "View\Framework\Providers\ScrollProvider.h"
 #include "View\Framework\MessageBus.h"
 
 class ScrollProvider;
@@ -31,7 +31,6 @@ public:
         ErrorHandler* errorHandler,
         RenderingContext* renderingContext,
         Logger* logger);
-    ~WindowContext();
 
     HINSTANCE GetInstance() const;
     ScrollProvider* GetScrollProvider() const;

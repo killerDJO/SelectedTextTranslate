@@ -87,7 +87,3 @@ void HotkeyInfo::UpdateHotkey(int hotkey)
     modifiers = HIBYTE(LOWORD(hotkey));
     virtualCode = LOBYTE(LOWORD(hotkey));
 }
-
-HotkeyInfo::~HotkeyInfo()
-{
-}

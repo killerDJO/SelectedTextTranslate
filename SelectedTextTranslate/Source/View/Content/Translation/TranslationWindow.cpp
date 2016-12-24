@@ -52,8 +52,6 @@ void TranslationWindow::SetModel(TranslateResult translateResult)
 
 Size TranslationWindow::RenderContent(Renderer* renderer)
 {
-    ContentWindow::RenderContent(renderer);
-
     headerWindow->Render();
 
     Size contentSize;
@@ -79,7 +77,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
             headerWindow->GetSize().GetHeight() + translateResultWindow->GetSize().GetHeight());
     }
 
-    RenderSeparator(renderer, max(windowSize.GetWidth(), contentSize.GetWidth()));
+    RenderSeparator(renderer, max(currentWindowSize.GetWidth(), contentSize.GetWidth()));
 
     return contentSize;
 }
@@ -89,9 +87,9 @@ void TranslationWindow::Resize()
     Size parentSize = parentWindow->GetSize();
     descriptor.SetWindowSize(parentSize);
 
-    windowSize = Size(
-        max(parentSize.GetWidth(), windowSize.GetWidth()),
-        max(parentSize.GetHeight(), windowSize.GetHeight()));
+    currentWindowSize = Size(
+        max(parentSize.GetWidth(), currentWindowSize.GetWidth()),
+        max(parentSize.GetHeight(), currentWindowSize.GetHeight()));
 
     Size bufferingDeviceContextSize = deviceContextBuffer->GetSize();
     bufferingDeviceContextSize = Size(
@@ -99,16 +97,16 @@ void TranslationWindow::Resize()
         max(parentSize.GetHeight(), bufferingDeviceContextSize.GetHeight()));
     deviceContextBuffer->Resize(bufferingDeviceContextSize);
 
-    AssertCriticalWinApiResult(MoveWindow(windowHandle, position.GetX(), position.GetY(), windowSize.GetWidth(), windowSize.GetHeight(), FALSE));
+    AssertCriticalWinApiResult(MoveWindow(windowHandle, position.GetX(), position.GetY(), currentWindowSize.GetWidth(), currentWindowSize.GetHeight(), FALSE));
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
     if(model.IsEmptyResult())
     {
-        renderer->DrawRect(Rect(0, headerHeight, windowSize.GetWidth(), windowSize.GetHeight() - headerHeight), lightGrayBrush);
+        renderer->DrawRect(Rect(0, headerHeight, currentWindowSize.GetWidth(), currentWindowSize.GetHeight() - headerHeight), lightGrayBrush);
     }
 
-    RenderSeparator(renderer, max(contentSize.GetWidth(), windowSize.GetWidth()));
+    RenderSeparator(renderer, max(contentSize.GetWidth(), currentWindowSize.GetWidth()));
 
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);

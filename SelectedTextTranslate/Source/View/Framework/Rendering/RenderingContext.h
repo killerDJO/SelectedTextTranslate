@@ -1,11 +1,11 @@
 #pragma once
-#include "View\Framework\Windows\Window.h"
 #include "View\Framework\Enums\FontSizes.h"
 #include "View\Framework\Enums\Colors.h"
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Rendering\Objects\Pen.h"
 #include "View\Framework\Rendering\Objects\Font.h"
 #include "View\Framework\Rendering\Objects\Brush.h"
+#include "View\Framework\Windows\Window.h"
 
 class Renderer;
 class Window;
@@ -24,6 +24,7 @@ private:
 
 public:
     RenderingContext(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
+    ~RenderingContext();
 
     Font* CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false, bool isBold = false) const;
     Brush* CreateCustomBrush(Colors color) const;
