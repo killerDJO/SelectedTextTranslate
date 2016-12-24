@@ -13,13 +13,13 @@ Window::Window(WindowContext* context)
 
     this->context = context;
     this->descriptor = WindowDescriptor();
+    this->nativeStateDescriptor = WindowNativeStateDescriptor();
     this->activeChildWindows = vector<Window*>();
     this->destroyBeforeDrawList = vector<Window*>();
 
     this->className = nullptr;
     this->deviceContextBuffer = nullptr;
 
-    this->isVisible = true;
     this->windowState = WindowStates::New;
 }
 
@@ -34,6 +34,7 @@ void Window::SetDescriptor(WindowDescriptor descriptor)
     this->descriptor = descriptor;
 }
 
+
 void Window::Initialize()
 {
     if(descriptor.IsEmpty())
@@ -41,10 +42,11 @@ void Window::Initialize()
         throw SelectedTextTranslateException(L"Descriptor must be set for window");
     }
 
-    deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), descriptor.GetWindowSize());
+    deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), descriptor.GetSize());
 
-    currentWindowSize = descriptor.GetWindowSize();
-    position = descriptor.GetPosition();
+    nativeStateDescriptor.SetSize(descriptor.GetSize());
+    nativeStateDescriptor.SetPosition(descriptor.GetPosition());
+    nativeStateDescriptor.MakeVisible();
     contentSize = Size(0, 0);
 
     NativeWindowHolder::Initialize();
@@ -54,7 +56,7 @@ void Window::Initialize()
 void Window::InitializeAndRender(bool preserveScrolls)
 {
     Initialize();
-    Render();
+    Render(preserveScrolls);
 }
 
 void Window::Render(bool preserveScrolls)
@@ -67,23 +69,23 @@ void Window::Render(bool preserveScrolls)
     windowState = WindowStates::Rendering;
 
     contentSize = RenderToBuffer();
-    currentWindowSize = descriptor.GetWindowSize();
+    nativeStateDescriptor.SetSize(descriptor.GetSize());
 
-    if (descriptor.GetOverflowX() == OverflowModes::Stretch && contentSize.GetWidth() > descriptor.GetWindowSize().GetWidth())
+    if (descriptor.GetOverflowX() == OverflowModes::Stretch && contentSize.GetWidth() > descriptor.GetSize().GetWidth())
     {
-        currentWindowSize = Size(contentSize.GetWidth(), currentWindowSize.GetHeight());
+        nativeStateDescriptor.EnsureWidth(contentSize.GetWidth());
     }
 
-    if (descriptor.GetOverflowY() == OverflowModes::Stretch && contentSize.GetHeight() > descriptor.GetWindowSize().GetHeight())
+    if (descriptor.GetOverflowY() == OverflowModes::Stretch && contentSize.GetHeight() > descriptor.GetSize().GetHeight())
     {
-        currentWindowSize = Size(currentWindowSize.GetWidth(), contentSize.GetHeight());
+        nativeStateDescriptor.EnsureHeight(contentSize.GetHeight());
     }
 
     windowState = WindowStates::Rendered;
 
     if (renderingContext->IsRenderingRoot(this))
     {
-        ApplyRenderedState(preserveScrolls);
+        ApplyNativeState(preserveScrolls);
     }
 
     renderingContext->EndRender(this);
@@ -118,7 +120,7 @@ Size Window::RenderToBuffer()
     return renderedSize;
 }
 
-void Window::ApplyRenderedState(bool preserveScrolls)
+void Window::ApplyNativeState(bool preserveScrolls)
 {
     // Child windows should be destroyed first
     DestroyChildWindows(destroyBeforeDrawList);
@@ -138,7 +140,7 @@ void Window::ApplyRenderedState(bool preserveScrolls)
             childWindow->Hide();
         }
 
-        childWindow->ApplyRenderedState(preserveScrolls);
+        childWindow->ApplyNativeState(preserveScrolls);
     }
 
     Draw(false);
@@ -161,8 +163,8 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
         windowHandle,
         descriptor.GetPosition().GetX() - offset.GetX(),
         descriptor.GetPosition().GetY() - offset.GetY(),
-        currentWindowSize.GetWidth(),
-        currentWindowSize.GetHeight(),
+        nativeStateDescriptor.GetSize().GetWidth(),
+        nativeStateDescriptor.GetSize().GetHeight(),
         FALSE));
 
     // Important to initialize scroll only after window has been moved
@@ -195,7 +197,7 @@ void Window::Draw(bool drawChildren)
 
     HDC deviceContext = GetDC(windowHandle);
     AssertCriticalWinApiResult(deviceContext);
-    deviceContextBuffer->Render(deviceContext, currentWindowSize);
+    deviceContextBuffer->Render(deviceContext, GetSize());
     AssertCriticalWinApiResult(ReleaseDC(windowHandle, deviceContext));
 }
 
@@ -254,10 +256,10 @@ DWORD Window::GetScrollStyle() const
 
 Size Window::GetSize() const
 {
-    return currentWindowSize;
+    return nativeStateDescriptor.GetSize();
 }
 
-Size Window::GetAvailableClientSize() const
+Size Window::GetClientSize() const
 {
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
@@ -289,7 +291,7 @@ Size Window::GetContentSize() const
 
 Point Window::GetPosition() const
 {
-    return position;
+    return nativeStateDescriptor.GetPosition();
 }
 
 Rect Window::GetBoundingRect() const
@@ -301,17 +303,17 @@ Rect Window::GetBoundingRect() const
 
 void Window::MakeVisible()
 {
-    isVisible = true;
+    nativeStateDescriptor.MakeVisible();
 }
 
 void Window::MakeHidden()
 {
-    isVisible = false;
+    nativeStateDescriptor.MakeHidden();
 }
 
 bool Window::IsVisible() const
 {
-    return isVisible;
+    return nativeStateDescriptor.IsVisible();
 }
 
 void Window::Show()

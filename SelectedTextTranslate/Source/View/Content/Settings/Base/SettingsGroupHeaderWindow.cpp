@@ -22,8 +22,7 @@ void SettingsGroupHeaderWindow::SetDescriptor(WindowDescriptor descriptor)
 void SettingsGroupHeaderWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
-    this->position = position;
-    this->currentWindowSize = Size(width, 0);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(width, 0));
 }
 
 void SettingsGroupHeaderWindow::SetTitle(wstring title)
@@ -59,7 +58,7 @@ SettingsGroupVisibilityState SettingsGroupHeaderWindow::GetVisibilityState() con
 void SettingsGroupHeaderWindow::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(currentWindowSize.GetWidth(), headerHeight));
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(descriptor.GetPosition(), Size(descriptor.GetSize().GetWidth(), headerHeight));
     ContentWindow::Initialize();
 }
 

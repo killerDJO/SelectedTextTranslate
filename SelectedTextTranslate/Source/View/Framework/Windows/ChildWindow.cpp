@@ -28,8 +28,8 @@ void ChildWindow::Initialize()
         WS_CHILD | WS_CLIPCHILDREN,
         descriptor.GetPosition().GetX() - offset.GetX(),
         descriptor.GetPosition().GetY() - offset.GetY(),
-        descriptor.GetWindowSize().GetWidth(),
-        descriptor.GetWindowSize().GetHeight(),
+        descriptor.GetSize().GetWidth(),
+        descriptor.GetSize().GetHeight(),
         parentWindow->GetHandle(),
         nullptr,
         context->GetInstance(),
@@ -73,8 +73,8 @@ LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
         AssertCriticalWinApiResult(GetWindowRect(windowHandle, &rcWindow));
-        AssertCriticalWinApiResult(MoveWindow(windowHandle, pos.x, pos.y, currentWindowSize.GetWidth(), currentWindowSize.GetHeight(), FALSE));
-        position = Point(pos.x, pos.y);
+        AssertCriticalWinApiResult(MoveWindow(windowHandle, pos.x, pos.y, nativeStateDescriptor.GetSize().GetWidth(), nativeStateDescriptor.GetSize().GetHeight(), FALSE));
+        nativeStateDescriptor.SetPosition(Point(pos.x, pos.y));
 
         return TRUE;
     }

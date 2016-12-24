@@ -64,7 +64,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
 
 Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
 {
-    int curY = currentWindowSize.GetHeight() / 2 + fontHeader->GetHeight() / 2;
+    int curY = GetSize().GetHeight() / 2 + fontHeader->GetHeight() / 2;
 
     renderer->PrintText(wstring(L"No text data selected"), fontHeader, Colors::Gray, RenderPosition(paddingX, curY));
 

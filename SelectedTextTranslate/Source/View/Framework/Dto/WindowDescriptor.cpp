@@ -43,7 +43,7 @@ Point WindowDescriptor::GetPosition() const
     return position;
 }
 
-Size WindowDescriptor::GetWindowSize() const
+Size WindowDescriptor::GetSize() const
 {
     return windowSize;
 }

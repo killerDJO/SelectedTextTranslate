@@ -31,7 +31,7 @@ void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
 void HotKeyInputWindow::SetPosition(Point position)
 {
     AssertWindowNotInitialized();
-    this->position = position;
+    descriptor = WindowDescriptor::CreateStretchWindowDescriptor(position);
 }
 
 void HotKeyInputWindow::SetFont(Font* font)
@@ -107,7 +107,7 @@ bool HotKeyInputWindow::IsValid() const
 void HotKeyInputWindow::Initialize()
 {
     Size hotkeyInputSize = Size(width, lineHeight + padding * 2 + borderWidth * 2);
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, hotkeyInputSize);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(descriptor.GetPosition(), hotkeyInputSize);
 
     // Ensure that the common control DLL is loaded.
     INITCOMMONCONTROLSEX icex;
@@ -278,7 +278,7 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 {
     Rect borderRect = Rect(
         Point(0, 0),
-        GetAvailableClientSize());
+        GetClientSize());
 
     Colors borderColor = Colors::Gray;
     if(!isValid)

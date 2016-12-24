@@ -18,7 +18,7 @@ void HoverButtonWindow::Initialize()
 
 Size HoverButtonWindow::RenderContent(Renderer* renderer)
 {
-    renderer->DrawDeviceContext(stateToDeviceContextMap[state], currentWindowSize);
+    renderer->DrawDeviceContext(stateToDeviceContextMap[state], GetSize());
     return renderer->GetSize();
 }
 

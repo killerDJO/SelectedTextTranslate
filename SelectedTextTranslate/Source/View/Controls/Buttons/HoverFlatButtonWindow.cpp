@@ -11,6 +11,7 @@ HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* par
     this->paddingY = context->GetScaleProvider()->Scale(5);
     this->borderWidth = context->GetScaleProvider()->Scale(1);
     this->className = L"STT_HOVERFLATBUTTON";
+    this->descriptor = WindowDescriptor();
 }
 
 void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
@@ -21,7 +22,7 @@ void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
 void HoverFlatButtonWindow::SetPosition(Point position)
 {
     AssertWindowNotInitialized();
-    this->position = position;
+    descriptor.SetPosition(position);
 }
 
 void HoverFlatButtonWindow::SetFont(Font* font)
@@ -80,7 +81,7 @@ Size HoverFlatButtonWindow::GetComputedSize() const
 void HoverFlatButtonWindow::Initialize()
 {
     descriptor = WindowDescriptor::CreateWindowDescriptor(
-        position,
+        descriptor.GetPosition(),
         GetComputedSize(),
         OverflowModes::Fixed,
         OverflowModes::Fixed);
@@ -95,10 +96,10 @@ int HoverFlatButtonWindow::GetTextBaseline() const
 
 void HoverFlatButtonWindow::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
-    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
-    stateToDeviceContextMap[ButtonStates::Pressed] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
-    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
+    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Pressed] = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], Colors::Button, Colors::LightGray, Colors::Black);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], Colors::ButtonHovered, Colors::Blue, Colors::Black);

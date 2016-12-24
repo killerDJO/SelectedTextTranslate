@@ -5,7 +5,7 @@
 
 class WindowDescriptor
 {
-protected:
+private:
     Point position;
     Size windowSize;
 
@@ -24,7 +24,7 @@ public:
     static WindowDescriptor CreateStretchWindowDescriptor(Point position);
 
     Point GetPosition() const;
-    Size GetWindowSize() const;
+    Size GetSize() const;
     OverflowModes GetOverflowY() const;
     OverflowModes GetOverflowX() const;
     wstring GetName() const;

@@ -24,8 +24,7 @@ void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
 void SettingsGroupWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
-    this->position = position;
-    this->currentWindowSize = Size(width, 0);
+    descriptor = WindowDescriptor::CreateWindowDescriptor(position, Size(width, 0), OverflowModes::Fixed, OverflowModes::Stretch);
 }
 
 void SettingsGroupWindow::SetTitle(wstring title)
@@ -62,12 +61,6 @@ void SettingsGroupWindow::UpdateModificationState() const
         headerWindow->SetVisibilityState(visibilityState);
         headerWindow->Render();
     }
-}
-
-void SettingsGroupWindow::Initialize()
-{
-    descriptor = WindowDescriptor::CreateWindowDescriptor(position, currentWindowSize, OverflowModes::Fixed, OverflowModes::Stretch);
-    ContentWindow::Initialize();
 }
 
 bool SettingsGroupWindow::IsValid() const

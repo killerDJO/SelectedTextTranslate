@@ -36,8 +36,6 @@ public:
     void SetVisibilityState(SettingsGroupVisibilityState visibilityState);
     SettingsGroupVisibilityState GetVisibilityState() const;
 
-    void Initialize() override;
-
     bool IsValid() const;
     virtual void ComputeContentState() = 0;
 

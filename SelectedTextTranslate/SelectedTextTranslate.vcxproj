@@ -90,6 +90,7 @@
     <ClCompile Include="Source\Providers\SqliteProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\Dto\TextRenderResult.cpp" />
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp" />
+    <ClCompile Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\View\Framework\Rendering\Objects\Brush.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Source\View\Framework\Rendering\Dto\TextRenderResult.h" />
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h" />
     <ClInclude Include="Source\View\Framework\Dto\Positioning\Point.h" />
+    <ClInclude Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

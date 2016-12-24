@@ -1,5 +1,6 @@
 #pragma once
 #include "View\Framework\Dto\WindowDescriptor.h"
+#include "View\Framework\Dto\WindowNativeStateDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\Renderer.h"
@@ -20,11 +21,10 @@ private:
 protected:
     WindowContext* context;
     WindowDescriptor descriptor;
-    Size currentWindowSize;
+    WindowNativeStateDescriptor nativeStateDescriptor;
+
     Size contentSize;
-    Point position;
     WindowStates windowState;
-    bool isVisible;
 
     DeviceContextBuffer* deviceContextBuffer;
     vector<Window*> activeChildWindows;
@@ -33,7 +33,7 @@ protected:
 
     void DestroyChildWindows();
 
-    void ApplyRenderedState(bool preserveScrolls);
+    void ApplyNativeState(bool preserveScrolls);
     void ApplyWindowPosition(bool preserveScrolls);
     Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
@@ -54,7 +54,7 @@ public:
 
     Size GetContentSize() const;
     Size GetSize() const;
-    Size GetAvailableClientSize() const;
+    Size GetClientSize() const;
     Point GetPosition() const;
     Rect GetBoundingRect() const;
 

@@ -22,7 +22,7 @@ void ScrollProvider::InitializeScrollbars(
         return;
     }
 
-    Size clientSize = window->GetAvailableClientSize();
+    Size clientSize = window->GetClientSize();
 
     Size contentSize = window->GetContentSize();
     contentSize = Size(

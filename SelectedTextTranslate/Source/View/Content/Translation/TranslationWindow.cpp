@@ -1,5 +1,4 @@
 #include "View\Content\Translation\TranslationWindow.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TranslationWindow::TranslationWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
@@ -77,7 +76,7 @@ Size TranslationWindow::RenderContent(Renderer* renderer)
             headerWindow->GetSize().GetHeight() + translateResultWindow->GetSize().GetHeight());
     }
 
-    RenderSeparator(renderer, max(currentWindowSize.GetWidth(), contentSize.GetWidth()));
+    RenderSeparator(renderer, max(GetSize().GetWidth(), contentSize.GetWidth()));
 
     return contentSize;
 }
@@ -87,9 +86,7 @@ void TranslationWindow::Resize()
     Size parentSize = parentWindow->GetSize();
     descriptor.SetWindowSize(parentSize);
 
-    currentWindowSize = Size(
-        max(parentSize.GetWidth(), currentWindowSize.GetWidth()),
-        max(parentSize.GetHeight(), currentWindowSize.GetHeight()));
+    nativeStateDescriptor.EnsureSize(parentSize);
 
     Size bufferingDeviceContextSize = deviceContextBuffer->GetSize();
     bufferingDeviceContextSize = Size(
@@ -97,16 +94,16 @@ void TranslationWindow::Resize()
         max(parentSize.GetHeight(), bufferingDeviceContextSize.GetHeight()));
     deviceContextBuffer->Resize(bufferingDeviceContextSize);
 
-    AssertCriticalWinApiResult(MoveWindow(windowHandle, position.GetX(), position.GetY(), currentWindowSize.GetWidth(), currentWindowSize.GetHeight(), FALSE));
+    ApplyNativeState(true);
 
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
     if(model.IsEmptyResult())
     {
-        renderer->DrawRect(Rect(0, headerHeight, currentWindowSize.GetWidth(), currentWindowSize.GetHeight() - headerHeight), lightGrayBrush);
+        renderer->DrawRect(Rect(0, headerHeight, nativeStateDescriptor.GetSize().GetWidth(), nativeStateDescriptor.GetSize().GetHeight() - headerHeight), lightGrayBrush);
     }
 
-    RenderSeparator(renderer, max(contentSize.GetWidth(), currentWindowSize.GetWidth()));
+    RenderSeparator(renderer, max(contentSize.GetWidth(), nativeStateDescriptor.GetSize().GetWidth()));
 
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);

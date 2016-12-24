@@ -31,8 +31,7 @@ void ConfirmDialogContentWindow::SetDimensions(Point position, int width)
 {
     AssertWindowNotInitialized();
 
-    this->position = position;
-    this->currentWindowSize = Size(width, 0);
+    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(width, height));
 }
 
 void ConfirmDialogContentWindow::SetTitle(wstring title)
@@ -52,7 +51,6 @@ wstring ConfirmDialogContentWindow::GetTitle() const
 
 void ConfirmDialogContentWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(currentWindowSize.GetWidth(), height));
     ChildWindow::Initialize();
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
@@ -106,7 +104,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     cancelButton->SetBackgroundColor(Colors::Background);
     cancelButton->InitializeAndRender();
 
-    return currentWindowSize;
+    return nativeStateDescriptor.GetSize();
 }
 
 ConfirmDialogContentWindow::~ConfirmDialogContentWindow()

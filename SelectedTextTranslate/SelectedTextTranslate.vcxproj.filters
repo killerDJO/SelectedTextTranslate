@@ -369,6 +369,9 @@
     <ClCompile Include="Source\View\Framework\Dto\Positioning\Size.cpp">
       <Filter>Source\View\Framework\Dto\Positioning</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -628,6 +631,7 @@
     <ClInclude Include="Source\View\Framework\Dto\Positioning\Size.h">
       <Filter>Source\View\Framework\Dto\Positioning</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
