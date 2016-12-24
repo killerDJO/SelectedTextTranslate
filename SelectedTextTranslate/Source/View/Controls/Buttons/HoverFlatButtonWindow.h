@@ -15,7 +15,7 @@ private:
     void RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const;
 
 protected:
-    void RenderStatesDeviceContext() override;
+    void RenderStatesDeviceContexts() override;
 
 public:
     HoverFlatButtonWindow(WindowContext* context, Window* parentWindow);

@@ -15,7 +15,7 @@ private:
     void RenderStateDeviceContext(HDC deviceContext, Colors color) const;
 
 protected:
-    void RenderStatesDeviceContext() override;
+    void RenderStatesDeviceContexts() override;
 
 public:
     HoverTextButtonWindow(WindowContext* context, Window* parentWindow);

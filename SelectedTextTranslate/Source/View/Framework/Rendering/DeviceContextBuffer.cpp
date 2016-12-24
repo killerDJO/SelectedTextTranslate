@@ -1,5 +1,4 @@
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
-#include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 DeviceContextBuffer::DeviceContextBuffer(DeviceContextProvider* deviceContextProvider, Size deviceContextSize)
 {
@@ -31,5 +30,5 @@ void DeviceContextBuffer::Render(HDC deviceContext, Size sizeToRender) const
 
 DeviceContextBuffer::~DeviceContextBuffer()
 {
-    AssertCriticalWinApiResult(DeleteDC(bufferingDeviceContext));
+    deviceContextProvider->DeleteDeviceContext(bufferingDeviceContext);
 }

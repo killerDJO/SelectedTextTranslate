@@ -4,9 +4,10 @@
 #include "View\Framework\Rendering\Objects\Brush.h"
 #include "View\Framework\Rendering\Objects\Font.h"
 
-Renderer::Renderer(RenderingContext* renderingContext)
+Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider)
 {
     this->renderingContext = renderingContext;
+    this->deviceContextProvider = deviceContextProvider;
     this->renderedSize = Size(0, 0);
     this->defaultBackgroundBrush = renderingContext->CreateCustomBrush(Colors::White);
     this->backgroundBrush = nullptr;
@@ -89,6 +90,16 @@ void Renderer::DrawBorderedRect(Rect outerRect, Brush* brush, int borderWidth, C
     UpdateRenderedContentSize(outerRect);
 }
 
+void Renderer::DrawDeviceContext(HDC deviceContext, Size contextSize)
+{
+    auto drawDeviceContextAction = [=](HDC hdc) -> void {
+        deviceContextProvider->CopyDeviceContext(deviceContext, hdc, contextSize);
+    };
+    renderActions.push_back(drawDeviceContextAction);
+
+    UpdateRenderedContentSize(contextSize);
+}
+
 void Renderer::SetBackground(Brush* backgroundBrush)
 {
     this->backgroundBrush = backgroundBrush;
@@ -156,6 +167,14 @@ void Renderer::UpdateRenderedContentSize(Rect rect)
     renderedSize = Size(
         max(renderedSize.GetWidth(), rect.GetRight()),
         max(renderedSize.GetHeight(), rect.GetBottom())
+    );
+}
+
+void Renderer::UpdateRenderedContentSize(Size size)
+{
+    renderedSize = Size(
+        max(renderedSize.GetWidth(), size.GetWidth()),
+        max(renderedSize.GetHeight(), size.GetHeight())
     );
 }
 

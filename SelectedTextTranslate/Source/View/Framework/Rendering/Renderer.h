@@ -13,6 +13,7 @@ class Renderer
 {
 private:
     RenderingContext* renderingContext;
+    DeviceContextProvider* deviceContextProvider;
 
     Brush* defaultBackgroundBrush;
     Brush* backgroundBrush;
@@ -24,13 +25,13 @@ private:
     void ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const;
 
 public:
-    Renderer(RenderingContext* renderingContext);
+    Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider);
     ~Renderer();
 
     TextRenderResult PrintText(const wstring text, Font* font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment = TA_LEFT);
     void DrawRect(Rect rect, Brush* brush);
     void DrawBorderedRect(Rect outerRect, Brush* brush, int borderWidth, Colors borderColor);
-
+    void DrawDeviceContext(HDC deviceContext, Size contextSize);
 
     void SetBackground(Brush* backgroundBrush);
     const Brush* GetBackgroundBrush() const;
@@ -41,6 +42,7 @@ public:
     void IncreaseHeight(int heightToAdd);
     void UpdateRenderedContentSize(Window* window);
     void UpdateRenderedContentSize(Rect rect);
+    void UpdateRenderedContentSize(Size size);
 
     void Render(HDC deviceContext, Size deviceContextSize);
     void Render(DeviceContextBuffer* deviceContextBuffer);

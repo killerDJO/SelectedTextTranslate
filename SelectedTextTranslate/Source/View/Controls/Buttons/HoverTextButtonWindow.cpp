@@ -96,7 +96,7 @@ wstring HoverTextButtonWindow::GetText() const
     return text;
 }
 
-void HoverTextButtonWindow::RenderStatesDeviceContext()
+void HoverTextButtonWindow::RenderStatesDeviceContexts()
 {
     Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), GetFont());
 

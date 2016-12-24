@@ -68,7 +68,7 @@ void HoverIconButtonWindow::Initialize()
     HoverButtonWindow::Initialize();
 }
 
-void HoverIconButtonWindow::RenderStatesDeviceContext()
+void HoverIconButtonWindow::RenderStatesDeviceContexts()
 {
     stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
     stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
@@ -99,6 +99,7 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     }
 
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
+
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
     Gdiplus::Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
@@ -154,8 +155,4 @@ Gdiplus::Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourc
     GlobalFree(globalBuffer);
 
     return metafile;
-}
-
-HoverIconButtonWindow::~HoverIconButtonWindow()
-{
 }

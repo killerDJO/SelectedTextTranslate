@@ -1,7 +1,7 @@
 #pragma once
-#include "View\Framework\Windows\ChildWindow.h"
 #include "Utilities\Subscribeable.h"
 #include "View\Controls\Buttons\Base\Enums\ButtonStates.h"
+#include "View\Framework\Windows\ChildWindow.h"
 
 class HoverButtonWindow : public ChildWindow
 {
@@ -15,7 +15,7 @@ protected:
 
     Size RenderContent(Renderer* renderer) override;
 
-    virtual void RenderStatesDeviceContext() = 0;
+    virtual void RenderStatesDeviceContexts() = 0;
 
 public:
     HoverButtonWindow(WindowContext* context, Window* parentWindow);

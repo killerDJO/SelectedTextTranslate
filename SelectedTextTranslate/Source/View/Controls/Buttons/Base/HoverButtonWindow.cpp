@@ -14,25 +14,14 @@ void HoverButtonWindow::Initialize()
 {
     ChildWindow::Initialize();
 
-    RenderStatesDeviceContext();
-    RenderContent(nullptr);
+    RenderStatesDeviceContexts();
+    Render();
 }
 
 Size HoverButtonWindow::RenderContent(Renderer* renderer)
 {
-    HDC sourceDC = stateToDeviceContextMap[state];
-
-    context->GetDeviceContextProvider()->CopyDeviceContext(sourceDC, deviceContextBuffer->GetDeviceContext(), currentWindowSize);
-
-    AssertCriticalWinApiResult(MoveWindow(
-        windowHandle,
-        descriptor.GetPosition().GetX(),
-        descriptor.GetPosition().GetY(),
-        currentWindowSize.GetWidth(),
-        currentWindowSize.GetHeight(),
-        FALSE));
-
-    return currentWindowSize;
+    renderer->DrawDeviceContext(stateToDeviceContextMap[state], currentWindowSize);
+    return renderer->GetSize();
 }
 
 LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
@@ -53,8 +42,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         }
 
         state = ButtonStates::Hovered;
-        RenderContent(nullptr);
-        InvalidateRect(windowHandle, nullptr, TRUE);
+        Render();
 
         OnClick.Notify();
 
@@ -69,8 +57,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         }
 
         state = ButtonStates::Pressed;
-        RenderContent(nullptr);
-        InvalidateRect(windowHandle, nullptr, TRUE);
+        Render();
         return TRUE;
     }
 
@@ -87,10 +74,10 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         if (state == ButtonStates::Normal)
         {
             state = ButtonStates::Hovered;
-            RenderContent(nullptr);
-            InvalidateRect(windowHandle, nullptr, TRUE);
-
+            Render();
             SetCursor(LoadCursor(nullptr, IDC_HAND));
+
+            return TRUE;
         }
 
         break;
@@ -104,9 +91,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         if (state != ButtonStates::Normal && state != ButtonStates::Disabled)
         {
             state = ButtonStates::Normal;
-            RenderContent(nullptr);
-            InvalidateRect(windowHandle, nullptr, TRUE);
-
+            Render();
             SetCursor(LoadCursor(nullptr, IDC_ARROW));
 
             return TRUE;
@@ -136,8 +121,7 @@ void HoverButtonWindow::ChangeButtonState(ButtonStates newState)
 
     if (windowState != WindowStates::New)
     {
-        RenderContent(nullptr);
-        Draw();
+        Render();
     }
 }
 
@@ -154,7 +138,7 @@ HoverButtonWindow::~HoverButtonWindow()
         HDC deviceContextToDelete = iterator->second;
         if(deletedDeviceContexts.find(deviceContextToDelete) == deletedDeviceContexts.end())
         {
-            AssertCriticalWinApiResult(DeleteDC(iterator->second));
+            context->GetDeviceContextProvider()->DeleteDeviceContext(iterator->second);
             deletedDeviceContexts.insert(deviceContextToDelete);
         }
     }

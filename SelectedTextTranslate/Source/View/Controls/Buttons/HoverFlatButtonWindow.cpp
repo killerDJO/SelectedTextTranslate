@@ -93,7 +93,7 @@ int HoverFlatButtonWindow::GetTextBaseline() const
     return GetFont()->GetStrokeHeight() + paddingY + borderWidth;
 }
 
-void HoverFlatButtonWindow::RenderStatesDeviceContext()
+void HoverFlatButtonWindow::RenderStatesDeviceContexts()
 {
     stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);
     stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(currentWindowSize);

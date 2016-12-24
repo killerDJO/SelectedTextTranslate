@@ -15,19 +15,20 @@ private:
     static map<tuple<DWORD, int, int>, HDC> iconsCache;
 
 protected:
-    void RenderStatesDeviceContext() override;
+    void RenderStatesDeviceContexts() override;
 
 public:
     HoverIconButtonWindow(WindowContext* context, Window* parentWindow);
-    ~HoverIconButtonWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, Size size);
 
     void SetNormalIconResource(DWORD normalIconResource);
     DWORD GetNormalIconResource() const;
+
     void SetHoverIconResource(DWORD hoverIconResource);
     DWORD GetHoverIconResource() const;
+
     void SetBackgroundBrush(Brush* backgroundBrush);
     Brush* GetBackgroundBrush() const;
 
