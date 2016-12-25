@@ -69,11 +69,6 @@ bool TranslateResult::IsInputCorrected() const
     return trimmedOrigin.compare(trimmedInput) != 0;
 }
 
-void TranslateResult::ToggleCategory(int translateResultCategoryIndex)
-{
-    translateCategories[translateResultCategoryIndex].Toggle();
-}
-
 wstring TranslateResult::SerializeToJson(TranslateResult translateResult)
 {
     json sentenceJson =
@@ -192,8 +187,4 @@ vector<TranslateResultCategory> TranslateResult::ParseTranslateCategories(json r
     }
 
     return categories;
-}
-
-TranslateResult::~TranslateResult()
-{
 }

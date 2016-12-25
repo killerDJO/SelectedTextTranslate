@@ -3,11 +3,6 @@
 TranslationWindow::TranslationWindow(WindowContext* context, Window* parentWindow)
     : ContentWindow(context, parentWindow)
 {
-    this->OnPlayText = Subscribeable<>();
-    this->OnForceTranslation = Subscribeable<>();
-    this->OnTranslateSuggestion = Subscribeable<>();
-    this->OnExpandTranslationResult = Subscribeable<int>();
-
     this->headerHeight = context->GetScaleProvider()->Scale(50);
     this->separatorHeight = context->GetScaleProvider()->Scale(1);
 
@@ -38,7 +33,7 @@ void TranslationWindow::Initialize()
         OverflowModes::Stretch);
     translateResultWindow = new TranslateResultWindow(context, this);
     translateResultWindow->SetDescriptor(translateResultWindowDescriptor);
-    translateResultWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
+    translateResultWindow->OnRequestRender.Subscribe(&OnRequestRender);
     translateResultWindow->Initialize();
 }
 
@@ -114,8 +109,4 @@ void TranslationWindow::Resize()
 void TranslationWindow::RenderSeparator(Renderer* renderer, int width) const
 {
     renderer->DrawRect(Rect(0, headerHeight, width, separatorHeight), lightGrayBrush);
-}
-
-TranslationWindow::~TranslationWindow()
-{
 }

@@ -17,13 +17,6 @@ MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
     this->settingsWindow = nullptr;
     this->confirmDialogWindow = nullptr;
 
-    this->OnPlayText = Subscribeable<>();
-    this->OnForceTranslation = Subscribeable<>();
-    this->OnTranslateSuggestion = Subscribeable<>();
-    this->OnExpandTranslationResult = Subscribeable<int>();
-    this->OnShowTranslation = Subscribeable<int>();
-    this->OnSaveSettings = Subscribeable<Settings>();
-
     this->viewDescriptors = map<ApplicationViews, ViewDescriptor>();
 }
 
@@ -31,10 +24,10 @@ void MainWindow::SetDescriptor(WindowDescriptor descriptor)
 {
     Window::SetDescriptor(descriptor);
 
-    viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, true);
+    viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
     viewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
     viewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(descriptor, true);
-    minSize = Size(0, 0);//descriptor.GetSize();
+    minSize = descriptor.GetSize();
 }
 
 void MainWindow::Initialize()
@@ -73,7 +66,7 @@ void MainWindow::CreateChildWindows()
     SetViewWindowDescriptor(translationWindow, ApplicationViews::TranslateResult);
     translationWindow->OnPlayText.Subscribe(&OnPlayText);
     translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
-    translationWindow->OnExpandTranslationResult.Subscribe(&OnExpandTranslationResult);
+    translationWindow->OnRequestRender.Subscribe(bind(&MainWindow::Render, this, true));
     translationWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     translationWindow->MakeHidden();
     translationWindow->Initialize();

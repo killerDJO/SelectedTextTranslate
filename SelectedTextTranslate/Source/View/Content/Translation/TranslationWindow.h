@@ -20,14 +20,12 @@ protected:
 
 public:
     TranslationWindow(WindowContext* context, Window* parentWindow);
-    ~TranslationWindow() override;
 
     void Initialize() override;
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
     Subscribeable<> OnTranslateSuggestion;
-    Subscribeable<int> OnExpandTranslationResult;
 
     void SetModel(TranslateResult translateResult) override;
 };

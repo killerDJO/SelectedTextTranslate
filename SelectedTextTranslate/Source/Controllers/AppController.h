@@ -40,7 +40,6 @@ public:
     void TranslateSelectedText();
     void ForceTranslateCurrentText();
     void TranslateSuggestion();
-    void ToggleTranslateResultCategory(int translateResultDictionaryIndex);
 
     void PlaySelectedText();
     void PlayCurrentText() const;

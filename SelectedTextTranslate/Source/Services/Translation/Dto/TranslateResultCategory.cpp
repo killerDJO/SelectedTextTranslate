@@ -4,7 +4,6 @@ TranslateResultCategory::TranslateResultCategory(wstring partOfSpeech, wstring b
 {
     this->partOfSpeech = partOfSpeech;
     this->baseForm = baseForm;
-    this->isExtendedList = isExtendedList;
     this->entries = entries;
 }
 
@@ -18,21 +17,7 @@ wstring TranslateResultCategory::GetBaseForm() const
     return baseForm;
 }
 
-bool TranslateResultCategory::IsExtendedList() const
-{
-    return isExtendedList;
-}
-
 vector<TranslateResultCategoryEntry> TranslateResultCategory::GetEntries() const
 {
     return entries;
-}
-
-void TranslateResultCategory::Toggle()
-{
-    isExtendedList ^= true;;
-}
-
-TranslateResultCategory::~TranslateResultCategory()
-{
 }

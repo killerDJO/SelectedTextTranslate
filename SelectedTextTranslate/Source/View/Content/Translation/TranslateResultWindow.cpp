@@ -4,7 +4,24 @@
 TranslateResultWindow::TranslateResultWindow(WindowContext* context, Window* parentWindow)
 : ContentWindow(context, parentWindow)
 {
-    this->OnExpandTranslationResult = Subscribeable<int>();
+    this->translateResultCategoryExpandedMap = map<int, bool>();
+}
+
+void TranslateResultWindow::SetModel(TranslateResult model)
+{
+    ModelHolder::SetModel(model);
+
+    translateResultCategoryExpandedMap.clear();
+
+    if(model.IsEmptyResult())
+    {
+        return;
+    }
+
+    for(size_t i = 0; i < model.GetTranslateCategories().size(); ++i)
+    {
+        translateResultCategoryExpandedMap[i] = false;
+    }
 }
 
 Size TranslateResultWindow::RenderContent(Renderer* renderer)
@@ -26,7 +43,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
         renderPosition = renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, renderPosition.MoveX(1));
 
         vector<TranslateResultCategoryEntry> showedEntries(0);
-        if (category.IsExtendedList())
+        if (translateResultCategoryExpandedMap[i])
         {
             showedEntries = categoryEntries;
         }
@@ -101,10 +118,10 @@ RenderResult TranslateResultWindow::CreateExpandButton(
 {
     DWORD hiddenCount = category.GetEntries().size() - showedCount;
 
-    if (category.IsExtendedList() || hiddenCount > 0) {
+    if (translateResultCategoryExpandedMap[categoryIndex] || hiddenCount > 0) {
         wstring text;
 
-        if (!category.IsExtendedList()) {
+        if (!translateResultCategoryExpandedMap[categoryIndex]) {
             if (hiddenCount == 1) {
                 text = L"show " + to_wstring(hiddenCount) + L" more result";
             }
@@ -120,9 +137,10 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
         expandButton->SetFont(fontSmallUnderscored);
         expandButton->SetText(text);
-        expandButton->OnClick.Subscribe([categoryIndex, this]() -> void
+        expandButton->OnClick.Subscribe([categoryIndex, this]()
         {
-            return OnExpandTranslationResult.Notify(categoryIndex);
+            translateResultCategoryExpandedMap[categoryIndex] ^= true;
+            OnRequestRender.Notify();
         });
         expandButton->InitializeAndRender();
 
@@ -131,8 +149,4 @@ RenderResult TranslateResultWindow::CreateExpandButton(
     }
 
     return RenderResult(renderDescriptor.GetRenderPosition());
-}
-
-TranslateResultWindow::~TranslateResultWindow()
-{
 }
