@@ -89,7 +89,7 @@ void SettingsWindow::CreateControls(RenderDescriptor renderDescriptor)
         bind(&SettingsWindow::UpdateSettings, this, globalModel));
 
     wstring resetButtonText = L"Reset";
-    int resetButtonTextWidth = context->GetRenderingContext()->GetTextSize(resetButtonText, fontSmallUnderscored).GetWidth();
+    int resetButtonTextWidth = context->GetRenderingProvider()->GetTextSize(resetButtonText, fontSmallUnderscored).GetWidth();
     int resetButtonPositionX = hotkeySettingsWindow->GetBoundingRect().GetRight() - resetButtonTextWidth;
 
     resetButton = CreateTextButtonControl(RenderDescriptor(renderDescriptor.GetRenderer(), Point(resetButtonPositionX, renderPosition.GetY())), resetButtonText, [this]() -> void

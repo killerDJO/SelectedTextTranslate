@@ -4,7 +4,7 @@
 HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
-    this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
     this->text = wstring();
     this->paddingX = context->GetScaleProvider()->Scale(10);
@@ -71,7 +71,7 @@ int HoverFlatButtonWindow::GetPaddingY() const
 
 Size HoverFlatButtonWindow::GetComputedSize() const
 {
-    Size textSize = context->GetRenderingContext()->GetTextSize(text, GetFont());
+    Size textSize = context->GetRenderingProvider()->GetTextSize(text, GetFont());
 
     return Size(
         textSize.GetWidth() + paddingX * 2,
@@ -111,7 +111,7 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    Brush* backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
+    Brush* backgroundBrush = context->GetRenderingProvider()->CreateCustomBrush(backgroundColor);
 
     renderer->DrawBorderedRect(
         Rect(Point(0, 0), GetSize()),

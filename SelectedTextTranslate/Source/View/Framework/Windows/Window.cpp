@@ -34,7 +34,6 @@ void Window::SetDescriptor(WindowDescriptor descriptor)
     this->descriptor = descriptor;
 }
 
-
 void Window::Initialize()
 {
     if(descriptor.IsEmpty())

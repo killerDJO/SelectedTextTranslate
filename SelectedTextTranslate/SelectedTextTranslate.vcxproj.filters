@@ -372,6 +372,9 @@
     <ClCompile Include="Source\View\Content\Settings\Base\Dto\SettingsState.cpp">
       <Filter>Source\View\Content\Settings\Base\Dto</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp">
+      <Filter>Source\View\Framework\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -633,6 +636,9 @@
     </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsState.h">
       <Filter>Source\View\Content\Settings\Base\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h">
+      <Filter>Source\View\Framework\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

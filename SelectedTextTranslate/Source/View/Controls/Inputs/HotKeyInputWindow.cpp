@@ -7,7 +7,7 @@ HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindo
 {
     this->className = HOTKEY_CLASS;
     this->currentHotkey = 0;
-    this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
+    this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Medium);
     this->font = nullptr;
     this->padding = context->GetScaleProvider()->Scale(3);
     this->borderWidth = context->GetScaleProvider()->Scale(1);

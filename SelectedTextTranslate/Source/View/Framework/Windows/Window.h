@@ -3,6 +3,7 @@
 #include "View\Framework\Dto\WindowNativeStateDescriptor.h"
 #include "View\Framework\Enums\WindowStates.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
+#include "View\Framework\Rendering\RenderingContext.h"
 #include "View\Framework\Rendering\Renderer.h"
 #include "View\Framework\Windows\NativeWindowHolder.h"
 #include "View\Framework\WindowContext.h"

@@ -5,7 +5,7 @@ HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* paren
     : SettingsGroupWindow(context, parentWindow)
 {
     this->title = L"Hotkeys";
-    this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
+    this->font = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Medium);
     this->controlsMargin = context->GetScaleProvider()->Scale(7);
 }
 

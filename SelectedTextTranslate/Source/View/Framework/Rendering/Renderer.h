@@ -4,7 +4,8 @@
 #include "View\Framework\Enums\Colors.h"
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
-#include "View\Framework\Rendering\RenderingContext.h"
+#include "View\Framework\Rendering\RenderingProvider.h"
+#include "View\Framework\Windows\Window.h"
 
 class RenderingContext;
 class Window;
@@ -12,7 +13,7 @@ class Window;
 class Renderer
 {
 private:
-    RenderingContext* renderingContext;
+    RenderingProvider* renderingProvider;
     DeviceContextProvider* deviceContextProvider;
 
     Brush* defaultBackgroundBrush;
@@ -25,7 +26,7 @@ private:
     void ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const;
 
 public:
-    Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider);
+    Renderer(RenderingProvider* renderingProvider, DeviceContextProvider* deviceContextProvider);
     ~Renderer();
 
     TextRenderResult PrintText(const wstring text, Font* font, Colors color, RenderPosition renderPosition, DWORD horizontalAlignment = TA_LEFT);

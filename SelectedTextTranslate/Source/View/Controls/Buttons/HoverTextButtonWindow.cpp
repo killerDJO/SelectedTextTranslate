@@ -4,7 +4,7 @@
 HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
-    this->defaultFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal);
+    this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
     this->normalColor = Colors::Gray;
     this->hoverColor = Colors::Black;
@@ -98,7 +98,7 @@ wstring HoverTextButtonWindow::GetText() const
 
 void HoverTextButtonWindow::RenderStatesDeviceContexts()
 {
-    Size textSize = context->GetRenderingContext()->GetTextSize(text.c_str(), GetFont());
+    Size textSize = context->GetRenderingProvider()->GetTextSize(text.c_str(), GetFont());
 
     nativeStateDescriptor.EnsureSize(textSize);
 
@@ -117,7 +117,7 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
-    Brush* backgroundBrush = context->GetRenderingContext()->CreateCustomBrush(backgroundColor);
+    Brush* backgroundBrush = context->GetRenderingProvider()->CreateCustomBrush(backgroundColor);
     renderer->SetBackground(backgroundBrush);
 
     renderer->PrintText(text.c_str(), GetFont(), color, Point(0, GetFont()->GetAscent()));

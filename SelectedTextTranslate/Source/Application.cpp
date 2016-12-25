@@ -8,6 +8,7 @@
 #include "Services\Settings\SettingsProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\Providers\ScrollProvider.h"
+#include "View\Framework\Rendering\RenderingContext.h"
 #include "View\Content\Main\MainWindow.h"
 
 Application::Application()
@@ -72,8 +73,9 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     ScaleProvider scaleProvider = ScaleProvider();
     DeviceContextProvider deviceContextProvider = DeviceContextProvider();
     ScrollProvider scrollProvider = ScrollProvider();
-    
-    RenderingContext renderingContext = RenderingContext(&scaleProvider, &deviceContextProvider);
+
+    RenderingProvider renderingProvider = RenderingProvider(&scaleProvider, &deviceContextProvider);
+    RenderingContext renderingContext = RenderingContext(&renderingProvider, &deviceContextProvider);
 
     WindowContext windowContext = WindowContext(
         hInstance,
@@ -83,6 +85,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         &messageBus,
         &trayIconProvider,
         &renderingContext,
+        &renderingProvider,
         logger);
 
     MainWindow mainWindow = MainWindow(&windowContext, &hotkeyProvider);

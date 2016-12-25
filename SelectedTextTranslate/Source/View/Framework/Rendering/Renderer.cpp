@@ -4,12 +4,12 @@
 #include "View\Framework\Rendering\Objects\Brush.h"
 #include "View\Framework\Rendering\Objects\Font.h"
 
-Renderer::Renderer(RenderingContext* renderingContext, DeviceContextProvider* deviceContextProvider)
+Renderer::Renderer(RenderingProvider* renderingProvider, DeviceContextProvider* deviceContextProvider)
 {
-    this->renderingContext = renderingContext;
+    this->renderingProvider = renderingProvider;
     this->deviceContextProvider = deviceContextProvider;
     this->renderedSize = Size(0, 0);
-    this->defaultBackgroundBrush = renderingContext->CreateCustomBrush(Colors::White);
+    this->defaultBackgroundBrush = renderingProvider->CreateCustomBrush(Colors::White);
     this->backgroundBrush = nullptr;
     this->renderActions = vector<function<void(HDC)>>();
 }
@@ -33,7 +33,7 @@ TextRenderResult Renderer::PrintText(wstring text, Font* font, Colors color, Ren
     };
     renderActions.push_back(printTextAction);
 
-    Size textSize = renderingContext->GetTextSize(text.c_str(), font);
+    Size textSize = renderingProvider->GetTextSize(text.c_str(), font);
 
     int rightX = position.GetX() + textSize.GetWidth();
     int bottomY = position.GetY() - font->GetAscent() + textSize.GetHeight();
@@ -72,7 +72,7 @@ void Renderer::DrawBorderedRect(Rect outerRect, Brush* brush, int borderWidth, C
         outerRect.GetHeight() - borderAjustments
     );
 
-    Pen* borderPen = renderingContext->CreateCustomPen(borderColor, borderWidth);
+    Pen* borderPen = renderingProvider->CreateCustomPen(borderColor, borderWidth);
     HBRUSH contentBrush = brush != nullptr
         ? brush->GetHandle()
         : (HBRUSH)GetStockObject(HOLLOW_BRUSH);

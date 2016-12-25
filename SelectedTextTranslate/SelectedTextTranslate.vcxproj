@@ -30,6 +30,7 @@
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Base\Dto\SettingsState.cpp" />
+    <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp" />
     <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsState.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h" />
+    <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h" />
     <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h" />
     <ClInclude Include="Source\View\Framework\ModelHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />

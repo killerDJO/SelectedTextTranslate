@@ -16,7 +16,7 @@ ConfirmDialogContentWindow::ConfirmDialogContentWindow(WindowContext* context, W
     this->borderWidth = context->GetScaleProvider()->Scale(1);
     this->height = context->GetScaleProvider()->Scale(103);
 
-    this->headerFont = context->GetRenderingContext()->CreateCustomFont(FontSizes::Normal, false, false, true);
+    this->headerFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal, false, false, true);
 
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
@@ -92,7 +92,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     confirmButton->EnableLayeredMode();
     confirmButton->InitializeAndRender();
 
-    int textWidth = context->GetRenderingContext()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
+    int textWidth = context->GetRenderingProvider()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);

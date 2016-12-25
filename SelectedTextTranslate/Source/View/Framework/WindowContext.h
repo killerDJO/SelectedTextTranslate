@@ -1,6 +1,7 @@
 #pragma once
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
 #include "Infrastructure\Logging\Logger.h"
+#include "View\Framework\Rendering\RenderingProvider.h"
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\Providers\ScaleProvider.h"
 #include "View\Framework\Providers\ScrollProvider.h"
@@ -19,6 +20,7 @@ class WindowContext
     MessageBus* messageBus;
     ErrorHandler* errorHandler;
     RenderingContext* renderingContext;
+    RenderingProvider* renderingProvider;
     Logger* logger;
 
 public:
@@ -30,6 +32,7 @@ public:
         MessageBus* messageBus,
         ErrorHandler* errorHandler,
         RenderingContext* renderingContext,
+        RenderingProvider* renderingProvider,
         Logger* logger);
 
     HINSTANCE GetInstance() const;
@@ -38,6 +41,7 @@ public:
     DeviceContextProvider* GetDeviceContextProvider() const;
     ErrorHandler* GetErrorHandler() const;
     RenderingContext* GetRenderingContext() const;
+    RenderingProvider* GetRenderingProvider() const;
     Logger* GetLogger() const;
     MessageBus* GetMessageBus() const;
 };
