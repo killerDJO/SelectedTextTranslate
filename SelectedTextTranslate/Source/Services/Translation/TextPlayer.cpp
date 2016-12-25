@@ -85,7 +85,3 @@ string TextPlayer::GetAudioFilePath(string extension) const
     buffer[pathLength] = 0;
     return string(buffer) + string(AUDIO_FILE_NAME) + extension;
 }
-
-TextPlayer::~TextPlayer()
-{
-}

@@ -56,7 +56,3 @@ wstring TextExtractor::GetSelectedText() const
 
     return result;
 }
-
-TextExtractor::~TextExtractor()
-{
-}

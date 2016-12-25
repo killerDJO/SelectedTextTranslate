@@ -20,7 +20,6 @@ private:
 public:
     Settings(HotkeySettings hotkeySettings);
     Settings();
-    ~Settings();
 
     HotkeySettings GetHotkeySettings() const;
     void SetHotkeySettings(HotkeySettings hotkeySettings);

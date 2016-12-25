@@ -11,7 +11,6 @@ private:
 
 public:
     Application();
-    ~Application();
 
     int Run(HINSTANCE hInstance) const;
 };

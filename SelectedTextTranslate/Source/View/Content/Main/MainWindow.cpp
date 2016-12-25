@@ -1,7 +1,7 @@
+#include "View\Content\Main\MainWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
-#include "View\Content\Main\MainWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 
 MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
@@ -169,7 +169,7 @@ void MainWindow::SetCurrentView(ApplicationViews applicationView)
 
 Size MainWindow::RenderContent(Renderer* renderer)
 {
-    if(currentView == ApplicationViews::None)
+    if (currentView == ApplicationViews::None)
     {
         throw SelectedTextTranslateFatalException(L"View must set before rendering.");
     }
@@ -191,7 +191,7 @@ void MainWindow::Scale(double scaleFactorAdjustment)
 {
     ScaleProvider* scaleProvider = context->GetScaleProvider();
 
-    if(!scaleProvider->IsScalingAllowed(scaleFactorAdjustment))
+    if (!scaleProvider->IsScalingAllowed(scaleFactorAdjustment))
     {
         return;
     }
@@ -360,8 +360,10 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     case WM_HOTKEY:
+    {
         hotkeyProvider->ProcessHotkey(wParam);
         return Window::WindowProcedure(message, wParam, lParam);
+    }
 
     case WM_ACTIVATE:
     {

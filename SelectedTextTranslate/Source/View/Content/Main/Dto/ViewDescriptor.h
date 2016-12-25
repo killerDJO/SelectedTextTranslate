@@ -10,7 +10,6 @@ private:
 public:
     ViewDescriptor();
     ViewDescriptor(WindowDescriptor windowDescriptor, bool isResizeable);
-    ~ViewDescriptor();
 
     WindowDescriptor GetWindowDescriptor() const;
     void SetWindowDescriptor(WindowDescriptor windowDescriptor);

@@ -17,7 +17,6 @@ private:
 
 public:
     TranslatePageParser(Logger* logger, RequestProvider* requestProvider);
-    ~TranslatePageParser();
 
     long long GetTkk1();
     long long GetTkk2();

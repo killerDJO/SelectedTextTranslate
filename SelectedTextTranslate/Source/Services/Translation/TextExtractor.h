@@ -4,7 +4,6 @@ class TextExtractor
 {
 public:
     TextExtractor();
-    ~TextExtractor();
 
     wstring GetSelectedText() const;
 };

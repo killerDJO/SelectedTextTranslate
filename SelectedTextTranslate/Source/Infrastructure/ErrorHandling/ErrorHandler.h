@@ -9,7 +9,6 @@ private:
 
 public:
     ErrorHandler(Logger* logger);
-    virtual ~ErrorHandler();
 
     Subscribeable<> OnErrorShow;
 

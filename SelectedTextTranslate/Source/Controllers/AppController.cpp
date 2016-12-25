@@ -126,7 +126,3 @@ void AppController::Exit() const
 {
     PostQuitMessage(0);
 }
-
-AppController::~AppController()
-{
-}

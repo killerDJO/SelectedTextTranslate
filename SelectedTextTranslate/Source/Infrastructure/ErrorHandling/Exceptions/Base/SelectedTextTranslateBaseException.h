@@ -7,7 +7,6 @@ private:
 
 public:
     SelectedTextTranslateBaseException(wstring message);
-    virtual ~SelectedTextTranslateBaseException();
 
     wstring GetFullErrorMessage() const;
     wstring GetDisplayErrorMessage() const;

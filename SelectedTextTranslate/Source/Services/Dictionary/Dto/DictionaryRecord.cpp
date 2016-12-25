@@ -56,7 +56,3 @@ bool DictionaryRecord::IsActive() const
 {
     return isActive;
 }
-
-DictionaryRecord::~DictionaryRecord()
-{
-}

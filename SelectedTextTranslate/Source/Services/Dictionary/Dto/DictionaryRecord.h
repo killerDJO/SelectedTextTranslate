@@ -14,7 +14,6 @@ private:
 public:
     DictionaryRecord(wstring word, bool isForcedTranslation, int count, wstring json, time_t createdDate, time_t updatedDate, bool isActive);
     DictionaryRecord();
-    ~DictionaryRecord();
 
     wstring GetWord() const;
     bool IsForcedTranslation() const;

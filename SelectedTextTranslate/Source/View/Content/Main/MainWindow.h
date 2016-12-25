@@ -1,12 +1,12 @@
 #pragma once
+#include "Controllers\Enums\ApplicationViews.h"
 #include "View\Framework\Windows\Window.h"
+#include "View\Providers\HotkeyProvider.h"
+#include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "View\Content\Main\Dto\ViewDescriptor.h"
 #include "View\Content\Dictionary\DictionaryWindow.h"
 #include "View\Content\Translation\TranslationWindow.h"
 #include "View\Content\Settings\SettingsWindow.h"
-#include "Controllers\Enums\ApplicationViews.h"
-#include "View\Content\Main\Dto\ViewDescriptor.h"
-#include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
-#include "View\Providers\HotkeyProvider.h"
 
 class MainWindow : public Window
 {

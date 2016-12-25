@@ -13,7 +13,6 @@ protected:
 
 public:
     StackProvider();
-    ~StackProvider();
 
     vector<wstring> GetCallStack();
 };

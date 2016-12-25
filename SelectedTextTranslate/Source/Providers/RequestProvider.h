@@ -8,7 +8,6 @@ private:
 
 public:
     RequestProvider(Logger* logger);
-    ~RequestProvider();
 
     wstring GetStringResponse(wstring url);
     vector<unsigned char> GetResponse(wstring url);

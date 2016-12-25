@@ -28,7 +28,3 @@ double TranslateResultCategoryEntry::GetScore() const
 {
     return score;
 }
-
-TranslateResultCategoryEntry::~TranslateResultCategoryEntry()
-{
-}

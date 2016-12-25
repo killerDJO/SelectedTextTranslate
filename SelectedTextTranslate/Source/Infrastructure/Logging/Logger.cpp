@@ -1,6 +1,6 @@
 #include "Infrastructure\Logging\Logger.h"
-#include "Utilities\StringUtilities.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Utilities\StringUtilities.h"
 #include <chrono>
 #include <iomanip>
 
@@ -134,8 +134,4 @@ wstring Logger::GetCurrentDateTime() const
     wstring dateTime = wstring(buffer) + L"." + ss.str();
 
     return dateTime;
-}
-
-Logger::~Logger()
-{
 }

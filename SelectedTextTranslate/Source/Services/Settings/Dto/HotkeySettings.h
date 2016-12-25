@@ -11,7 +11,6 @@ private:
 public:
     HotkeySettings(DWORD translateHotkey, DWORD playTextHotkey, DWORD zoomInHotkey, DWORD zoomOutHotkey);
     HotkeySettings();
-    ~HotkeySettings();
 
     DWORD GetTranslateHotkey() const;
     void SetTranslateHotkey(DWORD translateHotkey);

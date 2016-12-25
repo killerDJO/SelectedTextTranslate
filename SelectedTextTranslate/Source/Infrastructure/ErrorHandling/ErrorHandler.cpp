@@ -11,7 +11,3 @@ void ErrorHandler::HandleFatalException()
 {
     ExceptionHelper::TerminateOnException(logger);
 }
-
-ErrorHandler::~ErrorHandler()
-{
-}

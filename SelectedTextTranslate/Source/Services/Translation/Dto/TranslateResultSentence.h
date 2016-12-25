@@ -11,7 +11,6 @@ private:
 public:
     TranslateResultSentence(wstring translation, wstring origin, wstring input, wstring suggestion);
     TranslateResultSentence();
-    ~TranslateResultSentence();
 
     wstring GetTranslation() const;
     wstring GetOrigin() const;

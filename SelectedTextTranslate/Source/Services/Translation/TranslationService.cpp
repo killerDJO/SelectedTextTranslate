@@ -255,7 +255,3 @@ vector<TranslateResultCategory> TranslationService::ParseTranslateCategories(jso
 
     return categories;
 }
-
-TranslationService::~TranslationService()
-{
-}

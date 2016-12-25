@@ -66,7 +66,3 @@ Settings SettingsProvider::CreateDefaultSettings() const
     UpdateSettings(defaultSettings);
     return defaultSettings;
 }
-
-SettingsProvider::~SettingsProvider()
-{
-}

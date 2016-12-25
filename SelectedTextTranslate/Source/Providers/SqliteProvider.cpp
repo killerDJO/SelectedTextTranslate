@@ -125,7 +125,3 @@ void SqliteProvider::ExecuteReader(sqlite3_stmt* statement, function<void(map<ws
         throw SelectedTextTranslateException(message);
     }
 }
-
-SqliteProvider::~SqliteProvider()
-{
-}

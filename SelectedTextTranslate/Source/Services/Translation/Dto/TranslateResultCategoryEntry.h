@@ -10,7 +10,6 @@ private:
 public:
     TranslateResultCategoryEntry(wstring word, vector<wstring> reverseTranslations, double score);
     TranslateResultCategoryEntry();
-    ~TranslateResultCategoryEntry();
 
     wstring GetWord() const;
     vector<wstring> GetReverseTranslations() const;

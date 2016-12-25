@@ -137,7 +137,3 @@ WindowDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvid
 
     return descriptor;
 }
-
-Application::~Application()
-{
-}

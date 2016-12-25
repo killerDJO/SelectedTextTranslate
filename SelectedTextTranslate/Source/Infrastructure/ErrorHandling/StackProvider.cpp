@@ -77,7 +77,3 @@ wstring StackProvider::GetShortFileName(wstring fileName) const
 
     return result;
 }
-
-StackProvider::~StackProvider()
-{
-}

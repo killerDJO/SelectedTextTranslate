@@ -75,7 +75,3 @@ bool Settings::EqualTo(Settings settings) const
 {
     return settings.GetHotkeySettings().EqualTo(GetHotkeySettings());
 }
-
-Settings::~Settings()
-{
-}

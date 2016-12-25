@@ -25,7 +25,3 @@ bool ViewDescriptor::IsResizeable() const
 {
     return isResizeable;
 }
-
-ViewDescriptor::~ViewDescriptor()
-{
-}

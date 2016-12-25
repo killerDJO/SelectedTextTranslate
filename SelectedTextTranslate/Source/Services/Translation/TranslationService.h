@@ -27,7 +27,6 @@ private:
 
 public:
     TranslationService(Logger* logger, RequestProvider* requestProvider, TranslatePageParser* translatePageParser, DictionaryService* dictionary);
-    ~TranslationService();
 
     TranslateResult TranslateSentence(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const;
     wstring GetHash(wstring sentence) const;

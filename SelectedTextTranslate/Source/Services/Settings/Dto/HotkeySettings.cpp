@@ -63,7 +63,3 @@ bool HotkeySettings::EqualTo(HotkeySettings settings) const
         && settings.GetZoomInHotkey() == GetZoomInHotkey()
         && settings.GetZoomOutHotkey() == GetZoomOutHotkey();
 }
-
-HotkeySettings::~HotkeySettings()
-{
-}

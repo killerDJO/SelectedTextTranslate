@@ -35,7 +35,3 @@ wstring TranslateResultSentence::GetSuggestion() const
 {
     return suggestion;
 }
-
-TranslateResultSentence::~TranslateResultSentence()
-{
-}

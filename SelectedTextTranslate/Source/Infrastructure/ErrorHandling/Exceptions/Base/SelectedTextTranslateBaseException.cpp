@@ -23,7 +23,3 @@ wstring SelectedTextTranslateBaseException::GetDisplayErrorMessage() const
 {
     return StringUtilities::GetUtf16String(what());
 }
-
-SelectedTextTranslateBaseException::~SelectedTextTranslateBaseException()
-{
-}

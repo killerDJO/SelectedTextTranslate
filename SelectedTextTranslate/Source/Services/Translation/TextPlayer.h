@@ -23,7 +23,6 @@ private:
 
 public:
     TextPlayer(Logger* logger, TranslationService* translator, RequestProvider* requestProvider, ErrorHandler* errorHandler);
-    ~TextPlayer();
 
     void PlayText(wstring text);
 };

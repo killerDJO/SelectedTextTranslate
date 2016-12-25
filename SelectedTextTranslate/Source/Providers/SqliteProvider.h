@@ -6,7 +6,6 @@ private:
 
 public:
     SqliteProvider();
-    ~SqliteProvider();
 
     sqlite3* OpenDatabase(wstring databaseName) const;
     sqlite3_stmt* CreateStatement(sqlite3* database, const char* sqlQuery) const;

@@ -96,7 +96,3 @@ string TranslatePageParser::SearchScriptTag(GumboNode* node) const
 
     return "";
 }
-
-TranslatePageParser::~TranslatePageParser()
-{
-}

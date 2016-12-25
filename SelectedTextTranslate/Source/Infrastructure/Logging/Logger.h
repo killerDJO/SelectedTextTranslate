@@ -23,7 +23,6 @@ private:
 
 public:
     Logger();
-    ~Logger();
 
     void Log(LogLevels logLevel, wstring record);
     void LogFormatted(LogLevels logLevel, wstring format, ...);

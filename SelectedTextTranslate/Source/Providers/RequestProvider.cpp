@@ -69,7 +69,3 @@ wstring RequestProvider::EscapeText(wstring text) const
     wstring encodedString = uri::encode_data_string(text);
     return encodedString;
 }
-
-RequestProvider::~RequestProvider()
-{
-}
