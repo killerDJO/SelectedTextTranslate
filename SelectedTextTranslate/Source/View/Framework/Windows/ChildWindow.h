@@ -16,4 +16,6 @@ public:
     void Initialize() override;
 
     void EnableLayeredMode();
+
+    Subscribeable<> OnRequestRender;
 };

@@ -8,7 +8,6 @@ private:
 
 public:
     SettingsState();
-    ~SettingsState();
 
     SettingsGroupVisibilityState GetHotkeySettingsGroupVisibilityState() const;
     void SetHotkeySettingsGroupVisibilityState(SettingsGroupVisibilityState hotkeySettingsGroupState);

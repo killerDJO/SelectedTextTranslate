@@ -1,12 +1,12 @@
 #pragma once
-#include "View\Framework\Windows\ContentWindow.h"
-#include "View\Content\Settings\Base\SettingsGroupWindow.h"
 #include "Services\Settings\Dto\Settings.h"
-#include "View\Controls\Buttons\HoverFlatButtonWindow.h"
+#include "View\Framework\Windows\ContentWindow.h"
 #include "View\Framework\ModelHolder.h"
-#include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
-#include "View\Content\Settings\Dto\SettingsState.h"
+#include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
+#include "View\Content\Settings\Base\Dto\SettingsState.h"
+#include "View\Content\Settings\Base\SettingsGroupWindow.h"
+#include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
 
 class SettingsWindow : public ContentWindow, public ModelHolder<Settings>
 {
@@ -22,8 +22,7 @@ private:
 
     RenderResult CreateSettingsGroups(RenderDescriptor renderDescriptor);
     RenderResult CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor);
-    template<typename TModel>
-    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state, TModel model);
+    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state);
 
     void CreateControls(RenderDescriptor renderDescriptor);
     RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
@@ -38,10 +37,8 @@ protected:
 
 public:
     SettingsWindow(WindowContext* context, Window* parentWindow);
-    ~SettingsWindow() override;
 
     void SetModel(Settings model) override;
 
-    Subscribeable<> OnSettingsStateChanged;
     Subscribeable<Settings> OnSaveSettings;
 };

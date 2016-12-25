@@ -36,9 +36,6 @@ Size SettingsWindow::RenderContent(Renderer* renderer)
 
     SetButtonsState();
 
-    renderer->IncreaseWidth(paddingX);
-    renderer->IncreaseHeight(paddingY);
-
     return renderer->GetSize();
 }
 
@@ -50,31 +47,30 @@ RenderResult SettingsWindow::CreateSettingsGroups(RenderDescriptor renderDescrip
 RenderResult SettingsWindow::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
     hotkeySettingsWindow = new HotkeySettingsWindow(context, this);
-    RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsWindow, settingsState.GetHotkeySettingsGroupVisibilityState(), model.GetHotkeySettings());
-
-    hotkeySettingsWindow->OnSettingsChanged.Subscribe([this](HotkeySettings settings)
-    {
-        model.SetHotkeySettings(settings);
-        SetButtonsState();
-    });
+    RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsWindow, settingsState.GetHotkeySettingsGroupVisibilityState());
 
     hotkeySettingsWindow->OnSettingsToggled.Subscribe([this]()
     {
         settingsState.SetHotkeySettingsGroupVisibilityState(ToggleSettingsGroupState(settingsState.GetHotkeySettingsGroupVisibilityState()));
-        OnSettingsStateChanged.Notify();
+        this->OnRequestRender.Notify();
     });
 
     return RenderResult(renderPosition);
 }
 
-template<typename TModel>
-RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state, TModel model)
+RenderResult SettingsWindow::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupWindow* settingsGroup, SettingsGroupVisibilityState state)
 {
     settingsGroup->SetDimensions(renderDescriptor.GetRenderPosition().GetPosition(), context->GetScaleProvider()->Scale(257));
     settingsGroup->SetVisibilityState(state);
 
+    settingsGroup->OnSettingsChanged.Subscribe([this](Settings settings)
+    {
+        model = settings;
+        SetButtonsState();
+    });
+
     settingsGroup->Initialize();
-    dynamic_cast<ModelHolder<TModel>*>(settingsGroup)->SetModel(model);
+    settingsGroup->SetSettings(model, globalModel);
     settingsGroup->Render();
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
@@ -140,7 +136,7 @@ HoverTextButtonWindow* SettingsWindow::CreateTextButtonControl(RenderDescriptor 
 void SettingsWindow::UpdateSettings(Settings settings)
 {
     model = settings;
-    hotkeySettingsWindow->SetModel(model.GetHotkeySettings());
+    hotkeySettingsWindow->SetSettings(model, globalModel);
     hotkeySettingsWindow->Render(false);
     SetButtonsState();
 }
@@ -184,8 +180,4 @@ SettingsGroupVisibilityState SettingsWindow::ToggleSettingsGroupState(SettingsGr
     return settingsGroupState == SettingsGroupVisibilityState::Expanded
         ? SettingsGroupVisibilityState::Collapsed
         : SettingsGroupVisibilityState::Expanded;
-}
-
-SettingsWindow::~SettingsWindow()
-{
 }

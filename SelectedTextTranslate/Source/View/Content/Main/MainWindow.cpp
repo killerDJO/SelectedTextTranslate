@@ -31,10 +31,10 @@ void MainWindow::SetDescriptor(WindowDescriptor descriptor)
 {
     Window::SetDescriptor(descriptor);
 
-    viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
+    viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, true);
     viewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
     viewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(descriptor, true);
-    minSize = descriptor.GetSize();
+    minSize = Size(0, 0);//descriptor.GetSize();
 }
 
 void MainWindow::Initialize()
@@ -88,7 +88,7 @@ void MainWindow::CreateChildWindows()
 
     settingsWindow = new SettingsWindow(context, this);
     SetViewWindowDescriptor(settingsWindow, ApplicationViews::Settings);
-    settingsWindow->OnSettingsStateChanged.Subscribe(bind(&MainWindow::Render, this, true));
+    settingsWindow->OnRequestRender.Subscribe(bind(&MainWindow::Render, this, true));
     settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
     settingsWindow->MakeHidden();
     settingsWindow->Initialize();
@@ -404,8 +404,4 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     return 0;
-}
-
-MainWindow::~MainWindow()
-{
 }

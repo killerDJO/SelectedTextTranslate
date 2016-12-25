@@ -62,11 +62,6 @@ void SettingsGroupHeaderWindow::Initialize()
     ContentWindow::Initialize();
 }
 
-void SettingsGroupHeaderWindow::SpecifyWindowClass(WNDCLASSEX* windowClass)
-{
-    windowClass->hCursor = LoadCursor(nullptr, IDC_HAND);
-}
-
 Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
     DestroyChildWindows();
@@ -89,7 +84,7 @@ Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 
     HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
     expandButton->SetDimensions(
-        Point(GetSize().GetWidth() - iconSize - paddingX, renderPosition.GetY() - iconSize + context->GetScaleProvider()->Scale(2)),
+        Point(GetSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, context->GetScaleProvider()).GetY()),
         Size(iconSize, iconSize));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);
@@ -109,8 +104,4 @@ LRESULT SettingsGroupHeaderWindow::WindowProcedure(UINT message, WPARAM wParam, 
     }
 
     return ContentWindow::WindowProcedure(message, wParam, lParam);
-}
-
-SettingsGroupHeaderWindow::~SettingsGroupHeaderWindow()
-{
 }

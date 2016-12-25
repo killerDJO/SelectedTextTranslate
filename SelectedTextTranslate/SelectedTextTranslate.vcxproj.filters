@@ -112,9 +112,6 @@
     <Filter Include="Source\View\Content\Settings\Base">
       <UniqueIdentifier>{ee30c734-2883-4024-9906-2ede6bdf5441}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Settings\Dto">
-      <UniqueIdentifier>{64e0d8ec-d732-4366-a074-369699311013}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\View\Content\Settings\Hotkeys">
       <UniqueIdentifier>{8c8a0a75-e940-4f3d-bcd7-73eb2e0ff3b1}</UniqueIdentifier>
     </Filter>
@@ -150,6 +147,9 @@
     </Filter>
     <Filter Include="Source\View\Framework\Dto\Positioning">
       <UniqueIdentifier>{29c3bb8c-c1e8-4606-bd33-6a4742e02671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Content\Settings\Base\Dto">
+      <UniqueIdentifier>{64e0d8ec-d732-4366-a074-369699311013}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -291,9 +291,6 @@
     <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.cpp">
       <Filter>Source\View\Content\Settings\Hotkeys</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Dto\SettingsState.cpp">
-      <Filter>Source\View\Content\Settings\Dto</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp">
       <Filter>Source\View\Content\Settings\Base</Filter>
     </ClCompile>
@@ -370,7 +367,10 @@
       <Filter>Source\View\Framework\Dto\Positioning</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source\View\Framework\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Base\Dto\SettingsState.cpp">
+      <Filter>Source\View\Content\Settings\Base\Dto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,9 +544,6 @@
     <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.h">
       <Filter>Source\View\Content\Settings\Hotkeys</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Dto\SettingsState.h">
-      <Filter>Source\View\Content\Settings\Dto</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h">
       <Filter>Source\View\Content\Settings\Base</Filter>
     </ClInclude>
@@ -631,7 +628,12 @@
     <ClInclude Include="Source\View\Framework\Dto\Positioning\Size.h">
       <Filter>Source\View\Framework\Dto\Positioning</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.h" />
+    <ClInclude Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.h">
+      <Filter>Source\View\Framework\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsState.h">
+      <Filter>Source\View\Content\Settings\Base\Dto</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

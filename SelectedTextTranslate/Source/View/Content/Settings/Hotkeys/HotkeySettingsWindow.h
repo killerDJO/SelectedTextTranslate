@@ -1,19 +1,18 @@
 #pragma once
-#include "View\Content\Settings\Base\SettingsGroupWindow.h"
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
-#include "View\Framework\ModelHolder.h"
-#include "Services\Settings\Dto\HotkeySettings.h"
+#include "View\Content\Settings\Base\SettingsGroupWindow.h"
 
-class HotkeySettingsWindow : public SettingsGroupWindow, public ModelHolder<HotkeySettings>
+class HotkeySettingsWindow : public SettingsGroupWindow
 {
 private:
+    int controlsMargin;
+
     Font* font;
-    HotkeySettings globalModel;
     vector<HotKeyInputWindow*> hotkeyInputWindows;
 
-    RenderResult RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(DWORD)> hotkeySetter);
+    RenderResult RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(HotkeySettings*, DWORD)> hotkeySetter);
 
-    void ValidateHotkeyInputs();
+    void SetHotkeyInputsValiationState();
     bool IsModelValid() const;
 
 protected:
@@ -24,7 +23,4 @@ public:
     ~HotkeySettingsWindow() override;
 
     void ComputeContentState() override;
-    void SetModel(HotkeySettings model) override;
-
-    Subscribeable<HotkeySettings> OnSettingsChanged;
 };

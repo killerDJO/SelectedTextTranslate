@@ -47,7 +47,6 @@ protected:
 
 public:
     MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider);
-    ~MainWindow();
 
     void Initialize() override;
 

@@ -14,12 +14,10 @@ private:
 
 protected:
     Size RenderContent(Renderer* renderer) override;
-    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
     SettingsGroupHeaderWindow(WindowContext* context, Window* parentWindow);
-    ~SettingsGroupHeaderWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);

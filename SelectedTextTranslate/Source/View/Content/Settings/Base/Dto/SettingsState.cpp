@@ -1,4 +1,4 @@
-#include "View\Content\Settings\Dto\SettingsState.h"
+#include "View\Content\Settings\Base\Dto\SettingsState.h"
 
 SettingsState::SettingsState()
 {
@@ -13,8 +13,4 @@ SettingsGroupVisibilityState SettingsState::GetHotkeySettingsGroupVisibilityStat
 void SettingsState::SetHotkeySettingsGroupVisibilityState(SettingsGroupVisibilityState hotkeySettingsGroupVisibilityState)
 {
     this->hotkeySettingsGroupVisibilityState = hotkeySettingsGroupVisibilityState;
-}
-
-SettingsState::~SettingsState()
-{
 }

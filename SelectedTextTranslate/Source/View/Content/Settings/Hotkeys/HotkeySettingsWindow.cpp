@@ -5,14 +5,8 @@ HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* paren
     : SettingsGroupWindow(context, parentWindow)
 {
     this->title = L"Hotkeys";
-    this->OnSettingsChanged = Subscribeable<HotkeySettings>();
     this->font = context->GetRenderingContext()->CreateCustomFont(FontSizes::Medium);
-}
-
-void HotkeySettingsWindow::SetModel(HotkeySettings model)
-{
-    ModelHolder<HotkeySettings>::SetModel(model);
-    globalModel = model;
+    this->controlsMargin = context->GetScaleProvider()->Scale(7);
 }
 
 void HotkeySettingsWindow::RenderSettingsContent(RenderDescriptor renderDescriptor)
@@ -20,50 +14,48 @@ void HotkeySettingsWindow::RenderSettingsContent(RenderDescriptor renderDescript
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition().MoveY(paddingY);
     Renderer* renderer = renderDescriptor.GetRenderer();
 
-    const int controlsMargin = 7;
-
     hotkeyInputWindows.clear();
 
     renderPosition = RenderHotkeyEditControl(
         RenderDescriptor(renderer, renderPosition),
         L"Translate Selected Text:",
-        model.GetTranslateHotkey(),
-        [this](DWORD hotkey) -> void
-        {
-            model.SetTranslateHotkey(hotkey);
-        });
+        currentSettings.GetHotkeySettings().GetTranslateHotkey(),
+        [this](HotkeySettings* hotkeySettings, DWORD hotkey) -> void
+    {
+        hotkeySettings->SetTranslateHotkey(hotkey);
+    });
 
     renderPosition = RenderHotkeyEditControl(
         RenderDescriptor(renderer, renderPosition.MoveY(controlsMargin)),
         L"Play Selected Text:",
-        model.GetPlayTextHotkey(),
-        [this](DWORD hotkey) -> void
-        {
-            model.SetPlayTextHotkey(hotkey);
-        });
+        currentSettings.GetHotkeySettings().GetPlayTextHotkey(),
+        [this](HotkeySettings* hotkeySettings, DWORD hotkey) -> void
+    {
+        hotkeySettings->SetPlayTextHotkey(hotkey);
+    });
 
     renderPosition = RenderHotkeyEditControl(
         RenderDescriptor(renderer, renderPosition.MoveY(controlsMargin)),
         L"Zoom In:",
-        model.GetZoomInHotkey(),
-        [this](DWORD hotkey) -> void
-        {
-            model.SetZoomInHotkey(hotkey);
-        });
+        currentSettings.GetHotkeySettings().GetZoomInHotkey(),
+        [this](HotkeySettings* hotkeySettings, DWORD hotkey) -> void
+    {
+        hotkeySettings->SetZoomInHotkey(hotkey);
+    });
 
     RenderHotkeyEditControl(
         RenderDescriptor(renderer, renderPosition.MoveY(controlsMargin)),
         L"Zoom Out:",
-        model.GetZoomOutHotkey(),
-        [this](DWORD hotkey) -> void
-        {
-            model.SetZoomOutHotkey(hotkey);
-        });
+        currentSettings.GetHotkeySettings().GetZoomOutHotkey(),
+        [this](HotkeySettings* hotkeySettings, DWORD hotkey) -> void
+    {
+        hotkeySettings->SetZoomOutHotkey(hotkey);
+    });
 
     renderer->IncreaseHeight(2 * paddingY);
 }
 
-RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(DWORD)> hotkeySetter)
+RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(HotkeySettings*, DWORD)> hotkeySetter)
 {
     RenderPosition renderPosition = renderDescriptor.GetRenderPosition();
 
@@ -82,9 +74,12 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
     hotKeyInputWindow->SetHotkey(hotkey);
     hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, this](DWORD newHotkey)
     {
-        hotkeySetter(newHotkey);
+        HotkeySettings hotkeySettings = currentSettings.GetHotkeySettings();
+        hotkeySetter(&hotkeySettings, newHotkey);
+        currentSettings.SetHotkeySettings(hotkeySettings);
+
         ComputeContentState();
-        OnSettingsChanged.Notify(model);
+        OnSettingsChanged.Notify(currentSettings);
     });
     hotKeyInputWindow->InitializeAndRender();
     hotkeyInputWindows.push_back(hotKeyInputWindow);
@@ -96,16 +91,16 @@ RenderResult HotkeySettingsWindow::RenderHotkeyEditControl(RenderDescriptor rend
 
 void HotkeySettingsWindow::ComputeContentState()
 {
-    bool isModified = !model.EqualTo(globalModel);
+    bool isModified = !currentSettings.GetHotkeySettings().EqualTo(globalSettings.GetHotkeySettings());
     bool isValid = IsModelValid();
 
-    ValidateHotkeyInputs();
+    SetHotkeyInputsValiationState();
 
-    if(!isValid)
+    if (!isValid)
     {
         contentState = SettingsGroupContentState::Invalid;
     }
-    else if(isModified)
+    else if (isModified)
     {
         contentState = SettingsGroupContentState::Modified;
     }
@@ -118,7 +113,7 @@ void HotkeySettingsWindow::ComputeContentState()
     headerWindow->Render();
 }
 
-void HotkeySettingsWindow::ValidateHotkeyInputs()
+void HotkeySettingsWindow::SetHotkeyInputsValiationState()
 {
     for (size_t i = 0; i < hotkeyInputWindows.size(); ++i)
     {
@@ -145,10 +140,10 @@ bool HotkeySettingsWindow::IsModelValid() const
     bool isValid = true;
 
     vector<DWORD> hotkeys = vector<DWORD>();
-    hotkeys.push_back(model.GetTranslateHotkey());
-    hotkeys.push_back(model.GetPlayTextHotkey());
-    hotkeys.push_back(model.GetZoomInHotkey());
-    hotkeys.push_back(model.GetZoomOutHotkey());
+    hotkeys.push_back(currentSettings.GetHotkeySettings().GetTranslateHotkey());
+    hotkeys.push_back(currentSettings.GetHotkeySettings().GetPlayTextHotkey());
+    hotkeys.push_back(currentSettings.GetHotkeySettings().GetZoomInHotkey());
+    hotkeys.push_back(currentSettings.GetHotkeySettings().GetZoomOutHotkey());
 
     for (size_t i = 0; i < hotkeys.size(); ++i)
     {

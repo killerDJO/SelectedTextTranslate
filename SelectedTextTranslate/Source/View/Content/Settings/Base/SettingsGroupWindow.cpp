@@ -1,6 +1,6 @@
 #include "View\Content\Settings\Base\SettingsGroupWindow.h"
-#include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 
 SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentWindow)
@@ -35,6 +35,12 @@ void SettingsGroupWindow::SetTitle(wstring title)
 wstring SettingsGroupWindow::GetTitle() const
 {
     return title;
+}
+
+void SettingsGroupWindow::SetSettings(Settings currentSettings, Settings globalSettings)
+{
+    this->currentSettings = currentSettings;
+    this->globalSettings = globalSettings;
 }
 
 SettingsGroupContentState SettingsGroupWindow::GetContentState() const
@@ -92,8 +98,4 @@ Size SettingsGroupWindow::RenderContent(Renderer* renderer)
     ComputeContentState();
 
     return renderer->GetSize();
-}
-
-SettingsGroupWindow::~SettingsGroupWindow()
-{
 }
