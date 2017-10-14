@@ -98,10 +98,10 @@ Size Window::RenderToBuffer()
 
     Size deviceContextBufferSize = deviceContextBuffer->GetSize();
 
-    int requiredDcWidth = descriptor.GetOverflowX() != OverflowModes::Fixed && renderedSize.GetWidth() > deviceContextBufferSize.GetWidth()
+    const int requiredDcWidth = descriptor.GetOverflowX() != OverflowModes::Fixed && renderedSize.GetWidth() > deviceContextBufferSize.GetWidth()
         ? renderedSize.GetWidth()
         : deviceContextBufferSize.GetWidth();
-    int requiredDcHeight = descriptor.GetOverflowY() != OverflowModes::Fixed && renderedSize.GetHeight() > deviceContextBufferSize.GetHeight()
+    const int requiredDcHeight = descriptor.GetOverflowY() != OverflowModes::Fixed && renderedSize.GetHeight() > deviceContextBufferSize.GetHeight()
         ? renderedSize.GetHeight()
         : deviceContextBufferSize.GetHeight();
 

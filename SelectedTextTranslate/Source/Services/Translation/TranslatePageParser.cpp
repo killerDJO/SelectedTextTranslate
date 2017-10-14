@@ -26,15 +26,14 @@ long long TranslatePageParser::GetTkk2()
 
 void TranslatePageParser::UpateTkkIfNeccessary()
 {
-    time_t  timev;
+    time_t timev;
     time(&timev);
 
     if (lastTkkRequestTime == -1 || timev - lastTkkRequestTime > 60 * 60)
     {
         logger->Log(LogLevels::Trace, L"Start requesting TKK.");
 
-        wstring translatePageURL = L"https://translate.google.com";
-        wstring translatePageMarkup = requestProvider->GetStringResponse(translatePageURL);
+        wstring translatePageMarkup = requestProvider->GetStringResponse(L"translate.google.com", L"");
 
         GumboOutput* output = gumbo_parse(StringUtilities::GetUtf8String(translatePageMarkup).c_str());
         string scriptContent = SearchScriptTag(output->root);

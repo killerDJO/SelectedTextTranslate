@@ -21,8 +21,8 @@ void ExceptionHelper::ThrowOnWinapiError(DWORD resultValue,  bool isFatal, DWORD
 
 void ExceptionHelper::ThrowOnWinapiError(bool isFatal)
 {
-    int lastError = GetLastError();
-    wstring message = StringUtilities::Format(L"Error calling WINAPI function. Error code: %d.", lastError);
+    const int lastError = GetLastError();
+    const wstring message = StringUtilities::Format(L"Error calling WINAPI function. Error code: %d.", lastError);
 
     if (isFatal)
     {
@@ -38,7 +38,7 @@ void ExceptionHelper::ThrowOnGdiPlusError(Gdiplus::Status status, bool isFatal)
 {
     if(status != Gdiplus::Ok)
     {
-        wstring message = StringUtilities::Format(L"Error calling GDI+ function. Status: %d.", status);
+        const wstring message = StringUtilities::Format(L"Error calling GDI+ function. Status: %d.", status);
         
         if (isFatal)
         {
@@ -54,7 +54,7 @@ void ExceptionHelper::ThrowOnGdiPlusError(Gdiplus::Status status, bool isFatal)
 wstring ExceptionHelper::GetCurrentExceptionMessage()
 {
     wstring exceptionMessage;
-    exception_ptr exceptionPointer = current_exception();
+    const exception_ptr exceptionPointer = current_exception();
 
     if(exceptionPointer == nullptr)
     {

@@ -14,7 +14,7 @@ void TextPlayer::PlayText(wstring text)
 {
     currentTextToPlay = text;
     DWORD threadId;
-    HANDLE hThread = CreateThread(nullptr, 0, TextPlayer::Play, this, 0, &threadId);
+    HANDLE hThread = CreateThread(nullptr, 0, Play, this, 0, &threadId);
     AssertWinApiResult(hThread);
     AssertWinApiResult(CloseHandle(hThread));
 }
@@ -26,26 +26,26 @@ DWORD WINAPI TextPlayer::Play(LPVOID arg)
     {
         ExceptionHelper::SetupStructuredExceptionsTranslation();
 
-        wstring text = wstring(textPlayer->currentTextToPlay);
+        const wstring text = wstring(textPlayer->currentTextToPlay);
 
         textPlayer->logger->Log(LogLevels::Trace, L"Start playing sentence '" + text + L"'.");
 
-        wstring responseQuery = L"https://translate.google.com/translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
+        const wstring responseQuery = L"translate_tts?tl=en&client=t&q=" + textPlayer->requestProvider->EscapeText(text)
             + L"&tk=" + textPlayer->translationService->GetHash(text);
 
-        vector<unsigned char> audio = textPlayer->requestProvider->GetResponse(responseQuery);
+        vector<unsigned char> audio = textPlayer->requestProvider->GetResponse(L"translate.google.com", responseQuery);
 
-        string filePath = textPlayer->SaveToFile(audio);
+        const string filePath = textPlayer->SaveToFile(audio);
 
         audio.clear();
 
-        string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
+        const string openFileCommand = "open " + filePath + " type mpegvideo alias " + string(AUDIO_FILE_NAME);
         mciSendStringA(openFileCommand.c_str(), nullptr, 0, nullptr);
 
-        string playAudioCommand = "play " + string(AUDIO_FILE_NAME) + " wait";
+        const string playAudioCommand = "play " + string(AUDIO_FILE_NAME) + " wait";
         mciSendStringA(playAudioCommand.c_str(), nullptr, 0, nullptr);
 
-        string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
+        const string closeAudioCommand = "close " + string(AUDIO_FILE_NAME);
         mciSendStringA(closeAudioCommand.c_str(), nullptr, 0, nullptr);
 
         textPlayer->logger->Log(LogLevels::Trace, L"End playing sentence.");

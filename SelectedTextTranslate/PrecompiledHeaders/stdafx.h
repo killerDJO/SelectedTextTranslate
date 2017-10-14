@@ -10,10 +10,11 @@
 #include <SDKDDKVer.h>
 
 #include <windows.h>
+#include <Wininet.h>
 #include <mmsystem.h>
 #include <shellapi.h>
 #include <objidl.h>
-#include "gdiplus.h"
+#include <gdiplus.h>
 
 #include <stdlib.h>
 #include <malloc.h>
@@ -35,7 +36,6 @@
 #include <concurrent_queue.h>
 
 #include <json.hpp>
-#include <cpprest\http_client.h>
 #include "sqlite3.h"
 #include "duk_config.h"
 #include "duktape.h"

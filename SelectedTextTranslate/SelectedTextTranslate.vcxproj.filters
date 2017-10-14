@@ -642,7 +642,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Resources\translate.emf">
       <Filter>Resources</Filter>
     </None>
