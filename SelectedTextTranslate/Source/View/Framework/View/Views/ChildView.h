@@ -4,7 +4,7 @@
 class ChildView : public View
 {
 protected:
-    View* parentWindow;
+    View* parentView;
     bool isLayered;
 
     Point GetInitialViewOffset() override;
@@ -14,8 +14,7 @@ public:
     ChildView(ViewContext* context, View* parentView);
 
     void Initialize() override;
+    void Render(bool preserveScrolls = false) override;
 
     void EnableLayeredMode();
-
-    Subscribeable<> OnRequestRender;
 };

@@ -95,10 +95,7 @@ void AppController::ShowSettings() const
 
 void AppController::TranslateWordFromDictionary(int wordInDictionaryIndex)
 {
-    vector<DictionaryRecord> dictionaryRecords = dictionary->GetTopRecords(200);
-    DictionaryRecord recordToTranslate = dictionaryRecords[wordInDictionaryIndex];
-
-    translateResult = translationService->TranslateSentence(recordToTranslate.GetWord(), false, false);
+   
 
     mainWindow->SetTranslateResultView(translateResult);
     mainWindow->Render();

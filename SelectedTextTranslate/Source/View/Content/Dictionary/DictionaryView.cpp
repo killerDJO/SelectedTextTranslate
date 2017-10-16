@@ -1,15 +1,14 @@
-#include "View\Content\Dictionary\DictionaryWindow.h"
+#include "View\Content\Dictionary\DictionaryView.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
 
-DictionaryWindow::DictionaryWindow(ViewContext* context, View* parentWindow)
-    : ContentView(context, parentWindow)
+DictionaryView::DictionaryView(ViewContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
+    : ComponentView(context, parentWindow, modelHolder)
 {
-    this->OnShowTranslation = Subscribeable<int>();
     this->iconSize = context->GetScaleProvider()->Scale(16);
 }
 
-Size DictionaryWindow::RenderContent(Renderer* renderer)
+Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> model)
 {
     DestroyChildViews();
 

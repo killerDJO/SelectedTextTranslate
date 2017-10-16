@@ -19,7 +19,7 @@ protected:
     Brush* backgroundBrush;
 
 public:
-    ContentView(ViewContext* context, View* parentWindow);
+    ContentView(ViewContext* context, View* parentView);
     ~ContentView() override;
 
     int GetLineHeight() const;

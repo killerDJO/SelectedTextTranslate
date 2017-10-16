@@ -10,7 +10,7 @@ ChildView::ChildView(ViewContext* context, View* parentView)
         throw SelectedTextTranslateFatalException(L"Parent window must be provided.");
     }
 
-    this->parentWindow = parentView;
+    this->parentView = parentView;
     this->isLayered = false;
 
     parentView->AddChildView(this);
@@ -30,7 +30,7 @@ void ChildView::Initialize()
         descriptor.GetPosition().GetY() - offset.GetY(),
         descriptor.GetSize().GetWidth(),
         descriptor.GetSize().GetHeight(),
-        parentWindow->GetHandle(),
+        parentView->GetHandle(),
         nullptr,
         context->GetInstance(),
         nullptr);
@@ -46,6 +46,18 @@ void ChildView::Initialize()
     }
 }
 
+void ChildView::Render(bool preserveScrolls)
+{
+    if (descriptor.GetOverflowX() == OverflowModes::Stretch || descriptor.GetOverflowY() == OverflowModes::Stretch)
+    {
+        parentView->Render(preserveScrolls);
+    }
+    else
+    {
+        View::Render(preserveScrolls);
+    }
+}
+
 void ChildView::EnableLayeredMode()
 {
     AssertViewNotInitialized();
@@ -55,8 +67,8 @@ void ChildView::EnableLayeredMode()
 Point ChildView::GetInitialViewOffset()
 {
     ScrollProvider* scrollProvider = context->GetScrollProvider();
-    int offsetY = scrollProvider->GetCurrentScrollOffset(parentWindow, ScrollBars::Vertical);
-    int offsetX = scrollProvider->GetCurrentScrollOffset(parentWindow, ScrollBars::Horizontal);
+    int offsetY = scrollProvider->GetCurrentScrollOffset(parentView, ScrollBars::Vertical);
+    int offsetX = scrollProvider->GetCurrentScrollOffset(parentView, ScrollBars::Horizontal);
 
     return Point(offsetX, offsetY);
 }

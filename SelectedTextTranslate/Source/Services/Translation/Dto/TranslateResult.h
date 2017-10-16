@@ -41,4 +41,6 @@ public:
 
     static wstring SerializeToJson(TranslateResult translateResult);
     static TranslateResult ParseFromJson(wstring json);
+
+    bool EqualTo(TranslateResult other) const;
 };

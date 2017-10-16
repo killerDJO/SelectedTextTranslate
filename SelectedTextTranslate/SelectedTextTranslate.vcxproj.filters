@@ -49,9 +49,6 @@
     <Filter Include="Source\View\Providers">
       <UniqueIdentifier>{eb4a919c-5cee-4fbd-9964-96f98f213f53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Framework\Windows">
-      <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Providers">
       <UniqueIdentifier>{36f26b3b-0088-44dd-a571-4e467b8a59c5}</UniqueIdentifier>
     </Filter>
@@ -151,22 +148,16 @@
     <Filter Include="Source\View\Content\Settings\Base\Dto">
       <UniqueIdentifier>{64e0d8ec-d732-4366-a074-369699311013}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\View\Framework\View">
+      <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\View\Framework\View\Views">
+      <UniqueIdentifier>{142c10c3-7fec-423d-9ce2-7d12633b7e3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Dictionary\DictionaryWindow.cpp">
-      <Filter>Source\View\Content\Dictionary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\HeaderWindow.cpp">
-      <Filter>Source\View\Content\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\TranslateResultWindow.cpp">
-      <Filter>Source\View\Content\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\TranslationWindow.cpp">
-      <Filter>Source\View\Content\Translation</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.cpp">
       <Filter>Source\View\Controls\Buttons\Base</Filter>
@@ -234,9 +225,6 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.cpp">
       <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Dictionary\DictionaryService.cpp">
-      <Filter>Source\Services\Dictionary</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Services\Translation\TranslationService.cpp">
       <Filter>Source\Services\Translation</Filter>
     </ClCompile>
@@ -260,9 +248,6 @@
     </ClCompile>
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp">
       <Filter>Source\Services\Translation\Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp">
-      <Filter>Source\Services\Dictionary\Dto</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp">
       <Filter>Source\View\Content\Settings</Filter>
@@ -302,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Main\MainWindow.cpp">
-      <Filter>Source\View\Content\Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp">
       <Filter>Source\View\Content\Main\Dto</Filter>
@@ -361,22 +343,55 @@
       <Filter>Source\View\Framework\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Framework\View\Views\View.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\Component.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\NativeWindowHolder.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\ViewContext.cpp">
-      <Filter>Source\View\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\Views\ChildView.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
+      <Filter>Source\View\Framework\View\Views</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Framework\View\Views\ContentView.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
+      <Filter>Source\View\Framework\View\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\View\Views\ChildView.cpp">
+      <Filter>Source\View\Framework\View\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\NativeWindowHolder.cpp">
+      <Filter>Source\View\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Dictionary\DictionaryComponent.cpp">
+      <Filter>Source\View\Content\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp">
+      <Filter>Source\Services\Dictionary\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\Dictionary\DictionaryService.cpp">
+      <Filter>Source\Services\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Dictionary\DictionaryView.cpp">
+      <Filter>Source\View\Content\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Main\MainComponent.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Main\MainView.cpp">
+      <Filter>Source\View\Content\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\Header\HeaderView.cpp">
+      <Filter>Source\View\Content\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\Header\HeaderComponent.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultView.cpp">
+      <Filter>Source\View\Content\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultComponent.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\TranslationComponent.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Translation\TranslationView.cpp">
+      <Filter>Source\View\Content\Translation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,18 +405,6 @@
   <ItemGroup>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Dictionary\DictionaryWindow.h">
-      <Filter>Source\View\Content\Dictionary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Translation\HeaderWindow.h">
-      <Filter>Source\View\Content\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Translation\TranslateResultWindow.h">
-      <Filter>Source\View\Content\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Translation\TranslationWindow.h">
-      <Filter>Source\View\Content\Translation</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.h">
       <Filter>Source\View\Controls\Buttons\Base</Filter>
@@ -490,9 +493,6 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.h">
       <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Dictionary\DictionaryService.h">
-      <Filter>Source\Services\Dictionary</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Services\Translation\TranslationService.h">
       <Filter>Source\Services\Translation</Filter>
     </ClInclude>
@@ -513,9 +513,6 @@
     </ClInclude>
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.h">
       <Filter>Source\Services\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h">
-      <Filter>Source\Services\Dictionary\Dto</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h">
       <Filter>Source\View\Content\Settings</Filter>
@@ -561,9 +558,6 @@
     </ClInclude>
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Main\MainWindow.h">
-      <Filter>Source\View\Content\Main</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h">
       <Filter>Source\View\Content\Main\Dto</Filter>
@@ -625,25 +619,58 @@
     <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h">
       <Filter>Source\View\Framework\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\View.h">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Component.h" />
-    <ClInclude Include="Source\View\Framework\NativeWindowHolder.h">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\ViewContext.h">
-      <Filter>Source\View\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\ChildView.h">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\ContentView.h">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\Enums\ViewStates.h">
       <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\View.h">
+      <Filter>Source\View\Framework\View\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\ContentView.h">
+      <Filter>Source\View\Framework\View\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\ChildView.h">
+      <Filter>Source\View\Framework\View\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\NativeWindowHolder.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\ViewContext.h">
+      <Filter>Source\View\Framework\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Component.h">
+      <Filter>Source\View\Framework\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Dictionary\DictionaryComponent.h">
+      <Filter>Source\View\Content\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h">
+      <Filter>Source\Services\Dictionary\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Services\Dictionary\DictionaryService.h">
+      <Filter>Source\Services\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Dictionary\DictionaryView.h">
+      <Filter>Source\View\Content\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Main\MainComponent.h" />
+    <ClInclude Include="Source\View\Content\Main\MainView.h">
+      <Filter>Source\View\Content\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\ComponentView.h" />
+    <ClInclude Include="Source\View\Content\Translation\Header\HeaderView.h">
+      <Filter>Source\View\Content\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Translation\Header\HeaderComponent.h" />
+    <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultView.h">
+      <Filter>Source\View\Content\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.h" />
+    <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultComponent.h" />
+    <ClInclude Include="Source\View\Content\Translation\TranslationComponent.h" />
+    <ClInclude Include="Source\View\Content\Translation\TranslationView.h">
+      <Filter>Source\View\Content\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CompositionRoot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

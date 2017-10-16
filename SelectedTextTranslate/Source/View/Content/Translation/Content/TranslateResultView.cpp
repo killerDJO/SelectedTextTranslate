@@ -1,36 +1,18 @@
-﻿#include "View\Content\Translation\TranslateResultWindow.h"
+﻿#include "View\Content\Translation\Content\TranslateResultView.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(ViewContext* context, View* parentWindow)
-: ContentView(context, parentWindow)
+TranslateResultView::TranslateResultView(ViewContext* context, View* parentView, ModelHolder<TranslateResultContent>* modelHolder)
+    : ComponentView(context, parentView, modelHolder)
 {
-    this->translateResultCategoryExpandedMap = map<int, bool>();
 }
 
-void TranslateResultWindow::SetModel(TranslateResult model)
-{
-    ModelHolder::SetModel(model);
-
-    translateResultCategoryExpandedMap.clear();
-
-    if(model.IsEmptyResult())
-    {
-        return;
-    }
-
-    for(size_t i = 0; i < model.GetTranslateCategories().size(); ++i)
-    {
-        translateResultCategoryExpandedMap[i] = false;
-    }
-}
-
-Size TranslateResultWindow::RenderContent(Renderer* renderer)
+Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultContent model)
 {
     DestroyChildViews();
 
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 
-    vector<TranslateResultCategory> translateCategories = model.GetTranslateCategories();
+    vector<TranslateResultCategory> translateCategories = model.GetTranslateResult().GetTranslateCategories();
     for (size_t i = 0; i < translateCategories.size(); ++i)
     {
         TranslateResultCategory category = translateCategories[i];
@@ -43,7 +25,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
         renderPosition = renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, renderPosition.MoveX(1));
 
         vector<TranslateResultCategoryEntry> showedEntries(0);
-        if (translateResultCategoryExpandedMap[i])
+        if (model.IsExpanded(i))
         {
             showedEntries = categoryEntries;
         }
@@ -99,7 +81,7 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
         }
 
         renderPosition = renderPosition.MoveY(7, context->GetScaleProvider()).SetX(paddingX * 3);
-        renderPosition = CreateExpandButton(RenderDescriptor(renderer, renderPosition), category, i, showedEntries.size());
+        renderPosition = CreateExpandButton(model, RenderDescriptor(renderer, renderPosition), category, i, showedEntries.size());
 
         renderPosition = renderPosition.MoveY(lineHeight).SetX(paddingX);
     }
@@ -110,7 +92,8 @@ Size TranslateResultWindow::RenderContent(Renderer* renderer)
     return renderer->GetSize();
 }
 
-RenderResult TranslateResultWindow::CreateExpandButton(
+RenderResult TranslateResultView::CreateExpandButton(
+    TranslateResultContent model,
     RenderDescriptor renderDescriptor,
     TranslateResultCategory category,
     int categoryIndex,
@@ -118,10 +101,10 @@ RenderResult TranslateResultWindow::CreateExpandButton(
 {
     DWORD hiddenCount = category.GetEntries().size() - showedCount;
 
-    if (translateResultCategoryExpandedMap[categoryIndex] || hiddenCount > 0) {
+    if (model.IsExpanded(categoryIndex) || hiddenCount > 0) {
         wstring text;
 
-        if (!translateResultCategoryExpandedMap[categoryIndex]) {
+        if (!model.IsExpanded(categoryIndex)) {
             if (hiddenCount == 1) {
                 text = L"show " + to_wstring(hiddenCount) + L" more result";
             }
@@ -139,8 +122,7 @@ RenderResult TranslateResultWindow::CreateExpandButton(
         expandButton->SetText(text);
         expandButton->OnClick.Subscribe([categoryIndex, this]()
         {
-            translateResultCategoryExpandedMap[categoryIndex] ^= true;
-            OnRequestRender.Notify();
+            OnExpandCategory.Notify(categoryIndex);
         });
         expandButton->InitializeAndRender();
 

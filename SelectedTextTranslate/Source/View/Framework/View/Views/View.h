@@ -66,9 +66,9 @@ public:
     virtual void Show();
     virtual void Hide();
 
-    void AddChildView(View* ChildView);
+    void AddChildView(View* childView);
 
-    void Render(bool preserveScrolls = false);
+    virtual void Render(bool preserveScrolls = false);
     void Draw(bool drawChildren = false);
     void Initialize() override;
     void InitializeAndRender(bool preserveScrolls = false);

@@ -1,4 +1,5 @@
 #include "View\Framework\View\Views\View.h"
+#include "View\Framework\View\Views\ChildView.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
@@ -209,9 +210,9 @@ void View::DrawChildViews()
     }
 }
 
-void View::AddChildView(View* ChildView)
+void View::AddChildView(View* childView)
 {
-    activeChildViews.push_back(ChildView);
+    activeChildViews.push_back(childView);
 }
 
 void View::DestroyChildViews()

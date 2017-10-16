@@ -1,23 +1,20 @@
-#include "View\Content\Translation\HeaderWindow.h"
+#include "View\Content\Translation\Header\HeaderView.h"
 #include "Utilities\StringUtilities.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-HeaderWindow::HeaderWindow(ViewContext* context, View* parentWindow)
-    : ContentView(context, parentWindow)
+HeaderView::HeaderView(ViewContext* context, View* parentWindow, ModelHolder<TranslateResult>* modelHolder)
+    : ComponentView<TranslateResult>(context, parentWindow, modelHolder)
 {
-    this->OnPlayText = Subscribeable<>();
-    this->OnForceTranslation = Subscribeable<>();
-    this->OnTranslateSuggestion = Subscribeable<>();
 }
 
-Size HeaderWindow::RenderContent(Renderer* renderer)
+Size HeaderView::RenderContent(Renderer* renderer, TranslateResult model)
 {
     DestroyChildViews();
 
     if(!model.IsEmptyResult())
     {
-        return RenderTranslationResult(renderer);
+        return RenderTranslationResult(renderer, model);
     }
     else
     {
@@ -25,7 +22,7 @@ Size HeaderWindow::RenderContent(Renderer* renderer)
     }
 }
 
-Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
+Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult model)
 {
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 
@@ -62,7 +59,7 @@ Size HeaderWindow::RenderTranslationResult(Renderer* renderer)
     return renderer->GetSize();
 }
 
-Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
+Size HeaderView::RenderEmptyResult(Renderer* renderer) const
 {
     int curY = GetSize().GetHeight() / 2 + fontHeader->GetHeight() / 2;
 
@@ -71,17 +68,17 @@ Size HeaderWindow::RenderEmptyResult(Renderer* renderer) const
     return renderer->GetSize();
 }
 
-void HeaderWindow::PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput)
+void HeaderView::PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput)
 {
     PrintHeaderAction(renderDescriptor, L"corrected from", originalInput, &OnForceTranslation);
 }
 
-void HeaderWindow::PrintSuggestion(RenderDescriptor renderDescriptor, wstring suggestion)
+void HeaderView::PrintSuggestion(RenderDescriptor renderDescriptor, wstring suggestion)
 {
     PrintHeaderAction(renderDescriptor, L"maybe you meant", suggestion, &OnTranslateSuggestion);
 }
 
-void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback)
+void HeaderView::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback)
 {
     TextRenderResult originLineRenderResult = renderDescriptor.GetRenderer()->PrintText(
         StringUtilities::Format(L" (%ls ", actionDescription.c_str()),
@@ -101,8 +98,4 @@ void HeaderWindow::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring 
         fontSmall,
         Colors::Gray,
         Point(headerActionButton->GetBoundingRect().GetRight(), originLineRenderResult.GetBaselineY()));
-}
-
-HeaderWindow::~HeaderWindow()
-{
 }

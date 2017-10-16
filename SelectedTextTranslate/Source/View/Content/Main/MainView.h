@@ -4,27 +4,23 @@
 #include "View\Providers\HotkeyProvider.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 #include "View\Content\Main\Dto\ViewDescriptor.h"
-#include "View\Content\Dictionary\DictionaryWindow.h"
-#include "View\Content\Translation\TranslationWindow.h"
+#include "View\Content\Dictionary\DictionaryComponent.h"
+#include "View\Content\Translation\TranslationView.h"
 #include "View\Content\Settings\SettingsWindow.h"
 
-class MainWindow : public View
+class MainView : public View
 {
 private:
-    TranslationWindow* translationWindow;
-    DictionaryWindow* dictionaryWindow;
+    TranslationView* translationWindow;
+    DictionaryComponent* dictionaryComponent;
     SettingsWindow* settingsWindow;
     ConfirmDialogWindow* confirmDialogWindow;
 
     HotkeyProvider* hotkeyProvider;
 
-    ApplicationViews currentView;
-    map<ApplicationViews, ViewDescriptor> viewDescriptors;
+    ApplicationViews applicationView;
+    map<ApplicationViews, ViewDescriptor> applicationViewDescriptors;
     Size minSize;
-
-    TranslateResult translateResult;
-    vector<DictionaryRecord> dictionaryRecords;
-    Settings settings;
 
     void CreateChildViews();
     void SetViewWindowDescriptor(View* viewWindow, ApplicationViews view);
@@ -33,8 +29,8 @@ private:
     void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
     void Resize() override;
 
-    void SetCurrentView(ApplicationViews applicationView);
-    View* GetWindowToShow() const;
+    void SetApplicationView(ApplicationViews applicationView);
+    View* GetViewToShow() const;
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
     bool IsResizeLocked();
@@ -46,7 +42,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainWindow(ViewContext* context, HotkeyProvider* hotkeyProvider);
+    MainView(ViewContext* context, HotkeyProvider* hotkeyProvider);
 
     void Initialize() override;
 
@@ -54,10 +50,6 @@ public:
 
     void Minimize();
     void Maximize();
-
-    void SetTranslateResultView(TranslateResult translateResult);
-    void SetDictionaryView(vector<DictionaryRecord> dictionaryRecords);
-    void SetSettingsView(Settings settings);
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;
