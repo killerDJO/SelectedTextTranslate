@@ -2,10 +2,10 @@
 #include "View\Content\Dictionary\DictionaryView.h"
 #include "Services\Dictionary\DictionaryService.h"
 
-DictionaryComponent::DictionaryComponent(ViewContext* context, View* parentView, DictionaryService* dictionaryService)
-    : Component(new DictionaryView(context, parentView, this))
+DictionaryComponent::DictionaryComponent(ViewContext* context, View* parentView)
+    : Component(context, new DictionaryView(context, parentView, this))
 {
-    this->dictionaryService = dictionaryService;
+    this->dictionaryService = context->Get<DictionaryService>();
     this->view->OnShowTranslation.Subscribe(bind(&DictionaryComponent::ProcessShowTranslation, this, placeholders::_1));
 }
 

@@ -1,11 +1,6 @@
 #pragma once
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
-#include "Infrastructure\Logging\Logger.h"
-#include "View\Framework\Rendering\RenderingProvider.h"
-#include "View\Framework\Providers\DeviceContextProvider.h"
-#include "View\Framework\Providers\ScaleProvider.h"
-#include "View\Framework\Providers\ScrollProvider.h"
-#include "View\Framework\MessageBus.h"
+#include "CompositionRoot.h"
 
 class ScrollProvider;
 class RenderingContext;
@@ -13,35 +8,41 @@ class RenderingContext;
 class ViewContext
 {
     HINSTANCE hInstance;
-
-    ScrollProvider* scrollProvider;
-    ScaleProvider* scaleProvider;
-    DeviceContextProvider* deviceContextProvider;
-    MessageBus* messageBus;
     ErrorHandler* errorHandler;
-    RenderingContext* renderingContext;
-    RenderingProvider* renderingProvider;
-    Logger* logger;
+    CompositionRoot* compositionRoot;
 
 public:
     ViewContext(
         HINSTANCE hInstance,
-        ScrollProvider* scrollProvider,
-        ScaleProvider* scaleProvider,
-        DeviceContextProvider* deviceContextProvider,
-        MessageBus* messageBus,
-        ErrorHandler* errorHandler,
-        RenderingContext* renderingContext,
-        RenderingProvider* renderingProvider,
-        Logger* logger);
+        CompositionRoot* compositionRoot,
+        ErrorHandler* errorHandler);
 
     HINSTANCE GetInstance() const;
-    ScrollProvider* GetScrollProvider() const;
-    ScaleProvider* GetScaleProvider() const;
-    DeviceContextProvider* GetDeviceContextProvider() const;
     ErrorHandler* GetErrorHandler() const;
-    RenderingContext* GetRenderingContext() const;
-    RenderingProvider* GetRenderingProvider() const;
-    Logger* GetLogger() const;
-    MessageBus* GetMessageBus() const;
+
+    template <typename TService>
+    TService* Get() const;
 };
+
+inline ViewContext::ViewContext(HINSTANCE hInstance, CompositionRoot* compositionRoot, ErrorHandler* errorHandler)
+{
+    this->hInstance = hInstance;
+    this->compositionRoot = compositionRoot;
+    this->errorHandler = errorHandler;
+}
+
+inline HINSTANCE ViewContext::GetInstance() const
+{
+    return hInstance;
+}
+
+inline ErrorHandler* ViewContext::GetErrorHandler() const
+{
+    return errorHandler;
+}
+
+template <typename TService>
+TService* ViewContext::Get() const
+{
+    return compositionRoot->GetService<TService>();
+}

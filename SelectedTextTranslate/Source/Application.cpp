@@ -10,6 +10,7 @@
 #include "View\Framework\Providers\ScrollProvider.h"
 #include "View\Framework\Rendering\RenderingContext.h"
 #include "View\Content\Main\MainWindow.h"
+#include "CompositionRoot.h"
 
 Application::Application()
 {
@@ -54,7 +55,9 @@ int Application::Run(HINSTANCE hInstance) const
 
 int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
 {
-    SettingsProvider settingsProvider = SettingsProvider(logger);
+    CompositionRoot compositionRoot = CompositionRoot();
+    compositionRoot.RegisterService(logger);
+    compositionRoot.RegisterService(new SettingsProvider(logger));
     Settings settings = settingsProvider.GetSettings();
     MessageBus messageBus = MessageBus();
 

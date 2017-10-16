@@ -1,8 +1,8 @@
 #include "View\Framework\View\Views\View.h"
-#include "View\Framework\View\Views\ChildView.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "View\Framework\Providers\ScrollProvider.h"
 
 View::View(ViewContext* context)
     : NativeWindowHolder(context->GetInstance())
@@ -42,7 +42,7 @@ void View::Initialize()
         throw SelectedTextTranslateException(L"Descriptor must be set for window");
     }
 
-    deviceContextBuffer = new DeviceContextBuffer(context->GetDeviceContextProvider(), descriptor.GetSize());
+    deviceContextBuffer = new DeviceContextBuffer(context->Get<DeviceContextProvider>(), descriptor.GetSize());
 
     nativeStateDescriptor.SetSize(descriptor.GetSize());
     nativeStateDescriptor.SetPosition(descriptor.GetPosition());
@@ -63,7 +63,7 @@ void View::Render(bool preserveScrolls)
 {
     AssertViewInitialized();
 
-    RenderingContext* renderingContext = context->GetRenderingContext();
+    RenderingContext* renderingContext = context->Get<RenderingContext>();
 
     renderingContext->BeginRender(this);
     viewState = ViewStates::Rendering;
@@ -93,7 +93,7 @@ void View::Render(bool preserveScrolls)
 
 Size View::RenderToBuffer()
 {
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    Renderer* renderer = context->Get<RenderingContext>()->GetRenderer();
 
     Size renderedSize = RenderContent(renderer);
 
@@ -115,7 +115,7 @@ Size View::RenderToBuffer()
 
     renderer->Render(deviceContextBuffer);
 
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
+    context->Get<RenderingContext>()->ReleaseRenderer(renderer);
 
     return renderedSize;
 }
@@ -152,10 +152,12 @@ void View::ApplyViewPosition(bool preserveScrolls)
 {
     int verticalScrollPosition = 0;
     int horizontalScrollPosition = 0;
+
+    ScrollProvider* scrollProvider = context->Get<ScrollProvider>();
     if (preserveScrolls)
     {
-        verticalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Vertical);
-        horizontalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Horizontal);
+        verticalScrollPosition = scrollProvider->GetCurrentScrollPostion(this, ScrollBars::Vertical);
+        horizontalScrollPosition = scrollProvider->GetCurrentScrollPostion(this, ScrollBars::Horizontal);
     }
 
     Point offset = GetInitialViewOffset();
@@ -168,7 +170,7 @@ void View::ApplyViewPosition(bool preserveScrolls)
         FALSE));
 
     // Important to initialize scroll only after window has been moved
-    context->GetScrollProvider()->InitializeScrollbars(
+    scrollProvider->InitializeScrollbars(
         this,
         descriptor.GetOverflowX() == OverflowModes::Scroll,
         descriptor.GetOverflowY() == OverflowModes::Scroll,
@@ -264,7 +266,7 @@ Size View::GetClientSize() const
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
 
-    ScrollProvider* scrollProvider = context->GetScrollProvider();
+    ScrollProvider* scrollProvider = context->Get<ScrollProvider>();
     Size availablClientSize = Size(
         clientRect.right + scrollProvider->GetScrollBarSize(this, ScrollBars::Vertical),
         clientRect.bottom + scrollProvider->GetScrollBarSize(this, ScrollBars::Horizontal));
@@ -339,7 +341,7 @@ LRESULT View::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
     catch (const SelectedTextTranslateException& error)
     {
-        ExceptionHelper::HandleNonFatalException(context->GetLogger(), context->GetErrorHandler(), L"Error occurred.", error);
+        ExceptionHelper::HandleNonFatalException(context->Get<Logger>(), context->GetErrorHandler(), L"Error occurred.", error);
     }
     catch (...)
     {
@@ -351,7 +353,7 @@ LRESULT View::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
 LRESULT View::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    context->GetScrollProvider()->ProcessScrollMessages(this, message, wParam, lParam);
+    context->Get<ScrollProvider>()->ProcessScrollMessages(this, message, wParam, lParam);
 
     switch (message)
     {

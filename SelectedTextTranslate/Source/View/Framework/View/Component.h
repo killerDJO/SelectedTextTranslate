@@ -9,8 +9,9 @@ private:
 
 protected:
     TView* view;
+    ViewContext* context;
 
-    Component(TView* view);
+    Component(ViewContext* context, TView* view);
     virtual ~Component();
 
 public:
@@ -25,10 +26,11 @@ public:
 };
 
 template <class TView>
-Component<TView>::Component(TView* view)
+Component<TView>::Component(ViewContext* context, TView* view)
 {
     static_assert(is_base_of<View, TView>::value, "TView must inherit from View");
     this->view = rawView = view;
+    this->context = context;
 }
 
 template <class TView>

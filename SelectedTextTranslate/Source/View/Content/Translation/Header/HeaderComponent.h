@@ -10,10 +10,10 @@ private:
     TextPlayer* textPlayer;
     ModelHolder<TranslateResult>* modelHolder;
 
-    void PlayText();
+    void PlayText() const;
 
 public:
-    HeaderComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder, TextPlayer* textPlayer);
+    HeaderComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
 
     Subscribeable<> OnForceTranslation;
     Subscribeable<> OnTranslateSuggestion;

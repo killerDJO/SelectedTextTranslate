@@ -1,9 +1,9 @@
 #include "View\Content\Translation\Header\HeaderComponent.h"
 
-HeaderComponent::HeaderComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder, TextPlayer* textPlayer)
-    : Component(new HeaderView(context, parentView, modelHolder))
+HeaderComponent::HeaderComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
+    : Component(context, new HeaderView(context, parentView, modelHolder))
 {
-    this->textPlayer = textPlayer;
+    this->textPlayer = context->Get<TextPlayer>();
     this->modelHolder = modelHolder;
 
     view->OnForceTranslation.Subscribe(&OnForceTranslation);

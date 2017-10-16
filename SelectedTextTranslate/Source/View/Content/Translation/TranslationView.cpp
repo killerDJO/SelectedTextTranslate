@@ -3,8 +3,8 @@
 TranslationView::TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
-    this->headerHeight = context->GetScaleProvider()->Scale(50);
-    this->separatorHeight = context->GetScaleProvider()->Scale(1);
+    this->headerHeight = context->Get<ScaleProvider>()->Scale(50);
+    this->separatorHeight = context->Get<ScaleProvider>()->Scale(1);
 
     this->headerComponent = nullptr;
     this->translateResultComponent = nullptr;
@@ -82,7 +82,7 @@ void TranslationView::Resize()
 
     ApplyNativeState(true);
 
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    Renderer* renderer = context->Get<RenderingContext>()->GetRenderer();
 
     if(modelHolder->GetModel().IsEmptyResult())
     {
@@ -92,7 +92,7 @@ void TranslationView::Resize()
     RenderSeparator(renderer, max(contentSize.GetWidth(), nativeStateDescriptor.GetSize().GetWidth()));
 
     renderer->Render(deviceContextBuffer);
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
+    context->Get<RenderingContext>()->ReleaseRenderer(renderer);
 
     Draw();
 }

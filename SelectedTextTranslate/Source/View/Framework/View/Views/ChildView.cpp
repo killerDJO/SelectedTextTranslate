@@ -1,6 +1,7 @@
 #include "View\Framework\View\Views\ChildView.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "View\Framework\Providers\ScrollProvider.h"
 
 ChildView::ChildView(ViewContext* context, View* parentView)
     : View(context)
@@ -66,7 +67,7 @@ void ChildView::EnableLayeredMode()
 
 Point ChildView::GetInitialViewOffset()
 {
-    ScrollProvider* scrollProvider = context->GetScrollProvider();
+    ScrollProvider* scrollProvider = context->Get<ScrollProvider>();
     int offsetY = scrollProvider->GetCurrentScrollOffset(parentView, ScrollBars::Vertical);
     int offsetX = scrollProvider->GetCurrentScrollOffset(parentView, ScrollBars::Horizontal);
 
