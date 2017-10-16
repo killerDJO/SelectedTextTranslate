@@ -5,7 +5,7 @@
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(WindowContext* context, Window* parentWindow)
+HoverIconButtonWindow::HoverIconButtonWindow(ViewContext* context, View* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
     this->hoverIconResource = 0;
@@ -21,13 +21,13 @@ void HoverIconButtonWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void HoverIconButtonWindow::SetDimensions(Point position, Size size)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
 }
 
 void HoverIconButtonWindow::SetNormalIconResource(DWORD normalIconResource)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->normalIconResource = normalIconResource;
 }
 
@@ -38,7 +38,7 @@ DWORD HoverIconButtonWindow::GetNormalIconResource() const
 
 void HoverIconButtonWindow::SetHoverIconResource(DWORD hoverIconResource)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->hoverIconResource = hoverIconResource;
 }
 
@@ -49,7 +49,7 @@ DWORD HoverIconButtonWindow::GetHoverIconResource() const
 
 void HoverIconButtonWindow::SetBackgroundBrush(Brush* backgroundBrush)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->backgroundBrush = backgroundBrush;
 }
 

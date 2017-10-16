@@ -1,26 +1,26 @@
-#include "View\Framework\Windows\ChildWindow.h"
+#include "View\Framework\View\Views\ChildView.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-ChildWindow::ChildWindow(WindowContext* context, Window* parentWindow)
-    : Window(context)
+ChildView::ChildView(ViewContext* context, View* parentView)
+    : View(context)
 {
-    if(parentWindow == nullptr)
+    if(parentView == nullptr)
     {
         throw SelectedTextTranslateFatalException(L"Parent window must be provided.");
     }
 
-    this->parentWindow = parentWindow;
+    this->parentWindow = parentView;
     this->isLayered = false;
 
-    parentWindow->AddChildWindow(this);
+    parentView->AddChildView(this);
 }
 
-void ChildWindow::Initialize()
+void ChildView::Initialize()
 {
-    Window::Initialize();
+    View::Initialize();
 
-    Point offset = GetInitialWindowOffset();
+    Point offset = GetInitialViewOffset();
 
     windowHandle = CreateWindow(
         className,
@@ -46,13 +46,13 @@ void ChildWindow::Initialize()
     }
 }
 
-void ChildWindow::EnableLayeredMode()
+void ChildView::EnableLayeredMode()
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->isLayered = true;
 }
 
-Point ChildWindow::GetInitialWindowOffset()
+Point ChildView::GetInitialViewOffset()
 {
     ScrollProvider* scrollProvider = context->GetScrollProvider();
     int offsetY = scrollProvider->GetCurrentScrollOffset(parentWindow, ScrollBars::Vertical);
@@ -61,7 +61,7 @@ Point ChildWindow::GetInitialWindowOffset()
     return Point(offsetX, offsetY);
 }
 
-LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT ChildView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -86,6 +86,6 @@ LRESULT ChildWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     default:
-        return Window::WindowProcedure(message, wParam, lParam);
+        return View::WindowProcedure(message, wParam, lParam);
     }
 }

@@ -189,17 +189,8 @@
     <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp">
       <Filter>Source\View\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\WindowContext.cpp">
-      <Filter>Source\View\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp">
       <Filter>Source\View\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Windows\ChildWindow.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Windows\Window.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source</Filter>
@@ -248,9 +239,6 @@
     </ClCompile>
     <ClCompile Include="Source\Services\Translation\TranslationService.cpp">
       <Filter>Source\Services\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Windows\NativeWindowHolder.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
@@ -330,9 +318,6 @@
     <ClCompile Include="Source\View\Framework\Rendering\DeviceContextBuffer.cpp">
       <Filter>Source\View\Framework\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Windows\ContentWindow.cpp">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.cpp">
       <Filter>Source\View\Framework\Rendering\Dto</Filter>
     </ClCompile>
@@ -374,6 +359,24 @@
     </ClCompile>
     <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp">
       <Filter>Source\View\Framework\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\View\Views\View.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\View\Component.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\NativeWindowHolder.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\View\ViewContext.cpp">
+      <Filter>Source\View\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\View\Views\ChildView.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Framework\View\Views\ContentView.cpp">
+      <Filter>Source\View\Framework\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -424,9 +427,6 @@
     <ClInclude Include="Source\View\Framework\Enums\ScrollBars.h">
       <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Enums\WindowStates.h">
-      <Filter>Source\View\Framework\Enums</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\Providers\DeviceContextProvider.h">
       <Filter>Source\View\Framework\Providers</Filter>
     </ClInclude>
@@ -436,17 +436,8 @@
     <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h">
       <Filter>Source\View\Framework\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\WindowContext.h">
-      <Filter>Source\View\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Providers\HotkeyProvider.h">
       <Filter>Source\View\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Windows\ChildWindow.h">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Windows\Window.h">
-      <Filter>Source\View\Framework\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Source\Providers\RequestProvider.h">
       <Filter>Source\Providers</Filter>
@@ -504,9 +495,6 @@
     </ClInclude>
     <ClInclude Include="Source\Services\Translation\TranslationService.h">
       <Filter>Source\Services\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Windows\NativeWindowHolder.h">
-      <Filter>Source\View\Framework\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h">
       <Filter>Source\Infrastructure\ErrorHandling</Filter>
@@ -589,9 +577,6 @@
     <ClInclude Include="Source\View\Framework\Rendering\DeviceContextBuffer.h">
       <Filter>Source\View\Framework\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Windows\ContentWindow.h">
-      <Filter>Source\View\Framework\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.h">
       <Filter>Source\View\Framework\Rendering\Dto</Filter>
     </ClInclude>
@@ -639,6 +624,25 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h">
       <Filter>Source\View\Framework\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\View.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Component.h" />
+    <ClInclude Include="Source\View\Framework\NativeWindowHolder.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\ViewContext.h">
+      <Filter>Source\View\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\ChildView.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\View\Views\ContentView.h">
+      <Filter>Source\View\Framework\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Framework\Enums\ViewStates.h">
+      <Filter>Source\View\Framework\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

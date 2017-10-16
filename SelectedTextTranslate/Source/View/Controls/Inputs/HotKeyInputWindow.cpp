@@ -2,8 +2,8 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HotKeyInputWindow::HotKeyInputWindow(WindowContext* context, Window* parentWindow)
-    : ChildWindow(context, parentWindow)
+HotKeyInputWindow::HotKeyInputWindow(ViewContext* context, View* parentWindow)
+    : ChildView(context, parentWindow)
 {
     this->className = HOTKEY_CLASS;
     this->currentHotkey = 0;
@@ -30,13 +30,13 @@ void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void HotKeyInputWindow::SetPosition(Point position)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     descriptor = WindowDescriptor::CreateStretchWindowDescriptor(position);
 }
 
 void HotKeyInputWindow::SetFont(Font* font)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->font = font;
 }
 
@@ -47,7 +47,7 @@ Font* HotKeyInputWindow::GetFont() const
 
 void HotKeyInputWindow::SetPadding(int padding)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->padding = padding;
 }
 
@@ -58,7 +58,7 @@ int HotKeyInputWindow::GetPadding() const
 
 void HotKeyInputWindow::SetBorderWidth(int borderWidth)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->borderWidth = borderWidth;
 }
 
@@ -69,7 +69,7 @@ int HotKeyInputWindow::GetBorderWidth() const
 
 void HotKeyInputWindow::SetLineHeight(int lineHeight)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->lineHeight = lineHeight;
 }
 
@@ -80,7 +80,7 @@ int HotKeyInputWindow::GetLineHeight() const
 
 void HotKeyInputWindow::SetHotkey(DWORD hotkey)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     currentHotkey = hotkey;
 }
 
@@ -115,7 +115,7 @@ void HotKeyInputWindow::Initialize()
     icex.dwICC = ICC_HOTKEY_CLASS;
     AssertCriticalWinApiResult(InitCommonControlsEx(&icex));
 
-    ChildWindow::Initialize();
+    ChildView::Initialize();
 
     SubclassNativeControl();
 
@@ -242,7 +242,7 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     }
 
-    return ChildWindow::WindowProcedure(message, wParam, lParam);
+    return ChildView::WindowProcedure(message, wParam, lParam);
 }
 
 void HotKeyInputWindow::ShowCustomCaret() const

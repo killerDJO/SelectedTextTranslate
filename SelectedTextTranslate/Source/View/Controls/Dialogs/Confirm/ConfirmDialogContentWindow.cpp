@@ -1,12 +1,12 @@
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "View\Framework\Windows\ChildWindow.h"
+#include "View\Framework\View\Views\ChildView.h"
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-ConfirmDialogContentWindow::ConfirmDialogContentWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+ConfirmDialogContentWindow::ConfirmDialogContentWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->className = L"STT_CONFIRM_DIALOG_CONTENT";
     this->isLayered = true;
@@ -29,7 +29,7 @@ void ConfirmDialogContentWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void ConfirmDialogContentWindow::SetDimensions(Point position, int width)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
 
     descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(width, height));
 }
@@ -38,7 +38,7 @@ void ConfirmDialogContentWindow::SetTitle(wstring title)
 {
     this->title = title;
 
-    if (windowState != WindowStates::New)
+    if (viewState != ViewStates::New)
     {
         Render();
     }
@@ -51,13 +51,13 @@ wstring ConfirmDialogContentWindow::GetTitle() const
 
 void ConfirmDialogContentWindow::Initialize()
 {
-    ChildWindow::Initialize();
+    ChildView::Initialize();
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
 Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize()), nullptr, borderWidth, Colors::Gray);
 

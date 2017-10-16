@@ -1,7 +1,7 @@
 #pragma once
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
 #include "Infrastructure\Logging\Logger.h"
-#include "View\Framework\Windows\NativeWindowHolder.h"
+#include "View\Framework\NativeWindowHolder.h"
 #include "View\Providers\HotkeyProvider.h"
 
 class TrayIconProvider : public NativeWindowHolder, public ErrorHandler

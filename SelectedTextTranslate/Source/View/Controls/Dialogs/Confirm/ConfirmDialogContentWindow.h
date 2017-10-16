@@ -1,7 +1,7 @@
 #pragma once
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 
-class ConfirmDialogContentWindow : public ContentWindow
+class ConfirmDialogContentWindow : public ContentView
 {
 private:
     int height;
@@ -15,7 +15,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogContentWindow(WindowContext* context, Window* parentWindow);
+    ConfirmDialogContentWindow(ViewContext* context, View* parentWindow);
     ~ConfirmDialogContentWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;

@@ -10,7 +10,7 @@
 class ScrollProvider;
 class RenderingContext;
 
-class WindowContext
+class ViewContext
 {
     HINSTANCE hInstance;
 
@@ -24,7 +24,7 @@ class WindowContext
     Logger* logger;
 
 public:
-    WindowContext(
+    ViewContext(
         HINSTANCE hInstance,
         ScrollProvider* scrollProvider,
         ScaleProvider* scaleProvider,

@@ -1,7 +1,7 @@
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(WindowContext* context, Window* parentWindow)
+HoverTextButtonWindow::HoverTextButtonWindow(ViewContext* context, View* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
     this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal);
@@ -21,7 +21,7 @@ void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void HoverTextButtonWindow::SetPosition(Point position)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
     this->descriptor = WindowDescriptor::CreateWindowDescriptor(
         position,
@@ -32,7 +32,7 @@ void HoverTextButtonWindow::SetPosition(Point position)
 
 void HoverTextButtonWindow::SetNormalColor(Colors normalColor)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->normalColor = normalColor;
 }
 
@@ -43,7 +43,7 @@ Colors HoverTextButtonWindow::GetNormalColor() const
 
 void HoverTextButtonWindow::SetHoverColor(Colors hoverColor)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->hoverColor = hoverColor;
 }
 
@@ -54,7 +54,7 @@ Colors HoverTextButtonWindow::GetHoverColor() const
 
 void HoverTextButtonWindow::SetDisabledColor(Colors disabledColor)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->disabledColor = disabledColor;
 }
 
@@ -65,7 +65,7 @@ Colors HoverTextButtonWindow::GetDisabledColor() const
 
 void HoverTextButtonWindow::SetBackgroundColor(Colors backgroundColor)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->backgroundColor = backgroundColor;
 }
 
@@ -76,7 +76,7 @@ Colors HoverTextButtonWindow::GetBackgroundColor() const
 
 void HoverTextButtonWindow::SetFont(Font* font)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->font = font;
 }
 
@@ -87,7 +87,7 @@ Font* HoverTextButtonWindow::GetFont() const
 
 void HoverTextButtonWindow::SetText(wstring text)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->text = text;
 }
 

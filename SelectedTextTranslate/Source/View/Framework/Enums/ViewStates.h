@@ -1,6 +1,6 @@
 #pragma once
 
-enum class WindowStates
+enum class ViewStates
 {
     New = 0,
 

@@ -1,9 +1,9 @@
 #pragma once
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 #include "View\Content\Translation\HeaderWindow.h"
 #include "View\Content\Translation\TranslateResultWindow.h"
 
-class TranslationWindow : public ContentWindow, public ModelHolder<TranslateResult>
+class TranslationWindow : public ContentView, public ModelHolder<TranslateResult>
 {
 private:
     int headerHeight;
@@ -19,7 +19,7 @@ protected:
     void Resize() override;
 
 public:
-    TranslationWindow(WindowContext* context, Window* parentWindow);
+    TranslationWindow(ViewContext* context, View* parentWindow);
 
     void Initialize() override;
 

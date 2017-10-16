@@ -18,7 +18,7 @@ void RenderingContext::ReleaseRenderer(Renderer* renderer) const
     delete renderer;
 }
 
-void RenderingContext::BeginRender(Window* window)
+void RenderingContext::BeginRender(View* window)
 {
     if(renderingRoot == nullptr)
     {
@@ -26,7 +26,7 @@ void RenderingContext::BeginRender(Window* window)
     }
 }
 
-void RenderingContext::EndRender(Window* window)
+void RenderingContext::EndRender(View* window)
 {
     if(window == renderingRoot)
     {
@@ -34,7 +34,7 @@ void RenderingContext::EndRender(Window* window)
     }
 }
 
-bool RenderingContext::IsRenderingRoot(Window* window) const
+bool RenderingContext::IsRenderingRoot(View* window) const
 {
     return window == renderingRoot;
 }

@@ -3,8 +3,8 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-HeaderWindow::HeaderWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+HeaderWindow::HeaderWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->OnPlayText = Subscribeable<>();
     this->OnForceTranslation = Subscribeable<>();
@@ -13,7 +13,7 @@ HeaderWindow::HeaderWindow(WindowContext* context, Window* parentWindow)
 
 Size HeaderWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     if(!model.IsEmptyResult())
     {

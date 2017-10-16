@@ -1,6 +1,6 @@
 #pragma once
 #include "Services\Settings\Dto\Settings.h"
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 #include "View\Framework\ModelHolder.h"
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
@@ -8,7 +8,7 @@
 #include "View\Content\Settings\Base\SettingsGroupWindow.h"
 #include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
 
-class SettingsWindow : public ContentWindow, public ModelHolder<Settings>
+class SettingsWindow : public ContentView, public ModelHolder<Settings>
 {
 private:
     Settings globalModel;
@@ -36,7 +36,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    SettingsWindow(WindowContext* context, Window* parentWindow);
+    SettingsWindow(ViewContext* context, View* parentWindow);
 
     void SetModel(Settings model) override;
 

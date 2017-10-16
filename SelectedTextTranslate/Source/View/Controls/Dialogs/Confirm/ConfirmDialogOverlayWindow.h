@@ -1,7 +1,7 @@
 #pragma once
-#include "View\Framework\Windows\ChildWindow.h"
+#include "View\Framework\View\Views\ChildView.h"
 
-class ConfirmDialogOverlayWindow : public ChildWindow
+class ConfirmDialogOverlayWindow : public ChildView
 {
 private:
     Brush* backgroundBrush;
@@ -10,7 +10,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogOverlayWindow(WindowContext* context, Window* parentWindow);
+    ConfirmDialogOverlayWindow(ViewContext* context, View* parentWindow);
     ~ConfirmDialogOverlayWindow();
 
     void Initialize() override;

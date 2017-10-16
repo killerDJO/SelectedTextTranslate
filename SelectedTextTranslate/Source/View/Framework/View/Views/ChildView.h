@@ -1,17 +1,17 @@
 #pragma once
-#include "View\Framework\Windows\Window.h"
+#include "View\Framework\View\Views\View.h"
 
-class ChildWindow : public Window
+class ChildView : public View
 {
 protected:
-    Window* parentWindow;
+    View* parentWindow;
     bool isLayered;
 
-    Point GetInitialWindowOffset() override;
+    Point GetInitialViewOffset() override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    ChildWindow(WindowContext* context, Window* parentWindow);
+    ChildView(ViewContext* context, View* parentView);
 
     void Initialize() override;
 

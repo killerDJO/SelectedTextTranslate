@@ -4,8 +4,8 @@
 #include "Utilities\StringUtilities.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 
-MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
-    : Window(context)
+MainWindow::MainWindow(ViewContext* context, HotkeyProvider* hotkeyProvider)
+    : View(context)
 {
     this->hotkeyProvider = hotkeyProvider;
 
@@ -22,7 +22,7 @@ MainWindow::MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider)
 
 void MainWindow::SetDescriptor(WindowDescriptor descriptor)
 {
-    Window::SetDescriptor(descriptor);
+    View::SetDescriptor(descriptor);
 
     viewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
     viewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
@@ -32,7 +32,7 @@ void MainWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void MainWindow::Initialize()
 {
-    Window::Initialize();
+    View::Initialize();
 
     windowHandle = CreateWindowEx(
         WS_EX_TOOLWINDOW,
@@ -50,7 +50,7 @@ void MainWindow::Initialize()
     AssertCriticalWinApiResult(windowHandle);
     SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
-    CreateChildWindows();
+    CreateChildViews();
 
     Minimize();
 
@@ -58,9 +58,9 @@ void MainWindow::Initialize()
     context->GetMessageBus()->OnConfirmRequested.Subscribe(bind(&MainWindow::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
-void MainWindow::CreateChildWindows()
+void MainWindow::CreateChildViews()
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     translationWindow = new TranslationWindow(context, this);
     SetViewWindowDescriptor(translationWindow, ApplicationViews::TranslateResult);
@@ -93,7 +93,7 @@ void MainWindow::CreateChildWindows()
     confirmDialogWindow->Initialize();
 }
 
-void MainWindow::SetViewWindowDescriptor(Window* viewWindow, ApplicationViews view)
+void MainWindow::SetViewWindowDescriptor(View* viewWindow, ApplicationViews view)
 {
     WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
@@ -131,7 +131,7 @@ void MainWindow::Maximize()
 
 void MainWindow::SetTranslateResultView(TranslateResult translateResult)
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
 
     this->translateResult = translateResult;
     this->translationWindow->SetModel(translateResult);
@@ -140,7 +140,7 @@ void MainWindow::SetTranslateResultView(TranslateResult translateResult)
 
 void MainWindow::SetDictionaryView(vector<DictionaryRecord> dictionaryRecords)
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
 
     this->dictionaryRecords = dictionaryRecords;
     this->dictionaryWindow->SetModel(dictionaryRecords);
@@ -149,7 +149,7 @@ void MainWindow::SetDictionaryView(vector<DictionaryRecord> dictionaryRecords)
 
 void MainWindow::SetSettingsView(Settings settings)
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
 
     this->settings = settings;
     this->settingsWindow->SetModel(settings);
@@ -158,7 +158,7 @@ void MainWindow::SetSettingsView(Settings settings)
 
 void MainWindow::SetCurrentView(ApplicationViews applicationView)
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
 
     currentView = applicationView;
 
@@ -174,12 +174,12 @@ Size MainWindow::RenderContent(Renderer* renderer)
         throw SelectedTextTranslateFatalException(L"View must set before rendering.");
     }
 
-    for (size_t i = 0; i < activeChildWindows.size(); ++i)
+    for (size_t i = 0; i < activeChildViews.size(); ++i)
     {
-        activeChildWindows[i]->MakeHidden();
+        activeChildViews[i]->MakeHidden();
     }
 
-    Window* windowToShow = GetWindowToShow();
+    View* windowToShow = GetWindowToShow();
 
     windowToShow->MakeVisible();
     windowToShow->Render();
@@ -211,7 +211,7 @@ void MainWindow::Scale(double scaleFactorAdjustment)
 
     deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
 
-    CreateChildWindows();
+    CreateChildViews();
     Render();
 }
 
@@ -233,7 +233,7 @@ void MainWindow::ScaleViewDescriptor(ApplicationViews applicationView, double sc
 
 void MainWindow::Resize()
 {
-    if (windowState == WindowStates::Rendering)
+    if (viewState == ViewStates::Rendering)
     {
         return;
     }
@@ -261,7 +261,7 @@ void MainWindow::Resize()
     renderer->Render(deviceContextBuffer);
     context->GetRenderingContext()->ReleaseRenderer(renderer);
 
-    Window* currentWindow = GetWindowToShow();
+    View* currentWindow = GetWindowToShow();
     currentWindow->Resize();
     contentSize = currentWindow->GetContentSize();
 
@@ -270,7 +270,7 @@ void MainWindow::Resize()
     ApplyNativeState(true);
 }
 
-Window* MainWindow::GetWindowToShow() const
+View* MainWindow::GetWindowToShow() const
 {
     if (currentView == ApplicationViews::TranslateResult)
     {
@@ -295,9 +295,9 @@ void MainWindow::ShowConfirmDialog(wstring title, function<void()> onConfirm)
     confirmDialogWindow->SetTitle(title);
     confirmDialogWindow->OnConfirm.UnsubscribeAll();
     confirmDialogWindow->OnConfirm.Subscribe(onConfirm);
-    confirmDialogWindow->OnConfirm.Subscribe(bind(&MainWindow::ApplyWindowPosition, this, true));
+    confirmDialogWindow->OnConfirm.Subscribe(bind(&MainWindow::ApplyViewPosition, this, true));
     confirmDialogWindow->OnCancel.UnsubscribeAll();
-    confirmDialogWindow->OnCancel.Subscribe(bind(&MainWindow::ApplyWindowPosition, this, true));
+    confirmDialogWindow->OnCancel.Subscribe(bind(&MainWindow::ApplyViewPosition, this, true));
     confirmDialogWindow->Render();
     confirmDialogWindow->Show();
     context->GetScrollProvider()->HideScrollbars(this);
@@ -326,7 +326,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
             return TRUE;
         }
 
-        return Window::WindowProcedure(message, wParam, lParam);
+        return View::WindowProcedure(message, wParam, lParam);
     }
 
     case WM_SIZING:
@@ -362,7 +362,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     case WM_HOTKEY:
     {
         hotkeyProvider->ProcessHotkey(wParam);
-        return Window::WindowProcedure(message, wParam, lParam);
+        return View::WindowProcedure(message, wParam, lParam);
     }
 
     case WM_ACTIVATE:
@@ -395,7 +395,7 @@ LRESULT MainWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     default:
-        return Window::WindowProcedure(message, wParam, lParam);
+        return View::WindowProcedure(message, wParam, lParam);
     }
 
     return 0;

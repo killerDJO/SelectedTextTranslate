@@ -1,4 +1,4 @@
-#include "View\Framework\Windows\NativeWindowHolder.h"
+#include "View\Framework\NativeWindowHolder.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
@@ -17,7 +17,7 @@ void NativeWindowHolder::Initialize()
 
     if(className == nullptr)
     {
-        throw SelectedTextTranslateFatalException(L"Window class name should be provided.");
+        throw SelectedTextTranslateFatalException(L"Window's class name should be provided.");
     }
 
     if (!GetClassInfoEx(instance, className, &windowClass))

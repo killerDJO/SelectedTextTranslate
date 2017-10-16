@@ -1,8 +1,8 @@
 ﻿#include "View\Content\Translation\TranslateResultWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-TranslateResultWindow::TranslateResultWindow(WindowContext* context, Window* parentWindow)
-: ContentWindow(context, parentWindow)
+TranslateResultWindow::TranslateResultWindow(ViewContext* context, View* parentWindow)
+: ContentView(context, parentWindow)
 {
     this->translateResultCategoryExpandedMap = map<int, bool>();
 }
@@ -26,7 +26,7 @@ void TranslateResultWindow::SetModel(TranslateResult model)
 
 Size TranslateResultWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
 

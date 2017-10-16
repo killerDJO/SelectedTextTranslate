@@ -1,10 +1,10 @@
 #pragma once
 #include "Services\Settings\Dto\Settings.h"
 #include "View\Framework\Rendering\Dto\RenderDescriptor.h"
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 
-class SettingsGroupWindow : public ContentWindow
+class SettingsGroupWindow : public ContentView
 {
 private:
     int borderWidth;
@@ -26,7 +26,7 @@ protected:
     virtual void RenderSettingsContent(RenderDescriptor renderDescriptor) = 0;
 
 public:
-    SettingsGroupWindow(WindowContext* context, Window* parentWindow);
+    SettingsGroupWindow(ViewContext* context, View* parentWindow);
 
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);

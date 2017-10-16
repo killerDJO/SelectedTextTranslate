@@ -3,12 +3,12 @@
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h"
 
-ConfirmDialogWindow::ConfirmDialogWindow(WindowContext* context, Window* parentWindow)
-    : ChildWindow(context, parentWindow)
+ConfirmDialogWindow::ConfirmDialogWindow(ViewContext* context, View* parentView)
+    : ChildView(context, parentView)
 {
     this->className = L"STT_CONFIRM_DIALOG";
 
-    this->dialogContentWindow = nullptr;
+    this->dialogContentView = nullptr;
     this->title = wstring();
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
@@ -18,14 +18,14 @@ ConfirmDialogWindow::ConfirmDialogWindow(WindowContext* context, Window* parentW
 
 void ConfirmDialogWindow::Initialize()
 {
-    ChildWindow::Initialize();
+    ChildView::Initialize();
 
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
 void ConfirmDialogWindow::Show()
 {
-    ChildWindow::Show();
+    ChildView::Show();
     AssertWinApiResult(SetFocus(windowHandle));
 }
 
@@ -33,10 +33,10 @@ void ConfirmDialogWindow::SetTitle(wstring title)
 {
     this->title = title;
 
-    if(dialogContentWindow != nullptr)
+    if(dialogContentView != nullptr)
     {
-        dialogContentWindow->SetTitle(title);
-        dialogContentWindow->Render();
+        dialogContentView->SetTitle(title);
+        dialogContentView->Render();
     }
 }
 
@@ -47,7 +47,7 @@ wstring ConfirmDialogWindow::GetTitle() const
 
 Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
     overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize()));
@@ -57,17 +57,17 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
     int paddingX = roundToInt((GetSize().GetWidth() - dialogContentWidth) / 2);
     int paddingY = context->GetScaleProvider()->Scale(50);
 
-    dialogContentWindow = new ConfirmDialogContentWindow(context, this);
-    dialogContentWindow->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
-    dialogContentWindow->SetTitle(title);
-    dialogContentWindow->OnConfirm.Subscribe(&OnConfirm);
-    dialogContentWindow->OnConfirm.Subscribe(bind(&Window::Hide, this));
-    dialogContentWindow->OnCancel.Subscribe(&OnCancel);
-    dialogContentWindow->OnCancel.Subscribe(bind(&Window::Hide, this));
-    dialogContentWindow->InitializeAndRender();
+    dialogContentView = new ConfirmDialogContentWindow(context, this);
+    dialogContentView->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
+    dialogContentView->SetTitle(title);
+    dialogContentView->OnConfirm.Subscribe(&OnConfirm);
+    dialogContentView->OnConfirm.Subscribe(bind(&View::Hide, this));
+    dialogContentView->OnCancel.Subscribe(&OnCancel);
+    dialogContentView->OnCancel.Subscribe(bind(&View::Hide, this));
+    dialogContentView->InitializeAndRender();
 
     renderer->UpdateRenderedContentSize(overlayWindow);
-    renderer->UpdateRenderedContentSize(dialogContentWindow);
+    renderer->UpdateRenderedContentSize(dialogContentView);
 
     return renderer->GetSize();
 }

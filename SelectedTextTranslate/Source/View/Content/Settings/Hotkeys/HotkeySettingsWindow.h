@@ -19,7 +19,7 @@ protected:
     void RenderSettingsContent(RenderDescriptor renderDescriptor) override;
 
 public:
-    HotkeySettingsWindow(WindowContext* context, Window* parentWindow);
+    HotkeySettingsWindow(ViewContext* context, View* parentWindow);
     ~HotkeySettingsWindow() override;
 
     void ComputeContentState() override;

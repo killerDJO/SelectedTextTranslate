@@ -2,10 +2,10 @@
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
 #include "View\Framework\Rendering\Dto\RenderDescriptor.h"
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 #include "View\Framework\ModelHolder.h"
 
-class HeaderWindow : public ContentWindow, public ModelHolder<TranslateResult>
+class HeaderWindow : public ContentView, public ModelHolder<TranslateResult>
 {
 private:
     void PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput);
@@ -19,7 +19,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HeaderWindow(WindowContext* context, Window* parentWindow);
+    HeaderWindow(ViewContext* context, View* parentWindow);
     ~HeaderWindow() override;
 
     Subscribeable<> OnPlayText;

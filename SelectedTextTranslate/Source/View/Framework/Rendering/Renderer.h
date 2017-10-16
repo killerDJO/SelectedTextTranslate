@@ -5,10 +5,10 @@
 #include "View\Framework\Rendering\Dto\TextRenderResult.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\RenderingProvider.h"
-#include "View\Framework\Windows\Window.h"
+#include "View\Framework\View\Views\View.h"
 
 class RenderingContext;
-class Window;
+class View;
 
 class Renderer
 {
@@ -41,7 +41,7 @@ public:
 
     void IncreaseWidth(int widthToAdd);
     void IncreaseHeight(int heightToAdd);
-    void UpdateRenderedContentSize(Window* window);
+    void UpdateRenderedContentSize(View* window);
     void UpdateRenderedContentSize(Rect rect);
     void UpdateRenderedContentSize(Size size);
 

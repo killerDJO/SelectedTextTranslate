@@ -1,6 +1,6 @@
-#include "View\Framework\WindowContext.h"
+#include "View\Framework\View\ViewContext.h"
 
-WindowContext::WindowContext(
+ViewContext::ViewContext(
     HINSTANCE hInstance,
     ScrollProvider* scrollProvider,
     ScaleProvider* scaleProvider,
@@ -22,47 +22,47 @@ WindowContext::WindowContext(
     this->messageBus = messageBus;
 }
 
-HINSTANCE WindowContext::GetInstance() const
+HINSTANCE ViewContext::GetInstance() const
 {
     return hInstance;
 }
 
-ScrollProvider* WindowContext::GetScrollProvider() const
+ScrollProvider* ViewContext::GetScrollProvider() const
 {
     return scrollProvider;
 }
 
-ScaleProvider* WindowContext::GetScaleProvider() const
+ScaleProvider* ViewContext::GetScaleProvider() const
 {
     return scaleProvider;
 }
 
-DeviceContextProvider* WindowContext::GetDeviceContextProvider() const
+DeviceContextProvider* ViewContext::GetDeviceContextProvider() const
 {
     return deviceContextProvider;
 }
 
-ErrorHandler* WindowContext::GetErrorHandler() const
+ErrorHandler* ViewContext::GetErrorHandler() const
 {
     return errorHandler;
 }
 
-RenderingContext* WindowContext::GetRenderingContext() const
+RenderingContext* ViewContext::GetRenderingContext() const
 {
     return renderingContext;
 }
 
-RenderingProvider* WindowContext::GetRenderingProvider() const
+RenderingProvider* ViewContext::GetRenderingProvider() const
 {
     return renderingProvider;
 }
 
-Logger* WindowContext::GetLogger() const
+Logger* ViewContext::GetLogger() const
 {
     return logger;
 }
 
-MessageBus* WindowContext::GetMessageBus() const
+MessageBus* ViewContext::GetMessageBus() const
 {
     return messageBus;
 }

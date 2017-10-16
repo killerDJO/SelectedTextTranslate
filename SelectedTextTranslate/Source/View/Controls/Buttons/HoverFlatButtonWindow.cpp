@@ -1,7 +1,7 @@
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HoverFlatButtonWindow::HoverFlatButtonWindow(WindowContext* context, Window* parentWindow)
+HoverFlatButtonWindow::HoverFlatButtonWindow(ViewContext* context, View* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
     this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal);
@@ -21,13 +21,13 @@ void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void HoverFlatButtonWindow::SetPosition(Point position)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     descriptor.SetPosition(position);
 }
 
 void HoverFlatButtonWindow::SetFont(Font* font)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->font = font;
 }
 
@@ -38,7 +38,7 @@ Font* HoverFlatButtonWindow::GetFont() const
 
 void HoverFlatButtonWindow::SetText(wstring text)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->text = text;
 }
 
@@ -49,7 +49,7 @@ wstring HoverFlatButtonWindow::GetText() const
 
 void HoverFlatButtonWindow::SetPaddingX(int paddingX)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->paddingX = paddingX;
 }
 
@@ -60,7 +60,7 @@ int HoverFlatButtonWindow::GetPaddingX() const
 
 void HoverFlatButtonWindow::SetPaddingY(int paddingY)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->paddingY = paddingY;
 }
 

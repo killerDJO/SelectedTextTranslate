@@ -3,8 +3,8 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Content\Settings\Base\SettingsGroupHeaderWindow.h"
 
-SettingsGroupWindow::SettingsGroupWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+SettingsGroupWindow::SettingsGroupWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->contentState = SettingsGroupContentState::Default;
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
@@ -23,7 +23,7 @@ void SettingsGroupWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void SettingsGroupWindow::SetDimensions(Point position, int width)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     descriptor = WindowDescriptor::CreateWindowDescriptor(position, Size(width, 0), OverflowModes::Fixed, OverflowModes::Stretch);
 }
 
@@ -61,7 +61,7 @@ SettingsGroupVisibilityState SettingsGroupWindow::GetVisibilityState() const
 
 void SettingsGroupWindow::UpdateModificationState() const
 {
-    if (windowState != WindowStates::New)
+    if (viewState != ViewStates::New)
     {
         headerWindow->SetContentState(contentState);
         headerWindow->SetVisibilityState(visibilityState);
@@ -76,7 +76,7 @@ bool SettingsGroupWindow::IsValid() const
 
 Size SettingsGroupWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     headerWindow = new SettingsGroupHeaderWindow(context, this);
     headerWindow->SetTitle(title);

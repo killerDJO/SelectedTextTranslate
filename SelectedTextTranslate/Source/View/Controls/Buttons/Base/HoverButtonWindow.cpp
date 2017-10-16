@@ -2,8 +2,8 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include <set>
 
-HoverButtonWindow::HoverButtonWindow(WindowContext* context, Window* parentWindow)
-    : ChildWindow(context, parentWindow)
+HoverButtonWindow::HoverButtonWindow(ViewContext* context, View* parentWindow)
+    : ChildView(context, parentWindow)
 {
     this->OnClick = Subscribeable<>();
     this->state = ButtonStates::Normal;
@@ -12,7 +12,7 @@ HoverButtonWindow::HoverButtonWindow(WindowContext* context, Window* parentWindo
 
 void HoverButtonWindow::Initialize()
 {
-    ChildWindow::Initialize();
+    ChildView::Initialize();
     RenderStatesDeviceContexts();
 }
 
@@ -100,7 +100,7 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     }
 
-    return ChildWindow::WindowProcedure(message, wParam, lParam);
+    return ChildView::WindowProcedure(message, wParam, lParam);
 }
 
 void HoverButtonWindow::Disable()
@@ -117,7 +117,7 @@ void HoverButtonWindow::ChangeButtonState(ButtonStates newState)
 {
     state = newState;
 
-    if (windowState != WindowStates::New)
+    if (viewState != ViewStates::New)
     {
         Render();
     }

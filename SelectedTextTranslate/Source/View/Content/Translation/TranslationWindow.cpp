@@ -1,7 +1,7 @@
 #include "View\Content\Translation\TranslationWindow.h"
 
-TranslationWindow::TranslationWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+TranslationWindow::TranslationWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->headerHeight = context->GetScaleProvider()->Scale(50);
     this->separatorHeight = context->GetScaleProvider()->Scale(1);
@@ -12,7 +12,7 @@ TranslationWindow::TranslationWindow(WindowContext* context, Window* parentWindo
 
 void TranslationWindow::Initialize()
 {
-    ContentWindow::Initialize();
+    ContentView::Initialize();
 
     WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),

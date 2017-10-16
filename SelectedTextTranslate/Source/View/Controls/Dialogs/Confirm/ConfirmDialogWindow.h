@@ -1,19 +1,19 @@
 #pragma once
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
 
-class ConfirmDialogWindow : public ChildWindow
+class ConfirmDialogWindow : public ChildView
 {
 private:
     wstring title;
 
-    ConfirmDialogContentWindow* dialogContentWindow;
+    ConfirmDialogContentWindow* dialogContentView;
 
 protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogWindow(WindowContext* context, Window* parentWindow);
+    ConfirmDialogWindow(ViewContext* context, View* parentView);
     ~ConfirmDialogWindow() override;
 
     void SetTitle(wstring title);

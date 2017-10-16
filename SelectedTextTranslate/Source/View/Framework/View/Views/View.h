@@ -1,54 +1,54 @@
 #pragma once
 #include "View\Framework\Dto\WindowDescriptor.h"
 #include "View\Framework\Dto\WindowNativeStateDescriptor.h"
-#include "View\Framework\Enums\WindowStates.h"
+#include "View\Framework\Enums\ViewStates.h"
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\RenderingContext.h"
 #include "View\Framework\Rendering\Renderer.h"
-#include "View\Framework\Windows\NativeWindowHolder.h"
-#include "View\Framework\WindowContext.h"
+#include "View\Framework\NativeWindowHolder.h"
+#include "View\Framework\View\ViewContext.h"
 
-class WindowContext;
+class ViewContext;
 class Renderer;
 
-class Window : public NativeWindowHolder
+class View : public NativeWindowHolder
 {
 private:
-    vector<Window*> destroyBeforeDrawList;
+    vector<View*> destroyBeforeDrawList;
 
-    void DrawChildWindows();
-    void DestroyChildWindows(vector<Window*>& childWindows) const;
+    void DrawChildViews();
+    void DestroyChildViews(vector<View*>& childViews) const;
 
 protected:
-    WindowContext* context;
+    ViewContext* context;
     WindowDescriptor descriptor;
     WindowNativeStateDescriptor nativeStateDescriptor;
 
     Size contentSize;
-    WindowStates windowState;
+    ViewStates viewState;
 
     DeviceContextBuffer* deviceContextBuffer;
-    vector<Window*> activeChildWindows;
+    vector<View*> activeChildViews;
 
     DWORD GetScrollStyle() const;
 
-    void DestroyChildWindows();
+    void DestroyChildViews();
 
     void ApplyNativeState(bool preserveScrolls);
-    void ApplyWindowPosition(bool preserveScrolls);
+    void ApplyViewPosition(bool preserveScrolls);
     Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
-    virtual Point GetInitialWindowOffset();
+    virtual Point GetInitialViewOffset();
 
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
-    void AssertWindowInitialized() const;
-    void AssertWindowNotInitialized() const;
+    void AssertViewInitialized() const;
+    void AssertViewNotInitialized() const;
 
 public:
-    Window(WindowContext* context);
-    ~Window() override;
+    View(ViewContext* context);
+    ~View() override;
 
     WindowDescriptor GetDescriptor() const;
     virtual void SetDescriptor(WindowDescriptor descriptor);
@@ -66,7 +66,7 @@ public:
     virtual void Show();
     virtual void Hide();
 
-    void AddChildWindow(Window* childWindow);
+    void AddChildView(View* ChildView);
 
     void Render(bool preserveScrolls = false);
     void Draw(bool drawChildren = false);

@@ -11,7 +11,7 @@ ScrollProvider::ScrollProvider()
 }
 
 void ScrollProvider::InitializeScrollbars(
-    Window* window,
+    View* window,
     bool initializeHorizontalScroll,
     bool initializeVerticalScroll,
     int initialVerticalScrollPosition,
@@ -57,13 +57,13 @@ void ScrollProvider::InitializeScrollbars(
     }
 }
 
-void ScrollProvider::HideScrollbars(Window* window) const
+void ScrollProvider::HideScrollbars(View* window) const
 {
     InitializeScrollbar(window->GetHandle(), 0, 1, ScrollBars::Horizontal, 0);
     InitializeScrollbar(window->GetHandle(), 0, 1, ScrollBars::Vertical, 0);
 }
 
-void ScrollProvider::ProcessScrollMessages(Window* window, UINT message, WPARAM wParam, LPARAM lParam) const
+void ScrollProvider::ProcessScrollMessages(View* window, UINT message, WPARAM wParam, LPARAM lParam) const
 {
     if (message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Horizontal))
     {
@@ -107,7 +107,7 @@ void ScrollProvider::InitializeScrollbar(HWND windowHandle, int contentDimension
     SetScrollInfo(windowHandle, (int)scrollBar, &si, TRUE);
 }
 
-int ScrollProvider::GetCurrentScrollPostion(Window* window, ScrollBars scrollBar) const
+int ScrollProvider::GetCurrentScrollPostion(View* window, ScrollBars scrollBar) const
 {
     if (!IsScrollBarVisible(window, scrollBar))
     {
@@ -118,7 +118,7 @@ int ScrollProvider::GetCurrentScrollPostion(Window* window, ScrollBars scrollBar
     return scrollInfo.nPos;
 }
 
-int ScrollProvider::GetCurrentScrollOffset(Window* window, ScrollBars scrollBar) const
+int ScrollProvider::GetCurrentScrollOffset(View* window, ScrollBars scrollBar) const
 {
     if (!IsScrollBarVisible(window, scrollBar))
     {
@@ -128,7 +128,7 @@ int ScrollProvider::GetCurrentScrollOffset(Window* window, ScrollBars scrollBar)
     return GetCurrentScrollPostion(window, scrollBar) * GetScrollChar(scrollBar);
 }
 
-bool ScrollProvider::IsScrollBarVisible(const Window* window, ScrollBars scrollBar) const
+bool ScrollProvider::IsScrollBarVisible(const View* window, ScrollBars scrollBar) const
 {
     SCROLLBARINFO scrollBarInfo;
     scrollBarInfo.cbSize = sizeof SCROLLBARINFO;
@@ -141,7 +141,7 @@ bool ScrollProvider::IsScrollBarVisible(const Window* window, ScrollBars scrollB
     return (scrollBarInfo.rgstate[0] & STATE_SYSTEM_INVISIBLE) != STATE_SYSTEM_INVISIBLE;
 }
 
-int ScrollProvider::GetScrollBarSize(const Window* window, ScrollBars scrollBar) const
+int ScrollProvider::GetScrollBarSize(const View* window, ScrollBars scrollBar) const
 {
     if (IsScrollBarVisible(window, scrollBar))
     {
@@ -153,7 +153,7 @@ int ScrollProvider::GetScrollBarSize(const Window* window, ScrollBars scrollBar)
     return 0;
 }
 
-void ScrollProvider::ProcessScroll(Window* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const
+void ScrollProvider::ProcessScroll(View* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo = GetWindowScrollInfo(window, scrollBar);
     int scrollOffset = scrollInfo.nPos;
@@ -204,7 +204,7 @@ Size ScrollProvider::AlignWithScrollingGrid(Size size) const
         roundToInt(ceil((double)size.GetHeight() / scrollCharY) * scrollCharY));
 }
 
-void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const
+void ScrollProvider::SetScrollPosition(View* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const
 {
     scrollInfo.fMask = SIF_POS;
     SetScrollInfo(window->GetHandle(), (int)scrollBar, &scrollInfo, TRUE);
@@ -242,7 +242,7 @@ void ScrollProvider::SetScrollPosition(Window* window, SCROLLINFO scrollInfo, Sc
     }
 }
 
-SCROLLINFO ScrollProvider::GetWindowScrollInfo(Window* window, ScrollBars scrollBar) const
+SCROLLINFO ScrollProvider::GetWindowScrollInfo(View* window, ScrollBars scrollBar) const
 {
     SCROLLINFO scrollInfo;
     scrollInfo.cbSize = sizeof(scrollInfo);

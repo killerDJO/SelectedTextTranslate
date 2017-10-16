@@ -1,9 +1,9 @@
 #pragma once
-#include "View\Framework\Windows\Window.h"
+#include "View\Framework\View\Views\View.h"
 #include "View\Framework\Rendering\RenderingProvider.h"
 
 class Renderer;
-class Window;
+class View;
 class DeviceContextProvider;
 class RenderingProvider;
 
@@ -13,7 +13,7 @@ private:
     DeviceContextProvider* deviceContextProvider;
     RenderingProvider* renderingProvider;
 
-    Window* renderingRoot;
+    View* renderingRoot;
 
 public:
     RenderingContext(RenderingProvider* renderingProvider, DeviceContextProvider* deviceContextProvider);
@@ -21,7 +21,7 @@ public:
     Renderer* GetRenderer() const;
     void ReleaseRenderer(Renderer* renderer) const;
 
-    void BeginRender(Window* window);
-    void EndRender(Window* window);
-    bool IsRenderingRoot(Window* window) const;
+    void BeginRender(View* window);
+    void EndRender(View* window);
+    bool IsRenderingRoot(View* window) const;
 };

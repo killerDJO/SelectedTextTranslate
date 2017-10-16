@@ -2,8 +2,8 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
 
-DictionaryWindow::DictionaryWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+DictionaryWindow::DictionaryWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->OnShowTranslation = Subscribeable<int>();
     this->iconSize = context->GetScaleProvider()->Scale(16);
@@ -11,7 +11,7 @@ DictionaryWindow::DictionaryWindow(WindowContext* context, Window* parentWindow)
 
 Size DictionaryWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     RenderPosition renderPosition = RenderPosition(
         paddingX,

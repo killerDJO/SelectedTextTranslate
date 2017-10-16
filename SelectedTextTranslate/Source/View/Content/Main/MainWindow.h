@@ -1,6 +1,6 @@
 #pragma once
 #include "Controllers\Enums\ApplicationViews.h"
-#include "View\Framework\Windows\Window.h"
+#include "View\Framework\View\Views\View.h"
 #include "View\Providers\HotkeyProvider.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 #include "View\Content\Main\Dto\ViewDescriptor.h"
@@ -8,7 +8,7 @@
 #include "View\Content\Translation\TranslationWindow.h"
 #include "View\Content\Settings\SettingsWindow.h"
 
-class MainWindow : public Window
+class MainWindow : public View
 {
 private:
     TranslationWindow* translationWindow;
@@ -26,15 +26,15 @@ private:
     vector<DictionaryRecord> dictionaryRecords;
     Settings settings;
 
-    void CreateChildWindows();
-    void SetViewWindowDescriptor(Window* viewWindow, ApplicationViews view);
+    void CreateChildViews();
+    void SetViewWindowDescriptor(View* viewWindow, ApplicationViews view);
 
     void Scale(double scaleFactorAjustment);
     void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
     void Resize() override;
 
     void SetCurrentView(ApplicationViews applicationView);
-    Window* GetWindowToShow() const;
+    View* GetWindowToShow() const;
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
     bool IsResizeLocked();
@@ -46,7 +46,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainWindow(WindowContext* context, HotkeyProvider* hotkeyProvider);
+    MainWindow(ViewContext* context, HotkeyProvider* hotkeyProvider);
 
     void Initialize() override;
 

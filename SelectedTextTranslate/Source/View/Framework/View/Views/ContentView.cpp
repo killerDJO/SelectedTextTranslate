@@ -1,7 +1,7 @@
-#include "View\Framework\Windows\ContentWindow.h"
+#include "View\Framework\View\Views\ContentView.h"
 
-ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
-    : ChildWindow(context, parentWindow)
+ContentView::ContentView(ViewContext* context, View* parentView)
+    : ChildView(context, parentView)
 {
     this->lineHeight = context->GetScaleProvider()->Scale(20);
     this->paddingX = context->GetScaleProvider()->Scale(15);
@@ -20,37 +20,37 @@ ContentWindow::ContentWindow(WindowContext* context, Window* parentWindow)
     this->className = L"STT_CONTENT";
 }
 
-int ContentWindow::GetLineHeight() const
+int ContentView::GetLineHeight() const
 {
     return lineHeight;
 }
 
-void ContentWindow::SetLineHeight(int lineHeight)
+void ContentView::SetLineHeight(int lineHeight)
 {
     this->lineHeight = lineHeight;
 }
 
-int ContentWindow::GetPaddingX() const
+int ContentView::GetPaddingX() const
 {
     return paddingX;
 }
 
-void ContentWindow::SetPaddingX(int paddingX)
+void ContentView::SetPaddingX(int paddingX)
 {
     this->paddingX = paddingX;
 }
 
-int ContentWindow::GetPaddingY() const
+int ContentView::GetPaddingY() const
 {
     return paddingY;
 }
 
-void ContentWindow::SetPaddingY(int paddingY)
+void ContentView::SetPaddingY(int paddingY)
 {
     this->paddingY = paddingY;
 }
 
-ContentWindow::~ContentWindow()
+ContentView::~ContentView()
 {
     delete fontNormal;
     delete fontHeader;

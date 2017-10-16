@@ -1,7 +1,7 @@
 #include "View\Content\Settings\Hotkeys\HotkeySettingsWindow.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 
-HotkeySettingsWindow::HotkeySettingsWindow(WindowContext* context, Window* parentWindow)
+HotkeySettingsWindow::HotkeySettingsWindow(ViewContext* context, View* parentWindow)
     : SettingsGroupWindow(context, parentWindow)
 {
     this->title = L"Hotkeys";

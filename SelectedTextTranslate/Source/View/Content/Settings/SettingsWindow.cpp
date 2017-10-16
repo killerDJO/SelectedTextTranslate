@@ -5,8 +5,8 @@
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 
-SettingsWindow::SettingsWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+SettingsWindow::SettingsWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->settingsState = SettingsState();
     this->hotkeySettingsWindow = nullptr;
@@ -24,7 +24,7 @@ void SettingsWindow::SetModel(Settings model)
 
 Size SettingsWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 

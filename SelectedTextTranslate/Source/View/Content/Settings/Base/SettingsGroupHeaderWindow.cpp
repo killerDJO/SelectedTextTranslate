@@ -2,8 +2,8 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 
-SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(WindowContext* context, Window* parentWindow)
-    : ContentWindow(context, parentWindow)
+SettingsGroupHeaderWindow::SettingsGroupHeaderWindow(ViewContext* context, View* parentWindow)
+    : ContentView(context, parentWindow)
 {
     this->contentState = SettingsGroupContentState::Default;
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
@@ -21,7 +21,7 @@ void SettingsGroupHeaderWindow::SetDescriptor(WindowDescriptor descriptor)
 
 void SettingsGroupHeaderWindow::SetDimensions(Point position, int width)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(width, 0));
 }
 
@@ -59,12 +59,12 @@ void SettingsGroupHeaderWindow::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
     descriptor = WindowDescriptor::CreateFixedWindowDescriptor(descriptor.GetPosition(), Size(descriptor.GetSize().GetWidth(), headerHeight));
-    ContentWindow::Initialize();
+    ContentView::Initialize();
 }
 
 Size SettingsGroupHeaderWindow::RenderContent(Renderer* renderer)
 {
-    DestroyChildWindows();
+    DestroyChildViews();
 
     renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize()), backgroundBrush, borderWidth, Colors::Gray);
 
@@ -103,5 +103,5 @@ LRESULT SettingsGroupHeaderWindow::WindowProcedure(UINT message, WPARAM wParam, 
         return TRUE;
     }
 
-    return ContentWindow::WindowProcedure(message, wParam, lParam);
+    return ContentView::WindowProcedure(message, wParam, lParam);
 }

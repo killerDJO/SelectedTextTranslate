@@ -1,7 +1,7 @@
 #pragma once
-#include "View\Framework\Windows\ChildWindow.h"
+#include "View\Framework\View\Views\ChildView.h"
 
-class ContentWindow : public ChildWindow
+class ContentView : public ChildView
 {
 protected:
     int paddingX;
@@ -19,8 +19,8 @@ protected:
     Brush* backgroundBrush;
 
 public:
-    ContentWindow(WindowContext* context, Window* parentWindow);
-    ~ContentWindow() override;
+    ContentView(ViewContext* context, View* parentWindow);
+    ~ContentView() override;
 
     int GetLineHeight() const;
     void SetLineHeight(int lineHeight);

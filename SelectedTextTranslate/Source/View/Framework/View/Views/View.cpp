@@ -1,40 +1,40 @@
-#include "View\Framework\Windows\Window.h"
+#include "View\Framework\View\Views\View.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-Window::Window(WindowContext* context)
+View::View(ViewContext* context)
     : NativeWindowHolder(context->GetInstance())
 {
     if(context == nullptr)
     {
-        throw SelectedTextTranslateFatalException(L"Window context must be provided.");
+        throw SelectedTextTranslateFatalException(L"View context must be provided.");
     }
 
     this->context = context;
     this->descriptor = WindowDescriptor();
     this->nativeStateDescriptor = WindowNativeStateDescriptor();
-    this->activeChildWindows = vector<Window*>();
-    this->destroyBeforeDrawList = vector<Window*>();
+    this->activeChildViews = vector<View*>();
+    this->destroyBeforeDrawList = vector<View*>();
 
     this->className = nullptr;
     this->deviceContextBuffer = nullptr;
 
-    this->windowState = WindowStates::New;
+    this->viewState = ViewStates::New;
 }
 
-WindowDescriptor Window::GetDescriptor() const
+WindowDescriptor View::GetDescriptor() const
 {
     return descriptor;
 }
 
-void Window::SetDescriptor(WindowDescriptor descriptor)
+void View::SetDescriptor(WindowDescriptor descriptor)
 {
-    AssertWindowNotInitialized();
+    AssertViewNotInitialized();
     this->descriptor = descriptor;
 }
 
-void Window::Initialize()
+void View::Initialize()
 {
     if(descriptor.IsEmpty())
     {
@@ -49,23 +49,23 @@ void Window::Initialize()
     contentSize = Size(0, 0);
 
     NativeWindowHolder::Initialize();
-    windowState = WindowStates::Initialized;
+    viewState = ViewStates::Initialized;
 }
 
-void Window::InitializeAndRender(bool preserveScrolls)
+void View::InitializeAndRender(bool preserveScrolls)
 {
     Initialize();
     Render(preserveScrolls);
 }
 
-void Window::Render(bool preserveScrolls)
+void View::Render(bool preserveScrolls)
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
 
     RenderingContext* renderingContext = context->GetRenderingContext();
 
     renderingContext->BeginRender(this);
-    windowState = WindowStates::Rendering;
+    viewState = ViewStates::Rendering;
 
     contentSize = RenderToBuffer();
     nativeStateDescriptor.SetSize(descriptor.GetSize());
@@ -80,7 +80,7 @@ void Window::Render(bool preserveScrolls)
         nativeStateDescriptor.EnsureHeight(contentSize.GetHeight());
     }
 
-    windowState = WindowStates::Rendered;
+    viewState = ViewStates::Rendered;
 
     if (renderingContext->IsRenderingRoot(this))
     {
@@ -90,7 +90,7 @@ void Window::Render(bool preserveScrolls)
     renderingContext->EndRender(this);
 }
 
-Size Window::RenderToBuffer()
+Size View::RenderToBuffer()
 {
     Renderer* renderer = context->GetRenderingContext()->GetRenderer();
 
@@ -119,35 +119,35 @@ Size Window::RenderToBuffer()
     return renderedSize;
 }
 
-void Window::ApplyNativeState(bool preserveScrolls)
+void View::ApplyNativeState(bool preserveScrolls)
 {
     // Child windows should be destroyed first
-    DestroyChildWindows(destroyBeforeDrawList);
+    DestroyChildViews(destroyBeforeDrawList);
 
-    ApplyWindowPosition(preserveScrolls);
+    ApplyViewPosition(preserveScrolls);
 
     // Important to draw child windows first
-    for (size_t i = 0; i < activeChildWindows.size(); ++i)
+    for (size_t i = 0; i < activeChildViews.size(); ++i)
     {
-        Window* childWindow = activeChildWindows[i];
-        if (childWindow->IsVisible())
+        View* childView = activeChildViews[i];
+        if (childView->IsVisible())
         {
-            childWindow->Show();
+            childView->Show();
         }
         else
         {
-            childWindow->Hide();
+            childView->Hide();
         }
 
-        childWindow->ApplyNativeState(preserveScrolls);
+        childView->ApplyNativeState(preserveScrolls);
     }
 
     Draw(false);
 
-    windowState = WindowStates::Drawn;
+    viewState = ViewStates::Drawn;
 }
 
-void Window::ApplyWindowPosition(bool preserveScrolls)
+void View::ApplyViewPosition(bool preserveScrolls)
 {
     int verticalScrollPosition = 0;
     int horizontalScrollPosition = 0;
@@ -157,7 +157,7 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
         horizontalScrollPosition = context->GetScrollProvider()->GetCurrentScrollPostion(this, ScrollBars::Horizontal);
     }
 
-    Point offset = GetInitialWindowOffset();
+    Point offset = GetInitialViewOffset();
     AssertCriticalWinApiResult(MoveWindow(
         windowHandle,
         descriptor.GetPosition().GetX() - offset.GetX(),
@@ -178,20 +178,20 @@ void Window::ApplyWindowPosition(bool preserveScrolls)
     SendMessage(windowHandle, WM_NCPAINT, NULL, NULL);
 }
 
-Point Window::GetInitialWindowOffset()
+Point View::GetInitialViewOffset()
 {
     return Point(0, 0);
 }
 
-void Window::Draw(bool drawChildren)
+void View::Draw(bool drawChildren)
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
 
     if (drawChildren)
     {
         // Important to draw child windows before drawing parent window.
         // Otherwise, WM_CLIPCHILDREN style will cause redraw of the parent window after the child windows draw.
-        DrawChildWindows();
+        DrawChildViews();
     }
 
     HDC deviceContext = GetDC(windowHandle);
@@ -200,43 +200,43 @@ void Window::Draw(bool drawChildren)
     AssertCriticalWinApiResult(ReleaseDC(windowHandle, deviceContext));
 }
 
-void Window::DrawChildWindows()
+void View::DrawChildViews()
 {
-    for (size_t i = 0; i < activeChildWindows.size(); ++i)
+    for (size_t i = 0; i < activeChildViews.size(); ++i)
     {
-        Window* childWindow = activeChildWindows[i];
-        childWindow->Draw(true);
+        View* childView = activeChildViews[i];
+        childView->Draw(true);
     }
 }
 
-void Window::AddChildWindow(Window* childWindow)
+void View::AddChildView(View* ChildView)
 {
-    activeChildWindows.push_back(childWindow);
+    activeChildViews.push_back(ChildView);
 }
 
-void Window::DestroyChildWindows()
+void View::DestroyChildViews()
 {
-    destroyBeforeDrawList.insert(destroyBeforeDrawList.end(), activeChildWindows.begin(), activeChildWindows.end());
-    activeChildWindows = vector<Window*>();
+    destroyBeforeDrawList.insert(destroyBeforeDrawList.end(), activeChildViews.begin(), activeChildViews.end());
+    activeChildViews = vector<View*>();
 }
 
-void Window::DestroyChildWindows(vector<Window*>& childWindows) const
+void View::DestroyChildViews(vector<View*>& childViews) const
 {
-    for (size_t i = 0; i < childWindows.size(); ++i)
+    for (size_t i = 0; i < childViews.size(); ++i)
     {
-        delete childWindows[i];
+        delete childViews[i];
     }
 
-    childWindows.clear();
-    childWindows.resize(0);
+    childViews.clear();
+    childViews.resize(0);
 }
 
-void Window::Resize()
+void View::Resize()
 {
     // By default, do nothing on resize.
 }
 
-DWORD Window::GetScrollStyle() const
+DWORD View::GetScrollStyle() const
 {
     int scrollStyle = 0;
 
@@ -253,12 +253,12 @@ DWORD Window::GetScrollStyle() const
     return scrollStyle;
 }
 
-Size Window::GetSize() const
+Size View::GetSize() const
 {
     return nativeStateDescriptor.GetSize();
 }
 
-Size Window::GetClientSize() const
+Size View::GetClientSize() const
 {
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
@@ -272,7 +272,7 @@ Size Window::GetClientSize() const
     AssertCriticalWinApiResult(GetWindowRect(windowHandle, &windowRect));
     Size currentWindowSize = Size(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
-    // Important to compute the future window size in case wind has been scaled but changes not yet applied
+    // Important to compute the future window size in case window has been scaled but changes not yet applied
     double scaleFactor = double(windowRect.right - windowRect.left) / currentWindowSize.GetWidth();
 
     int horizontalFrame = roundToInt((currentWindowSize.GetWidth() - availablClientSize.GetWidth()) * scaleFactor);
@@ -283,53 +283,53 @@ Size Window::GetClientSize() const
     return scaledClientSize;
 }
 
-Size Window::GetContentSize() const
+Size View::GetContentSize() const
 {
     return contentSize;
 }
 
-Point Window::GetPosition() const
+Point View::GetPosition() const
 {
     return nativeStateDescriptor.GetPosition();
 }
 
-Rect Window::GetBoundingRect() const
+Rect View::GetBoundingRect() const
 {
     Point positon = GetPosition();
     Size size = GetSize();
     return Rect(positon, size);
 }
 
-void Window::MakeVisible()
+void View::MakeVisible()
 {
     nativeStateDescriptor.MakeVisible();
 }
 
-void Window::MakeHidden()
+void View::MakeHidden()
 {
     nativeStateDescriptor.MakeHidden();
 }
 
-bool Window::IsVisible() const
+bool View::IsVisible() const
 {
     return nativeStateDescriptor.IsVisible();
 }
 
-void Window::Show()
+void View::Show()
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
     MakeVisible();
     ShowWindow(GetHandle(), SW_SHOW);
 }
 
-void Window::Hide()
+void View::Hide()
 {
-    AssertWindowInitialized();
+    AssertViewInitialized();
     MakeHidden();
     ShowWindow(GetHandle(), SW_HIDE);
 }
 
-LRESULT Window::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT View::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     try
     {
@@ -348,7 +348,7 @@ LRESULT Window::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lPara
     return -1;
 }
 
-LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT View::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     context->GetScrollProvider()->ProcessScrollMessages(this, message, wParam, lParam);
 
@@ -374,28 +374,28 @@ LRESULT Window::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-void Window::AssertWindowInitialized() const
+void View::AssertViewInitialized() const
 {
-    if (windowState == WindowStates::New)
+    if (viewState == ViewStates::New)
     {
-        throw SelectedTextTranslateFatalException(L"Window has not been initialized.");
+        throw SelectedTextTranslateFatalException(L"View has not been initialized.");
     }
 }
 
-void Window::AssertWindowNotInitialized() const
+void View::AssertViewNotInitialized() const
 {
-    if (windowState != WindowStates::New)
+    if (viewState != ViewStates::New)
     {
-        throw SelectedTextTranslateFatalException(L"Window has been already initialized.");
+        throw SelectedTextTranslateFatalException(L"View has been already initialized.");
     }
 }
 
-Window::~Window()
+View::~View()
 {
     delete deviceContextBuffer;
 
-    DestroyChildWindows(activeChildWindows);
-    DestroyChildWindows(destroyBeforeDrawList);
+    DestroyChildViews(activeChildViews);
+    DestroyChildViews(destroyBeforeDrawList);
 
-    windowState = WindowStates::Destroyed;
+    viewState = ViewStates::Destroyed;
 }

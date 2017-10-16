@@ -1,7 +1,7 @@
 #pragma once
-#include "View\Framework\Windows\ChildWindow.h"
+#include "View\Framework\View\Views\ChildView.h"
 
-class HotKeyInputWindow : public ChildWindow
+class HotKeyInputWindow : public ChildView
 {
 private:
     DWORD currentHotkey;
@@ -31,7 +31,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HotKeyInputWindow(WindowContext* context, Window* parentWindow);
+    HotKeyInputWindow(ViewContext* context, View* parentWindow);
     virtual ~HotKeyInputWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;

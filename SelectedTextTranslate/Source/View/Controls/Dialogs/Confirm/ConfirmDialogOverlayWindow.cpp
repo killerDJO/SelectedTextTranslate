@@ -1,8 +1,8 @@
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-ConfirmDialogOverlayWindow::ConfirmDialogOverlayWindow(WindowContext* context, Window* parentWindow)
-    : ChildWindow(context, parentWindow)
+ConfirmDialogOverlayWindow::ConfirmDialogOverlayWindow(ViewContext* context, View* parentWindow)
+    : ChildView(context, parentWindow)
 {
     this->className = L"STT_CONFIRM_DIALOG_OVERLAY";
     this->isLayered = true;
@@ -11,7 +11,7 @@ ConfirmDialogOverlayWindow::ConfirmDialogOverlayWindow(WindowContext* context, W
 
 void ConfirmDialogOverlayWindow::Initialize()
 {
-    ChildWindow::Initialize();
+    ChildView::Initialize();
 
     AssertCriticalWinApiResult(SetLayeredWindowAttributes(windowHandle, 0, 175, LWA_ALPHA));
 }

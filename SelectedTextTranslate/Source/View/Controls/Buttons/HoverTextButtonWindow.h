@@ -18,7 +18,7 @@ protected:
     void RenderStatesDeviceContexts() override;
 
 public:
-    HoverTextButtonWindow(WindowContext* context, Window* parentWindow);
+    HoverTextButtonWindow(ViewContext* context, View* parentWindow);
     ~HoverTextButtonWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;
