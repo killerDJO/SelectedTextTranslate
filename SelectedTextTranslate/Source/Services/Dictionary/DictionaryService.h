@@ -2,6 +2,7 @@
 #include "Infrastructure\Logging\Logger.h"
 #include "Services\Dictionary\Dto\DictionaryRecord.h"
 #include "Providers\SqliteProvider.h"
+#include "CompositionRoot.h"
 
 class DictionaryService
 {
@@ -16,7 +17,7 @@ private:
     vector<DictionaryRecord> GetLogRecords(sqlite3_stmt* statement) const;
     
 public:
-    DictionaryService(Logger* logger, SqliteProvider* sqliteProvider);
+    DictionaryService(CompositionRoot* root);
     ~DictionaryService();
 
     void IncrementTranslationsCount(wstring sentence, bool isForcedTranslation) const;

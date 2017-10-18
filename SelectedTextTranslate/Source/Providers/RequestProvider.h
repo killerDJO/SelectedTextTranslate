@@ -1,5 +1,6 @@
 #pragma once
 #include "Infrastructure\Logging\Logger.h"
+#include "CompositionRoot.h"
 
 class RequestProvider
 {
@@ -13,7 +14,7 @@ private:
     vector<unsigned char> GetData(HINTERNET request) const;
 
 public:
-    RequestProvider(Logger* logger);
+    RequestProvider(CompositionRoot* root);
 
     wstring GetStringResponse(const wstring host, const wstring url) const;
     vector<unsigned char> GetResponse(const wstring host, const wstring url) const;

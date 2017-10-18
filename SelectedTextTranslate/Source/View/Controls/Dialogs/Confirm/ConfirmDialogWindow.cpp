@@ -53,9 +53,9 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
     overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize()));
     overlayWindow->InitializeAndRender();
 
-    int dialogContentWidth = context->GetScaleProvider()->Scale(200);
+    int dialogContentWidth = scaleProvider->Scale(200);
     int paddingX = roundToInt((GetSize().GetWidth() - dialogContentWidth) / 2);
-    int paddingY = context->GetScaleProvider()->Scale(50);
+    int paddingY = scaleProvider->Scale(50);
 
     dialogContentView = new ConfirmDialogContentWindow(context, this);
     dialogContentView->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);

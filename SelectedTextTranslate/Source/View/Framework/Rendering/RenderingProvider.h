@@ -6,6 +6,7 @@
 #include "View\Framework\Rendering\Objects\Pen.h"
 #include "View\Framework\Rendering\Objects\Font.h"
 #include "View\Framework\Rendering\Objects\Brush.h"
+#include "CompositionRoot.h"
 
 class RenderingProvider
 {
@@ -18,7 +19,7 @@ private:
     TEXTMETRIC GetFontMetrics(HFONT font) const;
 
 public:
-    RenderingProvider(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider);
+    RenderingProvider(CompositionRoot* root);
     ~RenderingProvider();
 
     Font* CreateCustomFont(FontSizes fontSize, bool isItalic = false, bool isUnderscored = false, bool isBold = false) const;

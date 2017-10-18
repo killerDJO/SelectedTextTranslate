@@ -1,22 +1,20 @@
 #pragma once
-#include "Controllers\Enums\ApplicationViews.h"
 #include "View\Framework\View\Views\View.h"
 #include "View\Providers\HotkeyProvider.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 #include "View\Content\Main\Dto\ViewDescriptor.h"
 #include "View\Content\Dictionary\DictionaryComponent.h"
-#include "View\Content\Translation\TranslationView.h"
-#include "View\Content\Settings\SettingsView.h"
+#include "View\Content\Main\Enums\ApplicationViews.h"
+#include "View\Content\Translation\TranslationComponent.h"
+#include "View\Content\Settings\SettingsComponent.h"
 
 class MainView : public View
 {
 private:
-    TranslationView* translationWindow;
+    TranslationComponent* translationWindow;
     DictionaryComponent* dictionaryComponent;
-    SettingsView* settingsWindow;
+    SettingsComponent* settingsWindow;
     ConfirmDialogWindow* confirmDialogWindow;
-
-    HotkeyProvider* hotkeyProvider;
 
     ApplicationViews applicationView;
     map<ApplicationViews, ViewDescriptor> applicationViewDescriptors;
@@ -25,11 +23,9 @@ private:
     void CreateChildViews();
     void SetViewWindowDescriptor(View* viewWindow, ApplicationViews view);
 
-    void Scale(double scaleFactorAjustment);
     void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
     void Resize() override;
 
-    void SetApplicationView(ApplicationViews applicationView);
     View* GetViewToShow() const;
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
@@ -42,18 +38,20 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainView(ViewContext* context, HotkeyProvider* hotkeyProvider);
+    MainView(ViewContext* context);
 
     void Initialize() override;
+
+    void SetApplicationView(ApplicationViews applicationView);
+    void Translate(wstring input);
 
     void SetDescriptor(WindowDescriptor descriptor) override;
 
     void Minimize();
     void Maximize();
 
-    Subscribeable<> OnPlayText;
-    Subscribeable<> OnForceTranslation;
-    Subscribeable<> OnTranslateSuggestion;
-    Subscribeable<int> OnShowTranslation;
-    Subscribeable<Settings> OnSaveSettings;
+    void Scale(double scaleFactorAjustment);
+
+    Subscribeable<int> OnHotkey;
+    Subscribeable<bool> OnVisibilityChanged;
 };

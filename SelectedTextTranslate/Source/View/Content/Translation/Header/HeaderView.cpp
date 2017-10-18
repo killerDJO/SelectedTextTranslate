@@ -34,14 +34,14 @@ Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult mod
     int imageSize = fontSmall->GetAscent();
     HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
     audioButton->SetDimensions(
-        renderPosition.MoveY(-imageSize).MoveY(2, context->GetScaleProvider()).GetPosition(),
+        renderPosition.MoveY(-imageSize).MoveY(2, scaleProvider).GetPosition(),
         Size(imageSize, imageSize));
     audioButton->SetHoverIconResource(IDR_AUDIO);
     audioButton->SetNormalIconResource(IDR_AUDIO_INACTIVE);
     audioButton->OnClick.Subscribe(&OnPlayText);
     audioButton->InitializeAndRender();
 
-    renderPosition = renderPosition.MoveX(imageSize).MoveX(2, context->GetScaleProvider());
+    renderPosition = renderPosition.MoveX(imageSize).MoveX(2, scaleProvider);
     renderPosition = renderer->PrintText(sentence.GetOrigin(), fontSmall, Colors::Gray, renderPosition);
 
     RenderDescriptor actionRenderDescriptor = RenderDescriptor(renderer, renderPosition.MoveX(1));

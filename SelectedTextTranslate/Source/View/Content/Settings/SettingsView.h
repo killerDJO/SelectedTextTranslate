@@ -22,8 +22,8 @@ private:
     RenderResult CreateSettingsGroups(RenderDescriptor renderDescriptor);
     RenderResult CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor);
 
-    template<typename TSettings>
-    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings>* settingsGroup);
+    template<typename TSettings, typename TView>
+    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings, TView>* settingsGroup);
 
     void CreateControls(RenderDescriptor renderDescriptor);
     RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
@@ -46,8 +46,8 @@ public:
     Subscribeable<> OnResetSettings;
 };
 
-template <typename TSettings>
-RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings>* settingsGroup)
+template <typename TSettings, typename TView>
+RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings, TView>* settingsGroup)
 {
     settingsGroup->SetDescriptor(WindowDescriptor::CreateWindowDescriptor(
         nativeStateDescriptor.GetPosition(),
@@ -62,7 +62,7 @@ RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescri
 
     settingsGroup->InitializeAndRender();
 
-    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
+    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup->GetView());
 
     return RenderResult(settingsGroup->GetBoundingRect());
 }

@@ -1,9 +1,9 @@
 #include "View\Framework\Rendering\RenderingContext.h"
 
-RenderingContext::RenderingContext(RenderingProvider* renderingProvider, DeviceContextProvider* deviceContextProvider)
+RenderingContext::RenderingContext(CompositionRoot* root)
 {
-    this->deviceContextProvider = deviceContextProvider;
-    this->renderingProvider = renderingProvider;
+    this->deviceContextProvider = root->GetService<DeviceContextProvider>();
+    this->renderingProvider = root->GetService<RenderingProvider>();
 
     this->renderingRoot = nullptr;
 }

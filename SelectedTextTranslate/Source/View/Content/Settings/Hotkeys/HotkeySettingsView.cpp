@@ -1,8 +1,8 @@
 #include "View\Content\Settings\Hotkeys\HotkeySettingsView.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 
-HotkeySettingsView::HotkeySettingsView(ViewContext* context, View* parentWindow, ModelHolder<SettingsGroupState<HotkeySettings>*>* modelHolder)
-    : SettingsGroupView(context, parentWindow, modelHolder)
+HotkeySettingsView::HotkeySettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupState<HotkeySettings>*>* modelHolder)
+    : SettingsGroupView(context, parentView, modelHolder)
 {
     this->font = renderingProvider->CreateCustomFont(FontSizes::Medium);
     this->controlsMargin = scaleProvider->Scale(7);

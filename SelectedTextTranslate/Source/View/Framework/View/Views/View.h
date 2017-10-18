@@ -24,6 +24,8 @@ protected:
     ScaleProvider* scaleProvider;
     ScrollProvider* scrollProvider;
     RenderingProvider* renderingProvider;
+    RenderingContext* renderingContext;
+    DeviceContextProvider* deviceContextProvider;
 
     WindowDescriptor descriptor;
     WindowNativeStateDescriptor nativeStateDescriptor;

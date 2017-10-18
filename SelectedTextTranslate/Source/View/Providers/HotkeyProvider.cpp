@@ -1,6 +1,6 @@
 #include "View\Providers\HotkeyProvider.h"
 
-HotkeyProvider::HotkeyProvider(HotkeySettings settings, MessageBus* messageBus)
+HotkeyProvider::HotkeyProvider(HotkeySettings settings, CompositionRoot* root)
 {
     this->hotkeysRegistry = vector<HotkeyInfo>();
     this->isSuspended = false;
@@ -8,8 +8,8 @@ HotkeyProvider::HotkeyProvider(HotkeySettings settings, MessageBus* messageBus)
 
     SetHotkeysSettings(settings);
 
-    messageBus->OnSuspendHotkeys.Subscribe(bind(&HotkeyProvider::SuspendHotkeys, this));
-    messageBus->OnEnableHotkeys.Subscribe(bind(&HotkeyProvider::EnableHotkeys, this));
+    root->GetService<MessageBus>()->OnSuspendHotkeys.Subscribe(bind(&HotkeyProvider::SuspendHotkeys, this));
+    root->GetService<MessageBus>()->OnEnableHotkeys.Subscribe(bind(&HotkeyProvider::EnableHotkeys, this));
 }
 
 void HotkeyProvider::SetHotkeysSettings(HotkeySettings settings)

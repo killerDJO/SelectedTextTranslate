@@ -6,7 +6,7 @@ ConfirmDialogOverlayWindow::ConfirmDialogOverlayWindow(ViewContext* context, Vie
 {
     this->className = L"STT_CONFIRM_DIALOG_OVERLAY";
     this->isLayered = true;
-    this->backgroundBrush = context->GetRenderingProvider()->CreateCustomBrush(Colors::White);
+    this->backgroundBrush = renderingProvider->CreateCustomBrush(Colors::White);
 }
 
 void ConfirmDialogOverlayWindow::Initialize()

@@ -2,8 +2,8 @@
 #include "View\Framework\View\Component.h"
 #include "View\Content\Settings\Base\SettingsGroupView.h"
 
-template<typename TSettings>
-class SettingGroupComponent : public Component<SettingsGroupView<TSettings>>, public ModelHolder<SettingsGroupState<TSettings>*>
+template<typename TSettings, typename TView>
+class SettingGroupComponent : public Component<TView>, public ModelHolder<SettingsGroupState<TSettings>*>
 {
 private:
     void EnsureSettingsFetched();
@@ -16,12 +16,12 @@ protected:
     SettingsGroupState<TSettings> settingsGroupState;
 
 public:
-    SettingGroupComponent(ViewContext* context, View* parentView, ModelHolder<TSettings>* modelHolder);
+    SettingGroupComponent(ViewContext* context, TView* view, ModelHolder<TSettings>* modelHolder);
 
     virtual bool IsValid() const = 0;
     virtual bool HasChanges() const = 0;
 
-    TSettings GetCurrentSettings() const;
+    TSettings GetCurrentSettings();
     void ResetCurrentSettings();
 
     SettingsGroupState<TSettings>* GetModel() override;
@@ -29,17 +29,17 @@ public:
     Subscribeable<> OnSettingsChanged;
 };
 
-template <typename TSettings>
-SettingGroupComponent<TSettings>::SettingGroupComponent(ViewContext* context, View* parentView, ModelHolder<TSettings>* modelHolder)
-    : Component<SettingsGroupView<TSettings>>(context, new SettingsGroupView<TSettings>(context, parentView, this))
+template<typename TSettings, typename TView>
+SettingGroupComponent<TSettings, TView>::SettingGroupComponent(ViewContext* context, TView* view, ModelHolder<TSettings>* modelHolder)
+    : Component<TView>(context, view)
 {
     this->modelHolder = modelHolder;
     this->view->OnSettingsChanged.Subscribe(bind(&SettingGroupComponent::ProcessChange, this));
     this->view->OnSettingsToggled.Subscribe(bind(&SettingGroupComponent::ProcessToggle, this));
 }
 
-template <typename TSettings>
-void SettingGroupComponent<TSettings>::EnsureSettingsFetched()
+template <typename TSettings, typename TView>
+void SettingGroupComponent<TSettings, TView>::EnsureSettingsFetched()
 {
     if (settingsGroupState.IsEmptyState())
     {
@@ -48,8 +48,8 @@ void SettingGroupComponent<TSettings>::EnsureSettingsFetched()
     }
 }
 
-template <typename TSettings>
-void SettingGroupComponent<TSettings>::ProcessToggle()
+template <typename TSettings, typename TView>
+void SettingGroupComponent<TSettings, TView>::ProcessToggle()
 {
     SettingsGroupVisibilityState visibilityState = this->settingsGroupState.GetVisibilityState() == SettingsGroupVisibilityState::Collapsed
         ? SettingsGroupVisibilityState::Expanded
@@ -58,8 +58,8 @@ void SettingGroupComponent<TSettings>::ProcessToggle()
     this->view->Render(true);
 }
 
-template <typename TSettings>
-void SettingGroupComponent<TSettings>::ProcessChange()
+template <typename TSettings, typename TView>
+void SettingGroupComponent<TSettings, TView>::ProcessChange()
 {
     SettingsGroupContentState contentState;
     if (!IsValid())
@@ -80,21 +80,21 @@ void SettingGroupComponent<TSettings>::ProcessChange()
     this->OnSettingsChanged.Notify();
 }
 
-template <typename TSettings>
-TSettings SettingGroupComponent<TSettings>::GetCurrentSettings() const
+template <typename TSettings, typename TView>
+TSettings SettingGroupComponent<TSettings, TView>::GetCurrentSettings()
 {
     this->EnsureSettingsFetched();
     return settingsGroupState.GetSettings();
 }
 
-template <typename TSettings>
-void SettingGroupComponent<TSettings>::ResetCurrentSettings()
+template <typename TSettings, typename TView>
+void SettingGroupComponent<TSettings, TView>::ResetCurrentSettings()
 {
     settingsGroupState.SetSettings(modelHolder->GetModel());
 }
 
-template <typename TSettings>
-SettingsGroupState<TSettings>* SettingGroupComponent<TSettings>::GetModel()
+template <typename TSettings, typename TView>
+SettingsGroupState<TSettings>* SettingGroupComponent<TSettings, TView>::GetModel()
 {
     this->EnsureSettingsFetched();
     return &settingsGroupState;

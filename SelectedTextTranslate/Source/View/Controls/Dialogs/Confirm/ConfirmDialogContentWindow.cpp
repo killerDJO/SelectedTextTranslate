@@ -10,13 +10,13 @@ ConfirmDialogContentWindow::ConfirmDialogContentWindow(ViewContext* context, Vie
 {
     this->className = L"STT_CONFIRM_DIALOG_CONTENT";
     this->isLayered = true;
-    this->paddingX = context->GetScaleProvider()->Scale(10);
-    this->paddingY = context->GetScaleProvider()->Scale(5);
-    this->lineHeight = context->GetScaleProvider()->Scale(25);
-    this->borderWidth = context->GetScaleProvider()->Scale(1);
-    this->height = context->GetScaleProvider()->Scale(103);
+    this->paddingX = scaleProvider->Scale(10);
+    this->paddingY = scaleProvider->Scale(5);
+    this->lineHeight = scaleProvider->Scale(25);
+    this->borderWidth = scaleProvider->Scale(1);
+    this->height = scaleProvider->Scale(103);
 
-    this->headerFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal, false, false, true);
+    this->headerFont = renderingProvider->CreateCustomFont(FontSizes::Normal, false, false, true);
 
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
@@ -92,7 +92,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     confirmButton->EnableLayeredMode();
     confirmButton->InitializeAndRender();
 
-    int textWidth = context->GetRenderingProvider()->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
+    int textWidth = renderingProvider->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
     HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);

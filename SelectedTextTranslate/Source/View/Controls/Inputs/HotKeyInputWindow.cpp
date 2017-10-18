@@ -1,17 +1,18 @@
 #include "View\Controls\Inputs\HotKeyInputWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
+#include "View\Framework\MessageBus.h"
 
 HotKeyInputWindow::HotKeyInputWindow(ViewContext* context, View* parentWindow)
     : ChildView(context, parentWindow)
 {
     this->className = HOTKEY_CLASS;
     this->currentHotkey = 0;
-    this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Medium);
+    this->defaultFont = renderingProvider->CreateCustomFont(FontSizes::Medium);
     this->font = nullptr;
-    this->padding = context->GetScaleProvider()->Scale(3);
-    this->borderWidth = context->GetScaleProvider()->Scale(1);
-    this->width = context->GetScaleProvider()->Scale(200);
+    this->padding = scaleProvider->Scale(3);
+    this->borderWidth = scaleProvider->Scale(1);
+    this->width = scaleProvider->Scale(200);
     this->lineHeight = this->defaultFont->GetHeight();
     this->hasFocus = false;
     this->isValid = true;
@@ -177,7 +178,7 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         RenderToBuffer();
         ShowCustomCaret();
         InvalidateRect(windowHandle, nullptr, TRUE);
-        context->GetMessageBus()->SuspendHotkeys();
+        context->Get<MessageBus>()->SuspendHotkeys();
         return TRUE;
     }
 
@@ -187,7 +188,7 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
         RenderToBuffer();
         AssertCriticalWinApiResult(HideCaret(windowHandle));
         InvalidateRect(windowHandle, nullptr, TRUE);
-        context->GetMessageBus()->EnableHotkeys();
+        context->Get<MessageBus>()->EnableHotkeys();
         return TRUE;
     }
 
@@ -295,6 +296,6 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
 
 HotKeyInputWindow::~HotKeyInputWindow()
 {
-    context->GetMessageBus()->EnableHotkeys();
+    context->Get<MessageBus>()->EnableHotkeys();
     delete defaultFont;
 }

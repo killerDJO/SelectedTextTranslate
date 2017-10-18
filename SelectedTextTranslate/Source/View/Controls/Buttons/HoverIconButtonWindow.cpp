@@ -70,8 +70,8 @@ void HoverIconButtonWindow::Initialize()
 
 void HoverIconButtonWindow::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(GetSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalIconResource);
@@ -85,13 +85,13 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     if (iconsCache.count(cacheKey) != 0)
     {
         HDC renderedDC = iconsCache[cacheKey];
-        context->GetDeviceContextProvider()->CopyDeviceContext(renderedDC, deviceContext, GetSize());
+        deviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, GetSize());
         return;
     }
 
     Gdiplus::Graphics graphics(deviceContext);
 
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    Renderer* renderer = renderingContext->GetRenderer();
 
     if(backgroundBrush != nullptr)
     {
@@ -100,7 +100,7 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
 
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
+    renderingContext->ReleaseRenderer(renderer);
 
     Gdiplus::Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
 
@@ -115,8 +115,8 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
 
     delete iconMetafile;
 
-    HDC cachedDC = context->GetDeviceContextProvider()->CreateDeviceContext(GetSize());
-    context->GetDeviceContextProvider()->CopyDeviceContext(deviceContext, cachedDC, GetSize());
+    HDC cachedDC = deviceContextProvider->CreateDeviceContext(GetSize());
+    deviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, GetSize());
     iconsCache[cacheKey] = cachedDC;
 }
 

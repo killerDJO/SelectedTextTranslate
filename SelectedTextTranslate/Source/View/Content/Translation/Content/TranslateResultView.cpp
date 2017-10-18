@@ -54,7 +54,7 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultConte
             vector<wstring> reverseTranslations = entry.GetReverseTranslations();
             if (reverseTranslations.size() != 0)
             {
-                renderPosition = renderer->PrintText(L" - ", fontNormal, Colors::Gray, renderPosition.MoveX(2, context->GetScaleProvider()));
+                renderPosition = renderer->PrintText(L" - ", fontNormal, Colors::Gray, renderPosition.MoveX(2, scaleProvider));
                 for (size_t k = 0; k < reverseTranslations.size(); ++k)
                 {
                     wstring text = wstring(reverseTranslations[k]);
@@ -68,19 +68,19 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultConte
             }
 
             int k = entry.GetScore() >= 0.05 ? 0 : (entry.GetScore() >= 0.0025 ? 1 : 2);
-            int rateUnit = context->GetScaleProvider()->Scale(8);
+            int rateUnit = scaleProvider->Scale(8);
             int strokeHeight = fontNormal->GetStrokeHeight();
 
             Rect rect = Rect(
                 paddingX + k * rateUnit,
-                renderPosition.GetY() - strokeHeight + context->GetScaleProvider()->Scale(2),
+                renderPosition.GetY() - strokeHeight + scaleProvider->Scale(2),
                 (3 - k) * rateUnit,
-                strokeHeight - context->GetScaleProvider()->Scale(2));
+                strokeHeight - scaleProvider->Scale(2));
 
             renderer->DrawRect(rect, lightGrayBrush);
         }
 
-        renderPosition = renderPosition.MoveY(7, context->GetScaleProvider()).SetX(paddingX * 3);
+        renderPosition = renderPosition.MoveY(7, scaleProvider).SetX(paddingX * 3);
         renderPosition = CreateExpandButton(model, RenderDescriptor(renderer, renderPosition), category, i, showedEntries.size());
 
         renderPosition = renderPosition.MoveY(lineHeight).SetX(paddingX);

@@ -1,9 +1,9 @@
 #include "Services\Settings\SettingsProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-SettingsProvider::SettingsProvider(Logger* logger)
+SettingsProvider::SettingsProvider(CompositionRoot* root)
 {
-    this->logger = logger;
+    this->logger = root->GetService<Logger>();
     this->settingsFileName = L"settings.json";
 }
 

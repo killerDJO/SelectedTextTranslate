@@ -16,7 +16,7 @@ private:
     View* renderingRoot;
 
 public:
-    RenderingContext(RenderingProvider* renderingProvider, DeviceContextProvider* deviceContextProvider);
+    RenderingContext(CompositionRoot* root);
 
     Renderer* GetRenderer() const;
     void ReleaseRenderer(Renderer* renderer) const;

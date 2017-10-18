@@ -15,6 +15,7 @@
     <Image Include="Resources\SelectedTextTranslateDisabled.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Content\Settings\SettingsComponent.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultComponent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp" />
+    <ClCompile Include="Source\View\Framework\View\Component.cpp" />
     <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
@@ -64,7 +66,6 @@
     <ClCompile Include="Source\View\Framework\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\RenderingContext.cpp" />
-    <ClCompile Include="Source\Controllers\AppController.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResult.cpp" />
     <ClCompile Include="Source\Services\Dictionary\DictionaryService.cpp" />
     <ClCompile Include="Source\Infrastructure\Logging\Logger.cpp" />
@@ -98,6 +99,7 @@
     <ClCompile Include="Source\View\Content\Translation\TranslationComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Content\Settings\SettingsComponent.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupState.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingGroupComponent.h" />
     <ClInclude Include="Source\CompositionRoot.h" />
@@ -149,7 +151,7 @@
     <ClInclude Include="Source\View\Framework\Enums\ViewStates.h" />
     <ClInclude Include="Source\View\Framework\Providers\DeviceContextProvider.h" />
     <ClInclude Include="Source\View\Framework\Providers\ScaleProvider.h" />
-    <ClInclude Include="Source\Controllers\Enums\ApplicationViews.h" />
+    <ClInclude Include="Source\View\Content\Main\Enums\ApplicationViews.h" />
     <ClInclude Include="Source\View\Framework\Enums\OverflowModes.h" />
     <ClInclude Include="Source\View\Framework\Enums\ScrollBars.h" />
     <ClInclude Include="Source\View\Framework\Rendering\Renderer.h" />
@@ -157,7 +159,6 @@
     <ClInclude Include="Source\View\Framework\Enums\FontSizes.h" />
     <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h" />
     <ClInclude Include="Source\View\Framework\Rendering\RenderingContext.h" />
-    <ClInclude Include="Source\Controllers\AppController.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h" />
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResult.h" />

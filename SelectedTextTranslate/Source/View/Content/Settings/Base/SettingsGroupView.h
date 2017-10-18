@@ -5,7 +5,7 @@
 #include "View\Content\Settings\Base\Dto\SettingsGroupState.h"
 
 template<typename TSettings>
-class SettingsGroupView : public ComponentView<SettingsGroupState<TSettings>>
+class SettingsGroupView : public ComponentView<SettingsGroupState<TSettings>*>
 {
 private:
     int borderWidth;
@@ -23,12 +23,11 @@ public:
 
 template <typename TSettings>
 SettingsGroupView<TSettings>::SettingsGroupView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupState<TSettings>*>* modelHolder)
-    : ComponentView<SettingsGroupState<TSettings>>(context, parentView, modelHolder)
+    : ComponentView<SettingsGroupState<TSettings>*>(context, parentView, modelHolder)
 {
     this->paddingX = this->paddingY = this->scaleProvider->Scale(5);
     this->borderWidth = this->scaleProvider->Scale(1);
     this->className = L"STT_SETTINGS_GROUP";
-    this->headerWindow = nullptr;
 }
 
 template <typename TSettings>

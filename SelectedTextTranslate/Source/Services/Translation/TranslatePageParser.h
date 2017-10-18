@@ -16,7 +16,7 @@ private:
     string SearchScriptTag(GumboNode* node) const;
 
 public:
-    TranslatePageParser(Logger* logger, RequestProvider* requestProvider);
+    TranslatePageParser(CompositionRoot* root);
 
     long long GetTkk1();
     long long GetTkk2();

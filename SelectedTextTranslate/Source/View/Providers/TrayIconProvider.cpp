@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance)
+TrayIconProvider::TrayIconProvider(CompositionRoot* root, HINSTANCE instance)
     : NativeWindowHolder(instance), ErrorHandler(logger)
 {
     this->className = L"STT_TRAY";
@@ -11,8 +11,8 @@ TrayIconProvider::TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvide
     this->menu = nullptr;
     this->WM_TASKBARCREATED = 0;
 
-    this->logger = logger;
-    this->hotkeyProvider = hotkeyProvider;
+    this->logger = root->GetService<Logger>();
+    this->hotkeyProvider = root->GetService<HotkeyProvider>();
 
     this->OnExit = Subscribeable<>();
     this->OnPlaySelectedText = Subscribeable<>();

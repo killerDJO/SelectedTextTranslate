@@ -14,13 +14,13 @@ private:
     const char* GetSeriviceName() const;
 
 public:
+    ~CompositionRoot();
+
     template<typename TService>
     TService* GetService();
 
     template<typename TService>
     void RegisterService(TService* service);
-
-    void DisposeServices();
 };
 
 template <typename TService>
@@ -44,7 +44,7 @@ TService* CompositionRoot::GetService()
         throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Service %s is not registered", serviceName));
     }
 
-    return reinterpret_cast<TService>(serviceRegistry[serviceName]);
+    return reinterpret_cast<TService*>(serviceRegistry[serviceName]);
 }
 
 template <typename TService>
@@ -57,4 +57,11 @@ void CompositionRoot::RegisterService(TService* service)
     }
 
     serviceRegistry[serviceName] = service;
+}
+
+inline CompositionRoot::~CompositionRoot()
+{
+    for (pair<string, void*> element : serviceRegistry) {
+        delete element.second;
+    }
 }

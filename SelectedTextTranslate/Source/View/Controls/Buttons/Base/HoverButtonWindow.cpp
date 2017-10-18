@@ -136,7 +136,7 @@ HoverButtonWindow::~HoverButtonWindow()
         HDC deviceContextToDelete = iterator->second;
         if(deletedDeviceContexts.find(deviceContextToDelete) == deletedDeviceContexts.end())
         {
-            context->GetDeviceContextProvider()->DeleteDeviceContext(iterator->second);
+            deviceContextProvider->DeleteDeviceContext(iterator->second);
             deletedDeviceContexts.insert(deviceContextToDelete);
         }
     }

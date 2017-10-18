@@ -4,7 +4,7 @@
 HoverTextButtonWindow::HoverTextButtonWindow(ViewContext* context, View* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
-    this->defaultFont = context->GetRenderingProvider()->CreateCustomFont(FontSizes::Normal);
+    this->defaultFont = renderingProvider->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
     this->normalColor = Colors::Gray;
     this->hoverColor = Colors::Black;
@@ -98,13 +98,13 @@ wstring HoverTextButtonWindow::GetText() const
 
 void HoverTextButtonWindow::RenderStatesDeviceContexts()
 {
-    Size textSize = context->GetRenderingProvider()->GetTextSize(text.c_str(), GetFont());
+    Size textSize = renderingProvider->GetTextSize(text.c_str(), GetFont());
 
     nativeStateDescriptor.EnsureSize(textSize);
 
-    stateToDeviceContextMap[ButtonStates::Normal] = context->GetDeviceContextProvider()->CreateDeviceContext(nativeStateDescriptor.GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = context->GetDeviceContextProvider()->CreateDeviceContext(nativeStateDescriptor.GetSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = context->GetDeviceContextProvider()->CreateDeviceContext(nativeStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(nativeStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(nativeStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = deviceContextProvider->CreateDeviceContext(nativeStateDescriptor.GetSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
     deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
 
@@ -115,15 +115,15 @@ void HoverTextButtonWindow::RenderStatesDeviceContexts()
 
 void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors color) const
 {
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    Renderer* renderer = renderingContext->GetRenderer();
 
-    Brush* backgroundBrush = context->GetRenderingProvider()->CreateCustomBrush(backgroundColor);
+    Brush* backgroundBrush = renderingProvider->CreateCustomBrush(backgroundColor);
     renderer->SetBackground(backgroundBrush);
 
     renderer->PrintText(text.c_str(), GetFont(), color, Point(0, GetFont()->GetAscent()));
     renderer->Render(deviceContext, deviceContextBuffer->GetSize());
 
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
+    renderingContext->ReleaseRenderer(renderer);
 
     delete backgroundBrush;
 }

@@ -2,6 +2,7 @@
 #include "Services\Settings\Dto\HotkeySettings.h"
 #include "View\Framework\MessageBus.h"
 #include "View\Providers\Dto\HotkeyInfo.h"
+#include "CompositionRoot.h"
 
 class HotkeyProvider
 {
@@ -20,7 +21,7 @@ private:
     void UpdateHotkeysInfo();
 
 public:
-    HotkeyProvider(HotkeySettings settings, MessageBus* messageBus);
+    HotkeyProvider(HotkeySettings settings, CompositionRoot* root);
 
     void SetHotkeysSettings(HotkeySettings settings);
 

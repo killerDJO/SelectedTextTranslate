@@ -43,7 +43,7 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    TrayIconProvider(Logger* logger, HotkeyProvider* hotkeyProvider, HINSTANCE instance);
+    TrayIconProvider(CompositionRoot* root, HINSTANCE instance);
     ~TrayIconProvider() override;
 
     void Initialize() override;

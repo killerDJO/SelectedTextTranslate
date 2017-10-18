@@ -1,6 +1,5 @@
 #include "Application.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "Controllers\AppController.h"
 #include "Services\Translation\TranslationService.h"
 #include "Services\Translation\TranslatePageParser.h"
 #include "Services\Dictionary\DictionaryService.h"
@@ -9,8 +8,13 @@
 #include "View\Framework\Providers\DeviceContextProvider.h"
 #include "View\Framework\Providers\ScrollProvider.h"
 #include "View\Framework\Rendering\RenderingContext.h"
-#include "View\Content\Main\MainWindow.h"
 #include "CompositionRoot.h"
+#include "View\Framework\MessageBus.h"
+#include "View\Providers\HotkeyProvider.h"
+#include "View\Providers\TrayIconProvider.h"
+#include "Services\Translation\TextExtractor.h"
+#include "Services\Translation\TextPlayer.h"
+#include "View\Content\Main\MainComponent.h"
 
 Application::Application()
 {
@@ -55,58 +59,35 @@ int Application::Run(HINSTANCE hInstance) const
 
 int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
 {
-    CompositionRoot compositionRoot = CompositionRoot();
-    compositionRoot.RegisterService(logger);
-    compositionRoot.RegisterService(new SettingsProvider(logger));
-    Settings settings = settingsProvider.GetSettings();
-    MessageBus messageBus = MessageBus();
+    CompositionRoot* root = new CompositionRoot();
+    root->RegisterService(logger);
+    root->RegisterService(new SettingsProvider(root));
+    
+    Settings settings = root->GetService<SettingsProvider>()->GetSettings();
+    root->RegisterService(new MessageBus());
+    root->RegisterService(new HotkeyProvider(settings.GetHotkeySettings(), root));
+    root->RegisterService(new TrayIconProvider(root, hInstance));
 
-    HotkeyProvider hotkeyProvider = HotkeyProvider(settings.GetHotkeySettings(), &messageBus);
+    root->RegisterService(new SqliteProvider());
+    root->RegisterService(new DictionaryService(root));
+    root->RegisterService(new TextExtractor());
+    root->RegisterService(new RequestProvider(root));
+    root->RegisterService(new TranslatePageParser(root));
+    root->RegisterService(new TranslationService(root));
+    root->RegisterService(new TextPlayer(root, root->GetService<TrayIconProvider>()));
+    root->RegisterService(new ScaleProvider());
+    root->RegisterService(new DeviceContextProvider());
+    root->RegisterService(new ScrollProvider());
+    root->RegisterService(new RenderingProvider(root));
+    root->RegisterService(new RenderingContext(root));
 
-    TrayIconProvider trayIconProvider = TrayIconProvider(logger, &hotkeyProvider, hInstance);
+    ViewContext viewContext = ViewContext(hInstance, root, root->GetService<TrayIconProvider>());
 
-    SqliteProvider sqliteProvider = SqliteProvider();
-    DictionaryService dictionarySerivce = DictionaryService(logger, &sqliteProvider);
-    TextExtractor textExtractor = TextExtractor();
-    RequestProvider requestProvider = RequestProvider(logger);
-    TranslatePageParser translatePageParser = TranslatePageParser(logger, &requestProvider);
-    TranslationService translationService = TranslationService(logger, &requestProvider, &translatePageParser, &dictionarySerivce);
-    TextPlayer textPlayer = TextPlayer(logger, &translationService, &requestProvider, &trayIconProvider);
+    MainComponent mainComponent = MainComponent(&viewContext);
+    mainComponent.SetDescriptor(GetMainWindowDescriptor(root->GetService<ScaleProvider>()));
 
-    ScaleProvider scaleProvider = ScaleProvider();
-    DeviceContextProvider deviceContextProvider = DeviceContextProvider();
-    ScrollProvider scrollProvider = ScrollProvider();
-
-    RenderingProvider renderingProvider = RenderingProvider(&scaleProvider, &deviceContextProvider);
-    RenderingContext renderingContext = RenderingContext(&renderingProvider, &deviceContextProvider);
-
-    ViewContext windowContext = ViewContext(
-        hInstance,
-        &scrollProvider,
-        &scaleProvider,
-        &deviceContextProvider,
-        &messageBus,
-        &trayIconProvider,
-        &renderingContext,
-        &renderingProvider,
-        logger);
-
-    MainWindow mainWindow = MainWindow(&windowContext, &hotkeyProvider);
-    mainWindow.SetDescriptor(GetMainWindowDescriptor(&scaleProvider));
-
-    AppController appController = AppController(
-        &mainWindow,
-        &trayIconProvider,
-        &translationService,
-        &textPlayer,
-        &textExtractor,
-        &dictionarySerivce,
-        &settingsProvider,
-        &hotkeyProvider);
-
-    trayIconProvider.Initialize();
-    mainWindow.Initialize();
-    appController.Initialize();
+    root->GetService<TrayIconProvider>()->Initialize();
+    mainComponent.Initialize();
 
     logger->Log(LogLevels::Trace, L"Application initialized.");
 
@@ -117,6 +98,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         DispatchMessage(&msg);
     }
 
+    delete root;
     logger->Log(LogLevels::Trace, L"Application shutdown.");
 
     return msg.wParam;

@@ -1,10 +1,10 @@
 #include "View\Framework\Rendering\RenderingProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-RenderingProvider::RenderingProvider(ScaleProvider* scaleProvider, DeviceContextProvider* deviceContextProvider)
+RenderingProvider::RenderingProvider(CompositionRoot* root)
 {
-    this->scaleProvider = scaleProvider;
-    this->deviceContextProvider = deviceContextProvider;
+    this->scaleProvider = root->GetService<ScaleProvider>();
+    this->deviceContextProvider = root->GetService<DeviceContextProvider>();
 
     this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(1, 1));
 }

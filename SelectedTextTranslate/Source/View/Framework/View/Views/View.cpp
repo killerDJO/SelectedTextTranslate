@@ -16,6 +16,8 @@ View::View(ViewContext* context)
     this->scaleProvider = context->Get<ScaleProvider>();
     this->scrollProvider = context->Get<ScrollProvider>();
     this->renderingProvider = context->Get<RenderingProvider>();
+    this->renderingContext = context->Get<RenderingContext>();
+    this->deviceContextProvider = context->Get<DeviceContextProvider>();
 
     this->descriptor = WindowDescriptor();
     this->nativeStateDescriptor = WindowNativeStateDescriptor();
@@ -67,8 +69,6 @@ void View::Render(bool preserveScrolls)
 {
     AssertViewInitialized();
 
-    RenderingContext* renderingContext = context->Get<RenderingContext>();
-
     renderingContext->BeginRender(this);
     viewState = ViewStates::Rendering;
 
@@ -97,7 +97,7 @@ void View::Render(bool preserveScrolls)
 
 Size View::RenderToBuffer()
 {
-    Renderer* renderer = context->Get<RenderingContext>()->GetRenderer();
+    Renderer* renderer = renderingContext->GetRenderer();
 
     Size renderedSize = RenderContent(renderer);
 
@@ -119,7 +119,7 @@ Size View::RenderToBuffer()
 
     renderer->Render(deviceContextBuffer);
 
-    context->Get<RenderingContext>()->ReleaseRenderer(renderer);
+    renderingContext->ReleaseRenderer(renderer);
 
     return renderedSize;
 }
@@ -157,7 +157,6 @@ void View::ApplyViewPosition(bool preserveScrolls)
     int verticalScrollPosition = 0;
     int horizontalScrollPosition = 0;
 
-    ScrollProvider* scrollProvider = context->Get<ScrollProvider>();
     if (preserveScrolls)
     {
         verticalScrollPosition = scrollProvider->GetCurrentScrollPostion(this, ScrollBars::Vertical);
@@ -270,7 +269,6 @@ Size View::GetClientSize() const
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(windowHandle, &clientRect));
 
-    ScrollProvider* scrollProvider = context->Get<ScrollProvider>();
     Size availablClientSize = Size(
         clientRect.right + scrollProvider->GetScrollBarSize(this, ScrollBars::Vertical),
         clientRect.bottom + scrollProvider->GetScrollBarSize(this, ScrollBars::Horizontal));

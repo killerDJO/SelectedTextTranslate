@@ -3,12 +3,13 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
 #include "View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "View\Content\Main\Enums\ApplicationViews.h"
+#include "View\Content\Translation\TranslationComponent.h"
+#include "View\Framework\Providers\ScrollProvider.h"
 
-MainView::MainView(ViewContext* context, HotkeyProvider* hotkeyProvider)
+MainView::MainView(ViewContext* context)
     : View(context)
 {
-    this->hotkeyProvider = hotkeyProvider;
-
     this->className = L"STT_MAIN";
     this->applicationView = ApplicationViews::None;
 
@@ -55,32 +56,30 @@ void MainView::Initialize()
     Minimize();
 
     context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainView::Minimize, this));
-    context->GetMessageBus()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
+    context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
 void MainView::CreateChildViews()
 {
     DestroyChildViews();
 
-    translationWindow = new TranslationView(context, this);
-    SetViewWindowDescriptor(translationWindow, ApplicationViews::TranslateResult);
-    translationWindow->OnPlayText.Subscribe(&OnPlayText);
-    translationWindow->OnForceTranslation.Subscribe(&OnForceTranslation);
-    translationWindow->OnRequestRender.Subscribe(bind(&MainView::Render, this, true));
-    translationWindow->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
+    translationWindow = new TranslationComponent(context, this);
+    SetViewWindowDescriptor(translationWindow->GetView(), ApplicationViews::TranslateResult);
     translationWindow->MakeHidden();
     translationWindow->Initialize();
 
     dictionaryComponent = new DictionaryComponent(context, this);
     SetViewWindowDescriptor(dictionaryComponent->GetView(), ApplicationViews::Dictionary);
-    dictionaryComponent->OnShowTranslation.Subscribe(&OnShowTranslation);
+    dictionaryComponent->OnShowTranslation.Subscribe([this](wstring input)
+    {
+        this->translationWindow->Translate(input, false);
+        SetApplicationView(ApplicationViews::TranslateResult);
+    });
     dictionaryComponent->GetView()->MakeHidden();
     dictionaryComponent->GetView()->Initialize();
 
-    settingsWindow = new SettingsView(context, this);
-    SetViewWindowDescriptor(settingsWindow, ApplicationViews::Settings);
-    settingsWindow->OnRequestRender.Subscribe(bind(&MainView::Render, this, true));
-    settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);
+    settingsWindow = new SettingsComponent(context, this);
+    SetViewWindowDescriptor(settingsWindow->GetView(), ApplicationViews::Settings);
     settingsWindow->MakeHidden();
     settingsWindow->Initialize();
 
@@ -130,11 +129,20 @@ void MainView::SetApplicationView(ApplicationViews applicationView)
 {
     AssertViewInitialized();
 
-    applicationView = applicationView;
+    this->applicationView = applicationView;
 
     descriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
     nativeStateDescriptor.SetPosition(descriptor.GetPosition());
     nativeStateDescriptor.SetSize(descriptor.GetSize());
+
+    Maximize();
+    Render();
+}
+
+void MainView::Translate(wstring input)
+{
+    this->translationWindow->Translate(input, true);
+    SetApplicationView(ApplicationViews::TranslateResult);
 }
 
 Size MainView::RenderContent(Renderer* renderer)
@@ -159,8 +167,6 @@ Size MainView::RenderContent(Renderer* renderer)
 
 void MainView::Scale(double scaleFactorAdjustment)
 {
-    ScaleProvider* scaleProvider = context->GetScaleProvider();
-
     if (!scaleProvider->IsScalingAllowed(scaleFactorAdjustment))
     {
         return;
@@ -190,8 +196,8 @@ void MainView::ScaleViewDescriptor(ApplicationViews applicationView, double scal
 {
     WindowDescriptor windowDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
 
-    int scaledWidth = context->GetScaleProvider()->Rescale(windowDescriptor.GetSize().GetWidth(), scaleFactorAdjustment);
-    int scaledHeight = context->GetScaleProvider()->Rescale(windowDescriptor.GetSize().GetHeight(), scaleFactorAdjustment);
+    int scaledWidth = scaleProvider->Rescale(windowDescriptor.GetSize().GetWidth(), scaleFactorAdjustment);
+    int scaledHeight = scaleProvider->Rescale(windowDescriptor.GetSize().GetHeight(), scaleFactorAdjustment);
 
     windowDescriptor.SetPosition(Point(
         windowDescriptor.GetPosition().GetX() - scaledWidth + windowDescriptor.GetSize().GetWidth(),
@@ -228,9 +234,9 @@ void MainView::Resize()
     deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
 
     // Clear background
-    Renderer* renderer = context->GetRenderingContext()->GetRenderer();
+    Renderer* renderer = renderingContext->GetRenderer();
     renderer->Render(deviceContextBuffer);
-    context->GetRenderingContext()->ReleaseRenderer(renderer);
+    renderingContext->ReleaseRenderer(renderer);
 
     View* currentWindow = GetViewToShow();
     currentWindow->Resize();
@@ -245,7 +251,7 @@ View* MainView::GetViewToShow() const
 {
     if (applicationView == ApplicationViews::TranslateResult)
     {
-        return translationWindow;
+        return translationWindow->GetView();
     }
 
     if (applicationView == ApplicationViews::Dictionary)
@@ -255,7 +261,7 @@ View* MainView::GetViewToShow() const
 
     if (applicationView == ApplicationViews::Settings)
     {
-        return settingsWindow;
+        return settingsWindow->GetView();
     }
 
     throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", applicationView));
@@ -271,7 +277,7 @@ void MainView::ShowConfirmDialog(wstring title, function<void()> onConfirm)
     confirmDialogWindow->OnCancel.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
     confirmDialogWindow->Render();
     confirmDialogWindow->Show();
-    context->GetScrollProvider()->HideScrollbars(this);
+    scrollProvider->HideScrollbars(this);
 }
 
 bool MainView::IsResizeLocked()
@@ -313,6 +319,8 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
             newSize = windowRect;
             return 0;
         }
+
+        return TRUE;
     }
 
     case WM_SYSCOMMAND:
@@ -327,12 +335,12 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-        return DefWindowProc(windowHandle, message, wParam, lParam);
+        return View::WindowProcedure(message, wParam, lParam);
     }
 
     case WM_HOTKEY:
     {
-        hotkeyProvider->ProcessHotkey(wParam);
+        OnHotkey.Notify(wParam);
         return View::WindowProcedure(message, wParam, lParam);
     }
 
@@ -347,21 +355,7 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SHOWWINDOW:
     {
-        if (wParam == TRUE)
-        {
-            hotkeyProvider->RegisterZoomInHotkey(
-                GetHandle(),
-                [=]() -> void { Scale(0.05); });
-
-            hotkeyProvider->RegisterZoomOutHotkey(
-                GetHandle(),
-                [=]() -> void { Scale(-0.05); });
-        }
-        else
-        {
-            hotkeyProvider->UnregisterZoomInHotkey(GetHandle());
-            hotkeyProvider->UnregisterZoomOutHotkey(GetHandle());
-        }
+        OnVisibilityChanged.Notify(wParam == TRUE);
         break;
     }
 

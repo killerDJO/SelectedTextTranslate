@@ -21,7 +21,7 @@ public:
     TSettings GetSettings() const;
 
     SettingsGroupContentState GetContentState() const;
-    void SetContentState(SettingsGroupContentState contentState) const;
+    void SetContentState(SettingsGroupContentState contentState);
 
     void SetVisibilityState(SettingsGroupVisibilityState visibilityState);
     SettingsGroupVisibilityState GetVisibilityState() const;
@@ -69,7 +69,7 @@ SettingsGroupContentState SettingsGroupState<TSettings>::GetContentState() const
 }
 
 template <typename TSettings>
-void SettingsGroupState<TSettings>::SetContentState(SettingsGroupContentState contentState) const
+void SettingsGroupState<TSettings>::SetContentState(SettingsGroupContentState contentState)
 {
     this->contentState = contentState;
 }

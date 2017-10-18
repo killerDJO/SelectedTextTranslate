@@ -3,7 +3,7 @@
 #include "View\Content\Settings\Hotkeys\HotkeySettingsComponent.h"
 
 HotkeySettingsComponent::HotkeySettingsComponent(ViewContext* context, View* parentView, ModelHolder<HotkeySettings>* modelHolder)
-    : SettingGroupComponent<HotkeySettings>(context, parentView, modelHolder)
+    : SettingGroupComponent<HotkeySettings, HotkeySettingsView>(context, new HotkeySettingsView(context, parentView, this), modelHolder)
 {
     this->title = L"Hotkeys";
 }

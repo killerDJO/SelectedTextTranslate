@@ -1,12 +1,11 @@
 #include "Services\Translation\TextPlayer.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-TextPlayer::TextPlayer(Logger* logger, TranslationService* translationService, RequestProvider* requestProvider, ErrorHandler* errorHandler)
+TextPlayer::TextPlayer(CompositionRoot* root, ErrorHandler* errorHandler)
 {
-    this->translationService = translationService;
-    this->requestProvider = requestProvider;
-    this->logger = logger;
+    this->translationService = root->GetService<TranslationService>();
+    this->requestProvider = root->GetService<RequestProvider>();
+    this->logger = root->GetService<Logger>();
     this->errorHandler = errorHandler;
 }
 

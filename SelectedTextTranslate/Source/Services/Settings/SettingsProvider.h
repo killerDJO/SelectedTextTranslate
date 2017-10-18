@@ -1,6 +1,7 @@
 #pragma once
 #include "Infrastructure\Logging\Logger.h"
 #include "Services\Settings\Dto\Settings.h"
+#include "CompositionRoot.h"
 
 class SettingsProvider
 {
@@ -11,7 +12,7 @@ private:
     Settings CreateDefaultSettings() const;
 
 public:
-    SettingsProvider(Logger* logger);
+    SettingsProvider(CompositionRoot* root);
 
     Settings GetSettings() const;
     void UpdateSettings(Settings settings) const;
