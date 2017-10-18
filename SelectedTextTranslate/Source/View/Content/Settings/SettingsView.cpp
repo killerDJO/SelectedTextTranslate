@@ -13,6 +13,8 @@ SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<S
     this->saveButton = nullptr;
     this->cancelButton = nullptr;
     this->resetButton = nullptr;
+
+    this->viewName = L"SettingsWindow";
 }
 
 Size SettingsView::RenderContent(Renderer* renderer)

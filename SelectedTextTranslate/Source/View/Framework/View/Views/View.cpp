@@ -26,6 +26,7 @@ View::View(ViewContext* context)
 
     this->className = nullptr;
     this->deviceContextBuffer = nullptr;
+    this->viewName = wstring();
 
     this->viewState = ViewStates::New;
 }
@@ -67,6 +68,7 @@ void View::InitializeAndRender(bool preserveScrolls)
 
 void View::Render(bool preserveScrolls)
 {
+    printf("Render: %ls, %ls\n", viewName.c_str(), className);
     AssertViewInitialized();
 
     renderingContext->BeginRender(this);

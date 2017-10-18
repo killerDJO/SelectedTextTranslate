@@ -23,5 +23,6 @@ public:
 
     void BeginRender(View* window);
     void EndRender(View* window);
+    bool IsRenderingInProgress() const;
     bool IsRenderingRoot(View* window) const;
 };

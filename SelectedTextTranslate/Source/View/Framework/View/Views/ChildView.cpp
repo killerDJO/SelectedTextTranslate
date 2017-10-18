@@ -47,18 +47,6 @@ void ChildView::Initialize()
     }
 }
 
-void ChildView::Render(bool preserveScrolls)
-{
-    if (descriptor.GetOverflowX() == OverflowModes::Stretch || descriptor.GetOverflowY() == OverflowModes::Stretch)
-    {
-        parentView->Render(preserveScrolls);
-    }
-    else
-    {
-        View::Render(preserveScrolls);
-    }
-}
-
 void ChildView::EnableLayeredMode()
 {
     AssertViewNotInitialized();

@@ -12,6 +12,7 @@ SettingsGroupHeaderControl::SettingsGroupHeaderControl(ViewContext* context, Vie
     this->borderWidth = scaleProvider->Scale(1);
     this->lineHeight = this->fontNormal->GetHeight();
     this->className = L"STT_SETTINGS_GROUP_HEADER";
+    this->viewName = L"SettingsGroupHeaderControl";
 }
 
 void SettingsGroupHeaderControl::SetDescriptor(WindowDescriptor descriptor)

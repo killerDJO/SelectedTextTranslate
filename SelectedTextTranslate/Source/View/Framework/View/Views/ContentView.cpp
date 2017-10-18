@@ -20,6 +20,19 @@ ContentView::ContentView(ViewContext* context, View* parentView)
     this->className = L"STT_CONTENT";
 }
 
+void ContentView::Render(bool preserveScrolls)
+{
+    bool isStretchWindow = descriptor.GetOverflowX() == OverflowModes::Stretch || descriptor.GetOverflowY() == OverflowModes::Stretch;
+    if (isStretchWindow && !renderingContext->IsRenderingInProgress())
+    {
+        parentView->Render(preserveScrolls);
+    }
+    else
+    {
+        ChildView::Render(preserveScrolls);
+    }
+}
+
 int ContentView::GetLineHeight() const
 {
     return lineHeight;

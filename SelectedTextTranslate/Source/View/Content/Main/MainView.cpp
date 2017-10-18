@@ -11,6 +11,7 @@ MainView::MainView(ViewContext* context)
     : View(context)
 {
     this->className = L"STT_MAIN";
+    this->viewName = L"MainWindow";
     this->applicationView = ApplicationViews::None;
 
     this->dictionaryComponent = nullptr;
@@ -59,6 +60,12 @@ void MainView::Initialize()
     context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
+void MainView::Render(bool preserveScrolls)
+{
+    View::Render(preserveScrolls);
+    Maximize();
+}
+
 void MainView::CreateChildViews()
 {
     DestroyChildViews();
@@ -74,6 +81,7 @@ void MainView::CreateChildViews()
     {
         this->translationWindow->Translate(input, false);
         SetApplicationView(ApplicationViews::TranslateResult);
+        Render();
     });
     dictionaryComponent->GetView()->MakeHidden();
     dictionaryComponent->GetView()->Initialize();
@@ -134,15 +142,12 @@ void MainView::SetApplicationView(ApplicationViews applicationView)
     descriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
     nativeStateDescriptor.SetPosition(descriptor.GetPosition());
     nativeStateDescriptor.SetSize(descriptor.GetSize());
-
-    Maximize();
-    Render();
 }
 
 void MainView::Translate(wstring input)
 {
-    this->translationWindow->Translate(input, true);
     SetApplicationView(ApplicationViews::TranslateResult);
+    this->translationWindow->Translate(input, true);
 }
 
 Size MainView::RenderContent(Renderer* renderer)

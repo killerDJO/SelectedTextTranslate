@@ -29,6 +29,7 @@ protected:
 
     WindowDescriptor descriptor;
     WindowNativeStateDescriptor nativeStateDescriptor;
+    wstring viewName;
 
     Size contentSize;
     ViewStates viewState;

@@ -41,6 +41,7 @@ public:
     MainView(ViewContext* context);
 
     void Initialize() override;
+    void Render(bool preserveScrolls = false) override;
 
     void SetApplicationView(ApplicationViews applicationView);
     void Translate(wstring input);

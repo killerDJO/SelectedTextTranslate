@@ -22,6 +22,8 @@ public:
     ContentView(ViewContext* context, View* parentView);
     ~ContentView() override;
 
+    void Render(bool preserveScrolls = false) override;
+
     int GetLineHeight() const;
     void SetLineHeight(int lineHeight);
 

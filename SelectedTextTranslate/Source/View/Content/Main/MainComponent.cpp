@@ -35,6 +35,7 @@ void MainComponent::TranslateSelectedText() const
 void MainComponent::ShowApplicatonView(ApplicationViews applicationView) const
 {
     view->SetApplicationView(applicationView);
+    view->Render();
 }
 
 void MainComponent::Suspend() const

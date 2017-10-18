@@ -14,7 +14,6 @@ public:
     ChildView(ViewContext* context, View* parentView);
 
     void Initialize() override;
-    void Render(bool preserveScrolls = false) override;
 
     void EnableLayeredMode();
 };

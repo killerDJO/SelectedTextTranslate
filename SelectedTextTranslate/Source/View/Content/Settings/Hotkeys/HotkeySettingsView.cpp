@@ -6,6 +6,8 @@ HotkeySettingsView::HotkeySettingsView(ViewContext* context, View* parentView, M
 {
     this->font = renderingProvider->CreateCustomFont(FontSizes::Medium);
     this->controlsMargin = scaleProvider->Scale(7);
+
+    this->viewName = L"HotkeySettingsWindow";
 }
 
 void HotkeySettingsView::RenderSettingsContent(RenderDescriptor renderDescriptor, HotkeySettings* settings)

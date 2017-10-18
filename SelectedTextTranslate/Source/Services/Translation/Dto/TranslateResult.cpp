@@ -191,6 +191,8 @@ vector<TranslateResultCategory> TranslateResult::ParseTranslateCategories(json r
 
 bool TranslateResult::EqualTo(TranslateResult other) const
 {
-    return sentence.GetInput() == other.GetSentence().GetInput()
+    return
+        !IsEmptyResult() && !other.IsEmptyResult()
+        && sentence.GetInput() == other.GetSentence().GetInput()
         && sentence.GetTranslation() == other.GetSentence().GetTranslation();
 }

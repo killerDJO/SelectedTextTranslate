@@ -8,6 +8,8 @@ TranslationView::TranslationView(ViewContext* context, View* parentView, ModelHo
 
     this->headerComponent = nullptr;
     this->translateResultComponent = nullptr;
+
+    this->viewName = L"TranslationWindow";
 }
 
 void TranslationView::Initialize()

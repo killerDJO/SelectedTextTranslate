@@ -34,6 +34,11 @@ void RenderingContext::EndRender(View* window)
     }
 }
 
+bool RenderingContext::IsRenderingInProgress() const
+{
+    return renderingRoot != nullptr;
+}
+
 bool RenderingContext::IsRenderingRoot(View* window) const
 {
     return window == renderingRoot;
