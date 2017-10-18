@@ -77,7 +77,7 @@ void MainView::CreateChildViews()
     dictionaryComponent->GetView()->MakeHidden();
     dictionaryComponent->GetView()->Initialize();
 
-    settingsWindow = new SettingsWindow(context, this);
+    settingsWindow = new SettingsView(context, this);
     SetViewWindowDescriptor(settingsWindow, ApplicationViews::Settings);
     settingsWindow->OnRequestRender.Subscribe(bind(&MainView::Render, this, true));
     settingsWindow->OnSaveSettings.Subscribe(&OnSaveSettings);

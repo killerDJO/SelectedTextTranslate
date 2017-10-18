@@ -6,14 +6,14 @@
 #include "View\Content\Main\Dto\ViewDescriptor.h"
 #include "View\Content\Dictionary\DictionaryComponent.h"
 #include "View\Content\Translation\TranslationView.h"
-#include "View\Content\Settings\SettingsWindow.h"
+#include "View\Content\Settings\SettingsView.h"
 
 class MainView : public View
 {
 private:
     TranslationView* translationWindow;
     DictionaryComponent* dictionaryComponent;
-    SettingsWindow* settingsWindow;
+    SettingsView* settingsWindow;
     ConfirmDialogWindow* confirmDialogWindow;
 
     HotkeyProvider* hotkeyProvider;

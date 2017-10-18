@@ -2,7 +2,7 @@
 #include "View\Content\Translation\Content\TranslateResultView.h"
 
 TranslateResultComponent::TranslateResultComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
-    : Component(new TranslateResultView(context, parentView, this))
+    : Component(context, new TranslateResultView(context, parentView, this))
 {
     this->modelHolder = modelHolder;
     view->OnExpandCategory.Subscribe(bind(&TranslateResultComponent::ExpandCategory, this, placeholders::_1));

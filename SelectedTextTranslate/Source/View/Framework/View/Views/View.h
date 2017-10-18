@@ -21,6 +21,10 @@ private:
 
 protected:
     ViewContext* context;
+    ScaleProvider* scaleProvider;
+    ScrollProvider* scrollProvider;
+    RenderingProvider* renderingProvider;
+
     WindowDescriptor descriptor;
     WindowNativeStateDescriptor nativeStateDescriptor;
 

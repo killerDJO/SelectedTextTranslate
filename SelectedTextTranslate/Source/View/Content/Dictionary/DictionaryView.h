@@ -1,7 +1,6 @@
 #pragma once
 #include "Utilities\Subscribeable.h"
 #include "Services\Dictionary\Dto\DictionaryRecord.h"
-#include "View\Framework\View\Views\ContentView.h"
 #include "View\Framework\View\Views\ComponentView.h"
 
 class DictionaryView : public ComponentView<vector<DictionaryRecord>>

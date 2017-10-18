@@ -13,6 +13,10 @@ View::View(ViewContext* context)
     }
 
     this->context = context;
+    this->scaleProvider = context->Get<ScaleProvider>();
+    this->scrollProvider = context->Get<ScrollProvider>();
+    this->renderingProvider = context->Get<RenderingProvider>();
+
     this->descriptor = WindowDescriptor();
     this->nativeStateDescriptor = WindowNativeStateDescriptor();
     this->activeChildViews = vector<View*>();

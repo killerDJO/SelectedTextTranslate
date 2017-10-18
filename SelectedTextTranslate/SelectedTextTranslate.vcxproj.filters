@@ -249,9 +249,6 @@
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp">
       <Filter>Source\Services\Translation\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp">
-      <Filter>Source\View\Content\Settings</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp">
       <Filter>Source\View\Controls\Inputs</Filter>
     </ClCompile>
@@ -261,12 +258,6 @@
     <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp">
       <Filter>Source\View\Providers\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.cpp">
-      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp">
-      <Filter>Source\View\Content\Settings\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Services\Settings\Dto\Settings.cpp">
       <Filter>Source\Services\Settings\Dto</Filter>
     </ClCompile>
@@ -275,9 +266,6 @@
     </ClCompile>
     <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp">
       <Filter>Source\Services\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp">
-      <Filter>Source\View\Content\Settings\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
@@ -336,9 +324,6 @@
     <ClCompile Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.cpp">
       <Filter>Source\View\Framework\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Base\Dto\SettingsState.cpp">
-      <Filter>Source\View\Content\Settings\Base\Dto</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp">
       <Filter>Source\View\Framework\Rendering</Filter>
     </ClCompile>
@@ -392,6 +377,18 @@
     </ClCompile>
     <ClCompile Include="Source\View\Content\Translation\TranslationView.cpp">
       <Filter>Source\View\Content\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\SettingsView.cpp">
+      <Filter>Source\View\Content\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsView.cpp">
+      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.cpp">
+      <Filter>Source\View\Content\Settings\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -514,9 +511,6 @@
     <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.h">
       <Filter>Source\Services\Translation\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h">
-      <Filter>Source\View\Content\Settings</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Controls\Inputs\HotKeyInputWindow.h">
       <Filter>Source\View\Controls\Inputs</Filter>
     </ClInclude>
@@ -529,12 +523,6 @@
     <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h">
       <Filter>Source\View\Providers\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.h">
-      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h">
-      <Filter>Source\View\Content\Settings\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Services\Settings\Dto\Settings.h">
       <Filter>Source\Services\Settings\Dto</Filter>
     </ClInclude>
@@ -546,9 +534,6 @@
     </ClInclude>
     <ClInclude Include="Source\View\Framework\ModelHolder.h">
       <Filter>Source\View\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h">
-      <Filter>Source\View\Content\Settings\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h">
       <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
@@ -613,9 +598,6 @@
     <ClInclude Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.h">
       <Filter>Source\View\Framework\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsState.h">
-      <Filter>Source\View\Content\Settings\Base\Dto</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h">
       <Filter>Source\View\Framework\Rendering</Filter>
     </ClInclude>
@@ -671,6 +653,21 @@
       <Filter>Source\View\Content\Translation</Filter>
     </ClInclude>
     <ClInclude Include="Source\CompositionRoot.h" />
+    <ClInclude Include="Source\View\Content\Settings\SettingsView.h">
+      <Filter>Source\View\Content\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsView.h">
+      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupView.h">
+      <Filter>Source\View\Content\Settings\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.h">
+      <Filter>Source\View\Content\Settings\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingGroupComponent.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

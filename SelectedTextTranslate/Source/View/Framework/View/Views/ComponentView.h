@@ -9,7 +9,7 @@ class ComponentView : public ContentView
 protected:
     ModelHolder<TModel>* modelHolder;
 
-    virtual Size RenderContent(Renderer* renderer, TModel model) = 0;
+    virtual Size RenderContent(Renderer* renderer, TModel model);
 
     Size RenderContent(Renderer* renderer) override
     {
@@ -23,3 +23,9 @@ public:
         this->modelHolder = modelHolder;
     }
 };
+
+template <class TModel>
+Size ComponentView<TModel>::RenderContent(Renderer* renderer, TModel model)
+{
+    return this->RenderContent(renderer);
+}

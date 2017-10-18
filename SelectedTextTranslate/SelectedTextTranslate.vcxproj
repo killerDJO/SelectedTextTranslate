@@ -15,6 +15,7 @@
     <Image Include="Resources\SelectedTextTranslateDisabled.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultComponent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Header\HeaderComponent.cpp" />
@@ -33,8 +34,7 @@
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp" />
-    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.cpp" />
-    <ClCompile Include="Source\View\Content\Settings\Base\Dto\SettingsState.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.cpp" />
     <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp" />
     <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
@@ -47,9 +47,8 @@
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp" />
     <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp" />
-    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.cpp" />
-    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupWindow.cpp" />
-    <ClCompile Include="Source\View\Content\Settings\SettingsWindow.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsView.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\SettingsView.cpp" />
     <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp" />
     <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp" />
     <ClCompile Include="Source\View\Framework\NativeWindowHolder.cpp" />
@@ -99,7 +98,10 @@
     <ClCompile Include="Source\View\Content\Translation\TranslationComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingGroupComponent.h" />
     <ClInclude Include="Source\CompositionRoot.h" />
+    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.h" />
     <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultComponent.h" />
     <ClInclude Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.h" />
     <ClInclude Include="Source\View\Content\Translation\Header\HeaderComponent.h" />
@@ -118,8 +120,7 @@
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h" />
     <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderWindow.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h" />
     <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h" />
     <ClInclude Include="Source\View\Framework\View\Component.h" />
@@ -132,9 +133,9 @@
     <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h" />
     <ClInclude Include="Source\Services\Settings\Dto\Settings.h" />
     <ClInclude Include="Source\Services\Settings\SettingsProvider.h" />
-    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsWindow.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupWindow.h" />
-    <ClInclude Include="Source\View\Content\Settings\SettingsWindow.h" />
+    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsView.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupView.h" />
+    <ClInclude Include="Source\View\Content\Settings\SettingsView.h" />
     <ClInclude Include="Source\View\Controls\Buttons\Base\Enums\ButtonStates.h" />
     <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h" />
     <ClInclude Include="Source\View\Controls\Inputs\HotKeyInputWindow.h" />
