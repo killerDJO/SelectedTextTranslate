@@ -2,23 +2,32 @@
 #include "Presentation\Framework\Dto\Positioning\Point.h"
 #include "Presentation\Framework\Dto\Positioning\Size.h"
 #include "Presentation\Framework\Dto\Positioning\Rect.h"
+#include "Presentation\Framework\Enums\ViewStates.h"
 
-class WindowNativeStateDescriptor
+class ViewStateDescriptor
 {
 private:
     Size size;
+    Size contentSize;
     Point position;
     bool isVisible;
+    ViewStates viewState;
 
 public:
-    WindowNativeStateDescriptor();
-    WindowNativeStateDescriptor(Size size, Point position, bool isVisible);
+    ViewStateDescriptor();
+    ViewStateDescriptor(Size size, Point position, bool isVisible);
 
     Size GetSize() const;
     void SetSize(Size size);
 
+    Size GetContentSize() const;
+    void SetContentSize(Size contentSize);
+
     Point GetPosition() const;
     void SetPosition(Point position);
+
+    ViewStates GetViewState() const;
+    void SetViewState(ViewStates viewState);
 
     Rect GetBoundingRect() const;
 

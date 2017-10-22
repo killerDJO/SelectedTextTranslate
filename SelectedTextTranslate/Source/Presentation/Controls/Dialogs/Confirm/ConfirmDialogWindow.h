@@ -16,6 +16,8 @@ public:
     ConfirmDialogWindow(CommonContext* context, View* parentView);
     ~ConfirmDialogWindow() override;
 
+    void SetSize(Size size);
+
     void SetTitle(wstring title);
     wstring GetTitle() const;
 

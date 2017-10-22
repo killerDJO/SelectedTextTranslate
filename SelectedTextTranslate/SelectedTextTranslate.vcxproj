@@ -23,6 +23,7 @@
     <ClCompile Include="Source\Presentation\Components\Translation\Header\HeaderComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Main\MainComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Dictionary\DictionaryComponent.cpp" />
+    <ClCompile Include="Source\Presentation\Framework\Views\ControlView.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\Objects\Brush.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\Objects\Font.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\Objects\Pen.cpp" />
@@ -62,7 +63,7 @@
     <ClCompile Include="Source\Presentation\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Providers\ScaleProvider.cpp" />
     <ClCompile Include="Source\BusinessLogic\Dictionary\Dto\DictionaryRecord.cpp" />
-    <ClCompile Include="Source\Presentation\Framework\Dto\WindowDescriptor.cpp" />
+    <ClCompile Include="Source\Presentation\Framework\Dto\LayoutDescriptor.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Providers\ScrollProvider.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\RenderingContext.cpp" />
@@ -95,10 +96,11 @@
     <ClCompile Include="Source\DataAccess\SqliteProvider.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.cpp" />
     <ClCompile Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.cpp" />
-    <ClCompile Include="Source\Presentation\Framework\Dto\WindowNativeStateDescriptor.cpp" />
+    <ClCompile Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Presentation\Components\Main\Enums\ApplicationViews.h" />
     <ClInclude Include="Source\Presentation\Components\Settings\SettingsComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupViewModel.h" />
     <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupComponent.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="Source\Presentation\Components\Settings\Base\Enums\SettingsGroupContentState.h" />
     <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Rect.h" />
     <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Size.h" />
+    <ClInclude Include="Source\Presentation\Framework\Views\ControlView.h" />
     <ClInclude Include="Source\Presentation\MessageBus.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\RenderPosition.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\RenderResult.h" />
@@ -185,7 +188,7 @@
     <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultView.h" />
     <ClInclude Include="Source\Presentation\Components\Main\MainView.h" />
     <ClInclude Include="Source\Presentation\Framework\Views\View.h" />
-    <ClInclude Include="Source\Presentation\Framework\Dto\WindowDescriptor.h" />
+    <ClInclude Include="Source\Presentation\Framework\Dto\LayoutDescriptor.h" />
     <ClInclude Include="Source\Presentation\Framework\CommonContext.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationView.h" />
     <ClInclude Include="Source\Presentation\Providers\TrayIconProvider.h" />
@@ -194,7 +197,7 @@
     <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.h" />
     <ClInclude Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.h" />
     <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Point.h" />
-    <ClInclude Include="Source\Presentation\Framework\Dto\WindowNativeStateDescriptor.h" />
+    <ClInclude Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationComponent.h" />
   </ItemGroup>
   <ItemGroup>

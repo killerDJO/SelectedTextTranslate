@@ -57,22 +57,22 @@ void ScrollProvider::InitializeScrollbars(
     }
 }
 
-void ScrollProvider::HideScrollbars(View* window) const
+void ScrollProvider::HideScrollbars(View* view) const
 {
-    InitializeScrollbar(window->GetHandle(), 0, 1, ScrollBars::Horizontal, 0);
-    InitializeScrollbar(window->GetHandle(), 0, 1, ScrollBars::Vertical, 0);
+    InitializeScrollbar(view->GetHandle(), 0, 1, ScrollBars::Horizontal, 0);
+    InitializeScrollbar(view->GetHandle(), 0, 1, ScrollBars::Vertical, 0);
 }
 
-void ScrollProvider::ProcessScrollMessages(View* window, UINT message, WPARAM wParam, LPARAM lParam) const
+void ScrollProvider::ProcessScrollMessages(View* view, UINT message, WPARAM wParam, LPARAM lParam) const
 {
-    if (message == WM_HSCROLL && window->GetDescriptor().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Horizontal))
+    if (message == WM_HSCROLL && view->GetDescriptor().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(view, ScrollBars::Horizontal))
     {
-        ProcessScroll(window, wParam, lParam, ScrollBars::Horizontal);
+        ProcessScroll(view, wParam, lParam, ScrollBars::Horizontal);
     }
 
-    if (message == WM_VSCROLL && window->GetDescriptor().GetOverflowY() == OverflowModes::Scroll && IsScrollBarVisible(window, ScrollBars::Vertical))
+    if (message == WM_VSCROLL && view->GetDescriptor().GetOverflowY() == OverflowModes::Scroll && IsScrollBarVisible(view, ScrollBars::Vertical))
     {
-        ProcessScroll(window, wParam, lParam, ScrollBars::Vertical);
+        ProcessScroll(view, wParam, lParam, ScrollBars::Vertical);
     }
 
     if (message == WM_MOUSEWHEEL)
@@ -80,11 +80,11 @@ void ScrollProvider::ProcessScrollMessages(View* window, UINT message, WPARAM wP
         int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
         if (zDelta < 0)
         {
-            SendMessage(window->GetHandle(), WM_VSCROLL, SB_LINEDOWN, NULL);
+            SendMessage(view->GetHandle(), WM_VSCROLL, SB_LINEDOWN, NULL);
         }
         else
         {
-            SendMessage(window->GetHandle(), WM_VSCROLL, SB_LINEUP, NULL);
+            SendMessage(view->GetHandle(), WM_VSCROLL, SB_LINEUP, NULL);
         }
     }
 }

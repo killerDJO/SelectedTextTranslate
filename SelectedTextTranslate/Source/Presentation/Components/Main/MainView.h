@@ -1,6 +1,5 @@
 #pragma once
 #include "Presentation\Framework\Views\View.h"
-#include "Presentation\Providers\HotkeyProvider.h"
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
 #include "Presentation\Components\Main\Dto\ViewDescriptor.h"
 #include "Presentation\Components\Dictionary\DictionaryComponent.h"
@@ -46,7 +45,7 @@ public:
     void SetApplicationView(ApplicationViews applicationView);
     void Translate(wstring input);
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
+    void SetDescriptor(LayoutDescriptor descriptor);
 
     void Minimize();
     void Maximize();

@@ -16,7 +16,7 @@ void TranslationView::Initialize()
 {
     ComponentView::Initialize();
 
-    WindowDescriptor headerWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+    LayoutDescriptor headerWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
         Size(0, headerHeight),
         OverflowModes::Stretch,
@@ -27,7 +27,7 @@ void TranslationView::Initialize()
     headerComponent->OnForceTranslation.Subscribe(&OnForceTranslation);
     headerComponent->Initialize();
 
-    WindowDescriptor translateResultWindowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+    LayoutDescriptor translateResultWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, headerComponent->GetBoundingRect().GetBottom() + separatorHeight),
         Size(0, 0),
         OverflowModes::Stretch,
@@ -72,9 +72,9 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslateResult model)
 void TranslationView::Resize()
 {
     Size parentSize = parentView->GetSize();
-    descriptor.SetWindowSize(parentSize);
+    layoutDescriptor.SetSize(parentSize);
 
-    nativeStateDescriptor.EnsureSize(parentSize);
+    viewStateDescriptor.EnsureSize(parentSize);
 
     Size bufferingDeviceContextSize = deviceContextBuffer->GetSize();
     bufferingDeviceContextSize = Size(
@@ -82,16 +82,16 @@ void TranslationView::Resize()
         max(parentSize.GetHeight(), bufferingDeviceContextSize.GetHeight()));
     deviceContextBuffer->Resize(bufferingDeviceContextSize);
 
-    ApplyNativeState(true);
+    ApplyViewState(true);
 
     Renderer* renderer = context->Get<RenderingContext>()->GetRenderer();
 
-    if(modelHolder->GetModel().IsEmptyResult())
+    if(GetModel().IsEmptyResult())
     {
-        renderer->DrawRect(Rect(0, headerHeight, nativeStateDescriptor.GetSize().GetWidth(), nativeStateDescriptor.GetSize().GetHeight() - headerHeight), lightGrayBrush);
+        renderer->DrawRect(Rect(0, headerHeight, viewStateDescriptor.GetSize().GetWidth(), viewStateDescriptor.GetSize().GetHeight() - headerHeight), lightGrayBrush);
     }
 
-    RenderSeparator(renderer, max(contentSize.GetWidth(), nativeStateDescriptor.GetSize().GetWidth()));
+    RenderSeparator(renderer, max(viewStateDescriptor.GetContentSize().GetWidth(), viewStateDescriptor.GetSize().GetWidth()));
 
     renderer->Render(deviceContextBuffer);
     context->Get<RenderingContext>()->ReleaseRenderer(renderer);

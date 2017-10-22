@@ -18,7 +18,6 @@ public:
     ConfirmDialogContentWindow(CommonContext* context, View* parentWindow);
     ~ConfirmDialogContentWindow();
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);
 
     void SetTitle(wstring title);

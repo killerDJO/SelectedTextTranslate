@@ -1,5 +1,4 @@
 #include "Presentation\Components\Settings\Base\SettingsGroupHeaderControl.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Presentation\Controls\Buttons\HoverIconButtonWindow.h"
 
 SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, View* parentWindow)
@@ -15,15 +14,10 @@ SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, V
     this->viewName = L"SettingsGroupHeaderControl";
 }
 
-void SettingsGroupHeaderControl::SetDescriptor(WindowDescriptor descriptor)
-{
-    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
-}
-
 void SettingsGroupHeaderControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(width, 0));
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
 }
 
 void SettingsGroupHeaderControl::SetTitle(wstring title)
@@ -59,7 +53,7 @@ SettingsGroupVisibilityState SettingsGroupHeaderControl::GetVisibilityState() co
 void SettingsGroupHeaderControl::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(descriptor.GetPosition(), Size(descriptor.GetSize().GetWidth(), headerHeight));
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(layoutDescriptor.GetPosition(), Size(layoutDescriptor.GetSize().GetWidth(), headerHeight));
     ContentView::Initialize();
 }
 

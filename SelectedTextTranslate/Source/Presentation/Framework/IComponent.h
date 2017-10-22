@@ -1,12 +1,12 @@
 #pragma once
-#include "Presentation\Framework\Dto\WindowDescriptor.h"
+#include "Presentation\Framework\Dto\LayoutDescriptor.h"
 #include "Presentation\Framework\Dto\Positioning\Rect.h"
 
 class IComponent
 {
 public:
     virtual ~IComponent() = default;
-    virtual void SetDescriptor(WindowDescriptor descriptor) = 0;
+    virtual void SetDescriptor(LayoutDescriptor descriptor) = 0;
 
     virtual Rect GetBoundingRect() const = 0;
     virtual void Render(bool preserveScrolls = false) const = 0;

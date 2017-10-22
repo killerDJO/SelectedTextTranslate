@@ -10,7 +10,5 @@ enum class ViewStates
 
     Rendered = 3,
 
-    Drawn = 4,
-
     Destroyed = 5,
 };

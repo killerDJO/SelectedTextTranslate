@@ -13,5 +13,7 @@ public:
     ConfirmDialogOverlayWindow(CommonContext* context, View* parentWindow);
     ~ConfirmDialogOverlayWindow();
 
+    void SetSize(Size size);
+
     void Initialize() override;
 };

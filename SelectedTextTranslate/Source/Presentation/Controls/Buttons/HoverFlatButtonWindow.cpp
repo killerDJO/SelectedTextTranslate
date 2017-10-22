@@ -1,5 +1,4 @@
 #include "Presentation\Controls\Buttons\HoverFlatButtonWindow.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 HoverFlatButtonWindow::HoverFlatButtonWindow(CommonContext* context, View* parentWindow)
     : HoverButtonWindow(context, parentWindow)
@@ -11,18 +10,13 @@ HoverFlatButtonWindow::HoverFlatButtonWindow(CommonContext* context, View* paren
     this->paddingY = scaleProvider->Scale(5);
     this->borderWidth = scaleProvider->Scale(1);
     this->className = L"STT_HOVERFLATBUTTON";
-    this->descriptor = WindowDescriptor();
-}
-
-void HoverFlatButtonWindow::SetDescriptor(WindowDescriptor descriptor)
-{
-    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
+    this->layoutDescriptor = LayoutDescriptor();
 }
 
 void HoverFlatButtonWindow::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    descriptor.SetPosition(position);
+    layoutDescriptor.SetPosition(position);
 }
 
 void HoverFlatButtonWindow::SetFont(Font* font)
@@ -80,8 +74,8 @@ Size HoverFlatButtonWindow::GetComputedSize() const
 
 void HoverFlatButtonWindow::Initialize()
 {
-    descriptor = WindowDescriptor::CreateWindowDescriptor(
-        descriptor.GetPosition(),
+    layoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+        layoutDescriptor.GetPosition(),
         GetComputedSize(),
         OverflowModes::Fixed,
         OverflowModes::Fixed);

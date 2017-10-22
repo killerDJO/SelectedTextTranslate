@@ -117,7 +117,7 @@ void HoverButtonWindow::ChangeButtonState(ButtonStates newState)
 {
     state = newState;
 
-    if (viewState != ViewStates::New)
+    if (viewStateDescriptor.GetViewState() != ViewStates::New)
     {
         Render();
     }

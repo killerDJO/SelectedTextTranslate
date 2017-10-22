@@ -104,7 +104,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     return msg.wParam;
 }
 
-WindowDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvider) const
+LayoutDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvider) const
 {
     int padding = 5;
 
@@ -117,7 +117,7 @@ WindowDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvid
     int x = workarea.right - width - padding;
     int y = workarea.bottom - height - padding;
 
-    WindowDescriptor descriptor = WindowDescriptor::CreateWindowDescriptor(
+    LayoutDescriptor descriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(x, y),
         Size(width, height),
         OverflowModes::Scroll,

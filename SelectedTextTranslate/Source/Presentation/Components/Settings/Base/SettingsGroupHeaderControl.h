@@ -19,7 +19,6 @@ protected:
 public:
     SettingsGroupHeaderControl(CommonContext* context, View* parentView);
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);
 
     void SetTitle(wstring title);

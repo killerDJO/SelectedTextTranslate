@@ -16,10 +16,16 @@ void ConfirmDialogOverlayWindow::Initialize()
     AssertCriticalWinApiResult(SetLayeredWindowAttributes(windowHandle, 0, 175, LWA_ALPHA));
 }
 
+void ConfirmDialogOverlayWindow::SetSize(Size size)
+{
+    AssertViewNotInitialized();
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
+}
+
 Size ConfirmDialogOverlayWindow::RenderContent(Renderer* renderer)
 {
-    renderer->DrawRect(Rect(Point(0, 0), nativeStateDescriptor.GetSize()), backgroundBrush);
-    return nativeStateDescriptor.GetSize();
+    renderer->DrawRect(Rect(Point(0, 0), viewStateDescriptor.GetSize()), backgroundBrush);
+    return viewStateDescriptor.GetSize();
 }
 
 ConfirmDialogOverlayWindow::~ConfirmDialogOverlayWindow()

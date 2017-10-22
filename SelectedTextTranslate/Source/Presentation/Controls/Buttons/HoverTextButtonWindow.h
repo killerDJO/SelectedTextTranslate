@@ -21,7 +21,6 @@ public:
     HoverTextButtonWindow(CommonContext* context, View* parentWindow);
     ~HoverTextButtonWindow();
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
     void SetPosition(Point position);
 
     void SetNormalColor(Colors normalColor);

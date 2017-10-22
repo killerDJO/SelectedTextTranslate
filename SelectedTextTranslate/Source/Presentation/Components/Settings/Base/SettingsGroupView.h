@@ -39,7 +39,7 @@ void SettingsGroupView<TSettings>::UpdateHeader()
 {
     if (headerControl != nullptr)
     {
-        headerControl->SetContentState(this->modelHolder->GetModel()->GetContentState());
+        headerControl->SetContentState(this->GetModel()->GetContentState());
         headerControl->Render();
     }
 }

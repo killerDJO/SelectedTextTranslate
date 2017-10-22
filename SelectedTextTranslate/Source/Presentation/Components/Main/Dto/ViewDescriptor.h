@@ -1,18 +1,18 @@
 #pragma once
-#include "Presentation\Framework\Dto\WindowDescriptor.h"
+#include "Presentation\Framework\Dto\LayoutDescriptor.h"
 
 class ViewDescriptor
 {
 private:
-    WindowDescriptor windowDescriptor;
+    LayoutDescriptor windowDescriptor;
     bool isResizeable;
 
 public:
     ViewDescriptor();
-    ViewDescriptor(WindowDescriptor windowDescriptor, bool isResizeable);
+    ViewDescriptor(LayoutDescriptor windowDescriptor, bool isResizeable);
 
-    WindowDescriptor GetWindowDescriptor() const;
-    void SetWindowDescriptor(WindowDescriptor windowDescriptor);
+    LayoutDescriptor GetWindowDescriptor() const;
+    void SetWindowDescriptor(LayoutDescriptor windowDescriptor);
 
     bool IsResizeable() const;
 };

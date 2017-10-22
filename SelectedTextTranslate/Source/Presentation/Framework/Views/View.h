@@ -1,6 +1,6 @@
 #pragma once
-#include "Presentation\Framework\Dto\WindowDescriptor.h"
-#include "Presentation\Framework\Dto\WindowNativeStateDescriptor.h"
+#include "Presentation\Framework\Dto\LayoutDescriptor.h"
+#include "Presentation\Framework\Dto\ViewStateDescriptor.h"
 #include "Presentation\Framework\Enums\ViewStates.h"
 #include "Presentation\Framework\Rendering\DeviceContextBuffer.h"
 #include "Presentation\Framework\Rendering\RenderingContext.h"
@@ -14,7 +14,7 @@ class Renderer;
 class View : public NativeWindowHolder
 {
 private:
-    vector<View*> destroyBeforeDrawList;
+    vector<View*> destroyedChildViews;
 
     void DrawChildViews();
     void DestroyChildViews(vector<View*>& childViews) const;
@@ -27,12 +27,9 @@ protected:
     RenderingContext* renderingContext;
     DeviceContextProvider* deviceContextProvider;
 
-    WindowDescriptor descriptor;
-    WindowNativeStateDescriptor nativeStateDescriptor;
+    LayoutDescriptor layoutDescriptor;
+    ViewStateDescriptor viewStateDescriptor;
     wstring viewName;
-
-    Size contentSize;
-    ViewStates viewState;
 
     DeviceContextBuffer* deviceContextBuffer;
     vector<View*> activeChildViews;
@@ -41,7 +38,7 @@ protected:
 
     void DestroyChildViews();
 
-    void ApplyNativeState(bool preserveScrolls);
+    void ApplyViewState(bool preserveScrolls);
     void ApplyViewPosition(bool preserveScrolls);
     Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
@@ -57,8 +54,7 @@ public:
     View(CommonContext* context);
     ~View() override;
 
-    WindowDescriptor GetDescriptor() const;
-    virtual void SetDescriptor(WindowDescriptor descriptor);
+    LayoutDescriptor GetDescriptor() const;
 
     Size GetContentSize() const;
     Size GetSize() const;

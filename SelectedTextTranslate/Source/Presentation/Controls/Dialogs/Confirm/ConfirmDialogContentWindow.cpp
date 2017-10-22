@@ -1,5 +1,4 @@
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Presentation\Framework\Views\ChildView.h"
 #include "Presentation\Controls\Buttons\HoverFlatButtonWindow.h"
@@ -22,23 +21,18 @@ ConfirmDialogContentWindow::ConfirmDialogContentWindow(CommonContext* context, V
     this->OnCancel = Subscribeable<>();
 }
 
-void ConfirmDialogContentWindow::SetDescriptor(WindowDescriptor descriptor)
-{
-    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
-}
-
 void ConfirmDialogContentWindow::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
 
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, Size(width, height));
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
 }
 
 void ConfirmDialogContentWindow::SetTitle(wstring title)
 {
     this->title = title;
 
-    if (viewState != ViewStates::New)
+    if (viewStateDescriptor.GetViewState() != ViewStates::New)
     {
         Render();
     }
@@ -104,7 +98,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     cancelButton->SetBackgroundColor(Colors::Background);
     cancelButton->InitializeAndRender();
 
-    return nativeStateDescriptor.GetSize();
+    return viewStateDescriptor.GetSize();
 }
 
 ConfirmDialogContentWindow::~ConfirmDialogContentWindow()

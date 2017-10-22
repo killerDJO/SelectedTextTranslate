@@ -14,16 +14,11 @@ HoverTextButtonWindow::HoverTextButtonWindow(CommonContext* context, View* paren
     this->className = L"STT_HOVERTEXTBUTTON";
 }
 
-void HoverTextButtonWindow::SetDescriptor(WindowDescriptor descriptor)
-{
-    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
-}
-
 void HoverTextButtonWindow::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
-    this->descriptor = WindowDescriptor::CreateWindowDescriptor(
+    this->layoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         position,
         Size(1, 1),
         OverflowModes::Stretch,
@@ -100,13 +95,13 @@ void HoverTextButtonWindow::RenderStatesDeviceContexts()
 {
     Size textSize = renderingProvider->GetTextSize(text.c_str(), GetFont());
 
-    nativeStateDescriptor.EnsureSize(textSize);
+    viewStateDescriptor.EnsureSize(textSize);
 
-    stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(nativeStateDescriptor.GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(nativeStateDescriptor.GetSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = deviceContextProvider->CreateDeviceContext(nativeStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(viewStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(viewStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = deviceContextProvider->CreateDeviceContext(viewStateDescriptor.GetSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
-    deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
+    deviceContextBuffer->Resize(viewStateDescriptor.GetSize());
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverColor);

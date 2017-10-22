@@ -23,6 +23,12 @@ void ConfirmDialogWindow::Initialize()
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
+void ConfirmDialogWindow::SetSize(Size size)
+{
+    AssertViewNotInitialized();
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
+}
+
 void ConfirmDialogWindow::Show()
 {
     ChildView::Show();
@@ -50,7 +56,7 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
     DestroyChildViews();
 
     ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
-    overlayWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetSize()));
+    overlayWindow->SetSize(GetSize());
     overlayWindow->InitializeAndRender();
 
     int dialogContentWidth = scaleProvider->Scale(200);

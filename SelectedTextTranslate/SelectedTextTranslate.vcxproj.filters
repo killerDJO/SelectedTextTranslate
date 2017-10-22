@@ -240,12 +240,6 @@
     <ClCompile Include="Source\Presentation\Framework\Dto\Positioning\Size.cpp">
       <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Presentation\Framework\Dto\WindowDescriptor.cpp">
-      <Filter>Source\Presentation\Framework\Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Framework\Dto\WindowNativeStateDescriptor.cpp">
-      <Filter>Source\Presentation\Framework\Dto</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Presentation\Framework\Providers\DeviceContextProvider.cpp">
       <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClCompile>
@@ -387,6 +381,15 @@
     <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.cpp">
       <Filter>Source\Presentation\Components\Translation\Content</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\Views\ControlView.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\Dto\LayoutDescriptor.cpp">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.cpp">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -501,12 +504,6 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Size.h">
       <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\Dto\WindowDescriptor.h">
-      <Filter>Source\Presentation\Framework\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\Dto\WindowNativeStateDescriptor.h">
-      <Filter>Source\Presentation\Framework\Dto</Filter>
     </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Enums\Colors.h">
       <Filter>Source\Presentation\Framework\Enums</Filter>
@@ -687,6 +684,14 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationComponent.h">
       <Filter>Source\Presentation\Components\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Views\ControlView.h" />
+    <ClInclude Include="Source\Presentation\Components\Main\Enums\ApplicationViews.h" />
+    <ClInclude Include="Source\Presentation\Framework\Dto\LayoutDescriptor.h">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.h">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

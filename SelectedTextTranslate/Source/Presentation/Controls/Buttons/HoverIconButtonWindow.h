@@ -20,7 +20,6 @@ protected:
 public:
     HoverIconButtonWindow(CommonContext* context, View* parentWindow);
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, Size size);
 
     void SetNormalIconResource(DWORD normalIconResource);

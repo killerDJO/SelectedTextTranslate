@@ -23,7 +23,6 @@ public:
 
     void Initialize() override;
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
     void SetPosition(Point position);
 
     void SetFont(Font* font);

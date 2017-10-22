@@ -39,7 +39,7 @@ RenderResult SettingsView::CreateSettingsGroups(RenderDescriptor renderDescripto
 
 RenderResult SettingsView::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
-    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(context, this, modelHolder->GetModel()->GetHotkeySettingsViewModel());
+    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(context, this, GetModel()->GetHotkeySettingsViewModel());
     RenderPosition renderPosition = AddSettingsGroup(renderDescriptor, hotkeySettingsComponent);
 
     return RenderResult(renderPosition);
@@ -49,7 +49,7 @@ RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescri
 {
     settingsGroups.push_back(settingsGroup);
 
-    settingsGroup->SetDescriptor(WindowDescriptor::CreateWindowDescriptor(
+    settingsGroup->SetDescriptor(LayoutDescriptor::CreateLayoutDescriptor(
         renderDescriptor.GetRenderPosition().GetPosition(),
         Size(scaleProvider->Scale(257), 0),
         OverflowModes::Fixed,
@@ -118,8 +118,8 @@ HoverTextButtonWindow* SettingsView::CreateTextButtonControl(RenderDescriptor re
 
 void SettingsView::SetButtonsState() const
 {
-    bool areSettingsModified = modelHolder->GetModel()->HasChanges();
-    bool areSettingsValid = modelHolder->GetModel()->IsValid();
+    bool areSettingsModified = GetModel()->HasChanges();
+    bool areSettingsValid = GetModel()->IsValid();
 
     if (areSettingsModified)
     {
@@ -139,7 +139,7 @@ void SettingsView::SetButtonsState() const
         saveButton->Disable();
     }
 
-    if (!modelHolder->GetModel()->AreDefaultSettings())
+    if (!GetModel()->AreDefaultSettings())
     {
         resetButton->Enable();
     }

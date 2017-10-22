@@ -14,15 +14,10 @@ HoverIconButtonWindow::HoverIconButtonWindow(CommonContext* context, View* paren
     this->className = L"STT_HOVERICONBUTTON";
 }
 
-void HoverIconButtonWindow::SetDescriptor(WindowDescriptor descriptor)
-{
-    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
-}
-
 void HoverIconButtonWindow::SetDimensions(Point position, Size size)
 {
     AssertViewNotInitialized();
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(position, size);
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
 }
 
 void HoverIconButtonWindow::SetNormalIconResource(DWORD normalIconResource)

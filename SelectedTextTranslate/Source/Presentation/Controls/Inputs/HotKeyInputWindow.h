@@ -34,7 +34,6 @@ public:
     HotKeyInputWindow(CommonContext* context, View* parentWindow);
     virtual ~HotKeyInputWindow();
 
-    void SetDescriptor(WindowDescriptor descriptor) override;
     void SetPosition(Point position);
 
     void SetFont(Font* font);

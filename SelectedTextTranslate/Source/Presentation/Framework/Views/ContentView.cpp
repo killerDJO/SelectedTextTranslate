@@ -22,7 +22,7 @@ ContentView::ContentView(CommonContext* context, View* parentView)
 
 void ContentView::Render(bool preserveScrolls)
 {
-    bool isStretchWindow = descriptor.GetOverflowX() == OverflowModes::Stretch || descriptor.GetOverflowY() == OverflowModes::Stretch;
+    bool isStretchWindow = layoutDescriptor.GetOverflowX() == OverflowModes::Stretch || layoutDescriptor.GetOverflowY() == OverflowModes::Stretch;
     if (isStretchWindow && !renderingContext->IsRenderingInProgress())
     {
         parentView->Render(preserveScrolls);

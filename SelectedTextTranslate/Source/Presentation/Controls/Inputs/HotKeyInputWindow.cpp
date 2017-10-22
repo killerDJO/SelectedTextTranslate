@@ -1,6 +1,5 @@
 #include "Presentation\Controls\Inputs\HotKeyInputWindow.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Presentation\MessageBus.h"
 
 HotKeyInputWindow::HotKeyInputWindow(CommonContext* context, View* parentWindow)
@@ -24,15 +23,10 @@ HotKeyInputWindow::HotKeyInputWindow(CommonContext* context, View* parentWindow)
     this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_EXT, L"EXT"));
 }
 
-void HotKeyInputWindow::SetDescriptor(WindowDescriptor descriptor)
-{
-    throw new SelectedTextTranslateFatalException(L"SetDescriptor is unsupported");
-}
-
 void HotKeyInputWindow::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    descriptor = WindowDescriptor::CreateStretchWindowDescriptor(position);
+    layoutDescriptor = LayoutDescriptor::CreateLayoutWindowDescriptor(position);
 }
 
 void HotKeyInputWindow::SetFont(Font* font)
@@ -108,7 +102,7 @@ bool HotKeyInputWindow::IsValid() const
 void HotKeyInputWindow::Initialize()
 {
     Size hotkeyInputSize = Size(width, lineHeight + padding * 2 + borderWidth * 2);
-    descriptor = WindowDescriptor::CreateFixedWindowDescriptor(descriptor.GetPosition(), hotkeyInputSize);
+    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(layoutDescriptor.GetPosition(), hotkeyInputSize);
 
     // Ensure that the common control DLL is loaded.
     INITCOMMONCONTROLSEX icex;

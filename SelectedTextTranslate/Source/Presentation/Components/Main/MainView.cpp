@@ -23,9 +23,9 @@ MainView::MainView(CommonContext* context)
     this->applicationViewDescriptors = map<ApplicationViews, ViewDescriptor>();
 }
 
-void MainView::SetDescriptor(WindowDescriptor descriptor)
+void MainView::SetDescriptor(LayoutDescriptor descriptor)
 {
-    View::SetDescriptor(descriptor);
+    this->layoutDescriptor = descriptor;
 
     applicationViewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
     applicationViewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
@@ -42,10 +42,10 @@ void MainView::Initialize()
         className,
         nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        descriptor.GetPosition().GetX(),
-        descriptor.GetPosition().GetY(),
-        descriptor.GetSize().GetWidth(),
-        descriptor.GetSize().GetHeight(),
+        layoutDescriptor.GetPosition().GetX(),
+        layoutDescriptor.GetPosition().GetY(),
+        layoutDescriptor.GetSize().GetWidth(),
+        layoutDescriptor.GetSize().GetHeight(),
         nullptr,
         nullptr,
         context->GetInstance(),
@@ -93,14 +93,14 @@ void MainView::CreateChildComponents()
     settingsComponent->Initialize();
 
     confirmDialogWindow = new ConfirmDialogWindow(context, this);
-    confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetClientSize()));
+    confirmDialogWindow->SetSize(GetClientSize());
     confirmDialogWindow->MakeHidden();
     confirmDialogWindow->Initialize();
 }
 
 void MainView::SetViewWindowDescriptor(IComponent* component, ApplicationViews view)
 {
-    WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
+    LayoutDescriptor windowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
         applicationViewDescriptors[view].GetWindowDescriptor().GetSize(),
         OverflowModes::Stretch,
@@ -140,9 +140,9 @@ void MainView::SetApplicationView(ApplicationViews applicationView)
 
     this->applicationView = applicationView;
 
-    descriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-    nativeStateDescriptor.SetPosition(descriptor.GetPosition());
-    nativeStateDescriptor.SetSize(descriptor.GetSize());
+    layoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
+    viewStateDescriptor.SetPosition(layoutDescriptor.GetPosition());
+    viewStateDescriptor.SetSize(layoutDescriptor.GetSize());
 }
 
 void MainView::Translate(wstring input)
@@ -186,13 +186,13 @@ void MainView::Scale(double scaleFactorAdjustment)
         scaleProvider->Rescale(minSize.GetWidth(), scaleFactorAdjustment),
         scaleProvider->Rescale(minSize.GetHeight(), scaleFactorAdjustment));
 
-    descriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-    nativeStateDescriptor.SetPosition(descriptor.GetPosition());
-    nativeStateDescriptor.SetSize(descriptor.GetSize());
+    layoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
+    viewStateDescriptor.SetPosition(layoutDescriptor.GetPosition());
+    viewStateDescriptor.SetSize(layoutDescriptor.GetSize());
 
     scaleProvider->AdjustScaleFactor(scaleFactorAdjustment);
 
-    deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
+    deviceContextBuffer->Resize(viewStateDescriptor.GetSize());
 
     CreateChildComponents();
     Render();
@@ -200,7 +200,7 @@ void MainView::Scale(double scaleFactorAdjustment)
 
 void MainView::ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment)
 {
-    WindowDescriptor windowDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
+    LayoutDescriptor windowDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
 
     int scaledWidth = scaleProvider->Rescale(windowDescriptor.GetSize().GetWidth(), scaleFactorAdjustment);
     int scaledHeight = scaleProvider->Rescale(windowDescriptor.GetSize().GetHeight(), scaleFactorAdjustment);
@@ -209,14 +209,14 @@ void MainView::ScaleViewDescriptor(ApplicationViews applicationView, double scal
         windowDescriptor.GetPosition().GetX() - scaledWidth + windowDescriptor.GetSize().GetWidth(),
         windowDescriptor.GetPosition().GetY() - scaledHeight + windowDescriptor.GetSize().GetHeight()));
 
-    windowDescriptor.SetWindowSize(Size(scaledWidth, scaledHeight));
+    windowDescriptor.SetSize(Size(scaledWidth, scaledHeight));
 
     applicationViewDescriptors[applicationView].SetWindowDescriptor(windowDescriptor);
 }
 
 void MainView::Resize()
 {
-    if (viewState == ViewStates::Rendering)
+    if (viewStateDescriptor.GetViewState() == ViewStates::Rendering)
     {
         return;
     }
@@ -226,18 +226,18 @@ void MainView::Resize()
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 
-    if (descriptor.GetSize().GetWidth() == newWidth && descriptor.GetSize().GetHeight() == newHeight)
+    if (layoutDescriptor.GetSize().GetWidth() == newWidth && layoutDescriptor.GetSize().GetHeight() == newHeight)
     {
         return;
     }
 
-    descriptor.SetWindowSize(Size(newWidth, newHeight));
-    nativeStateDescriptor.SetSize(descriptor.GetSize());
+    layoutDescriptor.SetSize(Size(newWidth, newHeight));
+    viewStateDescriptor.SetSize(layoutDescriptor.GetSize());
 
-    descriptor.SetPosition(Point(windowRect.left, windowRect.top));
-    nativeStateDescriptor.SetPosition(descriptor.GetPosition());
+    layoutDescriptor.SetPosition(Point(windowRect.left, windowRect.top));
+    viewStateDescriptor.SetPosition(layoutDescriptor.GetPosition());
 
-    deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
+    deviceContextBuffer->Resize(viewStateDescriptor.GetSize());
 
     // Clear background
     Renderer* renderer = renderingContext->GetRenderer();
@@ -246,11 +246,11 @@ void MainView::Resize()
 
     IComponent* currentComponent = GetComponentToShow();
     currentComponent->Resize();
-    contentSize = currentComponent->GetBoundingRect().GetSize();
+    viewStateDescriptor.SetContentSize(currentComponent->GetBoundingRect().GetSize());
 
-    applicationViewDescriptors[applicationView].SetWindowDescriptor(descriptor);
+    applicationViewDescriptors[applicationView].SetWindowDescriptor(layoutDescriptor);
 
-    ApplyNativeState(true);
+    ApplyViewState(true);
 }
 
 IComponent* MainView::GetComponentToShow() const
