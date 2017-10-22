@@ -1,6 +1,6 @@
 #pragma once
-#include "View\Framework\Dto\WindowDescriptor.h"
-#include "View\Framework\Providers\ScaleProvider.h"
+#include "Presentation\Framework\Dto\WindowDescriptor.h"
+#include "Presentation\Framework\Providers\ScaleProvider.h"
 #include "Infrastructure\Logging\Logger.h"
 
 class Application

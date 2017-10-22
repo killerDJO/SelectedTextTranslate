@@ -13,66 +13,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source\View">
-      <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Content">
-      <UniqueIdentifier>{537636ef-40f6-455f-9a7e-1df7e17b8159}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Content\Translation">
-      <UniqueIdentifier>{0fb3ebea-d276-4722-bee8-9a167ac10542}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Content\Dictionary">
-      <UniqueIdentifier>{e67beaf6-ff41-4df5-bd36-648b745610e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework">
-      <UniqueIdentifier>{95360e94-4027-4e06-b00c-0daa879080ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Enums">
-      <UniqueIdentifier>{cc90c993-6d3d-42bc-b0fb-107b4a0e4859}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Dto">
-      <UniqueIdentifier>{97d00024-acb7-455a-97e0-23ebc3bb7c6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Providers">
-      <UniqueIdentifier>{f5798579-2dcd-4072-8913-8bdfb5ade6f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Controls">
-      <UniqueIdentifier>{1ad5c4d7-d432-40b1-a523-6adf151a1482}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Controls\Buttons">
-      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Controls\Buttons\Base">
-      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Providers">
-      <UniqueIdentifier>{eb4a919c-5cee-4fbd-9964-96f98f213f53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Providers">
-      <UniqueIdentifier>{36f26b3b-0088-44dd-a571-4e467b8a59c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services">
-      <UniqueIdentifier>{34806764-0367-414e-97ea-53e2a8ac7205}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services\Dictionary">
-      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services\Dictionary\Dto">
-      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services\Translation">
-      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services\Translation\Dto">
-      <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Controllers">
-      <UniqueIdentifier>{fcd175ee-cd4e-42fc-803d-39200eb1d6a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Controllers\Enums">
-      <UniqueIdentifier>{8e8f7a48-82a3-4cb0-89a7-1761111bd46a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Utilities">
       <UniqueIdentifier>{3974d202-4013-43ee-b10e-900c7cc3fd4d}</UniqueIdentifier>
     </Filter>
@@ -94,115 +34,127 @@
     <Filter Include="Source\Infrastructure\Logging">
       <UniqueIdentifier>{28e01299-9b47-44d4-af0c-b914c5824d4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Settings">
-      <UniqueIdentifier>{7fc650a9-c0ba-4797-94d8-fda9822766bc}</UniqueIdentifier>
+    <Filter Include="Source\DataAccess">
+      <UniqueIdentifier>{36f26b3b-0088-44dd-a571-4e467b8a59c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Controls\Inputs">
-      <UniqueIdentifier>{c945885c-1a26-4089-a258-d1f69d4db24d}</UniqueIdentifier>
+    <Filter Include="Source\BusinessLogic">
+      <UniqueIdentifier>{34806764-0367-414e-97ea-53e2a8ac7205}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Controls\Buttons\Base\Enums">
-      <UniqueIdentifier>{8005affb-b6c5-4c06-b03b-57f0be139e65}</UniqueIdentifier>
+    <Filter Include="Source\BusinessLogic\Dictionary">
+      <UniqueIdentifier>{5b6001ba-a646-40c0-9e8d-7000ea1e7e3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Providers\Dto">
-      <UniqueIdentifier>{1c9de231-744a-4311-bd52-5e16eac50702}</UniqueIdentifier>
+    <Filter Include="Source\BusinessLogic\Dictionary\Dto">
+      <UniqueIdentifier>{c9fa018c-ead9-415c-84b6-cae50f537555}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Settings\Base">
-      <UniqueIdentifier>{ee30c734-2883-4024-9906-2ede6bdf5441}</UniqueIdentifier>
+    <Filter Include="Source\BusinessLogic\Translation">
+      <UniqueIdentifier>{264d8a42-5cc5-440c-b49f-b8684f24bfb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Settings\Hotkeys">
-      <UniqueIdentifier>{8c8a0a75-e940-4f3d-bcd7-73eb2e0ff3b1}</UniqueIdentifier>
+    <Filter Include="Source\BusinessLogic\Translation\Dto">
+      <UniqueIdentifier>{edb3b5fc-7e07-4d4b-bb51-7b9d975da6fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Settings\Base\Enums">
-      <UniqueIdentifier>{075b9ea0-a712-445a-a32e-9bff969cf7c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services\Settings">
+    <Filter Include="Source\BusinessLogic\Settings">
       <UniqueIdentifier>{9b4728f1-5dff-436a-af9b-b0be72c0ce62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Services\Settings\Dto">
+    <Filter Include="Source\BusinessLogic\Settings\Dto">
       <UniqueIdentifier>{a6feafe2-182a-49b5-8e24-91128c89e306}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Controls\Dialogs">
-      <UniqueIdentifier>{34ae1a56-a841-447e-a4e0-3e013c41a218}</UniqueIdentifier>
+    <Filter Include="Source\Presentation">
+      <UniqueIdentifier>{ec59e91e-70dd-4d6f-9e4e-4e257bbf2de9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Controls\Dialogs\Confirm">
-      <UniqueIdentifier>{92fcec42-94ad-432a-997f-b5fc986876dd}</UniqueIdentifier>
+    <Filter Include="Source\Presentation\Framework">
+      <UniqueIdentifier>{95360e94-4027-4e06-b00c-0daa879080ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Main">
-      <UniqueIdentifier>{08b78e1c-f745-44f5-9112-31e9103930c8}</UniqueIdentifier>
+    <Filter Include="Source\Presentation\Framework\Enums">
+      <UniqueIdentifier>{cc90c993-6d3d-42bc-b0fb-107b4a0e4859}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Main\Dto">
-      <UniqueIdentifier>{9ffbf3e1-552e-4ed1-b7f8-92ff5a5810b2}</UniqueIdentifier>
+    <Filter Include="Source\Presentation\Framework\Dto">
+      <UniqueIdentifier>{97d00024-acb7-455a-97e0-23ebc3bb7c6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Framework\Rendering">
-      <UniqueIdentifier>{7f35170c-a855-43de-8996-bc60d7749682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Rendering\Dto">
-      <UniqueIdentifier>{8c2ec133-92d3-4ad3-b492-74dfc201211d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Rendering\Objects">
-      <UniqueIdentifier>{a00cfe2b-63b0-4580-953a-a607aa7ef2af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\View\Framework\Dto\Positioning">
+    <Filter Include="Source\Presentation\Framework\Dto\Positioning">
       <UniqueIdentifier>{29c3bb8c-c1e8-4606-bd33-6a4742e02671}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Content\Settings\Base\Dto">
-      <UniqueIdentifier>{64e0d8ec-d732-4366-a074-369699311013}</UniqueIdentifier>
+    <Filter Include="Source\Presentation\Framework\Providers">
+      <UniqueIdentifier>{f5798579-2dcd-4072-8913-8bdfb5ade6f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Framework\View">
+    <Filter Include="Source\Presentation\Framework\Rendering">
+      <UniqueIdentifier>{7f35170c-a855-43de-8996-bc60d7749682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Framework\Rendering\Dto">
+      <UniqueIdentifier>{8c2ec133-92d3-4ad3-b492-74dfc201211d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Framework\Rendering\Objects">
+      <UniqueIdentifier>{a00cfe2b-63b0-4580-953a-a607aa7ef2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls">
+      <UniqueIdentifier>{1ad5c4d7-d432-40b1-a523-6adf151a1482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls\Buttons">
+      <UniqueIdentifier>{1a267c04-ff9c-4add-a7c5-4e0cc4e5f892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls\Buttons\Base">
+      <UniqueIdentifier>{d2786cbe-2ab2-4e09-aa55-1bd58a047c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls\Buttons\Base\Enums">
+      <UniqueIdentifier>{8005affb-b6c5-4c06-b03b-57f0be139e65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls\Inputs">
+      <UniqueIdentifier>{c945885c-1a26-4089-a258-d1f69d4db24d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls\Dialogs">
+      <UniqueIdentifier>{34ae1a56-a841-447e-a4e0-3e013c41a218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Controls\Dialogs\Confirm">
+      <UniqueIdentifier>{92fcec42-94ad-432a-997f-b5fc986876dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Providers">
+      <UniqueIdentifier>{eb4a919c-5cee-4fbd-9964-96f98f213f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Providers\Dto">
+      <UniqueIdentifier>{1c9de231-744a-4311-bd52-5e16eac50702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components">
+      <UniqueIdentifier>{537636ef-40f6-455f-9a7e-1df7e17b8159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Translation">
+      <UniqueIdentifier>{0fb3ebea-d276-4722-bee8-9a167ac10542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Dictionary">
+      <UniqueIdentifier>{e67beaf6-ff41-4df5-bd36-648b745610e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Settings">
+      <UniqueIdentifier>{7fc650a9-c0ba-4797-94d8-fda9822766bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Settings\Base">
+      <UniqueIdentifier>{ee30c734-2883-4024-9906-2ede6bdf5441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Settings\Base\Enums">
+      <UniqueIdentifier>{075b9ea0-a712-445a-a32e-9bff969cf7c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Settings\Hotkeys">
+      <UniqueIdentifier>{8c8a0a75-e940-4f3d-bcd7-73eb2e0ff3b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Main">
+      <UniqueIdentifier>{08b78e1c-f745-44f5-9112-31e9103930c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Main\Dto">
+      <UniqueIdentifier>{9ffbf3e1-552e-4ed1-b7f8-92ff5a5810b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Framework\Views">
       <UniqueIdentifier>{2912a327-fc41-4330-ab57-de41b2f6ac12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\View\Framework\View\Views">
-      <UniqueIdentifier>{142c10c3-7fec-423d-9ce2-7d12633b7e3c}</UniqueIdentifier>
+    <Filter Include="Source\Presentation\Components\Translation\Content">
+      <UniqueIdentifier>{3a688e1d-8ab8-4074-9bb8-1cd3254e8696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Presentation\Components\Translation\Header">
+      <UniqueIdentifier>{d6cff3b6-e092-461a-8b4e-27566e82f8c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.cpp">
-      <Filter>Source\View\Controls\Buttons\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Controls\Buttons\HoverIconButtonWindow.cpp">
-      <Filter>Source\View\Controls\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Controls\Buttons\HoverTextButtonWindow.cpp">
-      <Filter>Source\View\Controls\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\WindowDescriptor.cpp">
-      <Filter>Source\View\Framework\Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Providers\DeviceContextProvider.cpp">
-      <Filter>Source\View\Framework\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Providers\ScaleProvider.cpp">
-      <Filter>Source\View\Framework\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Framework\Providers\ScrollProvider.cpp">
-      <Filter>Source\View\Framework\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Providers\HotkeyProvider.cpp">
-      <Filter>Source\View\Providers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Providers\RequestProvider.cpp">
-      <Filter>Source\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\Translation\Dto\TranslateResult.cpp">
-      <Filter>Source\Services\Translation\Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\Translation\TextExtractor.cpp">
-      <Filter>Source\Services\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\Translation\TextPlayer.cpp">
-      <Filter>Source\Services\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\Translation\TranslatePageParser.cpp">
-      <Filter>Source\Services\Translation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\View\Providers\TrayIconProvider.cpp">
-      <Filter>Source\View\Providers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utilities\StringUtilities.cpp">
       <Filter>Source\Utilities</Filter>
@@ -222,9 +174,6 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.cpp">
       <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Translation\TranslationService.cpp">
-      <Filter>Source\Services\Translation</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
     </ClCompile>
@@ -234,164 +183,209 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Providers\SqliteProvider.cpp">
-      <Filter>Source\Providers</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\Base\HoverButtonWindow.cpp">
+      <Filter>Source\Presentation\Controls\Buttons\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultSentence.cpp">
-      <Filter>Source\Services\Translation\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverFlatButtonWindow.cpp">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategory.cpp">
-      <Filter>Source\Services\Translation\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverIconButtonWindow.cpp">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.cpp">
-      <Filter>Source\Services\Translation\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverTextButtonWindow.cpp">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Controls\Inputs\HotKeyInputWindow.cpp">
-      <Filter>Source\View\Controls\Inputs</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.cpp">
-      <Filter>Source\View\Controls\Buttons</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Providers\Dto\HotkeyInfo.cpp">
-      <Filter>Source\View\Providers\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Settings\Dto\Settings.cpp">
-      <Filter>Source\Services\Settings\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Controls\Inputs\HotKeyInputWindow.cpp">
+      <Filter>Source\Presentation\Controls\Inputs</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Settings\Dto\HotkeySettings.cpp">
-      <Filter>Source\Services\Settings\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Components\Dictionary\DictionaryComponent.cpp">
+      <Filter>Source\Presentation\Components\Dictionary</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Settings\SettingsProvider.cpp">
-      <Filter>Source\Services\Settings</Filter>
+    <ClCompile Include="Source\Presentation\Components\Dictionary\DictionaryView.cpp">
+      <Filter>Source\Presentation\Components\Dictionary</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp">
-      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    <ClCompile Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.cpp">
+      <Filter>Source\Presentation\Components\Main\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp">
-      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    <ClCompile Include="Source\Presentation\Components\Main\MainView.cpp">
+      <Filter>Source\Presentation\Components\Main</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
-      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    <ClCompile Include="Source\Presentation\Components\Settings\Base\SettingsGroupHeaderControl.cpp">
+      <Filter>Source\Presentation\Components\Settings\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Main\Dto\ViewDescriptor.cpp">
-      <Filter>Source\View\Content\Main\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsView.cpp">
+      <Filter>Source\Presentation\Components\Settings\Hotkeys</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Renderer.cpp">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClCompile Include="Source\Presentation\Components\Settings\SettingsView.cpp">
+      <Filter>Source\Presentation\Components\Settings</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\RenderingContext.cpp">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClCompile Include="Source\Presentation\Components\Translation\TranslationView.cpp">
+      <Filter>Source\Presentation\Components\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\DeviceContextBuffer.cpp">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Dto\Positioning\Point.cpp">
+      <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.cpp">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Dto\Positioning\Rect.cpp">
+      <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderPosition.cpp">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Dto\Positioning\Size.cpp">
+      <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Dto\RenderResult.cpp">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Dto\WindowDescriptor.cpp">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Dto\TextRenderResult.cpp">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Dto\WindowNativeStateDescriptor.cpp">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\MessageBus.cpp">
-      <Filter>Source\View\Framework</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Providers\DeviceContextProvider.cpp">
+      <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Objects\Pen.cpp">
-      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Providers\ScaleProvider.cpp">
+      <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Objects\Font.cpp">
-      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Providers\ScrollProvider.cpp">
+      <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\Objects\Brush.cpp">
-      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Dto\RenderDescriptor.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Positioning\Point.cpp">
-      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Dto\RenderPosition.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Positioning\Rect.cpp">
-      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Dto\RenderResult.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\Positioning\Size.cpp">
-      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.cpp">
-      <Filter>Source\View\Framework\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Objects\Brush.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\Rendering\RenderingProvider.cpp">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Objects\Font.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\Views\View.cpp">
-      <Filter>Source\View\Framework\View\Views</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Objects\Pen.cpp">
+      <Filter>Source\Presentation\Framework\Rendering\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\Views\ContentView.cpp">
-      <Filter>Source\View\Framework\View\Views</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\DeviceContextBuffer.cpp">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\Views\ChildView.cpp">
-      <Filter>Source\View\Framework\View\Views</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\Renderer.cpp">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\NativeWindowHolder.cpp">
-      <Filter>Source\View\Framework</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\RenderingContext.cpp">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Dictionary\DictionaryComponent.cpp">
-      <Filter>Source\View\Content\Dictionary</Filter>
+    <ClCompile Include="Source\Presentation\Framework\Rendering\RenderingProvider.cpp">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Dictionary\Dto\DictionaryRecord.cpp">
-      <Filter>Source\Services\Dictionary\Dto</Filter>
+    <ClCompile Include="Source\Presentation\Framework\NativeWindowHolder.cpp">
+      <Filter>Source\Presentation\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Services\Dictionary\DictionaryService.cpp">
-      <Filter>Source\Services\Dictionary</Filter>
+    <ClCompile Include="Source\Presentation\Providers\Dto\HotkeyInfo.cpp">
+      <Filter>Source\Presentation\Providers\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Dictionary\DictionaryView.cpp">
-      <Filter>Source\View\Content\Dictionary</Filter>
+    <ClCompile Include="Source\Presentation\Providers\HotkeyProvider.cpp">
+      <Filter>Source\Presentation\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Main\MainComponent.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\Presentation\Providers\TrayIconProvider.cpp">
+      <Filter>Source\Presentation\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Main\MainView.cpp">
-      <Filter>Source\View\Content\Main</Filter>
+    <ClCompile Include="Source\BusinessLogic\Dictionary\Dto\DictionaryRecord.cpp">
+      <Filter>Source\BusinessLogic\Dictionary\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\Header\HeaderView.cpp">
-      <Filter>Source\View\Content\Translation</Filter>
+    <ClCompile Include="Source\BusinessLogic\Dictionary\DictionaryService.cpp">
+      <Filter>Source\BusinessLogic\Dictionary</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\Header\HeaderComponent.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\BusinessLogic\Settings\Dto\HotkeySettings.cpp">
+      <Filter>Source\BusinessLogic\Settings\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultView.cpp">
-      <Filter>Source\View\Content\Translation</Filter>
+    <ClCompile Include="Source\BusinessLogic\Settings\Dto\Settings.cpp">
+      <Filter>Source\BusinessLogic\Settings\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultComponent.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\BusinessLogic\Settings\SettingsProvider.cpp">
+      <Filter>Source\BusinessLogic\Settings</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\TranslationComponent.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\Dto\TranslateResult.cpp">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\TranslationView.cpp">
-      <Filter>Source\View\Content\Translation</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\Dto\TranslateResultCategory.cpp">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\SettingsView.cpp">
-      <Filter>Source\View\Content\Settings</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\Dto\TranslateResultCategoryEntry.cpp">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsView.cpp">
-      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\Dto\TranslateResultSentence.cpp">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.cpp">
-      <Filter>Source\View\Content\Settings\Base</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\TextExtractor.cpp">
+      <Filter>Source\BusinessLogic\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\TextPlayer.cpp">
+      <Filter>Source\BusinessLogic\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\SettingsComponent.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\TranslatePageParser.cpp">
+      <Filter>Source\BusinessLogic\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\SettingsViewModel.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\BusinessLogic\Translation\TranslationService.cpp">
+      <Filter>Source\BusinessLogic\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultViewModel.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\DataAccess\RequestProvider.cpp">
+      <Filter>Source\DataAccess</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DataAccess\SqliteProvider.cpp">
+      <Filter>Source\DataAccess</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\Views\ChildView.cpp">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\Views\ContentView.cpp">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\Views\View.cpp">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\MessageBus.cpp">
+      <Filter>Source\Presentation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\Header\HeaderComponent.cpp">
+      <Filter>Source\Presentation\Components\Translation\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\Header\HeaderView.cpp">
+      <Filter>Source\Presentation\Components\Translation\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultView.cpp">
+      <Filter>Source\Presentation\Components\Translation\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultComponent.cpp">
+      <Filter>Source\Presentation\Components\Translation\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\TranslationComponent.cpp">
+      <Filter>Source\Presentation\Components\Translation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.cpp">
+      <Filter>Source\Presentation\Components\Settings\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Settings\SettingsComponent.cpp">
+      <Filter>Source\Presentation\Components\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Settings\SettingsViewModel.cpp">
+      <Filter>Source\Presentation\Components\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Main\MainComponent.cpp">
+      <Filter>Source\Presentation\Components\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.cpp">
+      <Filter>Source\Presentation\Components\Translation\Content</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -405,63 +399,6 @@
   <ItemGroup>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Controls\Buttons\Base\HoverButtonWindow.h">
-      <Filter>Source\View\Controls\Buttons\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Controls\Buttons\HoverIconButtonWindow.h">
-      <Filter>Source\View\Controls\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Controls\Buttons\HoverTextButtonWindow.h">
-      <Filter>Source\View\Controls\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\WindowDescriptor.h">
-      <Filter>Source\View\Framework\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Enums\Colors.h">
-      <Filter>Source\View\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Enums\FontSizes.h">
-      <Filter>Source\View\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Enums\OverflowModes.h">
-      <Filter>Source\View\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Enums\ScrollBars.h">
-      <Filter>Source\View\Framework\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Providers\DeviceContextProvider.h">
-      <Filter>Source\View\Framework\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Providers\ScaleProvider.h">
-      <Filter>Source\View\Framework\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Framework\Providers\ScrollProvider.h">
-      <Filter>Source\View\Framework\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Providers\HotkeyProvider.h">
-      <Filter>Source\View\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Providers\RequestProvider.h">
-      <Filter>Source\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResult.h">
-      <Filter>Source\Services\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultSentence.h">
-      <Filter>Source\Services\Translation\Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\TextExtractor.h">
-      <Filter>Source\Services\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\TextPlayer.h">
-      <Filter>Source\Services\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Services\Translation\TranslatePageParser.h">
-      <Filter>Source\Services\Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\View\Providers\TrayIconProvider.h">
-      <Filter>Source\View\Providers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application.h">
       <Filter>Source</Filter>
@@ -487,9 +424,6 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.h">
       <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Translation\TranslationService.h">
-      <Filter>Source\Services\Translation</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Infrastructure\ErrorHandling\StackProvider.h">
       <Filter>Source\Infrastructure\ErrorHandling</Filter>
     </ClInclude>
@@ -499,178 +433,261 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Providers\SqliteProvider.h">
-      <Filter>Source\Providers</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\Base\Enums\ButtonStates.h">
+      <Filter>Source\Presentation\Controls\Buttons\Base\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategory.h">
-      <Filter>Source\Services\Translation\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\Base\HoverButtonWindow.h">
+      <Filter>Source\Presentation\Controls\Buttons\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Translation\Dto\TranslateResultCategoryEntry.h">
-      <Filter>Source\Services\Translation\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverFlatButtonWindow.h">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Controls\Inputs\HotKeyInputWindow.h">
-      <Filter>Source\View\Controls\Inputs</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverIconButtonWindow.h">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Controls\Buttons\Base\Enums\ButtonStates.h">
-      <Filter>Source\View\Controls\Buttons\Base\Enums</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverTextButtonWindow.h">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Controls\Buttons\HoverFlatButtonWindow.h">
-      <Filter>Source\View\Controls\Buttons</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Providers\Dto\HotkeyInfo.h">
-      <Filter>Source\View\Providers\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Settings\Dto\Settings.h">
-      <Filter>Source\Services\Settings\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.h">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Settings\Dto\HotkeySettings.h">
-      <Filter>Source\Services\Settings\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Controls\Inputs\HotKeyInputWindow.h">
+      <Filter>Source\Presentation\Controls\Inputs</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Settings\SettingsProvider.h">
-      <Filter>Source\Services\Settings</Filter>
+    <ClInclude Include="Source\Presentation\Components\Dictionary\DictionaryComponent.h">
+      <Filter>Source\Presentation\Components\Dictionary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\ModelHolder.h">
-      <Filter>Source\View\Framework</Filter>
+    <ClInclude Include="Source\Presentation\Components\Dictionary\DictionaryView.h">
+      <Filter>Source\Presentation\Components\Dictionary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogWindow.h">
-      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    <ClInclude Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.h">
+      <Filter>Source\Presentation\Components\Main\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h">
-      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    <ClInclude Include="Source\Presentation\Components\Main\MainView.h">
+      <Filter>Source\Presentation\Components\Main</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
-      <Filter>Source\View\Controls\Dialogs\Confirm</Filter>
+    <ClInclude Include="Source\Presentation\Components\Settings\Base\Enums\SettingsGroupContentState.h">
+      <Filter>Source\Presentation\Components\Settings\Base\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Main\Dto\ViewDescriptor.h">
-      <Filter>Source\View\Content\Main\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Components\Settings\Base\Enums\SettingsGroupVisibilityState.h">
+      <Filter>Source\Presentation\Components\Settings\Base\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Renderer.h">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupHeaderControl.h">
+      <Filter>Source\Presentation\Components\Settings\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\RenderingContext.h">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupView.h">
+      <Filter>Source\Presentation\Components\Settings\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\DeviceContextBuffer.h">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClInclude Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsView.h">
+      <Filter>Source\Presentation\Components\Settings\Hotkeys</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderDescriptor.h">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Components\Settings\SettingsView.h">
+      <Filter>Source\Presentation\Components\Settings</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderPosition.h">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Components\Translation\TranslationView.h">
+      <Filter>Source\Presentation\Components\Translation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Dto\RenderResult.h">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Point.h">
+      <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Dto\TextRenderResult.h">
-      <Filter>Source\View\Framework\Rendering\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Rect.h">
+      <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\MessageBus.h">
-      <Filter>Source\View\Framework</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Size.h">
+      <Filter>Source\Presentation\Framework\Dto\Positioning</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupVisibilityState.h">
-      <Filter>Source\View\Content\Settings\Base\Enums</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Dto\WindowDescriptor.h">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\Enums\SettingsGroupContentState.h">
-      <Filter>Source\View\Content\Settings\Base\Enums</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Dto\WindowNativeStateDescriptor.h">
+      <Filter>Source\Presentation\Framework\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Objects\Pen.h">
-      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Enums\Colors.h">
+      <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Objects\Font.h">
-      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Enums\FontSizes.h">
+      <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\Objects\Brush.h">
-      <Filter>Source\View\Framework\Rendering\Objects</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Enums\OverflowModes.h">
+      <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Positioning\Point.h">
-      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Enums\ScrollBars.h">
+      <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Positioning\Rect.h">
-      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Enums\ViewStates.h">
+      <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\Positioning\Size.h">
-      <Filter>Source\View\Framework\Dto\Positioning</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Providers\DeviceContextProvider.h">
+      <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Dto\WindowNativeStateDescriptor.h">
-      <Filter>Source\View\Framework\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Providers\ScaleProvider.h">
+      <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Rendering\RenderingProvider.h">
-      <Filter>Source\View\Framework\Rendering</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Providers\ScrollProvider.h">
+      <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\Enums\ViewStates.h">
-      <Filter>Source\View\Framework\Enums</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\RenderDescriptor.h">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\View.h">
-      <Filter>Source\View\Framework\View\Views</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\RenderPosition.h">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\ContentView.h">
-      <Filter>Source\View\Framework\View\Views</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\RenderResult.h">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\ChildView.h">
-      <Filter>Source\View\Framework\View\Views</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.h">
+      <Filter>Source\Presentation\Framework\Rendering\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\NativeWindowHolder.h">
-      <Filter>Source\View\Framework</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Objects\Brush.h">
+      <Filter>Source\Presentation\Framework\Rendering\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Component.h">
-      <Filter>Source\View\Framework\View</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Objects\Font.h">
+      <Filter>Source\Presentation\Framework\Rendering\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Dictionary\DictionaryComponent.h">
-      <Filter>Source\View\Content\Dictionary</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Objects\Pen.h">
+      <Filter>Source\Presentation\Framework\Rendering\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Dictionary\Dto\DictionaryRecord.h">
-      <Filter>Source\Services\Dictionary\Dto</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\DeviceContextBuffer.h">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Services\Dictionary\DictionaryService.h">
-      <Filter>Source\Services\Dictionary</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\Renderer.h">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Dictionary\DictionaryView.h">
-      <Filter>Source\View\Content\Dictionary</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\RenderingContext.h">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Main\MainComponent.h" />
-    <ClInclude Include="Source\View\Content\Main\MainView.h">
-      <Filter>Source\View\Content\Main</Filter>
+    <ClInclude Include="Source\Presentation\Framework\Rendering\RenderingProvider.h">
+      <Filter>Source\Presentation\Framework\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\Views\ComponentView.h" />
-    <ClInclude Include="Source\View\Content\Translation\Header\HeaderView.h">
-      <Filter>Source\View\Content\Translation</Filter>
+    <ClInclude Include="Source\Presentation\Framework\ModelHolder.h">
+      <Filter>Source\Presentation\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Translation\Header\HeaderComponent.h" />
-    <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultView.h">
-      <Filter>Source\View\Content\Translation</Filter>
+    <ClInclude Include="Source\Presentation\Framework\NativeWindowHolder.h">
+      <Filter>Source\Presentation\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultComponent.h" />
-    <ClInclude Include="Source\View\Content\Translation\TranslationComponent.h" />
-    <ClInclude Include="Source\View\Content\Translation\TranslationView.h">
-      <Filter>Source\View\Content\Translation</Filter>
+    <ClInclude Include="Source\Presentation\Providers\Dto\HotkeyInfo.h">
+      <Filter>Source\Presentation\Providers\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CompositionRoot.h" />
-    <ClInclude Include="Source\View\Content\Settings\SettingsView.h">
-      <Filter>Source\View\Content\Settings</Filter>
+    <ClInclude Include="Source\Presentation\Providers\HotkeyProvider.h">
+      <Filter>Source\Presentation\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsView.h">
-      <Filter>Source\View\Content\Settings\Hotkeys</Filter>
+    <ClInclude Include="Source\Presentation\Providers\TrayIconProvider.h">
+      <Filter>Source\Presentation\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupView.h">
-      <Filter>Source\View\Content\Settings\Base</Filter>
+    <ClInclude Include="Source\BusinessLogic\Dictionary\Dto\DictionaryRecord.h">
+      <Filter>Source\BusinessLogic\Dictionary\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.h">
-      <Filter>Source\View\Content\Settings\Base</Filter>
+    <ClInclude Include="Source\BusinessLogic\Dictionary\DictionaryService.h">
+      <Filter>Source\BusinessLogic\Dictionary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.h" />
-    <ClInclude Include="Source\View\Content\Settings\SettingsComponent.h" />
-    <ClInclude Include="Source\View\Content\Main\Enums\ApplicationViews.h">
-      <Filter>Source\Controllers\Enums</Filter>
+    <ClInclude Include="Source\BusinessLogic\Settings\Dto\HotkeySettings.h">
+      <Filter>Source\BusinessLogic\Settings\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\SettingsViewModel.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupViewModel.h" />
-    <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultViewModel.h" />
-    <ClInclude Include="Source\View\Framework\View\IComponent.h" />
-    <ClInclude Include="Source\View\Framework\View\CommonContext.h">
-      <Filter>Source\View\Framework\View</Filter>
+    <ClInclude Include="Source\BusinessLogic\Settings\Dto\Settings.h">
+      <Filter>Source\BusinessLogic\Settings\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupComponent.h" />
+    <ClInclude Include="Source\BusinessLogic\Settings\SettingsProvider.h">
+      <Filter>Source\BusinessLogic\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\Dto\TranslateResult.h">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\Dto\TranslateResultCategory.h">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\Dto\TranslateResultCategoryEntry.h">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\Dto\TranslateResultSentence.h">
+      <Filter>Source\BusinessLogic\Translation\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\TextExtractor.h">
+      <Filter>Source\BusinessLogic\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\TextPlayer.h">
+      <Filter>Source\BusinessLogic\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\TranslatePageParser.h">
+      <Filter>Source\BusinessLogic\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BusinessLogic\Translation\TranslationService.h">
+      <Filter>Source\BusinessLogic\Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataAccess\RequestProvider.h">
+      <Filter>Source\DataAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataAccess\SqliteProvider.h">
+      <Filter>Source\DataAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Views\View.h">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Views\ChildView.h">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Views\ContentView.h">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Component.h">
+      <Filter>Source\Presentation\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\CommonContext.h">
+      <Filter>Source\Presentation\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\IComponent.h">
+      <Filter>Source\Presentation\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Views\ComponentView.h">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\MessageBus.h">
+      <Filter>Source\Presentation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Translation\Header\HeaderComponent.h">
+      <Filter>Source\Presentation\Components\Translation\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Translation\Header\HeaderView.h">
+      <Filter>Source\Presentation\Components\Translation\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultView.h">
+      <Filter>Source\Presentation\Components\Translation\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultComponent.h">
+      <Filter>Source\Presentation\Components\Translation\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupComponent.h">
+      <Filter>Source\Presentation\Components\Settings\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h">
+      <Filter>Source\Presentation\Components\Settings\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Settings\SettingsComponent.h">
+      <Filter>Source\Presentation\Components\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Settings\SettingsViewModel.h">
+      <Filter>Source\Presentation\Components\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupViewModel.h">
+      <Filter>Source\Presentation\Components\Settings\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Infrastructure\CompositionRoot.h">
+      <Filter>Source\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Main\MainComponent.h">
+      <Filter>Source\Presentation\Components\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.h">
+      <Filter>Source\Presentation\Components\Translation\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Translation\TranslationComponent.h">
+      <Filter>Source\Presentation\Components\Translation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">
