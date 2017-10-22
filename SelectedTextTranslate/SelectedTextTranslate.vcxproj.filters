@@ -393,6 +393,9 @@
     <ClCompile Include="Source\View\Framework\View\Component.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\View\Content\Settings\SettingsViewModel.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -663,12 +666,13 @@
       <Filter>Source\View\Content\Settings\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\Base\SettingGroupComponent.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupState.h" />
     <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.h" />
     <ClInclude Include="Source\View\Content\Settings\SettingsComponent.h" />
     <ClInclude Include="Source\View\Content\Main\Enums\ApplicationViews.h">
       <Filter>Source\Controllers\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\SettingsViewModel.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupViewModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

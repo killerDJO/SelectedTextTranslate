@@ -5,11 +5,9 @@
 #include "View\Content\Settings\Hotkeys\HotkeySettingsComponent.h"
 #include "View\Framework\MessageBus.h"
 
-SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<Settings>* modelHolder)
+SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
-    this->hotkeySettingsComponent = nullptr;
-
     this->saveButton = nullptr;
     this->cancelButton = nullptr;
     this->resetButton = nullptr;
@@ -41,7 +39,7 @@ RenderResult SettingsView::CreateSettingsGroups(RenderDescriptor renderDescripto
 
 RenderResult SettingsView::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
-    hotkeySettingsComponent = new HotkeySettingsComponent(context, this, this);
+    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(context, this, modelHolder->GetModel()->GetHotkeySettingsViewModel());
     RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsComponent);
 
     return RenderResult(renderPosition);
@@ -54,18 +52,19 @@ void SettingsView::CreateControls(RenderDescriptor renderDescriptor)
     cancelButton = CreateTextButtonControl(
         RenderDescriptor(renderDescriptor.GetRenderer(), renderPosition.MoveX(7, scaleProvider)),
         L"Cancel",
-        bind(&SettingsView::CancelSettingsChanges, this));
+        &OnCancelChanges);
 
     wstring resetButtonText = L"Reset";
     int resetButtonTextWidth = context->Get<RenderingProvider>()->GetTextSize(resetButtonText, fontSmallUnderscored).GetWidth();
 
-    //TODO: make settings group agnostic
-    int resetButtonPositionX = hotkeySettingsComponent->GetBoundingRect().GetRight() - resetButtonTextWidth;
-
-    resetButton = CreateTextButtonControl(RenderDescriptor(renderDescriptor.GetRenderer(), Point(resetButtonPositionX, renderPosition.GetY())), resetButtonText, [this]() -> void
+    int maxRightPosition = 0;
+    for(size_t i = 0; i < settingsGroups.size(); ++i)
     {
-        OnResetSettings.Notify();
-    });
+        maxRightPosition = max(maxRightPosition, settingsGroups[i]->GetBoundingRect().GetRight());
+    }
+    int resetButtonPositionX = maxRightPosition - resetButtonTextWidth;
+
+    resetButton = CreateTextButtonControl(RenderDescriptor(renderDescriptor.GetRenderer(), Point(resetButtonPositionX, renderPosition.GetY())), resetButtonText, &OnResetSettings);
 
     SetButtonsState();
 }
@@ -75,10 +74,7 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
     saveButton = new HoverFlatButtonWindow(context, this);
     saveButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
     saveButton->SetText(L"Save");
-    saveButton->OnClick.Subscribe([this]() -> void
-    {
-        this->OnSaveSettings.Notify(GetCurrentSettings());
-    });
+    saveButton->OnClick.Subscribe(&OnSaveSettings);
     saveButton->InitializeAndRender();
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(saveButton);
@@ -88,7 +84,7 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
         saveButton->GetPosition().GetY() + saveButton->GetTextBaseline()));
 }
 
-HoverTextButtonWindow* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, function<void()> clickCallback)
+HoverTextButtonWindow* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback)
 {
     HoverTextButtonWindow* button = new HoverTextButtonWindow(context, this);
     button->SetFont(fontSmallUnderscored);
@@ -103,17 +99,10 @@ HoverTextButtonWindow* SettingsView::CreateTextButtonControl(RenderDescriptor re
     return button;
 }
 
-void SettingsView::CancelSettingsChanges() const
-{
-    hotkeySettingsComponent->ResetCurrentSettings();
-    hotkeySettingsComponent->Render(false);
-    SetButtonsState();
-}
-
 void SettingsView::SetButtonsState() const
 {
-    bool areSettingsModified = !hotkeySettingsComponent->HasChanges();
-    bool areSettingsValid = hotkeySettingsComponent->IsValid();
+    bool areSettingsModified = modelHolder->GetModel()->HasChanges();
+    bool areSettingsValid = modelHolder->GetModel()->IsValid();
 
     if (areSettingsModified)
     {
@@ -133,23 +122,12 @@ void SettingsView::SetButtonsState() const
         saveButton->Disable();
     }
 
-    bool isResetPossible = GetCurrentSettings().EqualTo(Settings());
-    if (isResetPossible)
-    {
-        resetButton->Disable();
-    }
-    else
+    if (!modelHolder->GetModel()->AreDefaultSettings())
     {
         resetButton->Enable();
     }
-}
-
-Settings SettingsView::GetCurrentSettings() const
-{
-    return Settings(hotkeySettingsComponent->GetCurrentSettings());
-}
-
-HotkeySettings SettingsView::GetModel()
-{
-    return modelHolder->GetModel().GetHotkeySettings();
+    else
+    {
+        resetButton->Disable();
+    }
 }

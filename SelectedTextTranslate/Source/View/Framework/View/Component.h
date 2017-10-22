@@ -19,8 +19,9 @@ public:
 
     Rect GetBoundingRect() const;
     void Render(bool preserveScrolls = false) const;
-    void Initialize() const;
-    void InitializeAndRender(bool preserveScrolls = false) const;
+
+    virtual void Initialize();
+    void InitializeAndRender(bool preserveScrolls = false);
 
     void MakeVisible() const;
     void MakeHidden() const;
@@ -62,15 +63,16 @@ void Component<TView>::Render(bool preserveScrolls) const
 }
 
 template <class TView>
-void Component<TView>::Initialize() const
+void Component<TView>::Initialize()
 {
     rawView->Initialize();
 }
 
 template <class TView>
-void Component<TView>::InitializeAndRender(bool preserveScrolls) const
+void Component<TView>::InitializeAndRender(bool preserveScrolls)
 {
-    rawView->InitializeAndRender(preserveScrolls);
+    Initialize();
+    Render(preserveScrolls);
 }
 
 template <class TView>

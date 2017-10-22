@@ -2,17 +2,16 @@
 #include "View\Framework\View\Views\View.h"
 #include "View\Content\Settings\Hotkeys\HotkeySettingsComponent.h"
 
-HotkeySettingsComponent::HotkeySettingsComponent(ViewContext* context, View* parentView, ModelHolder<HotkeySettings>* modelHolder)
-    : SettingGroupComponent<HotkeySettings, HotkeySettingsView>(context, new HotkeySettingsView(context, parentView, this), modelHolder)
+HotkeySettingsComponent::HotkeySettingsComponent(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
+    : SettingGroupComponent<HotkeySettings, HotkeySettingsView>(context, new HotkeySettingsView(context, parentView, modelHolder), modelHolder)
 {
-    this->title = L"Hotkeys";
 }
 
-bool HotkeySettingsComponent::IsValid() const
+bool HotkeySettingsComponent::IsValid()
 {
     bool isValid = true;
 
-    HotkeySettings settings = modelHolder->GetModel();
+    HotkeySettings settings = *modelHolder->GetModel()->GetSettings();
     vector<DWORD> hotkeys = vector<DWORD>();
     hotkeys.push_back(settings.GetTranslateHotkey());
     hotkeys.push_back(settings.GetPlayTextHotkey());
@@ -28,9 +27,4 @@ bool HotkeySettingsComponent::IsValid() const
     }
 
     return isValid;
-}
-
-bool HotkeySettingsComponent::HasChanges() const
-{
-    return modelHolder->GetModel().EqualTo(settingsGroupState.GetSettings());
 }

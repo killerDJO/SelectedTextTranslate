@@ -4,21 +4,39 @@
 SettingsComponent::SettingsComponent(ViewContext* context, View* parentView)
     : Component<SettingsView>(context, new SettingsView(context, parentView, this))
 {
-    this->settingsProvider = context->Get<SettingsProvider>();
-    view->OnSaveSettings.Subscribe(bind(&SettingsComponent::UpdateSettings, this, placeholders::_1));
+    settingsProvider = context->Get<SettingsProvider>();
+    settingsViewModel = new SettingsViewModel(settingsProvider->GetSettings());
+
+    view->OnSaveSettings.Subscribe([context, this]
+    {
+        UpdateSettings(settingsViewModel->GetCurrentSettings());
+    });
+
+    view->OnCancelChanges.Subscribe([context, this]
+    {
+        settingsViewModel->CancelChanges();
+        view->Render(true);
+    });
+
     view->OnResetSettings.Subscribe([context, this]
     {
         context->Get<MessageBus>()->ShowConfirmDialog(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
     });
 }
 
-Settings SettingsComponent::GetModel()
+SettingsViewModel* SettingsComponent::GetModel()
 {
-    return settingsProvider->GetSettings();
+    return settingsViewModel;
 }
 
 void SettingsComponent::UpdateSettings(Settings settings) const
 {
     settingsProvider->UpdateSettings(settings);
+    settingsViewModel->SetSettings(settings);
     view->Render(true);
+}
+
+SettingsComponent::~SettingsComponent()
+{
+    delete settingsViewModel;
 }

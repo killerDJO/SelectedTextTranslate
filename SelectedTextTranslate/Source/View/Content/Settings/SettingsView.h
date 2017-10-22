@@ -1,23 +1,21 @@
 #pragma once
-#include "Services\Settings\Dto\Settings.h"
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 #include "View\Content\Settings\Base\SettingsGroupView.h"
-#include "View\Content\Settings\Hotkeys\HotkeySettingsView.h"
 #include "View\Framework\ModelHolder.h"
 #include "View\Framework\View\Views\ComponentView.h"
 #include "View\Content\Settings\Base\SettingGroupComponent.h"
-#include "View\Content\Settings\Hotkeys\HotkeySettingsComponent.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
+#include "View\Content\Settings\SettingsViewModel.h"
 
-class SettingsView : public ComponentView<Settings>, public ModelHolder<HotkeySettings>
+class SettingsView : public ComponentView<SettingsViewModel*>
 {
 private:
-    HotkeySettingsComponent* hotkeySettingsComponent;
-
     HoverFlatButtonWindow* saveButton;
     HoverTextButtonWindow* cancelButton;
     HoverTextButtonWindow* resetButton;
+
+    vector<ChildView*> settingsGroups;
 
     RenderResult CreateSettingsGroups(RenderDescriptor renderDescriptor);
     RenderResult CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor);
@@ -27,30 +25,27 @@ private:
 
     void CreateControls(RenderDescriptor renderDescriptor);
     RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
-    HoverTextButtonWindow* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, function<void()> clickCallback);
+    HoverTextButtonWindow* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback);
 
-    void CancelSettingsChanges() const;
     void SetButtonsState() const;
-
-    Settings GetCurrentSettings() const;
 
 protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    SettingsView(ViewContext* context, View* parentView, ModelHolder<Settings>* modelHolder);
+    SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder);
 
-    HotkeySettings GetModel() override;
-
-    Subscribeable<Settings> OnSaveSettings;
+    Subscribeable<> OnSaveSettings;
     Subscribeable<> OnResetSettings;
+    Subscribeable<> OnCancelChanges;
 };
 
 template <typename TSettings, typename TView>
 RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings, TView>* settingsGroup)
 {
+    settingsGroups.push_back(settingsGroup->GetView());
     settingsGroup->SetDescriptor(WindowDescriptor::CreateWindowDescriptor(
-        nativeStateDescriptor.GetPosition(),
+        renderDescriptor.GetRenderPosition().GetPosition(),
         Size(scaleProvider->Scale(257), 0),
         OverflowModes::Fixed,
         OverflowModes::Stretch));

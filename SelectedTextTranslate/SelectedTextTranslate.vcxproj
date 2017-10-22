@@ -17,6 +17,7 @@
   <ItemGroup>
     <ClCompile Include="Source\View\Content\Settings\SettingsComponent.cpp" />
     <ClCompile Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.cpp" />
+    <ClCompile Include="Source\View\Content\Settings\SettingsViewModel.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultComponent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.cpp" />
     <ClCompile Include="Source\View\Content\Translation\Header\HeaderComponent.cpp" />
@@ -100,10 +101,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\View\Content\Settings\SettingsComponent.h" />
-    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupState.h" />
+    <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupViewModel.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\SettingGroupComponent.h" />
     <ClInclude Include="Source\CompositionRoot.h" />
     <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.h" />
+    <ClInclude Include="Source\View\Content\Settings\SettingsViewModel.h" />
     <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultComponent.h" />
     <ClInclude Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.h" />
     <ClInclude Include="Source\View\Content\Translation\Header\HeaderComponent.h" />
