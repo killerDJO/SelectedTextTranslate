@@ -2,7 +2,7 @@
 #include "View\Providers\TrayIconProvider.h"
 #include "Services\Translation\TextExtractor.h"
 
-MainComponent::MainComponent(ViewContext* context)
+MainComponent::MainComponent(CommonContext* context)
     : Component(context, new MainView(context))
 {
     hotkeyProvider = context->Get<HotkeyProvider>();

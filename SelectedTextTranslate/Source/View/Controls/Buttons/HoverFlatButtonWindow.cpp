@@ -1,7 +1,7 @@
 #include "View\Controls\Buttons\HoverFlatButtonWindow.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HoverFlatButtonWindow::HoverFlatButtonWindow(ViewContext* context, View* parentWindow)
+HoverFlatButtonWindow::HoverFlatButtonWindow(CommonContext* context, View* parentWindow)
     : HoverButtonWindow(context, parentWindow)
 {
     this->defaultFont = renderingProvider->CreateCustomFont(FontSizes::Normal);

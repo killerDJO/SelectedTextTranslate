@@ -13,7 +13,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogWindow(ViewContext* context, View* parentView);
+    ConfirmDialogWindow(CommonContext* context, View* parentView);
     ~ConfirmDialogWindow() override;
 
     void SetTitle(wstring title);

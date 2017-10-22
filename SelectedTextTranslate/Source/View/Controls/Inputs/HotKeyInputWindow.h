@@ -31,7 +31,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HotKeyInputWindow(ViewContext* context, View* parentWindow);
+    HotKeyInputWindow(CommonContext* context, View* parentWindow);
     virtual ~HotKeyInputWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;

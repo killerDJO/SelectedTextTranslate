@@ -7,7 +7,7 @@
 #include "View\Content\Translation\TranslationComponent.h"
 #include "View\Framework\Providers\ScrollProvider.h"
 
-MainView::MainView(ViewContext* context)
+MainView::MainView(CommonContext* context)
     : View(context)
 {
     this->className = L"STT_MAIN";
@@ -15,8 +15,8 @@ MainView::MainView(ViewContext* context)
     this->applicationView = ApplicationViews::None;
 
     this->dictionaryComponent = nullptr;
-    this->translationWindow = nullptr;
-    this->settingsWindow = nullptr;
+    this->translationComponent = nullptr;
+    this->settingsComponent = nullptr;
     this->confirmDialogWindow = nullptr;
 
     this->applicationViewDescriptors = map<ApplicationViews, ViewDescriptor>();
@@ -52,7 +52,7 @@ void MainView::Initialize()
     AssertCriticalWinApiResult(windowHandle);
     SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 
-    CreateChildViews();
+    CreateChildComponents();
 
     Minimize();
 
@@ -66,30 +66,30 @@ void MainView::Render(bool preserveScrolls)
     Maximize();
 }
 
-void MainView::CreateChildViews()
+void MainView::CreateChildComponents()
 {
     DestroyChildViews();
 
-    translationWindow = new TranslationComponent(context, this);
-    SetViewWindowDescriptor(translationWindow->GetView(), ApplicationViews::TranslateResult);
-    translationWindow->MakeHidden();
-    translationWindow->Initialize();
+    translationComponent = new TranslationComponent(context, this);
+    SetViewWindowDescriptor(translationComponent, ApplicationViews::TranslateResult);
+    translationComponent->MakeHidden();
+    translationComponent->Initialize();
 
     dictionaryComponent = new DictionaryComponent(context, this);
-    SetViewWindowDescriptor(dictionaryComponent->GetView(), ApplicationViews::Dictionary);
+    SetViewWindowDescriptor(dictionaryComponent, ApplicationViews::Dictionary);
     dictionaryComponent->OnShowTranslation.Subscribe([this](wstring input)
     {
-        this->translationWindow->Translate(input, false);
+        this->translationComponent->Translate(input, false);
         SetApplicationView(ApplicationViews::TranslateResult);
         Render();
     });
-    dictionaryComponent->GetView()->MakeHidden();
-    dictionaryComponent->GetView()->Initialize();
+    dictionaryComponent->MakeHidden();
+    dictionaryComponent->Initialize();
 
-    settingsWindow = new SettingsComponent(context, this);
-    SetViewWindowDescriptor(settingsWindow->GetView(), ApplicationViews::Settings);
-    settingsWindow->MakeHidden();
-    settingsWindow->Initialize();
+    settingsComponent = new SettingsComponent(context, this);
+    SetViewWindowDescriptor(settingsComponent, ApplicationViews::Settings);
+    settingsComponent->MakeHidden();
+    settingsComponent->Initialize();
 
     confirmDialogWindow = new ConfirmDialogWindow(context, this);
     confirmDialogWindow->SetDescriptor(WindowDescriptor::CreateFixedWindowDescriptor(Point(0, 0), GetClientSize()));
@@ -97,14 +97,14 @@ void MainView::CreateChildViews()
     confirmDialogWindow->Initialize();
 }
 
-void MainView::SetViewWindowDescriptor(View* viewWindow, ApplicationViews view)
+void MainView::SetViewWindowDescriptor(IComponent* component, ApplicationViews view)
 {
     WindowDescriptor windowDescriptor = WindowDescriptor::CreateWindowDescriptor(
         Point(0, 0),
         applicationViewDescriptors[view].GetWindowDescriptor().GetSize(),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    viewWindow->SetDescriptor(windowDescriptor);
+    component->SetDescriptor(windowDescriptor);
 }
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -147,7 +147,7 @@ void MainView::SetApplicationView(ApplicationViews applicationView)
 void MainView::Translate(wstring input)
 {
     SetApplicationView(ApplicationViews::TranslateResult);
-    this->translationWindow->Translate(input, true);
+    this->translationComponent->Translate(input, true);
 }
 
 Size MainView::RenderContent(Renderer* renderer)
@@ -162,12 +162,12 @@ Size MainView::RenderContent(Renderer* renderer)
         activeChildViews[i]->MakeHidden();
     }
 
-    View* windowToShow = GetViewToShow();
+    IComponent* componentToShow = GetComponentToShow();
 
-    windowToShow->MakeVisible();
-    windowToShow->Render();
+    componentToShow->MakeVisible();
+    componentToShow->Render();
 
-    return windowToShow->GetContentSize();
+    return componentToShow->GetBoundingRect().GetSize();
 }
 
 void MainView::Scale(double scaleFactorAdjustment)
@@ -193,7 +193,7 @@ void MainView::Scale(double scaleFactorAdjustment)
 
     deviceContextBuffer->Resize(nativeStateDescriptor.GetSize());
 
-    CreateChildViews();
+    CreateChildComponents();
     Render();
 }
 
@@ -243,30 +243,30 @@ void MainView::Resize()
     renderer->Render(deviceContextBuffer);
     renderingContext->ReleaseRenderer(renderer);
 
-    View* currentWindow = GetViewToShow();
-    currentWindow->Resize();
-    contentSize = currentWindow->GetContentSize();
+    IComponent* currentComponent = GetComponentToShow();
+    currentComponent->Resize();
+    contentSize = currentComponent->GetBoundingRect().GetSize();
 
     applicationViewDescriptors[applicationView].SetWindowDescriptor(descriptor);
 
     ApplyNativeState(true);
 }
 
-View* MainView::GetViewToShow() const
+IComponent* MainView::GetComponentToShow() const
 {
     if (applicationView == ApplicationViews::TranslateResult)
     {
-        return translationWindow->GetView();
+        return translationComponent;
     }
 
     if (applicationView == ApplicationViews::Dictionary)
     {
-        return dictionaryComponent->GetView();
+        return dictionaryComponent;
     }
 
     if (applicationView == ApplicationViews::Settings)
     {
-        return settingsWindow->GetView();
+        return settingsComponent;
     }
 
     throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", applicationView));

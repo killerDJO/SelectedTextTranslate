@@ -19,7 +19,7 @@ protected:
     Brush* backgroundBrush;
 
 public:
-    ContentView(ViewContext* context, View* parentView);
+    ContentView(CommonContext* context, View* parentView);
     ~ContentView() override;
 
     void Render(bool preserveScrolls = false) override;

@@ -1,6 +1,6 @@
 #include "View\Content\Translation\Header\HeaderComponent.h"
 
-HeaderComponent::HeaderComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
+HeaderComponent::HeaderComponent(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
     : Component(context, new HeaderView(context, parentView, modelHolder))
 {
     this->textPlayer = context->Get<TextPlayer>();

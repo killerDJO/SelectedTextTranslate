@@ -15,7 +15,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogContentWindow(ViewContext* context, View* parentWindow);
+    ConfirmDialogContentWindow(CommonContext* context, View* parentWindow);
     ~ConfirmDialogContentWindow();
 
     void SetDescriptor(WindowDescriptor descriptor) override;

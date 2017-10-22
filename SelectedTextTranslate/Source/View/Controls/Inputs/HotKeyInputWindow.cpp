@@ -3,7 +3,7 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "View\Framework\MessageBus.h"
 
-HotKeyInputWindow::HotKeyInputWindow(ViewContext* context, View* parentWindow)
+HotKeyInputWindow::HotKeyInputWindow(CommonContext* context, View* parentWindow)
     : ChildView(context, parentWindow)
 {
     this->className = HOTKEY_CLASS;

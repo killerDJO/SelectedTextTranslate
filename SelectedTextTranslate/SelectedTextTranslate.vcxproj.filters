@@ -363,9 +363,6 @@
     <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultView.cpp">
       <Filter>Source\View\Content\Translation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultComponent.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -390,10 +387,10 @@
     <ClCompile Include="Source\View\Content\Settings\SettingsComponent.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Framework\View\Component.cpp">
+    <ClCompile Include="Source\View\Content\Settings\SettingsViewModel.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\View\Content\Settings\SettingsViewModel.cpp">
+    <ClCompile Include="Source\View\Content\Translation\Content\TranslateResultViewModel.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -616,9 +613,6 @@
     <ClInclude Include="Source\View\Framework\NativeWindowHolder.h">
       <Filter>Source\View\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Framework\View\ViewContext.h">
-      <Filter>Source\View\Framework\View</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View\Framework\View\Component.h">
       <Filter>Source\View\Framework\View</Filter>
     </ClInclude>
@@ -646,7 +640,6 @@
     <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultView.h">
       <Filter>Source\View\Content\Translation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Translation\Content\Dto\TranslateResultContent.h" />
     <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultComponent.h" />
     <ClInclude Include="Source\View\Content\Translation\TranslationComponent.h" />
     <ClInclude Include="Source\View\Content\Translation\TranslationView.h">
@@ -665,7 +658,6 @@
     <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupHeaderControl.h">
       <Filter>Source\View\Content\Settings\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source\View\Content\Settings\Base\SettingGroupComponent.h" />
     <ClInclude Include="Source\View\Content\Settings\Hotkeys\HotkeySettingsComponent.h" />
     <ClInclude Include="Source\View\Content\Settings\SettingsComponent.h" />
     <ClInclude Include="Source\View\Content\Main\Enums\ApplicationViews.h">
@@ -673,6 +665,12 @@
     </ClInclude>
     <ClInclude Include="Source\View\Content\Settings\SettingsViewModel.h" />
     <ClInclude Include="Source\View\Content\Settings\Base\Dto\SettingsGroupViewModel.h" />
+    <ClInclude Include="Source\View\Content\Translation\Content\TranslateResultViewModel.h" />
+    <ClInclude Include="Source\View\Framework\View\IComponent.h" />
+    <ClInclude Include="Source\View\Framework\View\CommonContext.h">
+      <Filter>Source\View\Framework\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\View\Content\Settings\Base\SettingsGroupComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

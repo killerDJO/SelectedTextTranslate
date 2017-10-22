@@ -5,7 +5,7 @@
 #include "View\Content\Settings\Hotkeys\HotkeySettingsComponent.h"
 #include "View\Framework\MessageBus.h"
 
-SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder)
+SettingsView::SettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
     this->saveButton = nullptr;
@@ -40,9 +40,26 @@ RenderResult SettingsView::CreateSettingsGroups(RenderDescriptor renderDescripto
 RenderResult SettingsView::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
     HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(context, this, modelHolder->GetModel()->GetHotkeySettingsViewModel());
-    RenderPosition renderPosition = InitializeSettingsGroup(renderDescriptor, hotkeySettingsComponent);
+    RenderPosition renderPosition = AddSettingsGroup(renderDescriptor, hotkeySettingsComponent);
 
     return RenderResult(renderPosition);
+}
+
+RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescriptor, IComponent* settingsGroup)
+{
+    settingsGroups.push_back(settingsGroup);
+
+    settingsGroup->SetDescriptor(WindowDescriptor::CreateWindowDescriptor(
+        renderDescriptor.GetRenderPosition().GetPosition(),
+        Size(scaleProvider->Scale(257), 0),
+        OverflowModes::Fixed,
+        OverflowModes::Stretch));
+
+    settingsGroup->InitializeAndRender();
+
+    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
+
+    return RenderResult(settingsGroup->GetBoundingRect());
 }
 
 void SettingsView::CreateControls(RenderDescriptor renderDescriptor)

@@ -14,7 +14,7 @@ private:
     void TranslateSuggestion();
 
 public:
-    TranslationComponent(ViewContext* context, View* parentView);
+    TranslationComponent(CommonContext* context, View* parentView);
 
     void Translate(wstring input, bool incrementTranslationsCount);
 

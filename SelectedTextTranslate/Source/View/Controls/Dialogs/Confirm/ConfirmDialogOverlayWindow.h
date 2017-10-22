@@ -10,7 +10,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogOverlayWindow(ViewContext* context, View* parentWindow);
+    ConfirmDialogOverlayWindow(CommonContext* context, View* parentWindow);
     ~ConfirmDialogOverlayWindow();
 
     void Initialize() override;

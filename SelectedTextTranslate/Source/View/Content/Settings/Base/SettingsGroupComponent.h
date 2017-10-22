@@ -3,7 +3,7 @@
 #include "View\Content\Settings\Base\SettingsGroupView.h"
 
 template<typename TSettings, typename TView>
-class SettingGroupComponent : public Component<TView>
+class SettingsGroupComponent : public Component<TView>
 {
 private:
     void ProcessToggle();
@@ -14,7 +14,7 @@ protected:
     ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder;
 
 public:
-    SettingGroupComponent(ViewContext* context, TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
+    SettingsGroupComponent(CommonContext* context, TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
 
     void Initialize() override;
     virtual bool IsValid() = 0;
@@ -23,23 +23,23 @@ public:
 };
 
 template <typename TSettings, typename TView>
-SettingGroupComponent<TSettings, TView>::SettingGroupComponent(ViewContext* context, TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
+SettingsGroupComponent<TSettings, TView>::SettingsGroupComponent(CommonContext* context, TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
     : Component<TView>(context, view)
 {
     this->modelHolder = modelHolder;
-    this->view->OnSettingsChanged.Subscribe(bind(&SettingGroupComponent::ProcessChange, this));
-    this->view->OnSettingsToggled.Subscribe(bind(&SettingGroupComponent::ProcessToggle, this));
+    this->view->OnSettingsChanged.Subscribe(bind(&SettingsGroupComponent::ProcessChange, this));
+    this->view->OnSettingsToggled.Subscribe(bind(&SettingsGroupComponent::ProcessToggle, this));
 }
 
 template <typename TSettings, typename TView>
-void SettingGroupComponent<TSettings, TView>::Initialize()
+void SettingsGroupComponent<TSettings, TView>::Initialize()
 {
     Component<TView>::Initialize();
     UpdateState();
 }
 
 template <typename TSettings, typename TView>
-void SettingGroupComponent<TSettings, TView>::ProcessToggle()
+void SettingsGroupComponent<TSettings, TView>::ProcessToggle()
 {
     SettingsGroupViewModel<TSettings>* settingsGroupViewModel = this->modelHolder->GetModel();
     SettingsGroupVisibilityState visibilityState = settingsGroupViewModel->GetVisibilityState() == SettingsGroupVisibilityState::Collapsed
@@ -50,7 +50,7 @@ void SettingGroupComponent<TSettings, TView>::ProcessToggle()
 }
 
 template <typename TSettings, typename TView>
-void SettingGroupComponent<TSettings, TView>::ProcessChange()
+void SettingsGroupComponent<TSettings, TView>::ProcessChange()
 {
     UpdateState();
     this->view->UpdateHeader();
@@ -58,7 +58,7 @@ void SettingGroupComponent<TSettings, TView>::ProcessChange()
 }
 
 template <typename TSettings, typename TView>
-void SettingGroupComponent<TSettings, TView>::UpdateState()
+void SettingsGroupComponent<TSettings, TView>::UpdateState()
 {
     SettingsGroupContentState contentState;
     if (!IsValid())

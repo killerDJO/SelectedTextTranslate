@@ -6,9 +6,9 @@
 #include "View\Framework\Rendering\RenderingContext.h"
 #include "View\Framework\Rendering\Renderer.h"
 #include "View\Framework\NativeWindowHolder.h"
-#include "View\Framework\View\ViewContext.h"
+#include "View\Framework\View\CommonContext.h"
 
-class ViewContext;
+class CommonContext;
 class Renderer;
 
 class View : public NativeWindowHolder
@@ -20,7 +20,7 @@ private:
     void DestroyChildViews(vector<View*>& childViews) const;
 
 protected:
-    ViewContext* context;
+    CommonContext* context;
     ScaleProvider* scaleProvider;
     ScrollProvider* scrollProvider;
     RenderingProvider* renderingProvider;
@@ -54,7 +54,7 @@ protected:
     void AssertViewNotInitialized() const;
 
 public:
-    View(ViewContext* context);
+    View(CommonContext* context);
     ~View() override;
 
     WindowDescriptor GetDescriptor() const;

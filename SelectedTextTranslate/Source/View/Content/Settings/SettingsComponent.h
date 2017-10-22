@@ -11,7 +11,7 @@ private:
     SettingsViewModel* settingsViewModel;
 
 public:
-    SettingsComponent(ViewContext* context, View* parentView);
+    SettingsComponent(CommonContext* context, View* parentView);
     ~SettingsComponent();
 
     SettingsViewModel* GetModel() override;

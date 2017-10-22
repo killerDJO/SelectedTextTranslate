@@ -1,40 +1,36 @@
 #pragma once
 #include "View\Framework\View\Views\View.h"
+#include "View\Framework\View\IComponent.h"
 
 template<class TView>
-class Component
+class Component : public IComponent
 {
-private:
-    View* rawView;
-
 protected:
     TView* view;
-    ViewContext* context;
+    CommonContext* context;
 
-    Component(ViewContext* context, TView* view);
-    virtual ~Component();
+    Component(CommonContext* context, TView* view);
+    ~Component() override;
 
 public:
-    virtual void SetDescriptor(WindowDescriptor descriptor);
+    void SetDescriptor(WindowDescriptor descriptor) override;
 
-    Rect GetBoundingRect() const;
-    void Render(bool preserveScrolls = false) const;
+    Rect GetBoundingRect() const override;
+    void Render(bool preserveScrolls = false) const override;
 
-    virtual void Initialize();
-    void InitializeAndRender(bool preserveScrolls = false);
+    void Initialize() override;
+    void InitializeAndRender(bool preserveScrolls = false) override;
 
-    void MakeVisible() const;
-    void MakeHidden() const;
-
-    TView* GetView();
+    void MakeVisible() const override;
+    void MakeHidden() const override;
+    void Resize() const override;
 };
 
 template <class TView>
-Component<TView>::Component(ViewContext* context, TView* view)
+Component<TView>::Component(CommonContext* context, TView* view)
 {
     static_assert(is_base_of<View, TView>::value, "TView must inherit from View");
     this->view = view;
-    this->rawView = view;
     this->context = context;
 }
 
@@ -47,25 +43,25 @@ Component<TView>::~Component()
 template <class TView>
 void Component<TView>::SetDescriptor(WindowDescriptor descriptor)
 {
-    rawView->SetDescriptor(descriptor);
+    view->SetDescriptor(descriptor);
 }
 
 template <class TView>
 Rect Component<TView>::GetBoundingRect() const
 {
-    return rawView->GetBoundingRect();
+    return view->GetBoundingRect();
 }
 
 template <class TView>
 void Component<TView>::Render(bool preserveScrolls) const
 {
-    rawView->Render(preserveScrolls);
+    view->Render(preserveScrolls);
 }
 
 template <class TView>
 void Component<TView>::Initialize()
 {
-    rawView->Initialize();
+    view->Initialize();
 }
 
 template <class TView>
@@ -78,17 +74,17 @@ void Component<TView>::InitializeAndRender(bool preserveScrolls)
 template <class TView>
 void Component<TView>::MakeVisible() const
 {
-    rawView->MakeVisible();
+    view->MakeVisible();
 }
 
 template <class TView>
 void Component<TView>::MakeHidden() const
 {
-    rawView->MakeHidden();
+    view->MakeHidden();
 }
 
 template <class TView>
-TView* Component<TView>::GetView()
+void Component<TView>::Resize() const
 {
-    return this->view;
+    view->Resize();
 }

@@ -13,7 +13,7 @@ private:
     void ProcessShowTranslation(int index);
 
 public:
-    DictionaryComponent(ViewContext* context, View* parentView);
+    DictionaryComponent(CommonContext* context, View* parentView);
 
     vector<DictionaryRecord> GetModel() override;
 

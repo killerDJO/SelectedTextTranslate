@@ -1,7 +1,7 @@
 #include "View\Content\Settings\Hotkeys\HotkeySettingsView.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 
-HotkeySettingsView::HotkeySettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
+HotkeySettingsView::HotkeySettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
     : SettingsGroupView(context, parentView, modelHolder)
 {
     this->font = renderingProvider->CreateCustomFont(FontSizes::Medium);

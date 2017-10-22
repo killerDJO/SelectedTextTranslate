@@ -1,20 +1,19 @@
 #pragma once
-#include "View\Framework\View\Views\ContentView.h"
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "View\Framework\Rendering\Dto\RenderDescriptor.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 #include "View\Framework\View\Views\ComponentView.h"
-#include "View\Content\Translation\Content\Dto\TranslateResultContent.h"
+#include "View\Content\Translation\Content\TranslateResultViewModel.h"
 
-class TranslateResultView : public ComponentView<TranslateResultContent>
+class TranslateResultView : public ComponentView<TranslateResultViewModel>
 {
 private:
-    RenderResult CreateExpandButton(TranslateResultContent model, RenderDescriptor renderDescriptor, TranslateResultCategory category, int categoryIndex, int showedCount);
+    RenderResult CreateExpandButton(TranslateResultViewModel model, RenderDescriptor renderDescriptor, TranslateResultCategory category, int categoryIndex, int showedCount);
 
 protected:
-    Size RenderContent(Renderer* renderer, TranslateResultContent model) override;
+    Size RenderContent(Renderer* renderer, TranslateResultViewModel model) override;
 
 public:
-    TranslateResultView(ViewContext* context, View* parentWindow, ModelHolder<TranslateResultContent>* modelHolder);
+    TranslateResultView(CommonContext* context, View* parentWindow, ModelHolder<TranslateResultViewModel>* modelHolder);
     Subscribeable<int> OnExpandCategory;
 };

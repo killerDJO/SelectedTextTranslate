@@ -1,13 +1,13 @@
 ﻿#include "View\Content\Translation\Content\TranslateResultView.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-TranslateResultView::TranslateResultView(ViewContext* context, View* parentView, ModelHolder<TranslateResultContent>* modelHolder)
+TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslateResultViewModel>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
     this->viewName = L"TranslateResultWindow";
 }
 
-Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultContent model)
+Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewModel model)
 {
     DestroyChildViews();
 
@@ -94,7 +94,7 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultConte
 }
 
 RenderResult TranslateResultView::CreateExpandButton(
-    TranslateResultContent model,
+    TranslateResultViewModel model,
     RenderDescriptor renderDescriptor,
     TranslateResultCategory category,
     int categoryIndex,

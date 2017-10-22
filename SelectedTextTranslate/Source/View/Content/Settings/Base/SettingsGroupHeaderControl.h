@@ -17,7 +17,7 @@ protected:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    SettingsGroupHeaderControl(ViewContext* context, View* parentView);
+    SettingsGroupHeaderControl(CommonContext* context, View* parentView);
 
     void SetDescriptor(WindowDescriptor descriptor) override;
     void SetDimensions(Point position, int width);

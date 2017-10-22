@@ -19,6 +19,6 @@ protected:
     void RenderSettingsContent(RenderDescriptor renderDescriptor, HotkeySettings* settings) override;
 
 public:
-    HotkeySettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder);
+    HotkeySettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder);
     ~HotkeySettingsView() override;
 };

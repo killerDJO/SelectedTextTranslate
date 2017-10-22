@@ -12,7 +12,7 @@ protected:
     Size RenderContent(Renderer* renderer, vector<DictionaryRecord> model) override;
 
 public:
-    DictionaryView(ViewContext* context, View* parentView, ModelHolder<vector<DictionaryRecord>>* modelHolder);
+    DictionaryView(CommonContext* context, View* parentView, ModelHolder<vector<DictionaryRecord>>* modelHolder);
 
     Subscribeable<int> OnShowTranslation;
 };

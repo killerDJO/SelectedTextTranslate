@@ -25,5 +25,5 @@ private:
     void Exit() const;
 
 public:
-    MainComponent(ViewContext* context);
+    MainComponent(CommonContext* context);
 };

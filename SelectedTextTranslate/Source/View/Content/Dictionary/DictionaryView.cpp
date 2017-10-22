@@ -2,7 +2,7 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Framework\Rendering\Dto\RenderPosition.h"
 
-DictionaryView::DictionaryView(ViewContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
+DictionaryView::DictionaryView(CommonContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
     : ComponentView(context, parentWindow, modelHolder)
 {
     this->viewName = L"DictionaryWindow";

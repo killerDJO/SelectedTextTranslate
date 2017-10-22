@@ -6,6 +6,7 @@
 #include "View\Framework\Rendering\DeviceContextBuffer.h"
 #include "View\Framework\Rendering\RenderingProvider.h"
 #include "View\Framework\View\Views\View.h"
+#include "View\Framework\View\IComponent.h"
 
 class RenderingContext;
 class View;
@@ -41,7 +42,8 @@ public:
 
     void IncreaseWidth(int widthToAdd);
     void IncreaseHeight(int heightToAdd);
-    void UpdateRenderedContentSize(View* window);
+    void UpdateRenderedContentSize(View* view);
+    void UpdateRenderedContentSize(IComponent* component);
     void UpdateRenderedContentSize(Rect rect);
     void UpdateRenderedContentSize(Size size);
 

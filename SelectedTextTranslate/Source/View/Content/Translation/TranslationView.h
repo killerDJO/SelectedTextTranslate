@@ -15,12 +15,12 @@ private:
 
 protected:
     Size RenderContent(Renderer* renderer, TranslateResult model) override;
-    void Resize() override;
 
 public:
-    TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
+    TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
 
     void Initialize() override;
+    void Resize() override;
 
     Subscribeable<> OnForceTranslation;
     Subscribeable<> OnTranslateSuggestion;

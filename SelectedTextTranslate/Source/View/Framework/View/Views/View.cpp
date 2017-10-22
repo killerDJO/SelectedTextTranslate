@@ -4,7 +4,7 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "View\Framework\Providers\ScrollProvider.h"
 
-View::View(ViewContext* context)
+View::View(CommonContext* context)
     : NativeWindowHolder(context->GetInstance())
 {
     if(context == nullptr)

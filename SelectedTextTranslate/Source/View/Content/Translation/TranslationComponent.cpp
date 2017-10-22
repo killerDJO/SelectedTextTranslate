@@ -1,6 +1,6 @@
 #include "View\Content\Translation\TranslationComponent.h"
 
-TranslationComponent::TranslationComponent(ViewContext* context, View* parentView)
+TranslationComponent::TranslationComponent(CommonContext* context, View* parentView)
     : Component(context, new TranslationView(context, parentView, this))
 {
     this->translationService = context->Get<TranslationService>();

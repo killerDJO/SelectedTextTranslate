@@ -1,6 +1,6 @@
 #include "View\Content\Translation\TranslationView.h"
 
-TranslationView::TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
+TranslationView::TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
     this->headerHeight = context->Get<ScaleProvider>()->Scale(50);

@@ -157,9 +157,14 @@ void Renderer::IncreaseHeight(int heightToAdd)
         renderedSize.GetHeight() + heightToAdd);
 }
 
-void Renderer::UpdateRenderedContentSize(View* window)
+void Renderer::UpdateRenderedContentSize(View* view)
 {
-    UpdateRenderedContentSize(window->GetBoundingRect());
+    UpdateRenderedContentSize(view->GetBoundingRect());
+}
+
+void Renderer::UpdateRenderedContentSize(IComponent* component)
+{
+    UpdateRenderedContentSize(component->GetBoundingRect());
 }
 
 void Renderer::UpdateRenderedContentSize(Rect rect)

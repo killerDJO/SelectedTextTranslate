@@ -4,7 +4,7 @@
 #include "View\Content\Settings\Base\SettingsGroupView.h"
 #include "View\Framework\ModelHolder.h"
 #include "View\Framework\View\Views\ComponentView.h"
-#include "View\Content\Settings\Base\SettingGroupComponent.h"
+#include "View\Content\Settings\Base\SettingsGroupComponent.h"
 #include "View\Framework\Rendering\Dto\RenderResult.h"
 #include "View\Content\Settings\SettingsViewModel.h"
 
@@ -15,13 +15,14 @@ private:
     HoverTextButtonWindow* cancelButton;
     HoverTextButtonWindow* resetButton;
 
-    vector<ChildView*> settingsGroups;
+    vector<IComponent*> settingsGroups;
 
     RenderResult CreateSettingsGroups(RenderDescriptor renderDescriptor);
     RenderResult CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor);
 
+    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, IComponent* settingsGroup);
     template<typename TSettings, typename TView>
-    RenderResult InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings, TView>* settingsGroup);
+    RenderResult AddSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupComponent<TSettings, TView>* settingsGroup);
 
     void CreateControls(RenderDescriptor renderDescriptor);
     RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
@@ -33,7 +34,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder);
+    SettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder);
 
     Subscribeable<> OnSaveSettings;
     Subscribeable<> OnResetSettings;
@@ -41,23 +42,8 @@ public:
 };
 
 template <typename TSettings, typename TView>
-RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescriptor, SettingGroupComponent<TSettings, TView>* settingsGroup)
+RenderResult SettingsView::AddSettingsGroup(RenderDescriptor renderDescriptor, SettingsGroupComponent<TSettings, TView>* settingsGroup)
 {
-    settingsGroups.push_back(settingsGroup->GetView());
-    settingsGroup->SetDescriptor(WindowDescriptor::CreateWindowDescriptor(
-        renderDescriptor.GetRenderPosition().GetPosition(),
-        Size(scaleProvider->Scale(257), 0),
-        OverflowModes::Fixed,
-        OverflowModes::Stretch));
-
-    settingsGroup->OnSettingsChanged.Subscribe([this]()
-    {
-        SetButtonsState();
-    });
-
-    settingsGroup->InitializeAndRender();
-
-    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup->GetView());
-
-    return RenderResult(settingsGroup->GetBoundingRect());
+    settingsGroup->OnSettingsChanged.Subscribe([this] { SetButtonsState(); });
+    return InitializeSettingsGroup(renderDescriptor, settingsGroup);
 }

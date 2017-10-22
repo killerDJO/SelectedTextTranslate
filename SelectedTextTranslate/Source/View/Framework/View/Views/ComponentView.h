@@ -17,7 +17,7 @@ protected:
     }
 
 public:
-    ComponentView(ViewContext* context, View* parentView, ModelHolder<TModel>* modelHolder)
+    ComponentView(CommonContext* context, View* parentView, ModelHolder<TModel>* modelHolder)
         : ContentView(context, parentView)
     {
         this->modelHolder = modelHolder;

@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 
-SettingsGroupHeaderControl::SettingsGroupHeaderControl(ViewContext* context, View* parentWindow)
+SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, View* parentWindow)
     : ContentView(context, parentWindow)
 {
     this->contentState = SettingsGroupContentState::Default;

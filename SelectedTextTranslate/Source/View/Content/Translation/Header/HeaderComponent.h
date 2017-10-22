@@ -13,7 +13,7 @@ private:
     void PlayText() const;
 
 public:
-    HeaderComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
+    HeaderComponent(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
 
     Subscribeable<> OnForceTranslation;
     Subscribeable<> OnTranslateSuggestion;

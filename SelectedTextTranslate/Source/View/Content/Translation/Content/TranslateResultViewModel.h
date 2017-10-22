@@ -1,15 +1,15 @@
 #pragma once
 #include "Services\Translation\Dto\TranslateResult.h"
 
-class TranslateResultContent
+class TranslateResultViewModel
 {
 private:
     TranslateResult translateResult;
     map<int, bool> translateResultCategoryExpandedMap;
 
 public:
-    TranslateResultContent();
-    TranslateResultContent(TranslateResult translateResult);
+    TranslateResultViewModel();
+    TranslateResultViewModel(TranslateResult translateResult);
 
     TranslateResult GetTranslateResult() const;
 

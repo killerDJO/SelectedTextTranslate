@@ -1,19 +1,19 @@
 #pragma once
 #include "Services\Translation\Dto\TranslateResult.h"
 #include "View\Framework\ModelHolder.h"
-#include "View\Content\Translation\Content\Dto\TranslateResultContent.h"
+#include "View\Content\Translation\Content\TranslateResultViewModel.h"
 #include "View\Content\Translation\Content\TranslateResultView.h"
 
-class TranslateResultComponent : public Component<TranslateResultView>, ModelHolder<TranslateResultContent>
+class TranslateResultComponent : public Component<TranslateResultView>, ModelHolder<TranslateResultViewModel>
 {
 private:
-    TranslateResultContent contentModel;
+    TranslateResultViewModel contentModel;
     ModelHolder<TranslateResult>* modelHolder;
 
     void ExpandCategory(int categoryIndex);
 
 public:
-    TranslateResultComponent(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
+    TranslateResultComponent(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
 
-    TranslateResultContent GetModel() override;
+    TranslateResultViewModel GetModel() override;
 };

@@ -1,7 +1,7 @@
 #include "View\Content\Settings\SettingsComponent.h"
 #include "View\Framework\MessageBus.h"
 
-SettingsComponent::SettingsComponent(ViewContext* context, View* parentView)
+SettingsComponent::SettingsComponent(CommonContext* context, View* parentView)
     : Component<SettingsView>(context, new SettingsView(context, parentView, this))
 {
     settingsProvider = context->Get<SettingsProvider>();

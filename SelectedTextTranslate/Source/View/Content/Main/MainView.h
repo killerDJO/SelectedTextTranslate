@@ -11,22 +11,21 @@
 class MainView : public View
 {
 private:
-    TranslationComponent* translationWindow;
+    TranslationComponent* translationComponent;
     DictionaryComponent* dictionaryComponent;
-    SettingsComponent* settingsWindow;
+    SettingsComponent* settingsComponent;
     ConfirmDialogWindow* confirmDialogWindow;
 
     ApplicationViews applicationView;
     map<ApplicationViews, ViewDescriptor> applicationViewDescriptors;
     Size minSize;
 
-    void CreateChildViews();
-    void SetViewWindowDescriptor(View* viewWindow, ApplicationViews view);
+    void CreateChildComponents();
+    void SetViewWindowDescriptor(IComponent* component, ApplicationViews view);
 
     void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
-    void Resize() override;
 
-    View* GetViewToShow() const;
+    IComponent* GetComponentToShow() const;
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
     bool IsResizeLocked();
@@ -38,10 +37,11 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainView(ViewContext* context);
+    MainView(CommonContext* context);
 
     void Initialize() override;
     void Render(bool preserveScrolls = false) override;
+    void Resize() override;
 
     void SetApplicationView(ApplicationViews applicationView);
     void Translate(wstring input);

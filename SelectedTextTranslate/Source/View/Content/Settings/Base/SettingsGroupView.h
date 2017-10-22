@@ -16,7 +16,7 @@ protected:
     virtual void RenderSettingsContent(RenderDescriptor renderDescriptor, TSettings* settings) = 0;
 
 public:
-    SettingsGroupView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
+    SettingsGroupView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
 
     void UpdateHeader();
 
@@ -25,7 +25,7 @@ public:
 };
 
 template <typename TSettings>
-SettingsGroupView<TSettings>::SettingsGroupView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
+SettingsGroupView<TSettings>::SettingsGroupView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
     : ComponentView<SettingsGroupViewModel<TSettings>*>(context, parentView, modelHolder)
 {
     this->paddingX = this->paddingY = this->scaleProvider->Scale(5);

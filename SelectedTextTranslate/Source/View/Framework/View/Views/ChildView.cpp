@@ -3,7 +3,7 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "View\Framework\Providers\ScrollProvider.h"
 
-ChildView::ChildView(ViewContext* context, View* parentView)
+ChildView::ChildView(CommonContext* context, View* parentView)
     : View(context)
 {
     if(parentView == nullptr)

@@ -2,7 +2,7 @@
 #include "View\Content\Dictionary\DictionaryView.h"
 #include "Services\Dictionary\DictionaryService.h"
 
-DictionaryComponent::DictionaryComponent(ViewContext* context, View* parentView)
+DictionaryComponent::DictionaryComponent(CommonContext* context, View* parentView)
     : Component(context, new DictionaryView(context, parentView, this))
 {
     this->dictionaryService = context->Get<DictionaryService>();

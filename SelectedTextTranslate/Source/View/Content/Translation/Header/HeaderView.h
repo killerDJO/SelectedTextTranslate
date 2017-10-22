@@ -20,7 +20,7 @@ protected:
     Size RenderContent(Renderer* renderer, TranslateResult model) override;
 
 public:
-    HeaderView(ViewContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
+    HeaderView(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;

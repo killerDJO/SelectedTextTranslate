@@ -1,6 +1,6 @@
 #include "View\Framework\View\Views\ContentView.h"
 
-ContentView::ContentView(ViewContext* context, View* parentView)
+ContentView::ContentView(CommonContext* context, View* parentView)
     : ChildView(context, parentView)
 {
     this->lineHeight = scaleProvider->Scale(20);

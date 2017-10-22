@@ -5,14 +5,14 @@
 class ScrollProvider;
 class RenderingContext;
 
-class ViewContext
+class CommonContext
 {
     HINSTANCE hInstance;
     ErrorHandler* errorHandler;
     CompositionRoot* compositionRoot;
 
 public:
-    ViewContext(
+    CommonContext(
         HINSTANCE hInstance,
         CompositionRoot* compositionRoot,
         ErrorHandler* errorHandler);
@@ -24,25 +24,25 @@ public:
     TService* Get() const;
 };
 
-inline ViewContext::ViewContext(HINSTANCE hInstance, CompositionRoot* compositionRoot, ErrorHandler* errorHandler)
+inline CommonContext::CommonContext(HINSTANCE hInstance, CompositionRoot* compositionRoot, ErrorHandler* errorHandler)
 {
     this->hInstance = hInstance;
     this->compositionRoot = compositionRoot;
     this->errorHandler = errorHandler;
 }
 
-inline HINSTANCE ViewContext::GetInstance() const
+inline HINSTANCE CommonContext::GetInstance() const
 {
     return hInstance;
 }
 
-inline ErrorHandler* ViewContext::GetErrorHandler() const
+inline ErrorHandler* CommonContext::GetErrorHandler() const
 {
     return errorHandler;
 }
 
 template <typename TService>
-TService* ViewContext::Get() const
+TService* CommonContext::Get() const
 {
     return compositionRoot->GetService<TService>();
 }

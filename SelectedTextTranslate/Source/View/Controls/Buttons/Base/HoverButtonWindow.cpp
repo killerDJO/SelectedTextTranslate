@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include <set>
 
-HoverButtonWindow::HoverButtonWindow(ViewContext* context, View* parentWindow)
+HoverButtonWindow::HoverButtonWindow(CommonContext* context, View* parentWindow)
     : ChildView(context, parentWindow)
 {
     this->OnClick = Subscribeable<>();

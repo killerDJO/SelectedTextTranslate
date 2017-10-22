@@ -3,7 +3,7 @@
 #include "View\Controls\Buttons\HoverIconButtonWindow.h"
 #include "View\Controls\Buttons\HoverTextButtonWindow.h"
 
-HeaderView::HeaderView(ViewContext* context, View* parentWindow, ModelHolder<TranslateResult>* modelHolder)
+HeaderView::HeaderView(CommonContext* context, View* parentWindow, ModelHolder<TranslateResult>* modelHolder)
     : ComponentView<TranslateResult>(context, parentWindow, modelHolder)
 {
     this->viewName = L"TranlsateResultHeaderWindow";
