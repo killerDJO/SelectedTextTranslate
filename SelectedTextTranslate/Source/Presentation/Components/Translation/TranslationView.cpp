@@ -22,7 +22,7 @@ void TranslationView::Initialize()
         OverflowModes::Stretch,
         OverflowModes::Fixed);
     headerComponent = new HeaderComponent(context, this, modelHolder);
-    headerComponent->SetDescriptor(headerWindowDescriptor);
+    headerComponent->SetLayout(headerWindowDescriptor);
     headerComponent->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     headerComponent->OnForceTranslation.Subscribe(&OnForceTranslation);
     headerComponent->Initialize();
@@ -33,7 +33,7 @@ void TranslationView::Initialize()
         OverflowModes::Stretch,
         OverflowModes::Stretch);
     translateResultComponent = new TranslateResultComponent(context, this, modelHolder);
-    translateResultComponent->SetDescriptor(translateResultWindowDescriptor);
+    translateResultComponent->SetLayout(translateResultWindowDescriptor);
     translateResultComponent->Initialize();
 }
 

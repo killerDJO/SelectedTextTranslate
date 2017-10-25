@@ -1,5 +1,5 @@
 #pragma once
-#include "Presentation\Controls\Inputs\HotKeyInputWindow.h"
+#include "Presentation\Controls\Inputs\HotKeyInputControl.h"
 #include "Presentation\Components\Settings\Base\SettingsGroupView.h"
 #include "BusinessLogic\Settings\Dto\HotkeySettings.h"
 
@@ -9,7 +9,7 @@ private:
     int controlsMargin;
 
     Font* font;
-    vector<HotKeyInputWindow*> hotkeyInputWindows;
+    vector<HotKeyInputControl*> hotkeyInputWindows;
 
     RenderResult RenderHotkeyEditControl(HotkeySettings* settings, RenderDescriptor renderDescriptor, wstring title, int hotkey, function<void(HotkeySettings*, DWORD)> hotkeySetter);
 

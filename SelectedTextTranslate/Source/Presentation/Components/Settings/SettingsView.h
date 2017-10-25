@@ -1,6 +1,6 @@
 #pragma once
-#include "Presentation\Controls\Buttons\HoverFlatButtonWindow.h"
-#include "Presentation\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverFlatButtonControl.h"
+#include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 #include "Presentation\Components\Settings\Base\SettingsGroupView.h"
 #include "Presentation\Framework\ModelHolder.h"
 #include "Presentation\Framework\Views\ComponentView.h"
@@ -11,9 +11,9 @@
 class SettingsView : public ComponentView<SettingsViewModel*>
 {
 private:
-    HoverFlatButtonWindow* saveButton;
-    HoverTextButtonWindow* cancelButton;
-    HoverTextButtonWindow* resetButton;
+    HoverFlatButtonControl* saveButton;
+    HoverTextButtonControl* cancelButton;
+    HoverTextButtonControl* resetButton;
 
     vector<IComponent*> settingsGroups;
 
@@ -26,7 +26,7 @@ private:
 
     void CreateControls(RenderDescriptor renderDescriptor);
     RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
-    HoverTextButtonWindow* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback);
+    HoverTextButtonControl* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback);
 
     void SetButtonsState() const;
 

@@ -2,7 +2,6 @@
 #include "BusinessLogic\Translation\Dto\TranslateResult.h"
 #include "Utilities\Subscribeable.h"
 #include "Presentation\Framework\Rendering\Dto\RenderDescriptor.h"
-#include "Presentation\Framework\Views\ContentView.h"
 #include "Presentation\Framework\ModelHolder.h"
 #include "Presentation\Framework\Views\ComponentView.h"
 

@@ -1,11 +1,20 @@
 #pragma once
-#include "Presentation\Framework\Views\ContentView.h"
+#include "Presentation\Framework\Views\ControlView.h"
 
-class ConfirmDialogContentWindow : public ContentView
+class ConfirmDialogContentControl : public ControlView
 {
 private:
+    int paddingX;
+    int paddingY;
+    int lineHeight;
     int height;
     int borderWidth;
+
+    Font* fontSmall;
+    Font* fontSmallUnderscored;
+
+    Brush* grayBrush;
+    Brush* backgroundBrush;
 
     wstring title;
 
@@ -15,8 +24,8 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogContentWindow(CommonContext* context, View* parentWindow);
-    ~ConfirmDialogContentWindow();
+    ConfirmDialogContentControl(CommonContext* context, View* parentWindow);
+    ~ConfirmDialogContentControl();
 
     void SetDimensions(Point position, int width);
 

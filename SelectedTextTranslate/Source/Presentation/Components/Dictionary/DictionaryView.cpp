@@ -1,5 +1,5 @@
 #include "Presentation\Components\Dictionary\DictionaryView.h"
-#include "Presentation\Controls\Buttons\HoverIconButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
 #include "Presentation\Framework\Rendering\Dto\RenderPosition.h"
 
 DictionaryView::DictionaryView(CommonContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
@@ -38,7 +38,7 @@ Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> 
 
         renderPosition = renderPosition.SetX(paddingX);
 
-        HoverIconButtonWindow* translateButton = new HoverIconButtonWindow(context, this);
+        HoverIconButtonControl* translateButton = new HoverIconButtonControl(context, this);
         translateButton->SetDimensions(
             renderPosition.MoveY(-fontNormal->GetAscent() + 1).GetPosition(),
             Size(iconSize, iconSize));

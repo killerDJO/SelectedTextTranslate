@@ -1,10 +1,10 @@
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayControl.h"
 
-ConfirmDialogWindow::ConfirmDialogWindow(CommonContext* context, View* parentView)
-    : ChildView(context, parentView)
+ConfirmDialogControl::ConfirmDialogControl(CommonContext* context, View* parentView)
+    : ControlView(context, parentView)
 {
     this->className = L"STT_CONFIRM_DIALOG";
 
@@ -16,26 +16,26 @@ ConfirmDialogWindow::ConfirmDialogWindow(CommonContext* context, View* parentVie
     this->isLayered = false;
 }
 
-void ConfirmDialogWindow::Initialize()
+void ConfirmDialogControl::Initialize()
 {
-    ChildView::Initialize();
+    ControlView::Initialize();
 
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
-void ConfirmDialogWindow::SetSize(Size size)
+void ConfirmDialogControl::SetSize(Size size)
 {
     AssertViewNotInitialized();
     layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
 }
 
-void ConfirmDialogWindow::Show()
+void ConfirmDialogControl::Show()
 {
-    ChildView::Show();
+    ControlView::Show();
     AssertWinApiResult(SetFocus(windowHandle));
 }
 
-void ConfirmDialogWindow::SetTitle(wstring title)
+void ConfirmDialogControl::SetTitle(wstring title)
 {
     this->title = title;
 
@@ -46,16 +46,16 @@ void ConfirmDialogWindow::SetTitle(wstring title)
     }
 }
 
-wstring ConfirmDialogWindow::GetTitle() const
+wstring ConfirmDialogControl::GetTitle() const
 {
     return title;
 }
 
-Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
+Size ConfirmDialogControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    ConfirmDialogOverlayWindow* overlayWindow = new ConfirmDialogOverlayWindow(context, this);
+    ConfirmDialogOverlayControl* overlayWindow = new ConfirmDialogOverlayControl(context, this);
     overlayWindow->SetSize(GetSize());
     overlayWindow->InitializeAndRender();
 
@@ -63,7 +63,7 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
     int paddingX = roundToInt((GetSize().GetWidth() - dialogContentWidth) / 2);
     int paddingY = scaleProvider->Scale(50);
 
-    dialogContentView = new ConfirmDialogContentWindow(context, this);
+    dialogContentView = new ConfirmDialogContentControl(context, this);
     dialogContentView->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
     dialogContentView->SetTitle(title);
     dialogContentView->OnConfirm.Subscribe(&OnConfirm);
@@ -78,6 +78,6 @@ Size ConfirmDialogWindow::RenderContent(Renderer* renderer)
     return renderer->GetSize();
 }
 
-ConfirmDialogWindow::~ConfirmDialogWindow()
+ConfirmDialogControl::~ConfirmDialogControl()
 {
 }

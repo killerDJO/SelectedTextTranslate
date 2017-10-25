@@ -1,7 +1,7 @@
-#include "Presentation\Controls\Buttons\HoverFlatButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverFlatButtonControl.h"
 
-HoverFlatButtonWindow::HoverFlatButtonWindow(CommonContext* context, View* parentWindow)
-    : HoverButtonWindow(context, parentWindow)
+HoverFlatButtonControl::HoverFlatButtonControl(CommonContext* context, View* parentWindow)
+    : HoverButtonControl(context, parentWindow)
 {
     this->defaultFont = renderingProvider->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
@@ -13,57 +13,57 @@ HoverFlatButtonWindow::HoverFlatButtonWindow(CommonContext* context, View* paren
     this->layoutDescriptor = LayoutDescriptor();
 }
 
-void HoverFlatButtonWindow::SetPosition(Point position)
+void HoverFlatButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     layoutDescriptor.SetPosition(position);
 }
 
-void HoverFlatButtonWindow::SetFont(Font* font)
+void HoverFlatButtonControl::SetFont(Font* font)
 {
     AssertViewNotInitialized();
     this->font = font;
 }
 
-Font* HoverFlatButtonWindow::GetFont() const
+Font* HoverFlatButtonControl::GetFont() const
 {
     return font == nullptr ? defaultFont : font;
 }
 
-void HoverFlatButtonWindow::SetText(wstring text)
+void HoverFlatButtonControl::SetText(wstring text)
 {
     AssertViewNotInitialized();
     this->text = text;
 }
 
-wstring HoverFlatButtonWindow::GetText() const
+wstring HoverFlatButtonControl::GetText() const
 {
     return text;
 }
 
-void HoverFlatButtonWindow::SetPaddingX(int paddingX)
+void HoverFlatButtonControl::SetPaddingX(int paddingX)
 {
     AssertViewNotInitialized();
     this->paddingX = paddingX;
 }
 
-int HoverFlatButtonWindow::GetPaddingX() const
+int HoverFlatButtonControl::GetPaddingX() const
 {
     return paddingX;
 }
 
-void HoverFlatButtonWindow::SetPaddingY(int paddingY)
+void HoverFlatButtonControl::SetPaddingY(int paddingY)
 {
     AssertViewNotInitialized();
     this->paddingY = paddingY;
 }
 
-int HoverFlatButtonWindow::GetPaddingY() const
+int HoverFlatButtonControl::GetPaddingY() const
 {
     return paddingY;
 }
 
-Size HoverFlatButtonWindow::GetComputedSize() const
+Size HoverFlatButtonControl::GetComputedSize() const
 {
     Size textSize = renderingProvider->GetTextSize(text, GetFont());
 
@@ -72,7 +72,7 @@ Size HoverFlatButtonWindow::GetComputedSize() const
         GetFont()->GetStrokeHeight() + 1 + (paddingY + borderWidth) * 2);
 }
 
-void HoverFlatButtonWindow::Initialize()
+void HoverFlatButtonControl::Initialize()
 {
     layoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         layoutDescriptor.GetPosition(),
@@ -80,15 +80,15 @@ void HoverFlatButtonWindow::Initialize()
         OverflowModes::Fixed,
         OverflowModes::Fixed);
 
-    HoverButtonWindow::Initialize();
+    HoverButtonControl::Initialize();
 }
 
-int HoverFlatButtonWindow::GetTextBaseline() const
+int HoverFlatButtonControl::GetTextBaseline() const
 {
     return GetFont()->GetStrokeHeight() + paddingY + borderWidth;
 }
 
-void HoverFlatButtonWindow::RenderStatesDeviceContexts()
+void HoverFlatButtonControl::RenderStatesDeviceContexts()
 {
     stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(GetSize());
     stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(GetSize());
@@ -101,7 +101,7 @@ void HoverFlatButtonWindow::RenderStatesDeviceContexts()
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Disabled], Colors::Background, Colors::LightGray, Colors::LightGray);
 }
 
-void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const
+void HoverFlatButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const
 {
     Renderer* renderer = renderingContext->GetRenderer();
 
@@ -127,7 +127,7 @@ void HoverFlatButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors b
     delete backgroundBrush;
 }
 
-HoverFlatButtonWindow::~HoverFlatButtonWindow()
+HoverFlatButtonControl::~HoverFlatButtonControl()
 {
     delete defaultFont;
 }

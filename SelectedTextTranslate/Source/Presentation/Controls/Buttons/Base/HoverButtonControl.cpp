@@ -1,28 +1,27 @@
-#include "Presentation\Controls\Buttons\Base\HoverButtonWindow.h"
+#include "Presentation\Controls\Buttons\Base\HoverButtonControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include <set>
 
-HoverButtonWindow::HoverButtonWindow(CommonContext* context, View* parentWindow)
-    : ChildView(context, parentWindow)
+HoverButtonControl::HoverButtonControl(CommonContext* context, View* parentWindow)
+    : ControlView(context, parentWindow)
 {
     this->OnClick = Subscribeable<>();
     this->state = ButtonStates::Normal;
     this->stateToDeviceContextMap = map<ButtonStates, HDC>();
 }
 
-void HoverButtonWindow::Initialize()
+void HoverButtonControl::Initialize()
 {
-    ChildView::Initialize();
+    ControlView::Initialize();
     RenderStatesDeviceContexts();
 }
 
-Size HoverButtonWindow::RenderContent(Renderer* renderer)
+Size HoverButtonControl::RenderContent(Renderer* renderer)
 {
     renderer->DrawDeviceContext(stateToDeviceContextMap[state], GetSize());
     return renderer->GetSize();
 }
 
-LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT HoverButtonControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     TRACKMOUSEEVENT tme;
     tme.cbSize = sizeof(TRACKMOUSEEVENT);
@@ -100,20 +99,20 @@ LRESULT HoverButtonWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     }
 
-    return ChildView::WindowProcedure(message, wParam, lParam);
+    return ControlView::WindowProcedure(message, wParam, lParam);
 }
 
-void HoverButtonWindow::Disable()
+void HoverButtonControl::Disable()
 {
     ChangeButtonState(ButtonStates::Disabled);
 }
 
-void HoverButtonWindow::Enable()
+void HoverButtonControl::Enable()
 {
     ChangeButtonState(ButtonStates::Normal);
 }
 
-void HoverButtonWindow::ChangeButtonState(ButtonStates newState)
+void HoverButtonControl::ChangeButtonState(ButtonStates newState)
 {
     state = newState;
 
@@ -123,12 +122,12 @@ void HoverButtonWindow::ChangeButtonState(ButtonStates newState)
     }
 }
 
-bool HoverButtonWindow::IsDisabled() const
+bool HoverButtonControl::IsDisabled() const
 {
     return state == ButtonStates::Disabled;
 }
 
-HoverButtonWindow::~HoverButtonWindow()
+HoverButtonControl::~HoverButtonControl()
 {
     set<HDC> deletedDeviceContexts;
     for (auto iterator = stateToDeviceContextMap.begin(); iterator != stateToDeviceContextMap.end(); ++iterator)

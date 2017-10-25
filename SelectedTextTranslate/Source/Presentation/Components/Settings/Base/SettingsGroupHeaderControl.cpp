@@ -1,28 +1,34 @@
 #include "Presentation\Components\Settings\Base\SettingsGroupHeaderControl.h"
-#include "Presentation\Controls\Buttons\HoverIconButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
 
 SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, View* parentWindow)
-    : ContentView(context, parentWindow)
+    : ControlView(context, parentWindow)
 {
     this->contentState = SettingsGroupContentState::Default;
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
     this->title = wstring();
+
+    this->fontNormal = renderingProvider->CreateCustomFont(FontSizes::Normal);
+    this->backgroundBrush = renderingProvider->CreateCustomBrush(Colors::Background);
     this->paddingX = this->paddingY = scaleProvider->Scale(5);
     this->borderWidth = scaleProvider->Scale(1);
     this->lineHeight = this->fontNormal->GetHeight();
+
     this->className = L"STT_SETTINGS_GROUP_HEADER";
     this->viewName = L"SettingsGroupHeaderControl";
 }
 
-void SettingsGroupHeaderControl::SetDimensions(Point position, int width)
+SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
     layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
+    return this;
 }
 
-void SettingsGroupHeaderControl::SetTitle(wstring title)
+SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetTitle(wstring title)
 {
     this->title = title;
+    return this;
 }
 
 wstring SettingsGroupHeaderControl::GetTitle() const
@@ -30,9 +36,10 @@ wstring SettingsGroupHeaderControl::GetTitle() const
     return title;
 }
 
-void SettingsGroupHeaderControl::SetContentState(SettingsGroupContentState contentState)
+SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetContentState(SettingsGroupContentState contentState)
 {
     this->contentState = contentState;
+    return this;
 }
 
 SettingsGroupContentState SettingsGroupHeaderControl::GetContentState() const
@@ -40,9 +47,10 @@ SettingsGroupContentState SettingsGroupHeaderControl::GetContentState() const
     return contentState;
 }
 
-void SettingsGroupHeaderControl::SetVisibilityState(SettingsGroupVisibilityState visibilityState)
+SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetVisibilityState(SettingsGroupVisibilityState visibilityState)
 {
     this->visibilityState = visibilityState;
+    return this;
 }
 
 SettingsGroupVisibilityState SettingsGroupHeaderControl::GetVisibilityState() const
@@ -54,7 +62,7 @@ void SettingsGroupHeaderControl::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
     layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(layoutDescriptor.GetPosition(), Size(layoutDescriptor.GetSize().GetWidth(), headerHeight));
-    ContentView::Initialize();
+    ControlView::Initialize();
 }
 
 Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
@@ -77,7 +85,7 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 
     int iconSize = fontNormal->GetAscent();
 
-    HoverIconButtonWindow* expandButton = new HoverIconButtonWindow(context, this);
+    HoverIconButtonControl* expandButton = new HoverIconButtonControl(context, this);
     expandButton->SetDimensions(
         Point(GetSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, scaleProvider).GetY()),
         Size(iconSize, iconSize));
@@ -98,5 +106,11 @@ LRESULT SettingsGroupHeaderControl::WindowProcedure(UINT message, WPARAM wParam,
         return TRUE;
     }
 
-    return ContentView::WindowProcedure(message, wParam, lParam);
+    return ControlView::WindowProcedure(message, wParam, lParam);
+}
+
+SettingsGroupHeaderControl::~SettingsGroupHeaderControl()
+{
+    delete backgroundBrush;
+    delete fontNormal;
 }

@@ -1,11 +1,11 @@
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Presentation\Framework\Views\ChildView.h"
-#include "Presentation\Controls\Buttons\HoverFlatButtonWindow.h"
-#include "Presentation\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverFlatButtonControl.h"
+#include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
-ConfirmDialogContentWindow::ConfirmDialogContentWindow(CommonContext* context, View* parentWindow)
-    : ContentView(context, parentWindow)
+ConfirmDialogContentControl::ConfirmDialogContentControl(CommonContext* context, View* parentWindow)
+    : ControlView(context, parentWindow)
 {
     this->className = L"STT_CONFIRM_DIALOG_CONTENT";
     this->isLayered = true;
@@ -15,20 +15,26 @@ ConfirmDialogContentWindow::ConfirmDialogContentWindow(CommonContext* context, V
     this->borderWidth = scaleProvider->Scale(1);
     this->height = scaleProvider->Scale(103);
 
+    this->fontSmall = renderingProvider->CreateCustomFont(FontSizes::Small);
+    this->fontSmallUnderscored = renderingProvider->CreateCustomFont(FontSizes::Small, false, true);
+
+    this->grayBrush = renderingProvider->CreateCustomBrush(Colors::Gray);
+    this->backgroundBrush = renderingProvider->CreateCustomBrush(Colors::Background);
+
     this->headerFont = renderingProvider->CreateCustomFont(FontSizes::Normal, false, false, true);
 
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
 }
 
-void ConfirmDialogContentWindow::SetDimensions(Point position, int width)
+void ConfirmDialogContentControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
 
     layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
 }
 
-void ConfirmDialogContentWindow::SetTitle(wstring title)
+void ConfirmDialogContentControl::SetTitle(wstring title)
 {
     this->title = title;
 
@@ -38,18 +44,18 @@ void ConfirmDialogContentWindow::SetTitle(wstring title)
     }
 }
 
-wstring ConfirmDialogContentWindow::GetTitle() const
+wstring ConfirmDialogContentControl::GetTitle() const
 {
     return title;
 }
 
-void ConfirmDialogContentWindow::Initialize()
+void ConfirmDialogContentControl::Initialize()
 {
-    ChildView::Initialize();
+    ControlView::Initialize();
     AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
-Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
+Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
@@ -77,7 +83,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
         borderWidth,
         Colors::Gray);
 
-    HoverFlatButtonWindow* confirmButton = new HoverFlatButtonWindow(context, this);
+    HoverFlatButtonControl* confirmButton = new HoverFlatButtonControl(context, this);
     confirmButton->SetText(L"Confirm");
     confirmButton->SetPosition(Point(
         GetSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
@@ -87,7 +93,7 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     confirmButton->InitializeAndRender();
 
     int textWidth = renderingProvider->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
-    HoverTextButtonWindow* cancelButton = new HoverTextButtonWindow(context, this);
+    HoverTextButtonControl* cancelButton = new HoverTextButtonControl(context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
     cancelButton->SetPosition(Point(
@@ -101,7 +107,11 @@ Size ConfirmDialogContentWindow::RenderContent(Renderer* renderer)
     return viewStateDescriptor.GetSize();
 }
 
-ConfirmDialogContentWindow::~ConfirmDialogContentWindow()
+ConfirmDialogContentControl::~ConfirmDialogContentControl()
 {
     delete headerFont;
+    delete fontSmallUnderscored;
+    delete fontSmall;
+    delete grayBrush;
+    delete backgroundBrush;
 }

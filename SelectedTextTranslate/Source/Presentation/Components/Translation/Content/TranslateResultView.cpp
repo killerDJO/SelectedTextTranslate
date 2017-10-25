@@ -1,5 +1,5 @@
 ﻿#include "Presentation\Components\Translation\Content\TranslateResultView.h"
-#include "Presentation\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
 TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslateResultViewModel>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
@@ -117,7 +117,7 @@ RenderResult TranslateResultView::CreateExpandButton(
             text = L"show less results";
         }
 
-        HoverTextButtonWindow* expandButton = new HoverTextButtonWindow(context, this);
+        HoverTextButtonControl* expandButton = new HoverTextButtonControl(context, this);
         expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
         expandButton->SetFont(fontSmallUnderscored);
         expandButton->SetText(text);

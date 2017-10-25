@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Utilities\StringUtilities.h"
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.h"
 #include "Presentation\Components\Main\Enums\ApplicationViews.h"
 #include "Presentation\Components\Translation\TranslationComponent.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
@@ -23,14 +23,14 @@ MainView::MainView(CommonContext* context)
     this->applicationViewDescriptors = map<ApplicationViews, ViewDescriptor>();
 }
 
-void MainView::SetDescriptor(LayoutDescriptor descriptor)
+void MainView::SetLayout(LayoutDescriptor layoutDescriptor)
 {
-    this->layoutDescriptor = descriptor;
+    this->layoutDescriptor = layoutDescriptor;
 
-    applicationViewDescriptors[ApplicationViews::Settings] = ViewDescriptor(descriptor, false);
-    applicationViewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(descriptor, true);
-    applicationViewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(descriptor, true);
-    minSize = descriptor.GetSize();
+    applicationViewDescriptors[ApplicationViews::Settings] = ViewDescriptor(layoutDescriptor, false);
+    applicationViewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(layoutDescriptor, true);
+    applicationViewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(layoutDescriptor, true);
+    minSize = layoutDescriptor.GetSize();
 }
 
 void MainView::Initialize()
@@ -92,7 +92,7 @@ void MainView::CreateChildComponents()
     settingsComponent->MakeHidden();
     settingsComponent->Initialize();
 
-    confirmDialogWindow = new ConfirmDialogWindow(context, this);
+    confirmDialogWindow = new ConfirmDialogControl(context, this);
     confirmDialogWindow->SetSize(GetClientSize());
     confirmDialogWindow->MakeHidden();
     confirmDialogWindow->Initialize();
@@ -105,7 +105,7 @@ void MainView::SetViewWindowDescriptor(IComponent* component, ApplicationViews v
         applicationViewDescriptors[view].GetWindowDescriptor().GetSize(),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    component->SetDescriptor(windowDescriptor);
+    component->SetLayout(windowDescriptor);
 }
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)

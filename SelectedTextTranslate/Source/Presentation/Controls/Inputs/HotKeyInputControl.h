@@ -1,7 +1,7 @@
 #pragma once
-#include "Presentation\Framework\Views\ChildView.h"
+#include "Presentation\Framework\Views\ControlView.h"
 
-class HotKeyInputWindow : public ChildView
+class HotKeyInputControl : public ControlView
 {
 private:
     DWORD currentHotkey;
@@ -31,8 +31,8 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HotKeyInputWindow(CommonContext* context, View* parentWindow);
-    virtual ~HotKeyInputWindow();
+    HotKeyInputControl(CommonContext* context, View* parentWindow);
+    virtual ~HotKeyInputControl();
 
     void SetPosition(Point position);
 

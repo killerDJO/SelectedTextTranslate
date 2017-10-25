@@ -1,8 +1,8 @@
-#include "Presentation\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-HoverTextButtonWindow::HoverTextButtonWindow(CommonContext* context, View* parentWindow)
-    : HoverButtonWindow(context, parentWindow)
+HoverTextButtonControl::HoverTextButtonControl(CommonContext* context, View* parentWindow)
+    : HoverButtonControl(context, parentWindow)
 {
     this->defaultFont = renderingProvider->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
@@ -14,7 +14,7 @@ HoverTextButtonWindow::HoverTextButtonWindow(CommonContext* context, View* paren
     this->className = L"STT_HOVERTEXTBUTTON";
 }
 
-void HoverTextButtonWindow::SetPosition(Point position)
+void HoverTextButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
@@ -25,73 +25,73 @@ void HoverTextButtonWindow::SetPosition(Point position)
         OverflowModes::Stretch);
 }
 
-void HoverTextButtonWindow::SetNormalColor(Colors normalColor)
+void HoverTextButtonControl::SetNormalColor(Colors normalColor)
 {
     AssertViewNotInitialized();
     this->normalColor = normalColor;
 }
 
-Colors HoverTextButtonWindow::GetNormalColor() const
+Colors HoverTextButtonControl::GetNormalColor() const
 {
     return normalColor;
 }
 
-void HoverTextButtonWindow::SetHoverColor(Colors hoverColor)
+void HoverTextButtonControl::SetHoverColor(Colors hoverColor)
 {
     AssertViewNotInitialized();
     this->hoverColor = hoverColor;
 }
 
-Colors HoverTextButtonWindow::GetHoverColor() const
+Colors HoverTextButtonControl::GetHoverColor() const
 {
     return hoverColor;
 }
 
-void HoverTextButtonWindow::SetDisabledColor(Colors disabledColor)
+void HoverTextButtonControl::SetDisabledColor(Colors disabledColor)
 {
     AssertViewNotInitialized();
     this->disabledColor = disabledColor;
 }
 
-Colors HoverTextButtonWindow::GetDisabledColor() const
+Colors HoverTextButtonControl::GetDisabledColor() const
 {
     return disabledColor;
 }
 
-void HoverTextButtonWindow::SetBackgroundColor(Colors backgroundColor)
+void HoverTextButtonControl::SetBackgroundColor(Colors backgroundColor)
 {
     AssertViewNotInitialized();
     this->backgroundColor = backgroundColor;
 }
 
-Colors HoverTextButtonWindow::GetBackgroundColor() const
+Colors HoverTextButtonControl::GetBackgroundColor() const
 {
     return backgroundColor;
 }
 
-void HoverTextButtonWindow::SetFont(Font* font)
+void HoverTextButtonControl::SetFont(Font* font)
 {
     AssertViewNotInitialized();
     this->font = font;
 }
 
-Font* HoverTextButtonWindow::GetFont() const
+Font* HoverTextButtonControl::GetFont() const
 {
     return font == nullptr ? defaultFont : font;
 }
 
-void HoverTextButtonWindow::SetText(wstring text)
+void HoverTextButtonControl::SetText(wstring text)
 {
     AssertViewNotInitialized();
     this->text = text;
 }
 
-wstring HoverTextButtonWindow::GetText() const
+wstring HoverTextButtonControl::GetText() const
 {
     return text;
 }
 
-void HoverTextButtonWindow::RenderStatesDeviceContexts()
+void HoverTextButtonControl::RenderStatesDeviceContexts()
 {
     Size textSize = renderingProvider->GetTextSize(text.c_str(), GetFont());
 
@@ -108,7 +108,7 @@ void HoverTextButtonWindow::RenderStatesDeviceContexts()
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Disabled], disabledColor);
 }
 
-void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors color) const
+void HoverTextButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors color) const
 {
     Renderer* renderer = renderingContext->GetRenderer();
 
@@ -123,7 +123,7 @@ void HoverTextButtonWindow::RenderStateDeviceContext(HDC deviceContext, Colors c
     delete backgroundBrush;
 }
 
-HoverTextButtonWindow::~HoverTextButtonWindow()
+HoverTextButtonControl::~HoverTextButtonControl()
 {
     delete defaultFont;
 }

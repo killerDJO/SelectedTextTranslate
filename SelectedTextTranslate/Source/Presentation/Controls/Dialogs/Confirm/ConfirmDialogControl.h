@@ -1,20 +1,20 @@
 #pragma once
-#include "Presentation\Framework\Views\ContentView.h"
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.h"
+#include "Presentation\Framework\Views\ControlView.h"
 
-class ConfirmDialogWindow : public ChildView
+class ConfirmDialogControl : public ControlView
 {
 private:
     wstring title;
 
-    ConfirmDialogContentWindow* dialogContentView;
+    ConfirmDialogContentControl* dialogContentView;
 
 protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogWindow(CommonContext* context, View* parentView);
-    ~ConfirmDialogWindow() override;
+    ConfirmDialogControl(CommonContext* context, View* parentView);
+    ~ConfirmDialogControl() override;
 
     void SetSize(Size size);
 

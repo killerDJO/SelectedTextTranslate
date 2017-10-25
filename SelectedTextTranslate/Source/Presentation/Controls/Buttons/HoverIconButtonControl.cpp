@@ -1,12 +1,12 @@
-#include "Presentation\Controls\Buttons\HoverIconButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
-map<tuple<DWORD, int, int>, HDC> HoverIconButtonWindow::iconsCache = map<tuple<DWORD, int, int>, HDC>();
+map<tuple<DWORD, int, int>, HDC> HoverIconButtonControl::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonWindow::HoverIconButtonWindow(CommonContext* context, View* parentWindow)
-    : HoverButtonWindow(context, parentWindow)
+HoverIconButtonControl::HoverIconButtonControl(CommonContext* context, View* parentWindow)
+    : HoverButtonControl(context, parentWindow)
 {
     this->hoverIconResource = 0;
     this->normalIconResource = 0;
@@ -14,56 +14,56 @@ HoverIconButtonWindow::HoverIconButtonWindow(CommonContext* context, View* paren
     this->className = L"STT_HOVERICONBUTTON";
 }
 
-void HoverIconButtonWindow::SetDimensions(Point position, Size size)
+void HoverIconButtonControl::SetDimensions(Point position, Size size)
 {
     AssertViewNotInitialized();
     layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
 }
 
-void HoverIconButtonWindow::SetNormalIconResource(DWORD normalIconResource)
+void HoverIconButtonControl::SetNormalIconResource(DWORD normalIconResource)
 {
     AssertViewNotInitialized();
     this->normalIconResource = normalIconResource;
 }
 
-DWORD HoverIconButtonWindow::GetNormalIconResource() const
+DWORD HoverIconButtonControl::GetNormalIconResource() const
 {
     return normalIconResource;
 }
 
-void HoverIconButtonWindow::SetHoverIconResource(DWORD hoverIconResource)
+void HoverIconButtonControl::SetHoverIconResource(DWORD hoverIconResource)
 {
     AssertViewNotInitialized();
     this->hoverIconResource = hoverIconResource;
 }
 
-DWORD HoverIconButtonWindow::GetHoverIconResource() const
+DWORD HoverIconButtonControl::GetHoverIconResource() const
 {
     return hoverIconResource;
 }
 
-void HoverIconButtonWindow::SetBackgroundBrush(Brush* backgroundBrush)
+void HoverIconButtonControl::SetBackgroundBrush(Brush* backgroundBrush)
 {
     AssertViewNotInitialized();
     this->backgroundBrush = backgroundBrush;
 }
 
-Brush* HoverIconButtonWindow::GetBackgroundBrush() const
+Brush* HoverIconButtonControl::GetBackgroundBrush() const
 {
     return backgroundBrush;
 }
 
-void HoverIconButtonWindow::Initialize()
+void HoverIconButtonControl::Initialize()
 {
     if(normalIconResource == 0 || hoverIconResource == 0)
     {
         throw new SelectedTextTranslateFatalException(L"Hover and normal icon resources must be set before initialization");
     }
 
-    HoverButtonWindow::Initialize();
+    HoverButtonControl::Initialize();
 }
 
-void HoverIconButtonWindow::RenderStatesDeviceContexts()
+void HoverIconButtonControl::RenderStatesDeviceContexts()
 {
     stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(GetSize());
     stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(GetSize());
@@ -73,7 +73,7 @@ void HoverIconButtonWindow::RenderStatesDeviceContexts()
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverIconResource);
 }
 
-void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const
+void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const
 {
     tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, GetSize().GetWidth(), GetSize().GetHeight());
 
@@ -115,7 +115,7 @@ void HoverIconButtonWindow::RenderStateDeviceContext(HDC deviceContext, DWORD ic
     iconsCache[cacheKey] = cachedDC;
 }
 
-Gdiplus::Metafile* HoverIconButtonWindow::LoadMetafileFromResource(DWORD resourceId) const
+Gdiplus::Metafile* HoverIconButtonControl::LoadMetafileFromResource(DWORD resourceId) const
 {
     HRSRC hResource = FindResource(context->GetInstance(), MAKEINTRESOURCE(resourceId), RT_RCDATA);
     AssertCriticalWinApiResult(hResource);

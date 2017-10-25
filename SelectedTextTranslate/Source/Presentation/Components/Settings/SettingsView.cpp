@@ -1,6 +1,6 @@
 #include "Presentation\Components\Settings\SettingsView.h"
-#include "Presentation\Controls\Buttons\HoverFlatButtonWindow.h"
-#include "Presentation\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverFlatButtonControl.h"
+#include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 #include "Presentation\Framework\Rendering\Dto\RenderResult.h"
 #include "Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h"
 #include "Presentation\MessageBus.h"
@@ -49,7 +49,7 @@ RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescri
 {
     settingsGroups.push_back(settingsGroup);
 
-    settingsGroup->SetDescriptor(LayoutDescriptor::CreateLayoutDescriptor(
+    settingsGroup->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
         renderDescriptor.GetRenderPosition().GetPosition(),
         Size(scaleProvider->Scale(257), 0),
         OverflowModes::Fixed,
@@ -88,7 +88,7 @@ void SettingsView::CreateControls(RenderDescriptor renderDescriptor)
 
 RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescriptor)
 {
-    saveButton = new HoverFlatButtonWindow(context, this);
+    saveButton = new HoverFlatButtonControl(context, this);
     saveButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
     saveButton->SetText(L"Save");
     saveButton->OnClick.Subscribe(&OnSaveSettings);
@@ -101,9 +101,9 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
         saveButton->GetPosition().GetY() + saveButton->GetTextBaseline()));
 }
 
-HoverTextButtonWindow* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback)
+HoverTextButtonControl* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback)
 {
-    HoverTextButtonWindow* button = new HoverTextButtonWindow(context, this);
+    HoverTextButtonControl* button = new HoverTextButtonControl(context, this);
     button->SetFont(fontSmallUnderscored);
 
     button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-button->GetFont()->GetAscent()).GetPosition());

@@ -2,6 +2,6 @@
 #include "Presentation\Framework\Views\ControlView.h"
 
 ControlView::ControlView(CommonContext* context, View* parentView)
-    : ContentView(context, parentView)
+    : ChildView(context, parentView)
 {
 }

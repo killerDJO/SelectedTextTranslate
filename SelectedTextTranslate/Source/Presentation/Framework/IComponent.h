@@ -6,7 +6,7 @@ class IComponent
 {
 public:
     virtual ~IComponent() = default;
-    virtual void SetDescriptor(LayoutDescriptor descriptor) = 0;
+    virtual void SetLayout(LayoutDescriptor layoutDescriptor) = 0;
 
     virtual Rect GetBoundingRect() const = 0;
     virtual void Render(bool preserveScrolls = false) const = 0;

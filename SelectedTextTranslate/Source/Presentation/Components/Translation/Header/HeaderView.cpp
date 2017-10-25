@@ -1,7 +1,7 @@
 #include "Presentation\Components\Translation\Header\HeaderView.h"
 #include "Utilities\StringUtilities.h"
-#include "Presentation\Controls\Buttons\HoverIconButtonWindow.h"
-#include "Presentation\Controls\Buttons\HoverTextButtonWindow.h"
+#include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
+#include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
 HeaderView::HeaderView(CommonContext* context, View* parentWindow, ModelHolder<TranslateResult>* modelHolder)
     : ComponentView<TranslateResult>(context, parentWindow, modelHolder)
@@ -33,7 +33,7 @@ Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult mod
     renderPosition = renderPosition.MoveY(lineHeight);
 
     int imageSize = fontSmall->GetAscent();
-    HoverIconButtonWindow* audioButton = new HoverIconButtonWindow(context, this);
+    HoverIconButtonControl* audioButton = new HoverIconButtonControl(context, this);
     audioButton->SetDimensions(
         renderPosition.MoveY(-imageSize).MoveY(2, scaleProvider).GetPosition(),
         Size(imageSize, imageSize));
@@ -87,7 +87,7 @@ void HeaderView::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring ac
         Colors::Gray,
         renderDescriptor.GetRenderPosition());
 
-    HoverTextButtonWindow* headerActionButton = new HoverTextButtonWindow(context, this);
+    HoverTextButtonControl* headerActionButton = new HoverTextButtonControl(context, this);
     headerActionButton->SetFont(fontSmallUnderscored);
     headerActionButton->SetPosition(originLineRenderResult.GetRenderPosition().MoveY(-fontSmall->GetAscent()).GetPosition());
     headerActionButton->SetText(actionText);

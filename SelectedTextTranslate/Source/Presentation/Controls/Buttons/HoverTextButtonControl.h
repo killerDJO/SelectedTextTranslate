@@ -1,7 +1,7 @@
 #pragma once
-#include "Presentation\Controls\Buttons\Base\HoverButtonWindow.h"
+#include "Presentation\Controls\Buttons\Base\HoverButtonControl.h"
 
-class HoverTextButtonWindow : public HoverButtonWindow
+class HoverTextButtonControl : public HoverButtonControl
 {
 private:
     Font* defaultFont;
@@ -18,8 +18,8 @@ protected:
     void RenderStatesDeviceContexts() override;
 
 public:
-    HoverTextButtonWindow(CommonContext* context, View* parentWindow);
-    ~HoverTextButtonWindow();
+    HoverTextButtonControl(CommonContext* context, View* parentWindow);
+    ~HoverTextButtonControl();
 
     void SetPosition(Point position);
 

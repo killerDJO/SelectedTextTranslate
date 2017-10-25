@@ -1,12 +1,18 @@
 #pragma once
-#include "Presentation\Framework\Views\ContentView.h"
 #include "Presentation\Components\Settings\Base\Enums\SettingsGroupVisibilityState.h"
 #include "Presentation\Components\Settings\Base\Enums\SettingsGroupContentState.h"
+#include "Presentation\Framework\Views\ControlView.h"
 
-class SettingsGroupHeaderControl : public ContentView
+class SettingsGroupHeaderControl : public ControlView
 {
 private:
     int borderWidth;
+
+    int paddingX;
+    int paddingY;
+    int lineHeight;
+    Brush* backgroundBrush;
+    Font* fontNormal;
 
     SettingsGroupVisibilityState visibilityState;
     SettingsGroupContentState contentState;
@@ -18,16 +24,17 @@ protected:
 
 public:
     SettingsGroupHeaderControl(CommonContext* context, View* parentView);
+    ~SettingsGroupHeaderControl();
 
-    void SetDimensions(Point position, int width);
+    SettingsGroupHeaderControl* SetDimensions(Point position, int width);
 
-    void SetTitle(wstring title);
+    SettingsGroupHeaderControl* SetTitle(wstring title);
     wstring GetTitle() const;
 
-    void SetContentState(SettingsGroupContentState contentState);
+    SettingsGroupHeaderControl* SetContentState(SettingsGroupContentState contentState);
     SettingsGroupContentState GetContentState() const;
 
-    void SetVisibilityState(SettingsGroupVisibilityState visibilityState);
+    SettingsGroupHeaderControl* SetVisibilityState(SettingsGroupVisibilityState visibilityState);
     SettingsGroupVisibilityState GetVisibilityState() const;
 
     void Initialize() override;

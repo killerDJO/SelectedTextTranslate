@@ -1,7 +1,6 @@
 #pragma once
 #include "Presentation\Framework\Dto\LayoutDescriptor.h"
 #include "Presentation\Framework\Dto\ViewStateDescriptor.h"
-#include "Presentation\Framework\Enums\ViewStates.h"
 #include "Presentation\Framework\Rendering\DeviceContextBuffer.h"
 #include "Presentation\Framework\Rendering\RenderingContext.h"
 #include "Presentation\Framework\Rendering\Renderer.h"
@@ -54,7 +53,7 @@ public:
     View(CommonContext* context);
     ~View() override;
 
-    LayoutDescriptor GetDescriptor() const;
+    LayoutDescriptor GetLayout() const;
 
     Size GetContentSize() const;
     Size GetSize() const;

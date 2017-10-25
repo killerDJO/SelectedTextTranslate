@@ -13,7 +13,7 @@ protected:
     ~Component() override;
 
 public:
-    void SetDescriptor(LayoutDescriptor descriptor) override;
+    void SetLayout(LayoutDescriptor descriptor) override;
 
     Rect GetBoundingRect() const override;
     void Render(bool preserveScrolls = false) const override;
@@ -41,9 +41,9 @@ Component<TView>::~Component()
 }
 
 template <class TView>
-void Component<TView>::SetDescriptor(LayoutDescriptor descriptor)
+void Component<TView>::SetLayout(LayoutDescriptor layoutDescriptor)
 {
-    view->SetDescriptor(descriptor);
+    view->SetLayout(layoutDescriptor);
 }
 
 template <class TView>

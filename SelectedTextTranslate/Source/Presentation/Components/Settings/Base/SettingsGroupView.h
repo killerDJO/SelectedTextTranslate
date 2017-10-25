@@ -50,12 +50,14 @@ Size SettingsGroupView<TSettings>::RenderContent(Renderer* renderer, SettingsGro
     this->DestroyChildViews();
 
     headerControl = new SettingsGroupHeaderControl(this->context, this);
-    headerControl->SetTitle(model->GetName());
-    headerControl->SetContentState(model->GetContentState());
-    headerControl->SetVisibilityState(model->GetVisibilityState());
-    headerControl->SetDimensions(Point(0, 0), this->GetSize().GetWidth());
     headerControl->OnSettingsToggled.Subscribe(&OnSettingsToggled);
-    headerControl->InitializeAndRender();
+
+    headerControl
+        ->SetTitle(model->GetName())
+        ->SetContentState(model->GetContentState())
+        ->SetVisibilityState(model->GetVisibilityState())
+        ->SetDimensions(Point(0, 0), this->GetSize().GetWidth())
+        ->InitializeAndRender();
 
     renderer->UpdateRenderedContentSize(headerControl);
 

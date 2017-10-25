@@ -1,7 +1,7 @@
 #pragma once
-#include "Presentation\Controls\Buttons\Base\HoverButtonWindow.h"
+#include "Presentation\Controls\Buttons\Base\HoverButtonControl.h"
 
-class HoverIconButtonWindow : public HoverButtonWindow
+class HoverIconButtonControl : public HoverButtonControl
 {
 private:
     DWORD normalIconResource;
@@ -18,7 +18,7 @@ protected:
     void RenderStatesDeviceContexts() override;
 
 public:
-    HoverIconButtonWindow(CommonContext* context, View* parentWindow);
+    HoverIconButtonControl(CommonContext* context, View* parentWindow);
 
     void SetDimensions(Point position, Size size);
 

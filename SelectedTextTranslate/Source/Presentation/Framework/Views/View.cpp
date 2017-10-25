@@ -52,7 +52,7 @@ void View::InitializeAndRender(bool preserveScrolls)
     Render(preserveScrolls);
 }
 
-LayoutDescriptor View::GetDescriptor() const
+LayoutDescriptor View::GetLayout() const
 {
     return layoutDescriptor;
 }

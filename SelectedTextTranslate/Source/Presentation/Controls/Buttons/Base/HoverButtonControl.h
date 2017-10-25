@@ -1,9 +1,9 @@
 #pragma once
 #include "Utilities\Subscribeable.h"
 #include "Presentation\Controls\Buttons\Base\Enums\ButtonStates.h"
-#include "Presentation\Framework\Views\ChildView.h"
+#include "Presentation\Framework\Views\ControlView.h"
 
-class HoverButtonWindow : public ChildView
+class HoverButtonControl : public ControlView
 {
 private:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -18,8 +18,8 @@ protected:
     virtual void RenderStatesDeviceContexts() = 0;
 
 public:
-    HoverButtonWindow(CommonContext* context, View* parentWindow);
-    virtual ~HoverButtonWindow();
+    HoverButtonControl(CommonContext* context, View* parentWindow);
+    virtual ~HoverButtonControl();
 
     Subscribeable<> OnClick;
 

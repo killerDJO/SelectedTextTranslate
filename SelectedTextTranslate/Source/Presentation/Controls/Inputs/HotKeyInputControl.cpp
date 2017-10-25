@@ -1,9 +1,9 @@
-#include "Presentation\Controls\Inputs\HotKeyInputWindow.h"
+#include "Presentation\Controls\Inputs\HotKeyInputControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Presentation\MessageBus.h"
 
-HotKeyInputWindow::HotKeyInputWindow(CommonContext* context, View* parentWindow)
-    : ChildView(context, parentWindow)
+HotKeyInputControl::HotKeyInputControl(CommonContext* context, View* parentWindow)
+    : ControlView(context, parentWindow)
 {
     this->className = HOTKEY_CLASS;
     this->currentHotkey = 0;
@@ -23,83 +23,83 @@ HotKeyInputWindow::HotKeyInputWindow(CommonContext* context, View* parentWindow)
     this->controlToDisplayNameMap.push_back(make_pair(HOTKEYF_EXT, L"EXT"));
 }
 
-void HotKeyInputWindow::SetPosition(Point position)
+void HotKeyInputControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     layoutDescriptor = LayoutDescriptor::CreateLayoutWindowDescriptor(position);
 }
 
-void HotKeyInputWindow::SetFont(Font* font)
+void HotKeyInputControl::SetFont(Font* font)
 {
     AssertViewNotInitialized();
     this->font = font;
 }
 
-Font* HotKeyInputWindow::GetFont() const
+Font* HotKeyInputControl::GetFont() const
 {
     return font == nullptr ? defaultFont : font;
 }
 
-void HotKeyInputWindow::SetPadding(int padding)
+void HotKeyInputControl::SetPadding(int padding)
 {
     AssertViewNotInitialized();
     this->padding = padding;
 }
 
-int HotKeyInputWindow::GetPadding() const
+int HotKeyInputControl::GetPadding() const
 {
     return padding;
 }
 
-void HotKeyInputWindow::SetBorderWidth(int borderWidth)
+void HotKeyInputControl::SetBorderWidth(int borderWidth)
 {
     AssertViewNotInitialized();
     this->borderWidth = borderWidth;
 }
 
-int HotKeyInputWindow::GetBorderWidth() const
+int HotKeyInputControl::GetBorderWidth() const
 {
     return borderWidth;
 }
 
-void HotKeyInputWindow::SetLineHeight(int lineHeight)
+void HotKeyInputControl::SetLineHeight(int lineHeight)
 {
     AssertViewNotInitialized();
     this->lineHeight = lineHeight;
 }
 
-int HotKeyInputWindow::GetLineHeight() const
+int HotKeyInputControl::GetLineHeight() const
 {
     return lineHeight;
 }
 
-void HotKeyInputWindow::SetHotkey(DWORD hotkey)
+void HotKeyInputControl::SetHotkey(DWORD hotkey)
 {
     AssertViewNotInitialized();
     currentHotkey = hotkey;
 }
 
-DWORD HotKeyInputWindow::GetHotKey() const
+DWORD HotKeyInputControl::GetHotKey() const
 {
     return currentHotkey;
 }
 
-void HotKeyInputWindow::MakeValid()
+void HotKeyInputControl::MakeValid()
 {
     isValid = true;
 }
 
-void HotKeyInputWindow::MakeInvalid()
+void HotKeyInputControl::MakeInvalid()
 {
     isValid = false;
 }
 
-bool HotKeyInputWindow::IsValid() const
+bool HotKeyInputControl::IsValid() const
 {
     return isValid;
 }
 
-void HotKeyInputWindow::Initialize()
+void HotKeyInputControl::Initialize()
 {
     Size hotkeyInputSize = Size(width, lineHeight + padding * 2 + borderWidth * 2);
     layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(layoutDescriptor.GetPosition(), hotkeyInputSize);
@@ -117,7 +117,7 @@ void HotKeyInputWindow::Initialize()
     Render();
 }
 
-void HotKeyInputWindow::SubclassNativeControl()
+void HotKeyInputControl::SubclassNativeControl()
 {
     baseWindowProcedure = (WNDPROC)SetWindowLongPtr(windowHandle, GWLP_WNDPROC, (LONG_PTR)WindowProcedureWrapper);
     AssertCriticalWinApiResult(baseWindowProcedure);
@@ -133,7 +133,7 @@ void HotKeyInputWindow::SubclassNativeControl()
     SendMessage(windowHandle, HKM_SETHOTKEY, currentHotkey, 0);
 }
 
-Size HotKeyInputWindow::RenderContent(Renderer* renderer)
+Size HotKeyInputControl::RenderContent(Renderer* renderer)
 {
     RenderBorder(renderer);
 
@@ -161,7 +161,7 @@ Size HotKeyInputWindow::RenderContent(Renderer* renderer)
     return renderer->GetSize();
 }
 
-LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -237,17 +237,17 @@ LRESULT HotKeyInputWindow::WindowProcedure(UINT message, WPARAM wParam, LPARAM l
 
     }
 
-    return ChildView::WindowProcedure(message, wParam, lParam);
+    return ControlView::WindowProcedure(message, wParam, lParam);
 }
 
-void HotKeyInputWindow::ShowCustomCaret() const
+void HotKeyInputControl::ShowCustomCaret() const
 {
     AssertCriticalWinApiResult(CreateCaret(windowHandle, (HBITMAP)nullptr, 1, lineHeight));
     AssertCriticalWinApiResult(SetCaretPos(currentTextPoistion.GetX(), borderWidth + padding));
     AssertCriticalWinApiResult(ShowCaret(windowHandle));
 }
 
-wstring HotKeyInputWindow::GetHotkeyDisplayString() const
+wstring HotKeyInputControl::GetHotkeyDisplayString() const
 {
     wstring hotkeyDisplay = L"";
 
@@ -269,7 +269,7 @@ wstring HotKeyInputWindow::GetHotkeyDisplayString() const
     return hotkeyDisplay;
 }
 
-void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
+void HotKeyInputControl::RenderBorder(Renderer* renderer) const
 {
     Rect borderRect = Rect(
         Point(0, 0),
@@ -288,7 +288,7 @@ void HotKeyInputWindow::RenderBorder(Renderer* renderer) const
     renderer->DrawBorderedRect(borderRect, nullptr, borderWidth, borderColor);
 }
 
-HotKeyInputWindow::~HotKeyInputWindow()
+HotKeyInputControl::~HotKeyInputControl()
 {
     context->Get<MessageBus>()->EnableHotkeys();
     delete defaultFont;

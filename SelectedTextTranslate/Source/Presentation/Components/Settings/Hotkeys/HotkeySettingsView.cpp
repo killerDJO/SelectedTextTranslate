@@ -80,7 +80,7 @@ RenderResult HotkeySettingsView::RenderHotkeyEditControl(
         .SetY(textRenderResult.GetBottomY())
         .MoveY(1);
 
-    HotKeyInputWindow* hotKeyInputWindow = new HotKeyInputWindow(context, this);
+    HotKeyInputControl* hotKeyInputWindow = new HotKeyInputControl(context, this);
     hotKeyInputWindow->SetPosition(renderPosition.GetPosition());
     hotKeyInputWindow->SetHotkey(hotkey);
     hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, settings, this](DWORD newHotkey)

@@ -84,7 +84,7 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     CommonContext viewContext = CommonContext(hInstance, root, root->GetService<TrayIconProvider>());
 
     MainComponent mainComponent = MainComponent(&viewContext);
-    mainComponent.SetDescriptor(GetMainWindowDescriptor(root->GetService<ScaleProvider>()));
+    mainComponent.SetLayout(GetMainWindowDescriptor(root->GetService<ScaleProvider>()));
 
     root->GetService<TrayIconProvider>()->Initialize();
     mainComponent.Initialize();

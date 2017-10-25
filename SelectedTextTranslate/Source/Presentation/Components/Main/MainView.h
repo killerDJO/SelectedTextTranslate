@@ -1,6 +1,6 @@
 #pragma once
 #include "Presentation\Framework\Views\View.h"
-#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.h"
+#include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.h"
 #include "Presentation\Components\Main\Dto\ViewDescriptor.h"
 #include "Presentation\Components\Dictionary\DictionaryComponent.h"
 #include "Presentation\Components\Main\Enums\ApplicationViews.h"
@@ -13,7 +13,7 @@ private:
     TranslationComponent* translationComponent;
     DictionaryComponent* dictionaryComponent;
     SettingsComponent* settingsComponent;
-    ConfirmDialogWindow* confirmDialogWindow;
+    ConfirmDialogControl* confirmDialogWindow;
 
     ApplicationViews applicationView;
     map<ApplicationViews, ViewDescriptor> applicationViewDescriptors;
@@ -45,7 +45,7 @@ public:
     void SetApplicationView(ApplicationViews applicationView);
     void Translate(wstring input);
 
-    void SetDescriptor(LayoutDescriptor descriptor);
+    void SetLayout(LayoutDescriptor layoutDescriptor);
 
     void Minimize();
     void Maximize();

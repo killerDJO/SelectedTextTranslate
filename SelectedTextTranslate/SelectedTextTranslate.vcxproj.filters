@@ -183,30 +183,6 @@
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp">
       <Filter>Source\Infrastructure\ErrorHandling\Exceptions</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Buttons\Base\HoverButtonWindow.cpp">
-      <Filter>Source\Presentation\Controls\Buttons\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverFlatButtonWindow.cpp">
-      <Filter>Source\Presentation\Controls\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverIconButtonWindow.cpp">
-      <Filter>Source\Presentation\Controls\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverTextButtonWindow.cpp">
-      <Filter>Source\Presentation\Controls\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.cpp">
-      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.cpp">
-      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.cpp">
-      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Controls\Inputs\HotKeyInputWindow.cpp">
-      <Filter>Source\Presentation\Controls\Inputs</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Presentation\Components\Dictionary\DictionaryComponent.cpp">
       <Filter>Source\Presentation\Components\Dictionary</Filter>
     </ClCompile>
@@ -342,9 +318,6 @@
     <ClCompile Include="Source\Presentation\Framework\Views\ChildView.cpp">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Presentation\Framework\Views\ContentView.cpp">
-      <Filter>Source\Presentation\Framework\Views</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Presentation\Framework\Views\View.cpp">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClCompile>
@@ -389,6 +362,30 @@
     </ClCompile>
     <ClCompile Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.cpp">
       <Filter>Source\Presentation\Framework\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\Base\HoverButtonControl.cpp">
+      <Filter>Source\Presentation\Controls\Buttons\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverFlatButtonControl.cpp">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverIconButtonControl.cpp">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Buttons\HoverTextButtonControl.cpp">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Inputs\HotKeyInputControl.cpp">
+      <Filter>Source\Presentation\Controls\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.cpp">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayControl.cpp">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.cpp">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,30 +435,6 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\Controls\Buttons\Base\Enums\ButtonStates.h">
       <Filter>Source\Presentation\Controls\Buttons\Base\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Buttons\Base\HoverButtonWindow.h">
-      <Filter>Source\Presentation\Controls\Buttons\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverFlatButtonWindow.h">
-      <Filter>Source\Presentation\Controls\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverIconButtonWindow.h">
-      <Filter>Source\Presentation\Controls\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverTextButtonWindow.h">
-      <Filter>Source\Presentation\Controls\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentWindow.h">
-      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayWindow.h">
-      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogWindow.h">
-      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Controls\Inputs\HotKeyInputWindow.h">
-      <Filter>Source\Presentation\Controls\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Dictionary\DictionaryComponent.h">
       <Filter>Source\Presentation\Components\Dictionary</Filter>
@@ -628,9 +601,6 @@
     <ClInclude Include="Source\Presentation\Framework\Views\ChildView.h">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\Views\ContentView.h">
-      <Filter>Source\Presentation\Framework\Views</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Component.h">
       <Filter>Source\Presentation\Framework</Filter>
     </ClInclude>
@@ -692,6 +662,30 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.h">
       <Filter>Source\Presentation\Framework\Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\Base\HoverButtonControl.h">
+      <Filter>Source\Presentation\Controls\Buttons\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverFlatButtonControl.h">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverIconButtonControl.h">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Buttons\HoverTextButtonControl.h">
+      <Filter>Source\Presentation\Controls\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Inputs\HotKeyInputControl.h">
+      <Filter>Source\Presentation\Controls\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.h">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayControl.h">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.h">
+      <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
