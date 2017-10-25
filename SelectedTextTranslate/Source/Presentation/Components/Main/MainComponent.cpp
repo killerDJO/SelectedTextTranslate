@@ -1,78 +1,83 @@
 #include "Presentation\Components\Main\MainComponent.h"
-#include "Presentation\Providers\TrayIconProvider.h"
+#include "Presentation\Providers\TrayIcon.h"
 #include "BusinessLogic\Translation\TextExtractor.h"
 
 MainComponent::MainComponent(CommonContext* context)
-    : Component(context, new MainView(context))
+    : Component(context, new MainView(context, this))
 {
-    hotkeyProvider = context->Get<HotkeyProvider>();
+    hotkeysRegistry = context->Get<HotkeysRegistry>();
     textExtractor = context->Get<TextExtractor>();
     textPlayer = context->Get<TextPlayer>();
+    messageBus = context->Get<MessageBus>();
 
-    TrayIconProvider* trayIconProvider = context->Get<TrayIconProvider>();
-    trayIconProvider->OnExit.Subscribe(bind(&MainComponent::Exit, this));
-    trayIconProvider->OnPlaySelectedText.Subscribe(bind(&MainComponent::PlaySelectedText, this));
-    trayIconProvider->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary));
-    trayIconProvider->OnShowSettings.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Settings));
-    trayIconProvider->OnTranslateSelectedText.Subscribe(bind(&MainComponent::TranslateSelectedText, this));
-    trayIconProvider->OnSuspend.Subscribe(bind(&MainComponent::Suspend, this));
-    trayIconProvider->OnEnable.Subscribe(bind(&MainComponent::Enable, this));
+    messageBus->OnPlaySelectedText.Subscribe(bind(&MainComponent::PlaySelectedText, this));
+    messageBus->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary));
+    messageBus->OnShowSettings.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Settings));
+    messageBus->OnTranslateSelectedText.Subscribe(bind(&MainComponent::TranslateSelectedText, this));
+
+    CurrentView->OnHotkey.Subscribe(bind(&MainComponent::ProcessHotkey, this, placeholders::_1));
+    CurrentView->OnVisibilityChanged.Subscribe(bind(&MainComponent::ProcessVisibilityChange, this, placeholders::_1));
+}
+
+void MainComponent::SetLayout(LayoutDescriptor layout)
+{
+    Component::SetLayout(layout);
+    viewModel = new MainViewModel(ApplicationViews::None, layout);
+}
+
+MainViewModel* MainComponent::GetModel()
+{
+    return viewModel;
 }
 
 void MainComponent::PlaySelectedText() const
 {
     wstring selectedText = textExtractor->GetSelectedText();
-    TranslateResult translateResult = context->Get<TranslationService>()->TranslateSentence(selectedText, false, false);
+    TranslateResult translateResult = Context->Get<TranslationService>()->TranslateSentence(selectedText, false, false);
     textPlayer->PlayText(translateResult.GetSentence().GetOrigin());
 }
 
 void MainComponent::TranslateSelectedText() const
 {
     wstring selectedText = textExtractor->GetSelectedText();
-    view->Translate(selectedText);
+    CurrentView->Translate(selectedText);
 }
 
 void MainComponent::ShowApplicatonView(ApplicationViews applicationView) const
 {
-    view->SetApplicationView(applicationView);
-    view->Render();
-}
-
-void MainComponent::Suspend() const
-{
-    trayIconProvider->SetSuspendedState();
-}
-
-void MainComponent::Enable() const
-{
-    trayIconProvider->SetEnabledState();
-}
-
-void MainComponent::Exit() const
-{
-    PostQuitMessage(0);
+    viewModel->SetApplicationView(applicationView);
+    CurrentView->Render();
 }
 
 void MainComponent::ProcessHotkey(int hotkey) const
 {
-    hotkeyProvider->ProcessHotkey(hotkey);
+    hotkeysRegistry->ProcessHotkey(hotkey);
 }
 
 void MainComponent::ProcessVisibilityChange(bool isVisible)
 {
+    const double ScaleFactor = 0.05;
     if (isVisible)
     {
-        hotkeyProvider->RegisterZoomInHotkey(
-            view->GetHandle(),
-            [=]() -> void { view->Scale(0.05); });
+        hotkeysRegistry->RegisterZoomInHotkey(
+            CurrentView->GetHandle(),
+            [=]() -> void { CurrentView->Scale(ScaleFactor); });
 
-        hotkeyProvider->RegisterZoomOutHotkey(
-            view->GetHandle(),
-            [=]() -> void { view->Scale(-0.05); });
+        hotkeysRegistry->RegisterZoomOutHotkey(
+            CurrentView->GetHandle(),
+            [=]() -> void { CurrentView->Scale(-ScaleFactor); });
     }
     else
     {
-        hotkeyProvider->UnregisterZoomInHotkey(view->GetHandle());
-        hotkeyProvider->UnregisterZoomOutHotkey(view->GetHandle());
+        hotkeysRegistry->UnregisterZoomInHotkey(CurrentView->GetHandle());
+        hotkeysRegistry->UnregisterZoomOutHotkey(CurrentView->GetHandle());
+    }
+}
+
+MainComponent::~MainComponent()
+{
+    if(viewModel != nullptr)
+    {
+        delete viewModel;
     }
 }

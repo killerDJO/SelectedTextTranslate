@@ -27,8 +27,8 @@ SettingsGroupComponent<TSettings, TView>::SettingsGroupComponent(CommonContext* 
     : Component<TView>(context, view)
 {
     this->modelHolder = modelHolder;
-    this->view->OnSettingsChanged.Subscribe(bind(&SettingsGroupComponent::ProcessChange, this));
-    this->view->OnSettingsToggled.Subscribe(bind(&SettingsGroupComponent::ProcessToggle, this));
+    this->CurrentView->OnSettingsChanged.Subscribe(bind(&SettingsGroupComponent::ProcessChange, this));
+    this->CurrentView->OnSettingsToggled.Subscribe(bind(&SettingsGroupComponent::ProcessToggle, this));
 }
 
 template <typename TSettings, typename TView>
@@ -53,7 +53,7 @@ template <typename TSettings, typename TView>
 void SettingsGroupComponent<TSettings, TView>::ProcessChange()
 {
     UpdateState();
-    this->view->UpdateHeader();
+    this->CurrentView->UpdateHeader();
     OnSettingsChanged.Notify();
 }
 

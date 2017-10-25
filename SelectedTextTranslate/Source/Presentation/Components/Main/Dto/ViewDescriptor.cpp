@@ -1,8 +1,8 @@
 #include "Presentation\Components\Main\Dto\ViewDescriptor.h"
 
-ViewDescriptor::ViewDescriptor(LayoutDescriptor windowDescriptor, bool isResizeable)
+ViewDescriptor::ViewDescriptor(LayoutDescriptor layoutDescriptor, bool isResizeable)
 {
-    this->windowDescriptor = windowDescriptor;
+    this->layoutDescriptor = layoutDescriptor;
     this->isResizeable = isResizeable;
 }
 
@@ -11,14 +11,14 @@ ViewDescriptor::ViewDescriptor()
 {
 }
 
-LayoutDescriptor ViewDescriptor::GetWindowDescriptor() const
+LayoutDescriptor ViewDescriptor::GetLayoutDescriptor() const
 {
-    return windowDescriptor;
+    return layoutDescriptor;
 }
 
-void ViewDescriptor::SetWindowDescriptor(LayoutDescriptor windowDescriptor)
+void ViewDescriptor::SetLayoutDescriptor(LayoutDescriptor layoutDescriptor)
 {
-    this->windowDescriptor = windowDescriptor;
+    this->layoutDescriptor = layoutDescriptor;
 }
 
 bool ViewDescriptor::IsResizeable() const

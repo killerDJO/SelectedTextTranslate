@@ -6,9 +6,9 @@ HeaderComponent::HeaderComponent(CommonContext* context, View* parentView, Model
     this->textPlayer = context->Get<TextPlayer>();
     this->modelHolder = modelHolder;
 
-    view->OnForceTranslation.Subscribe(&OnForceTranslation);
-    view->OnPlayText.Subscribe(bind(&HeaderComponent::PlayText, this));
-    view->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
+    CurrentView->OnForceTranslation.Subscribe(&OnForceTranslation);
+    CurrentView->OnPlayText.Subscribe(bind(&HeaderComponent::PlayText, this));
+    CurrentView->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
 }
 
 void HeaderComponent::PlayText() const

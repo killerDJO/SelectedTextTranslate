@@ -6,14 +6,15 @@ template<class TView>
 class Component : public IComponent
 {
 protected:
-    TView* view;
-    CommonContext* context;
+    TView* CurrentView;
+    CommonContext* Context;
+    LayoutDescriptor Layout;
 
     Component(CommonContext* context, TView* view);
     ~Component() override;
 
 public:
-    void SetLayout(LayoutDescriptor descriptor) override;
+    void SetLayout(LayoutDescriptor layout) override;
 
     Rect GetBoundingRect() const override;
     void Render(bool preserveScrolls = false) const override;
@@ -30,38 +31,39 @@ template <class TView>
 Component<TView>::Component(CommonContext* context, TView* view)
 {
     static_assert(is_base_of<View, TView>::value, "TView must inherit from View");
-    this->view = view;
-    this->context = context;
+    CurrentView = view;
+    Context = context;
 }
 
 template <class TView>
 Component<TView>::~Component()
 {
-    delete view;
+    delete CurrentView;
 }
 
 template <class TView>
-void Component<TView>::SetLayout(LayoutDescriptor layoutDescriptor)
+void Component<TView>::SetLayout(LayoutDescriptor layout)
 {
-    view->SetLayout(layoutDescriptor);
+    Layout = layout;
+    CurrentView->SetLayout(Layout);
 }
 
 template <class TView>
 Rect Component<TView>::GetBoundingRect() const
 {
-    return view->GetBoundingRect();
+    return CurrentView->GetBoundingRect();
 }
 
 template <class TView>
 void Component<TView>::Render(bool preserveScrolls) const
 {
-    view->Render(preserveScrolls);
+    CurrentView->Render(preserveScrolls);
 }
 
 template <class TView>
 void Component<TView>::Initialize()
 {
-    view->Initialize();
+    CurrentView->Initialize();
 }
 
 template <class TView>
@@ -74,17 +76,17 @@ void Component<TView>::InitializeAndRender(bool preserveScrolls)
 template <class TView>
 void Component<TView>::MakeVisible() const
 {
-    view->MakeVisible();
+    CurrentView->MakeVisible();
 }
 
 template <class TView>
 void Component<TView>::MakeHidden() const
 {
-    view->MakeHidden();
+    CurrentView->MakeHidden();
 }
 
 template <class TView>
 void Component<TView>::Resize() const
 {
-    view->Resize();
+    CurrentView->Resize();
 }

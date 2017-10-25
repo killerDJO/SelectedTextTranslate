@@ -5,8 +5,8 @@
 DictionaryComponent::DictionaryComponent(CommonContext* context, View* parentView)
     : Component(context, new DictionaryView(context, parentView, this))
 {
-    this->dictionaryService = context->Get<DictionaryService>();
-    this->view->OnShowTranslation.Subscribe(bind(&DictionaryComponent::ProcessShowTranslation, this, placeholders::_1));
+    dictionaryService = context->Get<DictionaryService>();
+    CurrentView->OnShowTranslation.Subscribe(bind(&DictionaryComponent::ProcessShowTranslation, this, placeholders::_1));
 }
 
 void DictionaryComponent::ProcessShowTranslation(int wordInDictionaryIndex)

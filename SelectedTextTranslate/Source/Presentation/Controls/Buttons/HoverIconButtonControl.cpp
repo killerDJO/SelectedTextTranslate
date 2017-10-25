@@ -8,22 +8,25 @@ map<tuple<DWORD, int, int>, HDC> HoverIconButtonControl::iconsCache = map<tuple<
 HoverIconButtonControl::HoverIconButtonControl(CommonContext* context, View* parentWindow)
     : HoverButtonControl(context, parentWindow)
 {
-    this->hoverIconResource = 0;
-    this->normalIconResource = 0;
-    this->backgroundBrush = nullptr;
-    this->ClassName = L"STT_HOVERICONBUTTON";
+    hoverIconResource = 0;
+    normalIconResource = 0;
+    backgroundBrush = nullptr;
+
+    ClassName = L"STT_HOVERICONBUTTON";
 }
 
-void HoverIconButtonControl::SetDimensions(Point position, Size size)
+HoverIconButtonControl* HoverIconButtonControl::SetDimensions(Point position, Size size)
 {
     AssertViewNotInitialized();
     LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
+    return this;
 }
 
-void HoverIconButtonControl::SetNormalIconResource(DWORD normalIconResource)
+HoverIconButtonControl* HoverIconButtonControl::SetNormalIconResource(DWORD normalIconResource)
 {
     AssertViewNotInitialized();
     this->normalIconResource = normalIconResource;
+    return this;
 }
 
 DWORD HoverIconButtonControl::GetNormalIconResource() const
@@ -31,10 +34,11 @@ DWORD HoverIconButtonControl::GetNormalIconResource() const
     return normalIconResource;
 }
 
-void HoverIconButtonControl::SetHoverIconResource(DWORD hoverIconResource)
+HoverIconButtonControl* HoverIconButtonControl::SetHoverIconResource(DWORD hoverIconResource)
 {
     AssertViewNotInitialized();
     this->hoverIconResource = hoverIconResource;
+    return this;
 }
 
 DWORD HoverIconButtonControl::GetHoverIconResource() const
@@ -42,10 +46,11 @@ DWORD HoverIconButtonControl::GetHoverIconResource() const
     return hoverIconResource;
 }
 
-void HoverIconButtonControl::SetBackgroundBrush(Brush* backgroundBrush)
+HoverIconButtonControl* HoverIconButtonControl::SetBackgroundBrush(Brush* backgroundBrush)
 {
     AssertViewNotInitialized();
     this->backgroundBrush = backgroundBrush;
+    return this;
 }
 
 Brush* HoverIconButtonControl::GetBackgroundBrush() const

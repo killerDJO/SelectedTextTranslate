@@ -4,13 +4,13 @@
 class MessageBus
 {
 public:
-    MessageBus();
-
-    void ShowConfirmDialog(wstring title, function<void()> onConfirm);
-    void SuspendHotkeys();
-    void EnableHotkeys();
-
     Subscribeable<wstring, function<void()>> OnConfirmRequested;
     Subscribeable<> OnSuspendHotkeys;
     Subscribeable<> OnEnableHotkeys;
+
+    Subscribeable<> OnExit;
+    Subscribeable<> OnPlaySelectedText;
+    Subscribeable<> OnTranslateSelectedText;
+    Subscribeable<> OnShowDictionary;
+    Subscribeable<> OnShowSettings;
 };

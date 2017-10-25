@@ -264,12 +264,6 @@
     <ClCompile Include="Source\Presentation\Providers\Dto\HotkeyInfo.cpp">
       <Filter>Source\Presentation\Providers\Dto</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Presentation\Providers\HotkeyProvider.cpp">
-      <Filter>Source\Presentation\Providers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\Providers\TrayIconProvider.cpp">
-      <Filter>Source\Presentation\Providers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BusinessLogic\Dictionary\Dto\DictionaryRecord.cpp">
       <Filter>Source\BusinessLogic\Dictionary\Dto</Filter>
     </ClCompile>
@@ -320,9 +314,6 @@
     </ClCompile>
     <ClCompile Include="Source\Presentation\Framework\Views\View.cpp">
       <Filter>Source\Presentation\Framework\Views</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Presentation\MessageBus.cpp">
-      <Filter>Source\Presentation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Presentation\Components\Translation\Header\HeaderComponent.cpp">
       <Filter>Source\Presentation\Components\Translation\Header</Filter>
@@ -386,6 +377,15 @@
     </ClCompile>
     <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.cpp">
       <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Providers\HotkeysRegistry.cpp">
+      <Filter>Source\Presentation\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Providers\TrayIcon.cpp">
+      <Filter>Source\Presentation\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Main\MainViewModel.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,12 +544,6 @@
     <ClInclude Include="Source\Presentation\Providers\Dto\HotkeyInfo.h">
       <Filter>Source\Presentation\Providers\Dto</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Presentation\Providers\HotkeyProvider.h">
-      <Filter>Source\Presentation\Providers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Providers\TrayIconProvider.h">
-      <Filter>Source\Presentation\Providers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BusinessLogic\Dictionary\Dto\DictionaryRecord.h">
       <Filter>Source\BusinessLogic\Dictionary\Dto</Filter>
     </ClInclude>
@@ -687,6 +681,13 @@
     <ClInclude Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.h">
       <Filter>Source\Presentation\Controls\Dialogs\Confirm</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Presentation\Providers\HotkeysRegistry.h">
+      <Filter>Source\Presentation\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Providers\TrayIcon.h">
+      <Filter>Source\Presentation\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Components\Main\MainViewModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

@@ -1,36 +1,24 @@
 #include "Presentation\Components\Main\MainView.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
-#include "Utilities\StringUtilities.h"
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.h"
 #include "Presentation\Components\Main\Enums\ApplicationViews.h"
 #include "Presentation\Components\Translation\TranslationComponent.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
 #include "Presentation\MessageBus.h"
 
-MainView::MainView(CommonContext* context)
+MainView::MainView(CommonContext* context, ModelHolder<MainViewModel*>* modelHolder)
     : View(context)
 {
     this->ClassName = L"STT_MAIN";
     this->ViewName = L"MainWindow";
-    this->applicationView = ApplicationViews::None;
+
+    this->modelHolder = modelHolder;
 
     this->dictionaryComponent = nullptr;
     this->translationComponent = nullptr;
     this->settingsComponent = nullptr;
-    this->confirmDialogWindow = nullptr;
-
-    this->applicationViewDescriptors = map<ApplicationViews, ViewDescriptor>();
-}
-
-void MainView::SetLayout(::LayoutDescriptor layoutDescriptor)
-{
-    this->LayoutDescriptor = layoutDescriptor;
-
-    applicationViewDescriptors[ApplicationViews::Settings] = ViewDescriptor(layoutDescriptor, false);
-    applicationViewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(layoutDescriptor, true);
-    applicationViewDescriptors[ApplicationViews::TranslateResult] = ViewDescriptor(layoutDescriptor, true);
-    minSize = layoutDescriptor.GetSize();
+    this->confirmDialog = nullptr;
 }
 
 void MainView::Initialize()
@@ -61,8 +49,16 @@ void MainView::Initialize()
     Context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
+void MainView::SetLayout(::LayoutDescriptor layout)
+{
+    LayoutDescriptor = layout;
+}
+
 void MainView::Render(bool preserveScrolls)
 {
+    LayoutDescriptor = GetModel()->GetCurrentLayoutDescriptor();
+    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
+    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
     View::Render(preserveScrolls);
     Maximize();
 }
@@ -72,40 +68,37 @@ void MainView::CreateChildComponents()
     DestroyChildViews();
 
     translationComponent = new TranslationComponent(Context, this);
-    SetViewWindowDescriptor(translationComponent, ApplicationViews::TranslateResult);
-    translationComponent->MakeHidden();
-    translationComponent->Initialize();
+    InitializeComponent(translationComponent, ApplicationViews::TranslateResult);
 
     dictionaryComponent = new DictionaryComponent(Context, this);
-    SetViewWindowDescriptor(dictionaryComponent, ApplicationViews::Dictionary);
     dictionaryComponent->OnShowTranslation.Subscribe([this](wstring input)
     {
-        this->translationComponent->Translate(input, false);
-        SetApplicationView(ApplicationViews::TranslateResult);
+        translationComponent->Translate(input, false);
+        GetModel()->SetApplicationView(ApplicationViews::TranslateResult);
         Render();
     });
-    dictionaryComponent->MakeHidden();
-    dictionaryComponent->Initialize();
+    InitializeComponent(dictionaryComponent, ApplicationViews::Dictionary);
 
     settingsComponent = new SettingsComponent(Context, this);
-    SetViewWindowDescriptor(settingsComponent, ApplicationViews::Settings);
-    settingsComponent->MakeHidden();
-    settingsComponent->Initialize();
+    InitializeComponent(settingsComponent, ApplicationViews::Settings);
 
-    confirmDialogWindow = new ConfirmDialogControl(Context, this);
-    confirmDialogWindow->SetSize(GetClientSize());
-    confirmDialogWindow->MakeHidden();
-    confirmDialogWindow->Initialize();
+    confirmDialog = new ConfirmDialogControl(Context, this);
+    confirmDialog->SetSize(GetClientSize());
+    confirmDialog->MakeHidden();
+    confirmDialog->Initialize();
 }
 
-void MainView::SetViewWindowDescriptor(IComponent* component, ApplicationViews view)
+void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
 {
-    ::LayoutDescriptor windowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    ::LayoutDescriptor initialLayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
-        applicationViewDescriptors[view].GetWindowDescriptor().GetSize(),
+        GetModel()->GetLayoutDescriptor(view).GetSize(),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    component->SetLayout(windowDescriptor);
+    component->SetLayout(initialLayoutDescriptor);
+    component->MakeHidden();
+    component->Initialize();
+    viewToComponentMap[view] = component;
 }
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -134,26 +127,15 @@ void MainView::Maximize()
     SwitchToThisWindow(Handle, TRUE);
 }
 
-void MainView::SetApplicationView(ApplicationViews applicationView)
+void MainView::Translate(wstring input) const
 {
-    AssertViewInitialized();
-
-    this->applicationView = applicationView;
-
-    LayoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
-    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
-}
-
-void MainView::Translate(wstring input)
-{
-    SetApplicationView(ApplicationViews::TranslateResult);
-    this->translationComponent->Translate(input, true);
+    GetModel()->SetApplicationView(ApplicationViews::TranslateResult);
+    translationComponent->Translate(input, true);
 }
 
 Size MainView::RenderContent(Renderer* renderer)
 {
-    if (applicationView == ApplicationViews::None)
+    if (GetModel()->GetApplicationView() == ApplicationViews::None)
     {
         throw SelectedTextTranslateFatalException(L"View must set before rendering.");
     }
@@ -178,40 +160,10 @@ void MainView::Scale(double scaleFactorAdjustment)
         return;
     }
 
-    // TODO: iterate thru map
-    ScaleViewDescriptor(ApplicationViews::Settings, scaleFactorAdjustment);
-    ScaleViewDescriptor(ApplicationViews::Dictionary, scaleFactorAdjustment);
-    ScaleViewDescriptor(ApplicationViews::TranslateResult, scaleFactorAdjustment);
-    minSize = Size(
-        ScaleProvider->Rescale(minSize.GetWidth(), scaleFactorAdjustment),
-        ScaleProvider->Rescale(minSize.GetHeight(), scaleFactorAdjustment));
-
-    LayoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
-    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
-
+    GetModel()->Scale(scaleFactorAdjustment, ScaleProvider);
     ScaleProvider->AdjustScaleFactor(scaleFactorAdjustment);
-
-    DeviceContextBuffer->Resize(ViewStateDescriptor.GetSize());
-
     CreateChildComponents();
     Render();
-}
-
-void MainView::ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment)
-{
-    ::LayoutDescriptor windowDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-
-    int scaledWidth = ScaleProvider->Rescale(windowDescriptor.GetSize().GetWidth(), scaleFactorAdjustment);
-    int scaledHeight = ScaleProvider->Rescale(windowDescriptor.GetSize().GetHeight(), scaleFactorAdjustment);
-
-    windowDescriptor.SetPosition(Point(
-        windowDescriptor.GetPosition().GetX() - scaledWidth + windowDescriptor.GetSize().GetWidth(),
-        windowDescriptor.GetPosition().GetY() - scaledHeight + windowDescriptor.GetSize().GetHeight()));
-
-    windowDescriptor.SetSize(Size(scaledWidth, scaledHeight));
-
-    applicationViewDescriptors[applicationView].SetWindowDescriptor(windowDescriptor);
 }
 
 void MainView::Resize()
@@ -248,47 +200,37 @@ void MainView::Resize()
     currentComponent->Resize();
     ViewStateDescriptor.SetContentSize(currentComponent->GetBoundingRect().GetSize());
 
-    applicationViewDescriptors[applicationView].SetWindowDescriptor(LayoutDescriptor);
+    GetModel()->GetViewDescriptor().SetLayoutDescriptor(LayoutDescriptor);
 
     ApplyViewState(true);
 }
 
-IComponent* MainView::GetComponentToShow() const
+IComponent* MainView::GetComponentToShow()
 {
-    if (applicationView == ApplicationViews::TranslateResult)
-    {
-        return translationComponent;
-    }
+    return viewToComponentMap[GetModel()->GetApplicationView()];
+}
 
-    if (applicationView == ApplicationViews::Dictionary)
-    {
-        return dictionaryComponent;
-    }
-
-    if (applicationView == ApplicationViews::Settings)
-    {
-        return settingsComponent;
-    }
-
-    throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Unsupported view: %d", applicationView));
+MainViewModel* MainView::GetModel() const
+{
+    return modelHolder->GetModel();
 }
 
 void MainView::ShowConfirmDialog(wstring title, function<void()> onConfirm)
 {
-    confirmDialogWindow->SetTitle(title);
-    confirmDialogWindow->OnConfirm.UnsubscribeAll();
-    confirmDialogWindow->OnConfirm.Subscribe(onConfirm);
-    confirmDialogWindow->OnConfirm.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
-    confirmDialogWindow->OnCancel.UnsubscribeAll();
-    confirmDialogWindow->OnCancel.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
-    confirmDialogWindow->Render();
-    confirmDialogWindow->Show();
+    confirmDialog->SetTitle(title);
+    confirmDialog->OnConfirm.UnsubscribeAll();
+    confirmDialog->OnConfirm.Subscribe(onConfirm);
+    confirmDialog->OnConfirm.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
+    confirmDialog->OnCancel.UnsubscribeAll();
+    confirmDialog->OnCancel.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
+    confirmDialog->Render();
+    confirmDialog->Show();
     ScrollProvider->HideScrollbars(this);
 }
 
-bool MainView::IsResizeLocked()
+bool MainView::IsResizeLocked() const
 {
-    return confirmDialogWindow->IsVisible() || !applicationViewDescriptors[applicationView].IsResizeable();
+    return confirmDialog->IsVisible() || !GetModel()->GetViewDescriptor().IsResizeable();
 }
 
 LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
@@ -318,7 +260,8 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         int newWidth = newSize.right - newSize.left;
         int newHeight = newSize.bottom - newSize.top;
 
-        if (IsResizeLocked() || newWidth < minSize.GetWidth() || newHeight < minSize.GetHeight())
+        Size minimumSize = GetModel()->GetMinimumSize();
+        if (IsResizeLocked() || newWidth < minimumSize.GetWidth() || newHeight < minimumSize.GetHeight())
         {
             RECT windowRect;
             GetWindowRect(Handle, &windowRect);

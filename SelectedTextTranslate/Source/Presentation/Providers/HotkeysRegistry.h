@@ -3,7 +3,7 @@
 #include "Presentation\Providers\Dto\HotkeyInfo.h"
 #include "Infrastructure\CompositionRoot.h"
 
-class HotkeyProvider
+class HotkeysRegistry
 {
 private:
     const int TranslateHotkeyId = 3003;
@@ -20,7 +20,7 @@ private:
     void UpdateHotkeysInfo();
 
 public:
-    HotkeyProvider(HotkeySettings settings, CompositionRoot* root);
+    HotkeysRegistry(HotkeySettings settings, CompositionRoot* root);
 
     void SetHotkeysSettings(HotkeySettings settings);
 

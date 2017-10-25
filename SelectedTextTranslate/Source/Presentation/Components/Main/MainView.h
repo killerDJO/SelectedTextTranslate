@@ -1,11 +1,11 @@
 #pragma once
 #include "Presentation\Framework\Views\View.h"
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.h"
-#include "Presentation\Components\Main\Dto\ViewDescriptor.h"
 #include "Presentation\Components\Dictionary\DictionaryComponent.h"
 #include "Presentation\Components\Main\Enums\ApplicationViews.h"
 #include "Presentation\Components\Translation\TranslationComponent.h"
 #include "Presentation\Components\Settings\SettingsComponent.h"
+#include "Presentation\Components\Main\MainViewModel.h"
 
 class MainView : public View
 {
@@ -13,21 +13,19 @@ private:
     TranslationComponent* translationComponent;
     DictionaryComponent* dictionaryComponent;
     SettingsComponent* settingsComponent;
-    ConfirmDialogControl* confirmDialogWindow;
+    ConfirmDialogControl* confirmDialog;
 
-    ApplicationViews applicationView;
-    map<ApplicationViews, ViewDescriptor> applicationViewDescriptors;
-    Size minSize;
+    ModelHolder<MainViewModel*>* modelHolder;
+    map<ApplicationViews, IComponent*> viewToComponentMap;
 
     void CreateChildComponents();
-    void SetViewWindowDescriptor(IComponent* component, ApplicationViews view);
+    void InitializeComponent(IComponent* component, ApplicationViews view);
 
-    void ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment);
-
-    IComponent* GetComponentToShow() const;
+    IComponent* GetComponentToShow();
+    MainViewModel* GetModel() const;
 
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
-    bool IsResizeLocked();
+    bool IsResizeLocked() const;
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
@@ -36,16 +34,14 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainView(CommonContext* context);
+    MainView(CommonContext* context, ModelHolder<MainViewModel*>* modelHolder);
 
     void Initialize() override;
+    void SetLayout(::LayoutDescriptor layout);
     void Render(bool preserveScrolls = false) override;
     void Resize() override;
 
-    void SetApplicationView(ApplicationViews applicationView);
-    void Translate(wstring input);
-
-    void SetLayout(::LayoutDescriptor layoutDescriptor);
+    void Translate(wstring input) const;
 
     void Minimize();
     void Maximize();

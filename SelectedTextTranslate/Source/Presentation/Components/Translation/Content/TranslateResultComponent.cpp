@@ -5,7 +5,7 @@ TranslateResultComponent::TranslateResultComponent(CommonContext* context, View*
     : Component(context, new TranslateResultView(context, parentView, this))
 {
     this->modelHolder = modelHolder;
-    view->OnExpandCategory.Subscribe(bind(&TranslateResultComponent::ExpandCategory, this, placeholders::_1));
+    CurrentView->OnExpandCategory.Subscribe(bind(&TranslateResultComponent::ExpandCategory, this, placeholders::_1));
 }
 
 TranslateResultViewModel TranslateResultComponent::GetModel()

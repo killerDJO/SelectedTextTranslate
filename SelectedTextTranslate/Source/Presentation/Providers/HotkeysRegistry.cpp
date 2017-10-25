@@ -1,7 +1,7 @@
-#include "Presentation\Providers\HotkeyProvider.h"
+#include "Presentation\Providers\HotkeysRegistry.h"
 #include "Presentation\MessageBus.h"
 
-HotkeyProvider::HotkeyProvider(HotkeySettings settings, CompositionRoot* root)
+HotkeysRegistry::HotkeysRegistry(HotkeySettings settings, CompositionRoot* root)
 {
     this->hotkeysRegistry = vector<HotkeyInfo>();
     this->isSuspended = false;
@@ -9,11 +9,11 @@ HotkeyProvider::HotkeyProvider(HotkeySettings settings, CompositionRoot* root)
 
     SetHotkeysSettings(settings);
 
-    root->GetService<MessageBus>()->OnSuspendHotkeys.Subscribe(bind(&HotkeyProvider::SuspendHotkeys, this));
-    root->GetService<MessageBus>()->OnEnableHotkeys.Subscribe(bind(&HotkeyProvider::EnableHotkeys, this));
+    root->GetService<MessageBus>()->OnSuspendHotkeys.Subscribe(bind(&HotkeysRegistry::SuspendHotkeys, this));
+    root->GetService<MessageBus>()->OnEnableHotkeys.Subscribe(bind(&HotkeysRegistry::EnableHotkeys, this));
 }
 
-void HotkeyProvider::SetHotkeysSettings(HotkeySettings settings)
+void HotkeysRegistry::SetHotkeysSettings(HotkeySettings settings)
 {
     hotkeyIdToHotkeyMap[TranslateHotkeyId] = settings.GetTranslateHotkey();
     hotkeyIdToHotkeyMap[PlayTextHotkeyId] = settings.GetPlayTextHotkey();
@@ -25,7 +25,7 @@ void HotkeyProvider::SetHotkeysSettings(HotkeySettings settings)
     EnableHotkeys();
 }
 
-void HotkeyProvider::RegisterCustomHotkey(HotkeyInfo hotkeyInfo)
+void HotkeysRegistry::RegisterCustomHotkey(HotkeyInfo hotkeyInfo)
 {
     if(!isSuspended)
     {
@@ -35,7 +35,7 @@ void HotkeyProvider::RegisterCustomHotkey(HotkeyInfo hotkeyInfo)
     hotkeysRegistry.push_back(hotkeyInfo);
 }
 
-void HotkeyProvider::UnregisterCustomHotkey(HWND windowHandle, int hotkeyId)
+void HotkeysRegistry::UnregisterCustomHotkey(HWND windowHandle, int hotkeyId)
 {
     for(size_t i = 0; i < hotkeysRegistry.size(); ++i)
     {
@@ -49,47 +49,47 @@ void HotkeyProvider::UnregisterCustomHotkey(HWND windowHandle, int hotkeyId)
     }
 }
 
-void HotkeyProvider::RegisterTranslateHotkey(HWND windowHandle, function<void()> pressedCallback)
+void HotkeysRegistry::RegisterTranslateHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
     RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, TranslateHotkeyId, hotkeyIdToHotkeyMap[TranslateHotkeyId]));
 }
 
-void HotkeyProvider::RegisterPlayTextHotkey(HWND windowHandle, function<void()> pressedCallback)
+void HotkeysRegistry::RegisterPlayTextHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
     RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, PlayTextHotkeyId, hotkeyIdToHotkeyMap[PlayTextHotkeyId]));
 }
 
-void HotkeyProvider::RegisterZoomInHotkey(HWND windowHandle, function<void()> pressedCallback)
+void HotkeysRegistry::RegisterZoomInHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
     RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomInHotkeyId, hotkeyIdToHotkeyMap[ZoomInHotkeyId]));
 }
 
-void HotkeyProvider::RegisterZoomOutHotkey(HWND windowHandle, function<void()> pressedCallback)
+void HotkeysRegistry::RegisterZoomOutHotkey(HWND windowHandle, function<void()> pressedCallback)
 {
     RegisterCustomHotkey(HotkeyInfo(windowHandle, pressedCallback, ZoomOutHotkeyId, hotkeyIdToHotkeyMap[ZoomOutHotkeyId]));
 }
 
-void HotkeyProvider::UnregisterZoomInHotkey(HWND windowHandle)
+void HotkeysRegistry::UnregisterZoomInHotkey(HWND windowHandle)
 {
     UnregisterCustomHotkey(windowHandle, ZoomInHotkeyId);
 }
 
-void HotkeyProvider::UnregisterZoomOutHotkey(HWND windowHandle)
+void HotkeysRegistry::UnregisterZoomOutHotkey(HWND windowHandle)
 {
     UnregisterCustomHotkey(windowHandle, ZoomOutHotkeyId);
 }
 
-void HotkeyProvider::UnregisterTranslateHotkey(HWND windowHandle)
+void HotkeysRegistry::UnregisterTranslateHotkey(HWND windowHandle)
 {
     UnregisterCustomHotkey(windowHandle, TranslateHotkeyId);
 }
 
-void HotkeyProvider::UnregisterPlayTextHotkey(HWND windowHandle)
+void HotkeysRegistry::UnregisterPlayTextHotkey(HWND windowHandle)
 {
     UnregisterCustomHotkey(windowHandle, PlayTextHotkeyId);
 }
 
-void HotkeyProvider::SuspendHotkeys()
+void HotkeysRegistry::SuspendHotkeys()
 {
     isSuspended = true;
     for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
@@ -98,7 +98,7 @@ void HotkeyProvider::SuspendHotkeys()
     }
 }
 
-void HotkeyProvider::EnableHotkeys()
+void HotkeysRegistry::EnableHotkeys()
 {
     isSuspended = false;
     for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
@@ -107,7 +107,7 @@ void HotkeyProvider::EnableHotkeys()
     }
 }
 
-void HotkeyProvider::UpdateHotkeysInfo()
+void HotkeysRegistry::UpdateHotkeysInfo()
 {
     for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
     {
@@ -115,7 +115,7 @@ void HotkeyProvider::UpdateHotkeysInfo()
     }
 }
 
-void HotkeyProvider::ProcessHotkey(DWORD hotkeyId)
+void HotkeysRegistry::ProcessHotkey(DWORD hotkeyId)
 {
     for (size_t i = 0; i < hotkeysRegistry.size(); ++i)
     {

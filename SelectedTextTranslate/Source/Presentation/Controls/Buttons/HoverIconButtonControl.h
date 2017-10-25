@@ -20,15 +20,15 @@ protected:
 public:
     HoverIconButtonControl(CommonContext* context, View* parentWindow);
 
-    void SetDimensions(Point position, Size size);
+    HoverIconButtonControl* SetDimensions(Point position, Size size);
 
-    void SetNormalIconResource(DWORD normalIconResource);
+    HoverIconButtonControl* SetNormalIconResource(DWORD normalIconResource);
     DWORD GetNormalIconResource() const;
 
-    void SetHoverIconResource(DWORD hoverIconResource);
+    HoverIconButtonControl* SetHoverIconResource(DWORD hoverIconResource);
     DWORD GetHoverIconResource() const;
 
-    void SetBackgroundBrush(Brush* backgroundBrush);
+    HoverIconButtonControl* SetBackgroundBrush(Brush* backgroundBrush);
     Brush* GetBackgroundBrush() const;
 
     void Initialize() override;

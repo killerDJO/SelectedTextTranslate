@@ -5,8 +5,8 @@
 DictionaryView::DictionaryView(CommonContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
     : ComponentView(context, parentWindow, modelHolder)
 {
-    this->ViewName = L"DictionaryWindow";
-    this->iconSize = ScaleProvider->Scale(16);
+    ViewName = L"DictionaryWindow";
+    iconSize = ScaleProvider->Scale(16);
 }
 
 Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> model)
@@ -39,16 +39,12 @@ Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> 
         renderPosition = renderPosition.SetX(PaddingX);
 
         HoverIconButtonControl* translateButton = new HoverIconButtonControl(Context, this);
-        translateButton->SetDimensions(
-            renderPosition.MoveY(-FontNormal->GetAscent() + 1).GetPosition(),
-            Size(iconSize, iconSize));
-        translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
-        translateButton->SetHoverIconResource(IDR_TRANSLATE);
-        translateButton->OnClick.Subscribe([i, this]()
-        {
-            return OnShowTranslation.Notify(i);
-        });
-        translateButton->InitializeAndRender();
+        translateButton->OnClick.Subscribe([i, this] { OnShowTranslation.Notify(i); });
+        translateButton
+            ->SetDimensions(renderPosition.MoveY(-FontNormal->GetAscent() + 1).GetPosition(), Size(iconSize, iconSize))
+            ->SetNormalIconResource(IDR_TRANSLATE_INACTIVE)
+            ->SetHoverIconResource(IDR_TRANSLATE)
+            ->InitializeAndRender();
     }
 
     renderer->IncreaseWidth(PaddingX);

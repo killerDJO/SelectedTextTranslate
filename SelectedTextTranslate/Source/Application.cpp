@@ -10,8 +10,8 @@
 #include "Presentation\Framework\Rendering\RenderingContext.h"
 #include "Infrastructure\CompositionRoot.h"
 #include "Presentation\MessageBus.h"
-#include "Presentation\Providers\HotkeyProvider.h"
-#include "Presentation\Providers\TrayIconProvider.h"
+#include "Presentation\Providers\HotkeysRegistry.h"
+#include "Presentation\Providers\TrayIcon.h"
 #include "BusinessLogic\Translation\TextExtractor.h"
 #include "BusinessLogic\Translation\TextPlayer.h"
 #include "Presentation\Components\Main\MainComponent.h"
@@ -65,8 +65,8 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     
     Settings settings = root->GetService<SettingsProvider>()->GetSettings();
     root->RegisterService(new MessageBus());
-    root->RegisterService(new HotkeyProvider(settings.GetHotkeySettings(), root));
-    root->RegisterService(new TrayIconProvider(root, hInstance));
+    root->RegisterService(new HotkeysRegistry(settings.GetHotkeySettings(), root));
+    root->RegisterService(new TrayIcon(root, hInstance));
 
     root->RegisterService(new SqliteProvider());
     root->RegisterService(new DictionaryService(root));
@@ -74,21 +74,22 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     root->RegisterService(new RequestProvider(root));
     root->RegisterService(new TranslatePageParser(root));
     root->RegisterService(new TranslationService(root));
-    root->RegisterService(new TextPlayer(root, root->GetService<TrayIconProvider>()));
+    root->RegisterService(new TextPlayer(root, root->GetService<TrayIcon>()));
     root->RegisterService(new ScaleProvider());
     root->RegisterService(new DeviceContextProvider());
     root->RegisterService(new ScrollProvider());
     root->RegisterService(new RenderingProvider(root));
     root->RegisterService(new RenderingContext(root));
 
-    CommonContext viewContext = CommonContext(hInstance, root, root->GetService<TrayIconProvider>());
+    CommonContext viewContext = CommonContext(hInstance, root, root->GetService<TrayIcon>());
 
     MainComponent mainComponent = MainComponent(&viewContext);
     mainComponent.SetLayout(GetMainWindowDescriptor(root->GetService<ScaleProvider>()));
 
-    root->GetService<TrayIconProvider>()->Initialize();
+    root->GetService<TrayIcon>()->Initialize();
     mainComponent.Initialize();
 
+    root->GetService<MessageBus>()->OnExit.Subscribe(bind(&Application::Exit, this));
     logger->Log(LogLevels::Trace, L"Application initialized.");
 
     MSG msg;
@@ -102,6 +103,11 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
     logger->Log(LogLevels::Trace, L"Application shutdown.");
 
     return msg.wParam;
+}
+
+void Application::Exit() const
+{
+    PostQuitMessage(0);
 }
 
 LayoutDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvider) const

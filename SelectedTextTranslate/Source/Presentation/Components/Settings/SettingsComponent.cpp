@@ -7,20 +7,20 @@ SettingsComponent::SettingsComponent(CommonContext* context, View* parentView)
     settingsProvider = context->Get<SettingsProvider>();
     settingsViewModel = new SettingsViewModel(settingsProvider->GetSettings());
 
-    view->OnSaveSettings.Subscribe([context, this]
+    CurrentView->OnSaveSettings.Subscribe([context, this]
     {
         UpdateSettings(settingsViewModel->GetCurrentSettings());
     });
 
-    view->OnCancelChanges.Subscribe([context, this]
+    CurrentView->OnCancelChanges.Subscribe([context, this]
     {
         settingsViewModel->CancelChanges();
-        view->Render(true);
+        CurrentView->Render(true);
     });
 
-    view->OnResetSettings.Subscribe([context, this]
+    CurrentView->OnResetSettings.Subscribe([context, this]
     {
-        context->Get<MessageBus>()->ShowConfirmDialog(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
+        context->Get<MessageBus>()->OnConfirmRequested.Notify(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
     });
 }
 
@@ -33,7 +33,7 @@ void SettingsComponent::UpdateSettings(Settings settings) const
 {
     settingsProvider->UpdateSettings(settings);
     settingsViewModel->SetSettings(settings);
-    view->Render(true);
+    CurrentView->Render(true);
 }
 
 SettingsComponent::~SettingsComponent()

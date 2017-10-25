@@ -4,15 +4,15 @@
 class ViewDescriptor
 {
 private:
-    LayoutDescriptor windowDescriptor;
+    LayoutDescriptor layoutDescriptor;
     bool isResizeable;
 
 public:
     ViewDescriptor();
-    ViewDescriptor(LayoutDescriptor windowDescriptor, bool isResizeable);
+    ViewDescriptor(LayoutDescriptor layoutDescriptor, bool isResizeable);
 
-    LayoutDescriptor GetWindowDescriptor() const;
-    void SetWindowDescriptor(LayoutDescriptor windowDescriptor);
+    LayoutDescriptor GetLayoutDescriptor() const;
+    void SetLayoutDescriptor(LayoutDescriptor layoutDescriptor);
 
     bool IsResizeable() const;
 };

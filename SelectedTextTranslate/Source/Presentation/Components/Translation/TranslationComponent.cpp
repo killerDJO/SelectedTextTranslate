@@ -4,7 +4,7 @@ TranslationComponent::TranslationComponent(CommonContext* context, View* parentV
     : Component(context, new TranslationView(context, parentView, this))
 {
     this->translationService = context->Get<TranslationService>();
-    view->OnForceTranslation.Subscribe(bind(&TranslationComponent::ForceTranslation, this));
+    CurrentView->OnForceTranslation.Subscribe(bind(&TranslationComponent::ForceTranslation, this));
 }
 
 void TranslationComponent::Translate(wstring input, bool incrementTranslationsCount)

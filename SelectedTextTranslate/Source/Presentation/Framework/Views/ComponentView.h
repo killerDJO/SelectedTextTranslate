@@ -82,6 +82,7 @@ void ComponentView<TModel>::SetLayout(::LayoutDescriptor layoutDescriptor)
 template <class TModel>
 TModel ComponentView<TModel>::GetModel() const
 {
+    AssertViewInitialized();
     return CurrentModelHolder->GetModel();
 }
 

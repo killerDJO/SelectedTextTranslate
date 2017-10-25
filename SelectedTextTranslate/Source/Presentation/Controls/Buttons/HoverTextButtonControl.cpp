@@ -1,24 +1,24 @@
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 
 HoverTextButtonControl::HoverTextButtonControl(CommonContext* context, View* parentWindow)
     : HoverButtonControl(context, parentWindow)
 {
-    this->defaultFont = RenderingProvider->CreateCustomFont(FontSizes::Normal);
-    this->font = nullptr;
-    this->normalColor = Colors::Gray;
-    this->hoverColor = Colors::Black;
-    this->disabledColor = Colors::LightGray;
-    this->backgroundColor = Colors::White;
-    this->text = wstring();
-    this->ClassName = L"STT_HOVERTEXTBUTTON";
+    defaultFont = RenderingProvider->CreateCustomFont(FontSizes::Normal);
+    font = nullptr;
+    normalColor = Colors::Gray;
+    hoverColor = Colors::Black;
+    disabledColor = Colors::LightGray;
+    backgroundColor = Colors::White;
+    text = wstring();
+
+    ClassName = L"STT_HOVERTEXTBUTTON";
 }
 
 void HoverTextButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
-    this->LayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    LayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         position,
         Size(1, 1),
         OverflowModes::Stretch,

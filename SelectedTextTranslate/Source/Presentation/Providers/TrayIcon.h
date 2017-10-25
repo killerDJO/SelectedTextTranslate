@@ -2,10 +2,12 @@
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
 #include "Infrastructure\Logging\Logger.h"
 #include "Presentation\Framework\NativeWindowHolder.h"
-#include "Presentation\Providers\HotkeyProvider.h"
+#include "Presentation\Providers\HotkeysRegistry.h"
+#include "Presentation\MessageBus.h"
 
-class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
+class TrayIcon : public NativeWindowHolder, public ErrorHandler
 {
+private:
     const UINT WM_TRAYICON = WM_USER + 1;
 
     const int TrayIconId = 5000;
@@ -25,7 +27,8 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     bool isSuspended;
 
     Logger* logger;
-    HotkeyProvider* hotkeyProvider;
+    HotkeysRegistry* hotkeysRegistry;
+    MessageBus* messageBus;
 
     void InitializeMenuActionsToSubscribeableMap();
 
@@ -37,28 +40,21 @@ class TrayIconProvider : public NativeWindowHolder, public ErrorHandler
     void SetTrayIconImage(DWORD imageResource);
 
     void RegisterHotkeys();
-    void UnregisterHotkeys() const;
 
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
-public:
-    TrayIconProvider(CompositionRoot* root, HINSTANCE instance);
-    ~TrayIconProvider() override;
-
-    void Initialize() override;
-
-    void ShowError(wstring message) override;
+    Subscribeable<> OnSuspend;
+    Subscribeable<> OnEnable;
 
     void SetSuspendedState();
     void SetEnabledState();
 
-    Subscribeable<> OnExit;
-    Subscribeable<> OnPlaySelectedText;
-    Subscribeable<> OnTranslateSelectedText;
-    Subscribeable<> OnShowDictionary;
-    Subscribeable<> OnShowSettings;
+public:
+    TrayIcon(CompositionRoot* root, HINSTANCE instance);
+    ~TrayIcon() override;
 
-    Subscribeable<> OnSuspend;
-    Subscribeable<> OnEnable;
+    void Initialize() override;
+
+    void ShowError(wstring message) override;
 };
