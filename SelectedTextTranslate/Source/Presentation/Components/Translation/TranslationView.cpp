@@ -3,36 +3,36 @@
 TranslationView::TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
-    this->headerHeight = context->Get<ScaleProvider>()->Scale(50);
-    this->separatorHeight = context->Get<ScaleProvider>()->Scale(1);
+    headerHeight = ScaleProvider->Scale(50);
+    separatorHeight = ScaleProvider->Scale(1);
 
-    this->headerComponent = nullptr;
-    this->translateResultComponent = nullptr;
+    headerComponent = nullptr;
+    translateResultComponent = nullptr;
 
-    this->viewName = L"TranslationWindow";
+    ViewName = L"TranslationWindow";
 }
 
 void TranslationView::Initialize()
 {
     ComponentView::Initialize();
 
-    LayoutDescriptor headerWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    ::LayoutDescriptor headerWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
         Size(0, headerHeight),
         OverflowModes::Stretch,
         OverflowModes::Fixed);
-    headerComponent = new HeaderComponent(context, this, modelHolder);
+    headerComponent = new HeaderComponent(Context, this, CurrentModelHolder);
     headerComponent->SetLayout(headerWindowDescriptor);
     headerComponent->OnTranslateSuggestion.Subscribe(&OnTranslateSuggestion);
     headerComponent->OnForceTranslation.Subscribe(&OnForceTranslation);
     headerComponent->Initialize();
 
-    LayoutDescriptor translateResultWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    ::LayoutDescriptor translateResultWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, headerComponent->GetBoundingRect().GetBottom() + separatorHeight),
         Size(0, 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
-    translateResultComponent = new TranslateResultComponent(context, this, modelHolder);
+    translateResultComponent = new TranslateResultComponent(Context, this, CurrentModelHolder);
     translateResultComponent->SetLayout(translateResultWindowDescriptor);
     translateResultComponent->Initialize();
 }
@@ -48,9 +48,9 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslateResult model)
         translateResultComponent->MakeHidden();
 
         Size backgroundSize = Size(
-            max(parentView->GetSize().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
-            parentView->GetSize().GetHeight() - headerHeight);
-        renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), backgroundBrush);
+            max(ParentView->GetSize().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
+            ParentView->GetSize().GetHeight() - headerHeight);
+        renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), BackgroundBrush);
 
         contentSize = headerComponent->GetBoundingRect().GetSize();
     }
@@ -71,35 +71,35 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslateResult model)
 
 void TranslationView::Resize()
 {
-    Size parentSize = parentView->GetSize();
-    layoutDescriptor.SetSize(parentSize);
+    Size parentSize = ParentView->GetSize();
+    LayoutDescriptor.SetSize(parentSize);
 
-    viewStateDescriptor.EnsureSize(parentSize);
+    ViewStateDescriptor.EnsureSize(parentSize);
 
-    Size bufferingDeviceContextSize = deviceContextBuffer->GetSize();
+    Size bufferingDeviceContextSize = DeviceContextBuffer->GetSize();
     bufferingDeviceContextSize = Size(
         max(parentSize.GetWidth(), bufferingDeviceContextSize.GetWidth()),
         max(parentSize.GetHeight(), bufferingDeviceContextSize.GetHeight()));
-    deviceContextBuffer->Resize(bufferingDeviceContextSize);
+    DeviceContextBuffer->Resize(bufferingDeviceContextSize);
 
     ApplyViewState(true);
 
-    Renderer* renderer = context->Get<RenderingContext>()->GetRenderer();
+    Renderer* renderer = RenderingContext->GetRenderer();
 
     if(GetModel().IsEmptyResult())
     {
-        renderer->DrawRect(Rect(0, headerHeight, viewStateDescriptor.GetSize().GetWidth(), viewStateDescriptor.GetSize().GetHeight() - headerHeight), lightGrayBrush);
+        renderer->DrawRect(Rect(0, headerHeight, ViewStateDescriptor.GetSize().GetWidth(), ViewStateDescriptor.GetSize().GetHeight() - headerHeight), LightGrayBrush);
     }
 
-    RenderSeparator(renderer, max(viewStateDescriptor.GetContentSize().GetWidth(), viewStateDescriptor.GetSize().GetWidth()));
+    RenderSeparator(renderer, max(ViewStateDescriptor.GetContentSize().GetWidth(), ViewStateDescriptor.GetSize().GetWidth()));
 
-    renderer->Render(deviceContextBuffer);
-    context->Get<RenderingContext>()->ReleaseRenderer(renderer);
+    renderer->Render(DeviceContextBuffer);
+    RenderingContext->ReleaseRenderer(renderer);
 
     Draw();
 }
 
 void TranslationView::RenderSeparator(Renderer* renderer, int width) const
 {
-    renderer->DrawRect(Rect(0, headerHeight, width, separatorHeight), lightGrayBrush);
+    renderer->DrawRect(Rect(0, headerHeight, width, separatorHeight), LightGrayBrush);
 }

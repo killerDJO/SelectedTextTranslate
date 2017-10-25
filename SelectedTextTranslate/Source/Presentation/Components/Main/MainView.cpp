@@ -11,8 +11,8 @@
 MainView::MainView(CommonContext* context)
     : View(context)
 {
-    this->className = L"STT_MAIN";
-    this->viewName = L"MainWindow";
+    this->ClassName = L"STT_MAIN";
+    this->ViewName = L"MainWindow";
     this->applicationView = ApplicationViews::None;
 
     this->dictionaryComponent = nullptr;
@@ -23,9 +23,9 @@ MainView::MainView(CommonContext* context)
     this->applicationViewDescriptors = map<ApplicationViews, ViewDescriptor>();
 }
 
-void MainView::SetLayout(LayoutDescriptor layoutDescriptor)
+void MainView::SetLayout(::LayoutDescriptor layoutDescriptor)
 {
-    this->layoutDescriptor = layoutDescriptor;
+    this->LayoutDescriptor = layoutDescriptor;
 
     applicationViewDescriptors[ApplicationViews::Settings] = ViewDescriptor(layoutDescriptor, false);
     applicationViewDescriptors[ApplicationViews::Dictionary] = ViewDescriptor(layoutDescriptor, true);
@@ -37,28 +37,28 @@ void MainView::Initialize()
 {
     View::Initialize();
 
-    windowHandle = CreateWindowEx(
+    Handle = CreateWindowEx(
         WS_EX_TOOLWINDOW,
-        className,
+        ClassName,
         nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        layoutDescriptor.GetPosition().GetX(),
-        layoutDescriptor.GetPosition().GetY(),
-        layoutDescriptor.GetSize().GetWidth(),
-        layoutDescriptor.GetSize().GetHeight(),
+        LayoutDescriptor.GetPosition().GetX(),
+        LayoutDescriptor.GetPosition().GetY(),
+        LayoutDescriptor.GetSize().GetWidth(),
+        LayoutDescriptor.GetSize().GetHeight(),
         nullptr,
         nullptr,
-        context->GetInstance(),
+        Context->GetInstance(),
         nullptr);
-    AssertCriticalWinApiResult(windowHandle);
-    SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
+    AssertCriticalWinApiResult(Handle);
+    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
 
     CreateChildComponents();
 
     Minimize();
 
-    context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainView::Minimize, this));
-    context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
+    Context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainView::Minimize, this));
+    Context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
 void MainView::Render(bool preserveScrolls)
@@ -71,12 +71,12 @@ void MainView::CreateChildComponents()
 {
     DestroyChildViews();
 
-    translationComponent = new TranslationComponent(context, this);
+    translationComponent = new TranslationComponent(Context, this);
     SetViewWindowDescriptor(translationComponent, ApplicationViews::TranslateResult);
     translationComponent->MakeHidden();
     translationComponent->Initialize();
 
-    dictionaryComponent = new DictionaryComponent(context, this);
+    dictionaryComponent = new DictionaryComponent(Context, this);
     SetViewWindowDescriptor(dictionaryComponent, ApplicationViews::Dictionary);
     dictionaryComponent->OnShowTranslation.Subscribe([this](wstring input)
     {
@@ -87,12 +87,12 @@ void MainView::CreateChildComponents()
     dictionaryComponent->MakeHidden();
     dictionaryComponent->Initialize();
 
-    settingsComponent = new SettingsComponent(context, this);
+    settingsComponent = new SettingsComponent(Context, this);
     SetViewWindowDescriptor(settingsComponent, ApplicationViews::Settings);
     settingsComponent->MakeHidden();
     settingsComponent->Initialize();
 
-    confirmDialogWindow = new ConfirmDialogControl(context, this);
+    confirmDialogWindow = new ConfirmDialogControl(Context, this);
     confirmDialogWindow->SetSize(GetClientSize());
     confirmDialogWindow->MakeHidden();
     confirmDialogWindow->Initialize();
@@ -100,7 +100,7 @@ void MainView::CreateChildComponents()
 
 void MainView::SetViewWindowDescriptor(IComponent* component, ApplicationViews view)
 {
-    LayoutDescriptor windowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    ::LayoutDescriptor windowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
         applicationViewDescriptors[view].GetWindowDescriptor().GetSize(),
         OverflowModes::Stretch,
@@ -110,10 +110,10 @@ void MainView::SetViewWindowDescriptor(IComponent* component, ApplicationViews v
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
-    windowClass->hIcon = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIcon = LoadIcon(Context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIcon);
 
-    windowClass->hIconSm = LoadIcon(context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIconSm = LoadIcon(Context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIconSm);
 
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -131,7 +131,7 @@ void MainView::Minimize()
 void MainView::Maximize()
 {
     Show();
-    SwitchToThisWindow(windowHandle, TRUE);
+    SwitchToThisWindow(Handle, TRUE);
 }
 
 void MainView::SetApplicationView(ApplicationViews applicationView)
@@ -140,9 +140,9 @@ void MainView::SetApplicationView(ApplicationViews applicationView)
 
     this->applicationView = applicationView;
 
-    layoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-    viewStateDescriptor.SetPosition(layoutDescriptor.GetPosition());
-    viewStateDescriptor.SetSize(layoutDescriptor.GetSize());
+    LayoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
+    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
+    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
 }
 
 void MainView::Translate(wstring input)
@@ -158,9 +158,9 @@ Size MainView::RenderContent(Renderer* renderer)
         throw SelectedTextTranslateFatalException(L"View must set before rendering.");
     }
 
-    for (size_t i = 0; i < activeChildViews.size(); ++i)
+    for (size_t i = 0; i < ActiveChildViews.size(); ++i)
     {
-        activeChildViews[i]->MakeHidden();
+        ActiveChildViews[i]->MakeHidden();
     }
 
     IComponent* componentToShow = GetComponentToShow();
@@ -173,7 +173,7 @@ Size MainView::RenderContent(Renderer* renderer)
 
 void MainView::Scale(double scaleFactorAdjustment)
 {
-    if (!scaleProvider->IsScalingAllowed(scaleFactorAdjustment))
+    if (!ScaleProvider->IsScalingAllowed(scaleFactorAdjustment))
     {
         return;
     }
@@ -183,16 +183,16 @@ void MainView::Scale(double scaleFactorAdjustment)
     ScaleViewDescriptor(ApplicationViews::Dictionary, scaleFactorAdjustment);
     ScaleViewDescriptor(ApplicationViews::TranslateResult, scaleFactorAdjustment);
     minSize = Size(
-        scaleProvider->Rescale(minSize.GetWidth(), scaleFactorAdjustment),
-        scaleProvider->Rescale(minSize.GetHeight(), scaleFactorAdjustment));
+        ScaleProvider->Rescale(minSize.GetWidth(), scaleFactorAdjustment),
+        ScaleProvider->Rescale(minSize.GetHeight(), scaleFactorAdjustment));
 
-    layoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
-    viewStateDescriptor.SetPosition(layoutDescriptor.GetPosition());
-    viewStateDescriptor.SetSize(layoutDescriptor.GetSize());
+    LayoutDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
+    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
+    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
 
-    scaleProvider->AdjustScaleFactor(scaleFactorAdjustment);
+    ScaleProvider->AdjustScaleFactor(scaleFactorAdjustment);
 
-    deviceContextBuffer->Resize(viewStateDescriptor.GetSize());
+    DeviceContextBuffer->Resize(ViewStateDescriptor.GetSize());
 
     CreateChildComponents();
     Render();
@@ -200,10 +200,10 @@ void MainView::Scale(double scaleFactorAdjustment)
 
 void MainView::ScaleViewDescriptor(ApplicationViews applicationView, double scaleFactorAdjustment)
 {
-    LayoutDescriptor windowDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
+    ::LayoutDescriptor windowDescriptor = applicationViewDescriptors[applicationView].GetWindowDescriptor();
 
-    int scaledWidth = scaleProvider->Rescale(windowDescriptor.GetSize().GetWidth(), scaleFactorAdjustment);
-    int scaledHeight = scaleProvider->Rescale(windowDescriptor.GetSize().GetHeight(), scaleFactorAdjustment);
+    int scaledWidth = ScaleProvider->Rescale(windowDescriptor.GetSize().GetWidth(), scaleFactorAdjustment);
+    int scaledHeight = ScaleProvider->Rescale(windowDescriptor.GetSize().GetHeight(), scaleFactorAdjustment);
 
     windowDescriptor.SetPosition(Point(
         windowDescriptor.GetPosition().GetX() - scaledWidth + windowDescriptor.GetSize().GetWidth(),
@@ -216,39 +216,39 @@ void MainView::ScaleViewDescriptor(ApplicationViews applicationView, double scal
 
 void MainView::Resize()
 {
-    if (viewStateDescriptor.GetViewState() == ViewStates::Rendering)
+    if (ViewStateDescriptor.GetViewState() == ViewStates::Rendering)
     {
         return;
     }
 
     RECT windowRect;
-    AssertCriticalWinApiResult(GetWindowRect(windowHandle, &windowRect));
+    AssertCriticalWinApiResult(GetWindowRect(Handle, &windowRect));
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 
-    if (layoutDescriptor.GetSize().GetWidth() == newWidth && layoutDescriptor.GetSize().GetHeight() == newHeight)
+    if (LayoutDescriptor.GetSize().GetWidth() == newWidth && LayoutDescriptor.GetSize().GetHeight() == newHeight)
     {
         return;
     }
 
-    layoutDescriptor.SetSize(Size(newWidth, newHeight));
-    viewStateDescriptor.SetSize(layoutDescriptor.GetSize());
+    LayoutDescriptor.SetSize(Size(newWidth, newHeight));
+    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
 
-    layoutDescriptor.SetPosition(Point(windowRect.left, windowRect.top));
-    viewStateDescriptor.SetPosition(layoutDescriptor.GetPosition());
+    LayoutDescriptor.SetPosition(Point(windowRect.left, windowRect.top));
+    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
 
-    deviceContextBuffer->Resize(viewStateDescriptor.GetSize());
+    DeviceContextBuffer->Resize(ViewStateDescriptor.GetSize());
 
     // Clear background
-    Renderer* renderer = renderingContext->GetRenderer();
-    renderer->Render(deviceContextBuffer);
-    renderingContext->ReleaseRenderer(renderer);
+    Renderer* renderer = RenderingContext->GetRenderer();
+    renderer->Render(DeviceContextBuffer);
+    RenderingContext->ReleaseRenderer(renderer);
 
     IComponent* currentComponent = GetComponentToShow();
     currentComponent->Resize();
-    viewStateDescriptor.SetContentSize(currentComponent->GetBoundingRect().GetSize());
+    ViewStateDescriptor.SetContentSize(currentComponent->GetBoundingRect().GetSize());
 
-    applicationViewDescriptors[applicationView].SetWindowDescriptor(layoutDescriptor);
+    applicationViewDescriptors[applicationView].SetWindowDescriptor(LayoutDescriptor);
 
     ApplyViewState(true);
 }
@@ -283,7 +283,7 @@ void MainView::ShowConfirmDialog(wstring title, function<void()> onConfirm)
     confirmDialogWindow->OnCancel.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
     confirmDialogWindow->Render();
     confirmDialogWindow->Show();
-    scrollProvider->HideScrollbars(this);
+    ScrollProvider->HideScrollbars(this);
 }
 
 bool MainView::IsResizeLocked()
@@ -321,7 +321,7 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         if (IsResizeLocked() || newWidth < minSize.GetWidth() || newHeight < minSize.GetHeight())
         {
             RECT windowRect;
-            GetWindowRect(windowHandle, &windowRect);
+            GetWindowRect(Handle, &windowRect);
             newSize = windowRect;
             return 0;
         }

@@ -11,13 +11,13 @@ HoverIconButtonControl::HoverIconButtonControl(CommonContext* context, View* par
     this->hoverIconResource = 0;
     this->normalIconResource = 0;
     this->backgroundBrush = nullptr;
-    this->className = L"STT_HOVERICONBUTTON";
+    this->ClassName = L"STT_HOVERICONBUTTON";
 }
 
 void HoverIconButtonControl::SetDimensions(Point position, Size size)
 {
     AssertViewNotInitialized();
-    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
+    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
 }
 
 void HoverIconButtonControl::SetNormalIconResource(DWORD normalIconResource)
@@ -65,8 +65,8 @@ void HoverIconButtonControl::Initialize()
 
 void HoverIconButtonControl::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(GetSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalIconResource);
@@ -80,22 +80,22 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
     if (iconsCache.count(cacheKey) != 0)
     {
         HDC renderedDC = iconsCache[cacheKey];
-        deviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, GetSize());
+        DeviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, GetSize());
         return;
     }
 
     Gdiplus::Graphics graphics(deviceContext);
 
-    Renderer* renderer = renderingContext->GetRenderer();
+    Renderer* renderer = RenderingContext->GetRenderer();
 
     if(backgroundBrush != nullptr)
     {
         renderer->SetBackground(backgroundBrush);
     }
 
-    renderer->Render(deviceContext, deviceContextBuffer->GetSize());
+    renderer->Render(deviceContext, DeviceContextBuffer->GetSize());
 
-    renderingContext->ReleaseRenderer(renderer);
+    RenderingContext->ReleaseRenderer(renderer);
 
     Gdiplus::Metafile* iconMetafile = LoadMetafileFromResource(iconResource);
 
@@ -110,20 +110,20 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
 
     delete iconMetafile;
 
-    HDC cachedDC = deviceContextProvider->CreateDeviceContext(GetSize());
-    deviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, GetSize());
+    HDC cachedDC = DeviceContextProvider->CreateDeviceContext(GetSize());
+    DeviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, GetSize());
     iconsCache[cacheKey] = cachedDC;
 }
 
 Gdiplus::Metafile* HoverIconButtonControl::LoadMetafileFromResource(DWORD resourceId) const
 {
-    HRSRC hResource = FindResource(context->GetInstance(), MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    HRSRC hResource = FindResource(Context->GetInstance(), MAKEINTRESOURCE(resourceId), RT_RCDATA);
     AssertCriticalWinApiResult(hResource);
 
-    DWORD imageSize = SizeofResource(context->GetInstance(), hResource);
+    DWORD imageSize = SizeofResource(Context->GetInstance(), hResource);
     AssertCriticalWinApiResult(imageSize);
 
-    void* pResourceData = LockResource(LoadResource(context->GetInstance(), hResource));
+    void* pResourceData = LockResource(LoadResource(Context->GetInstance(), hResource));
     AssertCriticalWinApiResult(pResourceData);
 
     HGLOBAL globalBuffer = GlobalAlloc(GMEM_MOVEABLE, imageSize);

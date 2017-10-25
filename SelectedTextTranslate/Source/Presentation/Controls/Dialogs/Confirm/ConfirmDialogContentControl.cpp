@@ -7,21 +7,21 @@
 ConfirmDialogContentControl::ConfirmDialogContentControl(CommonContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
-    this->className = L"STT_CONFIRM_DIALOG_CONTENT";
-    this->isLayered = true;
-    this->paddingX = scaleProvider->Scale(10);
-    this->paddingY = scaleProvider->Scale(5);
-    this->lineHeight = scaleProvider->Scale(25);
-    this->borderWidth = scaleProvider->Scale(1);
-    this->height = scaleProvider->Scale(103);
+    this->ClassName = L"STT_CONFIRM_DIALOG_CONTENT";
+    this->IsLayered = true;
+    this->paddingX = ScaleProvider->Scale(10);
+    this->paddingY = ScaleProvider->Scale(5);
+    this->lineHeight = ScaleProvider->Scale(25);
+    this->borderWidth = ScaleProvider->Scale(1);
+    this->height = ScaleProvider->Scale(103);
 
-    this->fontSmall = renderingProvider->CreateCustomFont(FontSizes::Small);
-    this->fontSmallUnderscored = renderingProvider->CreateCustomFont(FontSizes::Small, false, true);
+    this->fontSmall = RenderingProvider->CreateCustomFont(FontSizes::Small);
+    this->fontSmallUnderscored = RenderingProvider->CreateCustomFont(FontSizes::Small, false, true);
 
-    this->grayBrush = renderingProvider->CreateCustomBrush(Colors::Gray);
-    this->backgroundBrush = renderingProvider->CreateCustomBrush(Colors::Background);
+    this->grayBrush = RenderingProvider->CreateCustomBrush(Colors::Gray);
+    this->backgroundBrush = RenderingProvider->CreateCustomBrush(Colors::Background);
 
-    this->headerFont = renderingProvider->CreateCustomFont(FontSizes::Normal, false, false, true);
+    this->headerFont = RenderingProvider->CreateCustomFont(FontSizes::Normal, false, false, true);
 
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
@@ -31,14 +31,14 @@ void ConfirmDialogContentControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
 
-    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
+    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
 }
 
 void ConfirmDialogContentControl::SetTitle(wstring title)
 {
     this->title = title;
 
-    if (viewStateDescriptor.GetViewState() != ViewStates::New)
+    if (ViewStateDescriptor.GetViewState() != ViewStates::New)
     {
         Render();
     }
@@ -52,7 +52,7 @@ wstring ConfirmDialogContentControl::GetTitle() const
 void ConfirmDialogContentControl::Initialize()
 {
     ControlView::Initialize();
-    AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
+    AssertCriticalWinApiResult(SetWindowPos(Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
 Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
@@ -83,7 +83,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
         borderWidth,
         Colors::Gray);
 
-    HoverFlatButtonControl* confirmButton = new HoverFlatButtonControl(context, this);
+    HoverFlatButtonControl* confirmButton = new HoverFlatButtonControl(Context, this);
     confirmButton->SetText(L"Confirm");
     confirmButton->SetPosition(Point(
         GetSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
@@ -92,8 +92,8 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     confirmButton->EnableLayeredMode();
     confirmButton->InitializeAndRender();
 
-    int textWidth = renderingProvider->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
-    HoverTextButtonControl* cancelButton = new HoverTextButtonControl(context, this);
+    int textWidth = RenderingProvider->GetTextSize(L"Cancel", fontSmallUnderscored).GetWidth();
+    HoverTextButtonControl* cancelButton = new HoverTextButtonControl(Context, this);
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
     cancelButton->SetPosition(Point(
@@ -104,7 +104,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     cancelButton->SetBackgroundColor(Colors::Background);
     cancelButton->InitializeAndRender();
 
-    return viewStateDescriptor.GetSize();
+    return ViewStateDescriptor.GetSize();
 }
 
 ConfirmDialogContentControl::~ConfirmDialogContentControl()

@@ -8,20 +8,20 @@ SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, V
     this->visibilityState = SettingsGroupVisibilityState::Collapsed;
     this->title = wstring();
 
-    this->fontNormal = renderingProvider->CreateCustomFont(FontSizes::Normal);
-    this->backgroundBrush = renderingProvider->CreateCustomBrush(Colors::Background);
-    this->paddingX = this->paddingY = scaleProvider->Scale(5);
-    this->borderWidth = scaleProvider->Scale(1);
+    this->fontNormal = RenderingProvider->CreateCustomFont(FontSizes::Normal);
+    this->backgroundBrush = RenderingProvider->CreateCustomBrush(Colors::Background);
+    this->paddingX = this->paddingY = ScaleProvider->Scale(5);
+    this->borderWidth = ScaleProvider->Scale(1);
     this->lineHeight = this->fontNormal->GetHeight();
 
-    this->className = L"STT_SETTINGS_GROUP_HEADER";
-    this->viewName = L"SettingsGroupHeaderControl";
+    this->ClassName = L"STT_SETTINGS_GROUP_HEADER";
+    this->ViewName = L"SettingsGroupHeaderControl";
 }
 
 SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
-    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
+    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
     return this;
 }
 
@@ -61,7 +61,7 @@ SettingsGroupVisibilityState SettingsGroupHeaderControl::GetVisibilityState() co
 void SettingsGroupHeaderControl::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
-    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(layoutDescriptor.GetPosition(), Size(layoutDescriptor.GetSize().GetWidth(), headerHeight));
+    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(LayoutDescriptor.GetPosition(), Size(LayoutDescriptor.GetSize().GetWidth(), headerHeight));
     ControlView::Initialize();
 }
 
@@ -85,9 +85,9 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 
     int iconSize = fontNormal->GetAscent();
 
-    HoverIconButtonControl* expandButton = new HoverIconButtonControl(context, this);
+    HoverIconButtonControl* expandButton = new HoverIconButtonControl(Context, this);
     expandButton->SetDimensions(
-        Point(GetSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, scaleProvider).GetY()),
+        Point(GetSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, ScaleProvider).GetY()),
         Size(iconSize, iconSize));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);

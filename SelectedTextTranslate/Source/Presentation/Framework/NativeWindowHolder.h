@@ -3,11 +3,11 @@
 class NativeWindowHolder
 {
 protected:
-    HINSTANCE instance;
-    WNDPROC baseWindowProcedure;
+    HINSTANCE Instance;
+    WNDPROC BaseWindowProcedure;
 
-    HWND windowHandle;
-    wchar_t* className;
+    HWND Handle;
+    wchar_t* ClassName;
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass);
 
     static LRESULT CALLBACK WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

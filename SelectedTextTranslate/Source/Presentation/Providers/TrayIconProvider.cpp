@@ -5,9 +5,9 @@
 TrayIconProvider::TrayIconProvider(CompositionRoot* root, HINSTANCE instance)
     : NativeWindowHolder(instance), ErrorHandler(logger)
 {
-    this->className = L"STT_TRAY";
+    this->ClassName = L"STT_TRAY";
 
-    this->windowHandle = nullptr;
+    this->Handle = nullptr;
     this->menu = nullptr;
     this->WM_TASKBARCREATED = 0;
 
@@ -43,9 +43,9 @@ void TrayIconProvider::Initialize()
 {
     NativeWindowHolder::Initialize();
 
-    windowHandle = CreateWindow(className, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, nullptr);
-    AssertCriticalWinApiResult(windowHandle);
-    SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
+    Handle = CreateWindow(ClassName, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, Instance, nullptr);
+    AssertCriticalWinApiResult(Handle);
+    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
 
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
     AssertWinApiResult(WM_TASKBARCREATED);
@@ -83,12 +83,12 @@ void TrayIconProvider::CreateTrayIcon()
     memset(&notifyIconData, 0, sizeof(NOTIFYICONDATA));
 
     notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
-    notifyIconData.hWnd = windowHandle;
+    notifyIconData.hWnd = Handle;
     notifyIconData.uID = TrayIconId;
     notifyIconData.uVersion = NOTIFYICON_VERSION_4;
     notifyIconData.uFlags = NIF_ICON | NIF_TIP | NIF_INFO | NIF_MESSAGE;
     notifyIconData.uCallbackMessage = WM_TRAYICON;
-    notifyIconData.hIcon = LoadIcon(instance, MAKEINTRESOURCE(IDI_APP_ICON));
+    notifyIconData.hIcon = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
     wcscpy_s(notifyIconData.szTip, L"Selected text translate..");
 
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
@@ -96,17 +96,17 @@ void TrayIconProvider::CreateTrayIcon()
 
 void TrayIconProvider::SetTrayIconImage(DWORD imageResource)
 {
-    notifyIconData.hIcon = LoadIcon(instance, MAKEINTRESOURCE(imageResource));
+    notifyIconData.hIcon = LoadIcon(Instance, MAKEINTRESOURCE(imageResource));
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));
 }
 
 void TrayIconProvider::RegisterHotkeys()
 {
-    hotkeyProvider->RegisterTranslateHotkey(windowHandle, [this]() -> void
+    hotkeyProvider->RegisterTranslateHotkey(Handle, [this]() -> void
     {
         return OnTranslateSelectedText.Notify();
     });
-    hotkeyProvider->RegisterPlayTextHotkey(windowHandle, [this]() -> void
+    hotkeyProvider->RegisterPlayTextHotkey(Handle, [this]() -> void
     {
         return OnPlaySelectedText.Notify();
     });
@@ -114,8 +114,8 @@ void TrayIconProvider::RegisterHotkeys()
 
 void TrayIconProvider::UnregisterHotkeys() const
 {
-    hotkeyProvider->UnregisterPlayTextHotkey(windowHandle);
-    hotkeyProvider->UnregisterTranslateHotkey(windowHandle);
+    hotkeyProvider->UnregisterPlayTextHotkey(Handle);
+    hotkeyProvider->UnregisterTranslateHotkey(Handle);
 }
 
 void TrayIconProvider::ShowError(wstring message)
@@ -181,8 +181,8 @@ LRESULT TrayIconProvider::WindowProcedure(UINT message, WPARAM wParam, LPARAM lP
         {
             POINT curPoint;
             AssertWinApiResult(GetCursorPos(&curPoint));
-            SetForegroundWindow(windowHandle);
-            UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, windowHandle, nullptr);
+            SetForegroundWindow(Handle);
+            UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, Handle, nullptr);
 
             if(clicked != 0)
             {

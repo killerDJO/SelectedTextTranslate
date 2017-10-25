@@ -28,9 +28,9 @@ template <typename TSettings>
 SettingsGroupView<TSettings>::SettingsGroupView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
     : ComponentView<SettingsGroupViewModel<TSettings>*>(context, parentView, modelHolder)
 {
-    this->paddingX = this->paddingY = this->scaleProvider->Scale(5);
-    this->borderWidth = this->scaleProvider->Scale(1);
-    this->className = L"STT_SETTINGS_GROUP";
+    this->PaddingX = this->PaddingY = this->ScaleProvider->Scale(5);
+    this->borderWidth = this->ScaleProvider->Scale(1);
+    this->ClassName = L"STT_SETTINGS_GROUP";
     this->headerControl = nullptr;
 }
 
@@ -49,7 +49,7 @@ Size SettingsGroupView<TSettings>::RenderContent(Renderer* renderer, SettingsGro
 {
     this->DestroyChildViews();
 
-    headerControl = new SettingsGroupHeaderControl(this->context, this);
+    headerControl = new SettingsGroupHeaderControl(this->Context, this);
     headerControl->OnSettingsToggled.Subscribe(&OnSettingsToggled);
 
     headerControl
@@ -63,7 +63,7 @@ Size SettingsGroupView<TSettings>::RenderContent(Renderer* renderer, SettingsGro
 
     if (model->GetVisibilityState() == SettingsGroupVisibilityState::Expanded)
     {
-        RenderSettingsContent(RenderDescriptor(renderer, Point(this->paddingX * 2, headerControl->GetBoundingRect().GetBottom())), model->GetSettings());
+        RenderSettingsContent(RenderDescriptor(renderer, Point(this->PaddingX * 2, headerControl->GetBoundingRect().GetBottom())), model->GetSettings());
         Rect contentBorderRect = Rect(Point(0, 0), Size(this->GetSize().GetWidth(), renderer->GetSize().GetHeight()));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, borderWidth, Colors::Gray);
     }

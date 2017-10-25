@@ -45,7 +45,7 @@ public:
     void SetApplicationView(ApplicationViews applicationView);
     void Translate(wstring input);
 
-    void SetLayout(LayoutDescriptor layoutDescriptor);
+    void SetLayout(::LayoutDescriptor layoutDescriptor);
 
     void Minimize();
     void Maximize();

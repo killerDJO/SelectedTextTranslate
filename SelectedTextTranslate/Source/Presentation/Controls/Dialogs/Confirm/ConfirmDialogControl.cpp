@@ -6,33 +6,33 @@
 ConfirmDialogControl::ConfirmDialogControl(CommonContext* context, View* parentView)
     : ControlView(context, parentView)
 {
-    this->className = L"STT_CONFIRM_DIALOG";
+    this->ClassName = L"STT_CONFIRM_DIALOG";
 
     this->dialogContentView = nullptr;
     this->title = wstring();
     this->OnConfirm = Subscribeable<>();
     this->OnCancel = Subscribeable<>();
 
-    this->isLayered = false;
+    this->IsLayered = false;
 }
 
 void ConfirmDialogControl::Initialize()
 {
     ControlView::Initialize();
 
-    AssertCriticalWinApiResult(SetWindowPos(windowHandle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
+    AssertCriticalWinApiResult(SetWindowPos(Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
 void ConfirmDialogControl::SetSize(Size size)
 {
     AssertViewNotInitialized();
-    layoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
+    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
 }
 
 void ConfirmDialogControl::Show()
 {
     ControlView::Show();
-    AssertWinApiResult(SetFocus(windowHandle));
+    AssertWinApiResult(SetFocus(Handle));
 }
 
 void ConfirmDialogControl::SetTitle(wstring title)
@@ -55,15 +55,15 @@ Size ConfirmDialogControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    ConfirmDialogOverlayControl* overlayWindow = new ConfirmDialogOverlayControl(context, this);
+    ConfirmDialogOverlayControl* overlayWindow = new ConfirmDialogOverlayControl(Context, this);
     overlayWindow->SetSize(GetSize());
     overlayWindow->InitializeAndRender();
 
-    int dialogContentWidth = scaleProvider->Scale(200);
+    int dialogContentWidth = ScaleProvider->Scale(200);
     int paddingX = roundToInt((GetSize().GetWidth() - dialogContentWidth) / 2);
-    int paddingY = scaleProvider->Scale(50);
+    int paddingY = ScaleProvider->Scale(50);
 
-    dialogContentView = new ConfirmDialogContentControl(context, this);
+    dialogContentView = new ConfirmDialogContentControl(Context, this);
     dialogContentView->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
     dialogContentView->SetTitle(title);
     dialogContentView->OnConfirm.Subscribe(&OnConfirm);

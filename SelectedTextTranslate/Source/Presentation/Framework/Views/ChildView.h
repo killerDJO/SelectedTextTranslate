@@ -4,8 +4,8 @@
 class ChildView : public View
 {
 protected:
-    View* parentView;
-    bool isLayered;
+    View* ParentView;
+    bool IsLayered;
 
     Point GetInitialViewOffset() override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;

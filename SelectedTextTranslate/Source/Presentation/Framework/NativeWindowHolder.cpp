@@ -4,26 +4,26 @@
 
 NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
 {
-    this->instance = instance;
-    this->baseWindowProcedure = DefWindowProc;
+    this->Instance = instance;
+    this->BaseWindowProcedure = DefWindowProc;
 
-    this->windowHandle = nullptr;
-    this->className = nullptr;
+    this->Handle = nullptr;
+    this->ClassName = nullptr;
 }
 
 void NativeWindowHolder::Initialize()
 {
     WNDCLASSEX windowClass = { 0 };
 
-    if(className == nullptr)
+    if(ClassName == nullptr)
     {
         throw SelectedTextTranslateFatalException(L"Window's class name should be provided.");
     }
 
-    if (!GetClassInfoEx(instance, className, &windowClass))
+    if (!GetClassInfoEx(Instance, ClassName, &windowClass))
     {
-        windowClass.hInstance = instance;
-        windowClass.lpszClassName = className;
+        windowClass.hInstance = Instance;
+        windowClass.lpszClassName = ClassName;
         windowClass.lpfnWndProc = WindowProcedureWrapper;
         windowClass.cbSize = sizeof(WNDCLASSEX);
         windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -41,7 +41,7 @@ void NativeWindowHolder::SpecifyWindowClass(WNDCLASSEX* windowClass)
 
 HWND NativeWindowHolder::GetHandle() const
 {
-    return windowHandle;
+    return Handle;
 }
 
 LRESULT NativeWindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -58,7 +58,7 @@ LRESULT NativeWindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPAR
 
 LRESULT NativeWindowHolder::CallBaseWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) const
 {
-    return CallWindowProc(baseWindowProcedure, windowHandle, message, wParam, lParam);
+    return CallWindowProc(BaseWindowProcedure, Handle, message, wParam, lParam);
 }
 
 LRESULT NativeWindowHolder::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
@@ -73,8 +73,8 @@ LRESULT NativeWindowHolder::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
 
 NativeWindowHolder::~NativeWindowHolder()
 {
-    if(windowHandle != nullptr)
+    if(Handle != nullptr)
     {
-        AssertCriticalWinApiResult(DestroyWindow(windowHandle));
+        AssertCriticalWinApiResult(DestroyWindow(Handle));
     }
 }

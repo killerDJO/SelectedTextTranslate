@@ -4,15 +4,15 @@
 HotkeySettingsView::HotkeySettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
     : SettingsGroupView(context, parentView, modelHolder)
 {
-    this->font = renderingProvider->CreateCustomFont(FontSizes::Medium);
-    this->controlsMargin = scaleProvider->Scale(7);
+    this->font = RenderingProvider->CreateCustomFont(FontSizes::Medium);
+    this->controlsMargin = ScaleProvider->Scale(7);
 
-    this->viewName = L"HotkeySettingsWindow";
+    this->ViewName = L"HotkeySettingsWindow";
 }
 
 void HotkeySettingsView::RenderSettingsContent(RenderDescriptor renderDescriptor, HotkeySettings* settings)
 {
-    RenderPosition renderPosition = renderDescriptor.GetRenderPosition().MoveY(paddingY);
+    RenderPosition renderPosition = renderDescriptor.GetRenderPosition().MoveY(PaddingY);
     Renderer* renderer = renderDescriptor.GetRenderer();
 
     hotkeyInputWindows.clear();
@@ -58,7 +58,7 @@ void HotkeySettingsView::RenderSettingsContent(RenderDescriptor renderDescriptor
     });
 
     SetHotkeyInputsValiationState();
-    renderer->IncreaseHeight(2 * paddingY);
+    renderer->IncreaseHeight(2 * PaddingY);
 }
 
 RenderResult HotkeySettingsView::RenderHotkeyEditControl(
@@ -80,7 +80,7 @@ RenderResult HotkeySettingsView::RenderHotkeyEditControl(
         .SetY(textRenderResult.GetBottomY())
         .MoveY(1);
 
-    HotKeyInputControl* hotKeyInputWindow = new HotKeyInputControl(context, this);
+    HotKeyInputControl* hotKeyInputWindow = new HotKeyInputControl(Context, this);
     hotKeyInputWindow->SetPosition(renderPosition.GetPosition());
     hotKeyInputWindow->SetHotkey(hotkey);
     hotKeyInputWindow->OnHotkeyChanged.Subscribe([hotkeySetter, settings, this](DWORD newHotkey)

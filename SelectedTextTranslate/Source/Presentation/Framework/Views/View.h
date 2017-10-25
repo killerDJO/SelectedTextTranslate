@@ -19,19 +19,19 @@ private:
     void DestroyChildViews(vector<View*>& childViews) const;
 
 protected:
-    CommonContext* context;
-    ScaleProvider* scaleProvider;
-    ScrollProvider* scrollProvider;
-    RenderingProvider* renderingProvider;
-    RenderingContext* renderingContext;
-    DeviceContextProvider* deviceContextProvider;
+    CommonContext* Context;
+    ScaleProvider* ScaleProvider;
+    ScrollProvider* ScrollProvider;
+    RenderingProvider* RenderingProvider;
+    RenderingContext* RenderingContext;
+    DeviceContextProvider* DeviceContextProvider;
 
-    LayoutDescriptor layoutDescriptor;
-    ViewStateDescriptor viewStateDescriptor;
-    wstring viewName;
+    LayoutDescriptor LayoutDescriptor;
+    ViewStateDescriptor ViewStateDescriptor;
+    wstring ViewName;
 
-    DeviceContextBuffer* deviceContextBuffer;
-    vector<View*> activeChildViews;
+    DeviceContextBuffer* DeviceContextBuffer;
+    vector<View*> ActiveChildViews;
 
     DWORD GetScrollStyle() const;
 
@@ -53,7 +53,7 @@ public:
     View(CommonContext* context);
     ~View() override;
 
-    LayoutDescriptor GetLayout() const;
+    ::LayoutDescriptor GetLayout() const;
 
     Size GetContentSize() const;
     Size GetSize() const;

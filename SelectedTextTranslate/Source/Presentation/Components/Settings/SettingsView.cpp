@@ -12,18 +12,18 @@ SettingsView::SettingsView(CommonContext* context, View* parentView, ModelHolder
     this->cancelButton = nullptr;
     this->resetButton = nullptr;
 
-    this->viewName = L"SettingsWindow";
+    this->ViewName = L"SettingsWindow";
 }
 
 Size SettingsView::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
+    RenderPosition renderPosition = RenderPosition(PaddingX, PaddingY);
 
     renderPosition = CreateSettingsGroups(RenderDescriptor(renderer, renderPosition));
 
-    renderPosition = renderPosition.MoveY(lineHeight / 2).SetX(paddingX);
+    renderPosition = renderPosition.MoveY(LineHeight / 2).SetX(PaddingX);
 
     CreateControls(RenderDescriptor(renderer, renderPosition));
 
@@ -39,7 +39,7 @@ RenderResult SettingsView::CreateSettingsGroups(RenderDescriptor renderDescripto
 
 RenderResult SettingsView::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
-    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(context, this, GetModel()->GetHotkeySettingsViewModel());
+    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(Context, this, GetModel()->GetHotkeySettingsViewModel());
     RenderPosition renderPosition = AddSettingsGroup(renderDescriptor, hotkeySettingsComponent);
 
     return RenderResult(renderPosition);
@@ -51,7 +51,7 @@ RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescri
 
     settingsGroup->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
         renderDescriptor.GetRenderPosition().GetPosition(),
-        Size(scaleProvider->Scale(257), 0),
+        Size(ScaleProvider->Scale(257), 0),
         OverflowModes::Fixed,
         OverflowModes::Stretch));
 
@@ -67,12 +67,12 @@ void SettingsView::CreateControls(RenderDescriptor renderDescriptor)
     RenderPosition renderPosition = CreateSaveButtonControl(renderDescriptor);
 
     cancelButton = CreateTextButtonControl(
-        RenderDescriptor(renderDescriptor.GetRenderer(), renderPosition.MoveX(7, scaleProvider)),
+        RenderDescriptor(renderDescriptor.GetRenderer(), renderPosition.MoveX(7, ScaleProvider)),
         L"Cancel",
         &OnCancelChanges);
 
     wstring resetButtonText = L"Reset";
-    int resetButtonTextWidth = context->Get<RenderingProvider>()->GetTextSize(resetButtonText, fontSmallUnderscored).GetWidth();
+    int resetButtonTextWidth = RenderingProvider->GetTextSize(resetButtonText, FontSmallUnderscored).GetWidth();
 
     int maxRightPosition = 0;
     for(size_t i = 0; i < settingsGroups.size(); ++i)
@@ -88,7 +88,7 @@ void SettingsView::CreateControls(RenderDescriptor renderDescriptor)
 
 RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescriptor)
 {
-    saveButton = new HoverFlatButtonControl(context, this);
+    saveButton = new HoverFlatButtonControl(Context, this);
     saveButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
     saveButton->SetText(L"Save");
     saveButton->OnClick.Subscribe(&OnSaveSettings);
@@ -103,8 +103,8 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
 
 HoverTextButtonControl* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback)
 {
-    HoverTextButtonControl* button = new HoverTextButtonControl(context, this);
-    button->SetFont(fontSmallUnderscored);
+    HoverTextButtonControl* button = new HoverTextButtonControl(Context, this);
+    button->SetFont(FontSmallUnderscored);
 
     button->SetPosition(renderDescriptor.GetRenderPosition().MoveY(-button->GetFont()->GetAscent()).GetPosition());
     button->SetText(text);

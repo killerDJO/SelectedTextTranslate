@@ -7,21 +7,21 @@ template <class TModel>
 class ComponentView : public ChildView
 {
 protected:
-    int paddingX;
-    int paddingY;
-    int lineHeight;
+    int PaddingX;
+    int PaddingY;
+    int LineHeight;
 
-    Font* fontNormal;
-    Font* fontHeader;
-    Font* fontItalic;
-    Font* fontSmall;
-    Font* fontSmallUnderscored;
+    Font* FontNormal;
+    Font* FontHeader;
+    Font* FontItalic;
+    Font* FontSmall;
+    Font* FontSmallUnderscored;
 
-    Brush* grayBrush;
-    Brush* lightGrayBrush;
-    Brush* backgroundBrush;
+    Brush* GrayBrush;
+    Brush* LightGrayBrush;
+    Brush* BackgroundBrush;
 
-    ModelHolder<TModel>* modelHolder;
+    ModelHolder<TModel>* CurrentModelHolder;
 
     TModel GetModel() const;
     virtual Size RenderContent(Renderer* renderer, TModel model);
@@ -32,39 +32,39 @@ public:
     ~ComponentView() override;
 
     void Render(bool preserveScrolls = false) override;
-    virtual void SetLayout(LayoutDescriptor layoutDescriptor);
+    virtual void SetLayout(::LayoutDescriptor layoutDescriptor);
 };
 
 template <class TModel>
 ComponentView<TModel>::ComponentView(CommonContext* context, View* parentView, ModelHolder<TModel>* modelHolder)
     : ChildView(context, parentView)
 {
-    this->modelHolder = modelHolder;
+    CurrentModelHolder = modelHolder;
 
-    this->lineHeight = scaleProvider->Scale(20);
-    this->paddingX = scaleProvider->Scale(15);
-    this->paddingY = scaleProvider->Scale(15);
+    LineHeight = ScaleProvider->Scale(20);
+    PaddingX = ScaleProvider->Scale(15);
+    PaddingY = ScaleProvider->Scale(15);
 
-    this->fontNormal = renderingProvider->CreateCustomFont(FontSizes::Normal);
-    this->fontHeader = renderingProvider->CreateCustomFont(FontSizes::Large);
-    this->fontItalic = renderingProvider->CreateCustomFont(FontSizes::Normal, true);
-    this->fontSmall = renderingProvider->CreateCustomFont(FontSizes::Small);
-    this->fontSmallUnderscored = renderingProvider->CreateCustomFont(FontSizes::Small, false, true);
+    FontNormal = RenderingProvider->CreateCustomFont(FontSizes::Normal);
+    FontHeader = RenderingProvider->CreateCustomFont(FontSizes::Large);
+    FontItalic = RenderingProvider->CreateCustomFont(FontSizes::Normal, true);
+    FontSmall = RenderingProvider->CreateCustomFont(FontSizes::Small);
+    FontSmallUnderscored = RenderingProvider->CreateCustomFont(FontSizes::Small, false, true);
 
-    this->lightGrayBrush = renderingProvider->CreateCustomBrush(Colors::LightGray);
-    this->grayBrush = renderingProvider->CreateCustomBrush(Colors::Gray);
-    this->backgroundBrush = renderingProvider->CreateCustomBrush(Colors::Background);
+    LightGrayBrush = RenderingProvider->CreateCustomBrush(Colors::LightGray);
+    GrayBrush = RenderingProvider->CreateCustomBrush(Colors::Gray);
+    BackgroundBrush = RenderingProvider->CreateCustomBrush(Colors::Background);
 
-    this->className = L"STT_COMPONENT";
+    ClassName = L"STT_COMPONENT";
 }
 
 template <class TModel>
 void ComponentView<TModel>::Render(bool preserveScrolls)
 {
-    bool isStretchWindow = layoutDescriptor.GetOverflowX() == OverflowModes::Stretch || layoutDescriptor.GetOverflowY() == OverflowModes::Stretch;
-    if (isStretchWindow && !renderingContext->IsRenderingInProgress())
+    bool isStretchWindow = LayoutDescriptor.GetOverflowX() == OverflowModes::Stretch || LayoutDescriptor.GetOverflowY() == OverflowModes::Stretch;
+    if (isStretchWindow && !RenderingContext->IsRenderingInProgress())
     {
-        parentView->Render(preserveScrolls);
+        ParentView->Render(preserveScrolls);
     }
     else
     {
@@ -73,16 +73,16 @@ void ComponentView<TModel>::Render(bool preserveScrolls)
 }
 
 template <class TModel>
-void ComponentView<TModel>::SetLayout(LayoutDescriptor layoutDescriptor)
+void ComponentView<TModel>::SetLayout(::LayoutDescriptor layoutDescriptor)
 {
     AssertViewNotInitialized();
-    this->layoutDescriptor = layoutDescriptor;
+    this->LayoutDescriptor = layoutDescriptor;
 }
 
 template <class TModel>
 TModel ComponentView<TModel>::GetModel() const
 {
-    return modelHolder->GetModel();
+    return CurrentModelHolder->GetModel();
 }
 
 template <class TModel>
@@ -100,12 +100,12 @@ Size ComponentView<TModel>::RenderContent(Renderer* renderer)
 template <class TModel>
 ComponentView<TModel>::~ComponentView()
 {
-    delete fontNormal;
-    delete fontHeader;
-    delete fontItalic;
-    delete fontSmallUnderscored;
-    delete fontSmall;
-    delete lightGrayBrush;
-    delete grayBrush;
-    delete backgroundBrush;
+    delete FontNormal;
+    delete FontHeader;
+    delete FontItalic;
+    delete FontSmallUnderscored;
+    delete FontSmall;
+    delete LightGrayBrush;
+    delete GrayBrush;
+    delete BackgroundBrush;
 }

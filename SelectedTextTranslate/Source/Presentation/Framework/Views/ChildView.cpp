@@ -11,8 +11,8 @@ ChildView::ChildView(CommonContext* context, View* parentView)
         throw SelectedTextTranslateFatalException(L"Parent window must be provided.");
     }
 
-    this->parentView = parentView;
-    this->isLayered = false;
+    this->ParentView = parentView;
+    this->IsLayered = false;
 
     parentView->AddChildView(this);
 }
@@ -23,41 +23,40 @@ void ChildView::Initialize()
 
     Point offset = GetInitialViewOffset();
 
-    windowHandle = CreateWindow(
-        className,
+    Handle = CreateWindow(
+        ClassName,
         nullptr,
         WS_CHILD | WS_CLIPCHILDREN,
-        layoutDescriptor.GetPosition().GetX() - offset.GetX(),
-        layoutDescriptor.GetPosition().GetY() - offset.GetY(),
-        layoutDescriptor.GetSize().GetWidth(),
-        layoutDescriptor.GetSize().GetHeight(),
-        parentView->GetHandle(),
+        LayoutDescriptor.GetPosition().GetX() - offset.GetX(),
+        LayoutDescriptor.GetPosition().GetY() - offset.GetY(),
+        LayoutDescriptor.GetSize().GetWidth(),
+        LayoutDescriptor.GetSize().GetHeight(),
+        ParentView->GetHandle(),
         nullptr,
-        context->GetInstance(),
+        Context->GetInstance(),
         nullptr);
 
-    AssertCriticalWinApiResult(windowHandle);
+    AssertCriticalWinApiResult(Handle);
 
-    SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)this);
+    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
 
-    if(isLayered)
+    if(IsLayered)
     {
-        SetWindowLongPtr(windowHandle, GWL_EXSTYLE, GetWindowLongPtr(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED);
-        AssertCriticalWinApiResult(SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA));
+        SetWindowLongPtr(Handle, GWL_EXSTYLE, GetWindowLongPtr(Handle, GWL_EXSTYLE) | WS_EX_LAYERED);
+        AssertCriticalWinApiResult(SetLayeredWindowAttributes(Handle, 0, 255, LWA_ALPHA));
     }
 }
 
 void ChildView::EnableLayeredMode()
 {
     AssertViewNotInitialized();
-    this->isLayered = true;
+    this->IsLayered = true;
 }
 
 Point ChildView::GetInitialViewOffset()
 {
-    ScrollProvider* scrollProvider = context->Get<ScrollProvider>();
-    int offsetY = scrollProvider->GetCurrentScrollOffset(parentView, ScrollBars::Vertical);
-    int offsetX = scrollProvider->GetCurrentScrollOffset(parentView, ScrollBars::Horizontal);
+    int offsetY = ScrollProvider->GetCurrentScrollOffset(ParentView, ScrollBars::Vertical);
+    int offsetX = ScrollProvider->GetCurrentScrollOffset(ParentView, ScrollBars::Horizontal);
 
     return Point(offsetX, offsetY);
 }
@@ -73,16 +72,16 @@ LRESULT ChildView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     {
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
-        AssertCriticalWinApiResult(GetWindowRect(windowHandle, &rcWindow));
-        AssertCriticalWinApiResult(MoveWindow(windowHandle, pos.x, pos.y, viewStateDescriptor.GetSize().GetWidth(), viewStateDescriptor.GetSize().GetHeight(), FALSE));
-        viewStateDescriptor.SetPosition(Point(pos.x, pos.y));
+        AssertCriticalWinApiResult(GetWindowRect(Handle, &rcWindow));
+        AssertCriticalWinApiResult(MoveWindow(Handle, pos.x, pos.y, ViewStateDescriptor.GetSize().GetWidth(), ViewStateDescriptor.GetSize().GetHeight(), FALSE));
+        ViewStateDescriptor.SetPosition(Point(pos.x, pos.y));
 
         return TRUE;
     }
 
     case WM_LBUTTONDOWN:
     {
-        AssertCriticalWinApiResult(SetFocus(windowHandle));
+        AssertCriticalWinApiResult(SetFocus(Handle));
         return TRUE;
     }
 

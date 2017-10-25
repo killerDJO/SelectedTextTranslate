@@ -5,8 +5,8 @@
 DictionaryView::DictionaryView(CommonContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
     : ComponentView(context, parentWindow, modelHolder)
 {
-    this->viewName = L"DictionaryWindow";
-    this->iconSize = context->Get<ScaleProvider>()->Scale(16);
+    this->ViewName = L"DictionaryWindow";
+    this->iconSize = ScaleProvider->Scale(16);
 }
 
 Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> model)
@@ -14,33 +14,33 @@ Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> 
     DestroyChildViews();
 
     RenderPosition renderPosition = RenderPosition(
-        paddingX,
-        paddingY / 2 + fontNormal->GetAscent());
+        PaddingX,
+        PaddingY / 2 + FontNormal->GetAscent());
 
     size_t countToShow = min(200, model.size());
 
     wstring title = L"Showing " + to_wstring(countToShow) + L" out of " + to_wstring(model.size());
-    renderer->PrintText(title, fontItalic, Colors::Gray, renderPosition);
+    renderer->PrintText(title, FontItalic, Colors::Gray, renderPosition);
 
     for (size_t i = 0; i < countToShow; ++i)
     {
-        renderPosition = renderPosition.MoveY(lineHeight);
+        renderPosition = renderPosition.MoveY(LineHeight);
 
         DictionaryRecord record = model[i];
 
         renderPosition = renderer->PrintText(
             record.GetWord(),
-            fontNormal,
+            FontNormal,
             Colors::Black,
-            renderPosition.MoveX(paddingX));
+            renderPosition.MoveX(PaddingX));
 
-        renderer->PrintText(L" (" + to_wstring(record.GetCount()) + L")", fontNormal, Colors::Gray, renderPosition);
+        renderer->PrintText(L" (" + to_wstring(record.GetCount()) + L")", FontNormal, Colors::Gray, renderPosition);
 
-        renderPosition = renderPosition.SetX(paddingX);
+        renderPosition = renderPosition.SetX(PaddingX);
 
-        HoverIconButtonControl* translateButton = new HoverIconButtonControl(context, this);
+        HoverIconButtonControl* translateButton = new HoverIconButtonControl(Context, this);
         translateButton->SetDimensions(
-            renderPosition.MoveY(-fontNormal->GetAscent() + 1).GetPosition(),
+            renderPosition.MoveY(-FontNormal->GetAscent() + 1).GetPosition(),
             Size(iconSize, iconSize));
         translateButton->SetNormalIconResource(IDR_TRANSLATE_INACTIVE);
         translateButton->SetHoverIconResource(IDR_TRANSLATE);
@@ -51,7 +51,7 @@ Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> 
         translateButton->InitializeAndRender();
     }
 
-    renderer->IncreaseWidth(paddingX);
+    renderer->IncreaseWidth(PaddingX);
 
     return renderer->GetSize();
 }

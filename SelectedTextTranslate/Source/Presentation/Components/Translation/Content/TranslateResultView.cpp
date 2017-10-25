@@ -4,14 +4,14 @@
 TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslateResultViewModel>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
-    this->viewName = L"TranslateResultWindow";
+    this->ViewName = L"TranslateResultWindow";
 }
 
 Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewModel model)
 {
     DestroyChildViews();
 
-    RenderPosition renderPosition = RenderPosition(paddingX, lineHeight);
+    RenderPosition renderPosition = RenderPosition(PaddingX, LineHeight);
 
     vector<TranslateResultCategory> translateCategories = model.GetTranslateResult().GetTranslateCategories();
     for (size_t i = 0; i < translateCategories.size(); ++i)
@@ -20,10 +20,10 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewM
         vector<TranslateResultCategoryEntry> categoryEntries = category.GetEntries();
 
         // Draw category header
-        renderPosition = renderer->PrintText(category.GetBaseForm(), fontNormal, Colors::Black, renderPosition);
+        renderPosition = renderer->PrintText(category.GetBaseForm(), FontNormal, Colors::Black, renderPosition);
 
         wstring partOfSpeech = L" - " + wstring(category.GetPartOfSpeech());
-        renderPosition = renderer->PrintText(partOfSpeech.c_str(), fontItalic, Colors::Gray, renderPosition.MoveX(1));
+        renderPosition = renderer->PrintText(partOfSpeech.c_str(), FontItalic, Colors::Gray, renderPosition.MoveX(1));
 
         vector<TranslateResultCategoryEntry> showedEntries(0);
         if (model.IsExpanded(i))
@@ -46,16 +46,16 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewM
         // Draw words
         for (size_t j = 0; j < showedEntries.size(); ++j)
         {
-            renderPosition = renderPosition.MoveY(lineHeight).SetX(paddingX * 3);
+            renderPosition = renderPosition.MoveY(LineHeight).SetX(PaddingX * 3);
 
             TranslateResultCategoryEntry entry = showedEntries[j];
-            renderPosition = renderer->PrintText(entry.GetWord(), fontNormal, Colors::Black, renderPosition);
+            renderPosition = renderer->PrintText(entry.GetWord(), FontNormal, Colors::Black, renderPosition);
 
             // Draw reverse translation
             vector<wstring> reverseTranslations = entry.GetReverseTranslations();
             if (reverseTranslations.size() != 0)
             {
-                renderPosition = renderer->PrintText(L" - ", fontNormal, Colors::Gray, renderPosition.MoveX(2, scaleProvider));
+                renderPosition = renderer->PrintText(L" - ", FontNormal, Colors::Gray, renderPosition.MoveX(2, ScaleProvider));
                 for (size_t k = 0; k < reverseTranslations.size(); ++k)
                 {
                     wstring text = wstring(reverseTranslations[k]);
@@ -64,31 +64,31 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewM
                         text += L", ";
                     }
 
-                    renderPosition = renderer->PrintText(text.c_str(), fontItalic, Colors::Gray, renderPosition);
+                    renderPosition = renderer->PrintText(text.c_str(), FontItalic, Colors::Gray, renderPosition);
                 }
             }
 
             int k = entry.GetScore() >= 0.05 ? 0 : (entry.GetScore() >= 0.0025 ? 1 : 2);
-            int rateUnit = scaleProvider->Scale(8);
-            int strokeHeight = fontNormal->GetStrokeHeight();
+            int rateUnit = ScaleProvider->Scale(8);
+            int strokeHeight = FontNormal->GetStrokeHeight();
 
             Rect rect = Rect(
-                paddingX + k * rateUnit,
-                renderPosition.GetY() - strokeHeight + scaleProvider->Scale(2),
+                PaddingX + k * rateUnit,
+                renderPosition.GetY() - strokeHeight + ScaleProvider->Scale(2),
                 (3 - k) * rateUnit,
-                strokeHeight - scaleProvider->Scale(2));
+                strokeHeight - ScaleProvider->Scale(2));
 
-            renderer->DrawRect(rect, lightGrayBrush);
+            renderer->DrawRect(rect, LightGrayBrush);
         }
 
-        renderPosition = renderPosition.MoveY(7, scaleProvider).SetX(paddingX * 3);
+        renderPosition = renderPosition.MoveY(7, ScaleProvider).SetX(PaddingX * 3);
         renderPosition = CreateExpandButton(model, RenderDescriptor(renderer, renderPosition), category, i, showedEntries.size());
 
-        renderPosition = renderPosition.MoveY(lineHeight).SetX(paddingX);
+        renderPosition = renderPosition.MoveY(LineHeight).SetX(PaddingX);
     }
 
-    renderer->IncreaseWidth(paddingX);
-    renderer->IncreaseHeight(paddingY);
+    renderer->IncreaseWidth(PaddingX);
+    renderer->IncreaseHeight(PaddingY);
 
     return renderer->GetSize();
 }
@@ -117,9 +117,9 @@ RenderResult TranslateResultView::CreateExpandButton(
             text = L"show less results";
         }
 
-        HoverTextButtonControl* expandButton = new HoverTextButtonControl(context, this);
+        HoverTextButtonControl* expandButton = new HoverTextButtonControl(Context, this);
         expandButton->SetPosition(renderDescriptor.GetRenderPosition().GetPosition());
-        expandButton->SetFont(fontSmallUnderscored);
+        expandButton->SetFont(FontSmallUnderscored);
         expandButton->SetText(text);
         expandButton->OnClick.Subscribe([categoryIndex, this]()
         {

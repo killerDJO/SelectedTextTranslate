@@ -25,7 +25,7 @@ LRESULT HoverButtonControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
 {
     TRACKMOUSEEVENT tme;
     tme.cbSize = sizeof(TRACKMOUSEEVENT);
-    tme.hwndTrack = windowHandle;
+    tme.hwndTrack = Handle;
     tme.dwHoverTime = 10;
 
     switch (message)
@@ -116,7 +116,7 @@ void HoverButtonControl::ChangeButtonState(ButtonStates newState)
 {
     state = newState;
 
-    if (viewStateDescriptor.GetViewState() != ViewStates::New)
+    if (ViewStateDescriptor.GetViewState() != ViewStates::New)
     {
         Render();
     }
@@ -135,7 +135,7 @@ HoverButtonControl::~HoverButtonControl()
         HDC deviceContextToDelete = iterator->second;
         if(deletedDeviceContexts.find(deviceContextToDelete) == deletedDeviceContexts.end())
         {
-            deviceContextProvider->DeleteDeviceContext(iterator->second);
+            DeviceContextProvider->DeleteDeviceContext(iterator->second);
             deletedDeviceContexts.insert(deviceContextToDelete);
         }
     }

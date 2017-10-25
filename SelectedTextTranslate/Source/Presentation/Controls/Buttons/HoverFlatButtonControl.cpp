@@ -3,20 +3,20 @@
 HoverFlatButtonControl::HoverFlatButtonControl(CommonContext* context, View* parentWindow)
     : HoverButtonControl(context, parentWindow)
 {
-    this->defaultFont = renderingProvider->CreateCustomFont(FontSizes::Normal);
+    this->defaultFont = RenderingProvider->CreateCustomFont(FontSizes::Normal);
     this->font = nullptr;
     this->text = wstring();
-    this->paddingX = scaleProvider->Scale(10);
-    this->paddingY = scaleProvider->Scale(5);
-    this->borderWidth = scaleProvider->Scale(1);
-    this->className = L"STT_HOVERFLATBUTTON";
-    this->layoutDescriptor = LayoutDescriptor();
+    this->paddingX = ScaleProvider->Scale(10);
+    this->paddingY = ScaleProvider->Scale(5);
+    this->borderWidth = ScaleProvider->Scale(1);
+    this->ClassName = L"STT_HOVERFLATBUTTON";
+    this->LayoutDescriptor = ::LayoutDescriptor();
 }
 
 void HoverFlatButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    layoutDescriptor.SetPosition(position);
+    LayoutDescriptor.SetPosition(position);
 }
 
 void HoverFlatButtonControl::SetFont(Font* font)
@@ -65,7 +65,7 @@ int HoverFlatButtonControl::GetPaddingY() const
 
 Size HoverFlatButtonControl::GetComputedSize() const
 {
-    Size textSize = renderingProvider->GetTextSize(text, GetFont());
+    Size textSize = RenderingProvider->GetTextSize(text, GetFont());
 
     return Size(
         textSize.GetWidth() + paddingX * 2,
@@ -74,8 +74,8 @@ Size HoverFlatButtonControl::GetComputedSize() const
 
 void HoverFlatButtonControl::Initialize()
 {
-    layoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
-        layoutDescriptor.GetPosition(),
+    LayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+        LayoutDescriptor.GetPosition(),
         GetComputedSize(),
         OverflowModes::Fixed,
         OverflowModes::Fixed);
@@ -90,10 +90,10 @@ int HoverFlatButtonControl::GetTextBaseline() const
 
 void HoverFlatButtonControl::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = deviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = deviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Pressed] = deviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = deviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Pressed] = DeviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(GetSize());
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], Colors::Button, Colors::LightGray, Colors::Black);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], Colors::ButtonHovered, Colors::Blue, Colors::Black);
@@ -103,9 +103,9 @@ void HoverFlatButtonControl::RenderStatesDeviceContexts()
 
 void HoverFlatButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors backgroundColor, Colors borderColor, Colors fontColor) const
 {
-    Renderer* renderer = renderingContext->GetRenderer();
+    Renderer* renderer = RenderingContext->GetRenderer();
 
-    Brush* backgroundBrush = renderingProvider->CreateCustomBrush(backgroundColor);
+    Brush* backgroundBrush = RenderingProvider->CreateCustomBrush(backgroundColor);
 
     renderer->DrawBorderedRect(
         Rect(Point(0, 0), GetSize()),
@@ -122,7 +122,7 @@ void HoverFlatButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors 
 
     renderer->Render(deviceContext, GetSize());
 
-    renderingContext->ReleaseRenderer(renderer);
+    RenderingContext->ReleaseRenderer(renderer);
 
     delete backgroundBrush;
 }
