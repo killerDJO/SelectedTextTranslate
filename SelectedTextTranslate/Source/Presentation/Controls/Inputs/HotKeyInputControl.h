@@ -32,7 +32,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    HotKeyInputControl(CommonContext* context, View* parentWindow);
+    HotKeyInputControl(ViewContext* context, View* parentWindow);
     virtual ~HotKeyInputControl();
 
     void SetPosition(Point position);

@@ -6,9 +6,9 @@
 #include "Presentation\Framework\Rendering\Renderer.h"
 #include "Presentation\Framework\NativeWindowHolder.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
-#include "Presentation\Framework\CommonContext.h"
+#include "Presentation\Framework\ViewContext.h"
 
-class CommonContext;
+class ViewContext;
 class Renderer;
 class ScrollProvider;
 
@@ -21,7 +21,7 @@ private:
     void DestroyChildViews(vector<View*>& childViews) const;
 
 protected:
-    CommonContext* Context;
+    ViewContext* Context;
     ScaleProvider* ScaleProvider;
     ScrollProvider* ScrollProvider;
     RenderingProvider* RenderingProvider;
@@ -52,7 +52,7 @@ protected:
     void AssertViewNotInitialized() const;
 
 public:
-    View(CommonContext* context);
+    View(ViewContext* context);
     ~View() override;
 
     LayoutDescriptor GetLayout() const;

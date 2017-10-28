@@ -13,7 +13,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogControl(CommonContext* context, View* parentView);
+    ConfirmDialogControl(ViewContext* context, View* parentView);
     ~ConfirmDialogControl() override;
 
     void SetSize(Size size);

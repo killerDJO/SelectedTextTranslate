@@ -2,8 +2,8 @@
 #include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
 #include "Presentation\Framework\Rendering\Dto\RenderPosition.h"
 
-DictionaryView::DictionaryView(CommonContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
-    : ComponentView(context, parentWindow, modelHolder)
+DictionaryView::DictionaryView(ViewContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder, IComponent* component)
+    : ChildComponentView(context, parentWindow, modelHolder, component)
 {
     Name = L"DictionaryWindow";
     iconSize = ScaleProvider->Scale(16);

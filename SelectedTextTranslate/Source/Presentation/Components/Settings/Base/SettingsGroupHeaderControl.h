@@ -23,7 +23,7 @@ protected:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    SettingsGroupHeaderControl(CommonContext* context, View* parentView);
+    SettingsGroupHeaderControl(ViewContext* context, View* parentView);
     ~SettingsGroupHeaderControl();
 
     SettingsGroupHeaderControl* SetDimensions(Point position, int width);

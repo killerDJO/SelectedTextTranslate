@@ -15,6 +15,7 @@
     <Image Include="Resources\SelectedTextTranslateDisabled.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Presentation\Framework\ViewContext.cpp" />
     <ClCompile Include="Source\ServiceRegistryCreator.cpp" />
     <ClCompile Include="Source\Presentation\Components\Main\MainViewModel.cpp" />
     <ClCompile Include="Source\Presentation\Components\Settings\SettingsComponent.cpp" />
@@ -117,7 +118,7 @@
     <ClInclude Include="Source\Presentation\Components\Translation\Header\HeaderComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Main\MainComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Dictionary\DictionaryComponent.h" />
-    <ClInclude Include="Source\Presentation\Framework\CommonContext.h" />
+    <ClInclude Include="Source\Presentation\Framework\ViewContext.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Objects\Brush.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Objects\Font.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Objects\Pen.h" />
@@ -137,7 +138,7 @@
     <ClInclude Include="Source\Presentation\Framework\Rendering\RenderingProvider.h" />
     <ClInclude Include="Source\Presentation\Framework\Components\Component.h" />
     <ClInclude Include="Source\Presentation\Framework\Components\IComponent.h" />
-    <ClInclude Include="Source\Presentation\Framework\Views\ComponentView.h" />
+    <ClInclude Include="Source\Presentation\Framework\Views\ChildComponentView.h" />
     <ClInclude Include="Source\Presentation\Providers\Dto\HotkeyInfo.h" />
     <ClInclude Include="Source\Presentation\Framework\ModelHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />

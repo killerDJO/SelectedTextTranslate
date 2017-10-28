@@ -1,7 +1,7 @@
 #include "Presentation\Components\Translation\Header\HeaderComponent.h"
 
 HeaderComponent::HeaderComponent(ServiceRegistry* serviceRegistry, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder)
-    : Component(new HeaderView(serviceRegistry->Get<CommonContext>(), parentView, modelHolder))
+    : Component(new HeaderView(serviceRegistry->Get<ViewContext>(), parentView, modelHolder, this))
 {
     this->textPlayer = serviceRegistry->Get<TextPlayer>();
     this->modelHolder = modelHolder;

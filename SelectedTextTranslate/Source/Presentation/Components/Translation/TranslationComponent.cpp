@@ -2,7 +2,7 @@
 #include "Presentation\Framework\ViewModelsStore.h"
 
 TranslationComponent::TranslationComponent(ServiceRegistry* serviceRegistry, View* parentView)
-    : Component(new TranslationView(serviceRegistry->Get<CommonContext>(), parentView, this))
+    : Component(new TranslationView(serviceRegistry->Get<ViewContext>(), parentView, this, this))
 {
     translationService = serviceRegistry->Get<TranslationService>();
     viewModelsStore = serviceRegistry->Get<ViewModelsStore>();

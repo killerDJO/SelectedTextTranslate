@@ -7,7 +7,7 @@
 #include "Presentation\Framework\Providers\ScrollProvider.h"
 #include "Presentation\MessageBus.h"
 
-MainView::MainView(CommonContext* context, ModelHolder<MainViewModel*>* modelHolder)
+MainView::MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder)
     : View(context)
 {
     this->ClassName = L"STT_MAIN";
@@ -46,7 +46,7 @@ void MainView::Initialize()
     Minimize();
 
     Context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainView::Minimize, this));
-    Context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
+    Context->GetMessageBus()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
 void MainView::SetLayout(LayoutDescriptor layout)

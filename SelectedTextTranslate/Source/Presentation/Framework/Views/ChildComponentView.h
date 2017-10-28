@@ -4,8 +4,11 @@
 #include "Presentation\Framework\Views\ChildView.h"
 
 template <class TModel>
-class ComponentView : public ChildView
+class ChildComponentView : public ChildView
 {
+private:
+    IComponent* component;
+
 protected:
     int PaddingX;
     int PaddingY;
@@ -28,18 +31,19 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ComponentView(CommonContext* context, View* parentView, ModelHolder<TModel>* modelHolder);
-    ~ComponentView() override;
+    ChildComponentView(ViewContext* context, View* parentView, ModelHolder<TModel>* modelHolder, IComponent* component);
+    ~ChildComponentView() override;
 
     void Render(bool preserveScrolls = false) override;
     virtual void SetLayout(::LayoutDescriptor layoutDescriptor);
 };
 
 template <class TModel>
-ComponentView<TModel>::ComponentView(CommonContext* context, View* parentView, ModelHolder<TModel>* modelHolder)
+ChildComponentView<TModel>::ChildComponentView(ViewContext* context, View* parentView, ModelHolder<TModel>* modelHolder, IComponent* component)
     : ChildView(context, parentView)
 {
     CurrentModelHolder = modelHolder;
+    this->component = component;
 
     LineHeight = ScaleProvider->Scale(20);
     PaddingX = ScaleProvider->Scale(15);
@@ -59,7 +63,7 @@ ComponentView<TModel>::ComponentView(CommonContext* context, View* parentView, M
 }
 
 template <class TModel>
-void ComponentView<TModel>::Render(bool preserveScrolls)
+void ChildComponentView<TModel>::Render(bool preserveScrolls)
 {
     bool isStretchWindow = Layout.GetOverflowX() == OverflowModes::Stretch || Layout.GetOverflowY() == OverflowModes::Stretch;
     if (isStretchWindow && !RenderingContext->IsRenderingInProgress())
@@ -73,34 +77,35 @@ void ComponentView<TModel>::Render(bool preserveScrolls)
 }
 
 template <class TModel>
-void ComponentView<TModel>::SetLayout(::LayoutDescriptor layoutDescriptor)
+void ChildComponentView<TModel>::SetLayout(LayoutDescriptor layoutDescriptor)
 {
     AssertViewNotInitialized();
     this->Layout = layoutDescriptor;
 }
 
 template <class TModel>
-TModel ComponentView<TModel>::GetModel() const
+TModel ChildComponentView<TModel>::GetModel() const
 {
     AssertViewInitialized();
     return CurrentModelHolder->GetModel();
 }
 
 template <class TModel>
-Size ComponentView<TModel>::RenderContent(Renderer* renderer, TModel model)
+Size ChildComponentView<TModel>::RenderContent(Renderer* renderer, TModel model)
 {
     return this->RenderContent(renderer);
 }
 
 template <class TModel>
-Size ComponentView<TModel>::RenderContent(Renderer* renderer)
+Size ChildComponentView<TModel>::RenderContent(Renderer* renderer)
 {
     return RenderContent(renderer, GetModel());
 }
 
 template <class TModel>
-ComponentView<TModel>::~ComponentView()
+ChildComponentView<TModel>::~ChildComponentView()
 {
+    delete component;
     delete FontNormal;
     delete FontHeader;
     delete FontItalic;

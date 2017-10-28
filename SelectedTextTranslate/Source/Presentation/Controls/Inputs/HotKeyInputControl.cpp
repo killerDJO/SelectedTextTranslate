@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Presentation\MessageBus.h"
 
-HotKeyInputControl::HotKeyInputControl(CommonContext* context, View* parentWindow)
+HotKeyInputControl::HotKeyInputControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
     this->ClassName = HOTKEY_CLASS;
@@ -172,7 +172,7 @@ LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
         RenderToBuffer();
         ShowCustomCaret();
         InvalidateRect(Handle, nullptr, TRUE);
-        Context->Get<MessageBus>()->OnSuspendHotkeys.Notify();
+        Context->GetMessageBus()->OnSuspendHotkeys.Notify();
         return TRUE;
     }
 
@@ -182,7 +182,7 @@ LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
         RenderToBuffer();
         AssertCriticalWinApiResult(HideCaret(Handle));
         InvalidateRect(Handle, nullptr, TRUE);
-        Context->Get<MessageBus>()->OnEnableHotkeys.Notify();
+        Context->GetMessageBus()->OnEnableHotkeys.Notify();
         return TRUE;
     }
 
@@ -290,6 +290,6 @@ void HotKeyInputControl::RenderBorder(Renderer* renderer) const
 
 HotKeyInputControl::~HotKeyInputControl()
 {
-    Context->Get<MessageBus>()->OnEnableHotkeys.Notify();
+    Context->GetMessageBus()->OnEnableHotkeys.Notify();
     delete defaultFont;
 }

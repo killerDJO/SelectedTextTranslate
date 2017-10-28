@@ -5,8 +5,8 @@
 #include "Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h"
 #include "Presentation\MessageBus.h"
 
-SettingsView::SettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder)
-    : ComponentView(context, parentView, modelHolder)
+SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder, IComponent* component)
+    : ChildComponentView(context, parentView, modelHolder, component)
 {
     this->saveButton = nullptr;
     this->cancelButton = nullptr;
@@ -18,6 +18,7 @@ SettingsView::SettingsView(CommonContext* context, View* parentView, ModelHolder
 Size SettingsView::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
+    settingsGroups.clear();
 
     RenderPosition renderPosition = RenderPosition(PaddingX, PaddingY);
 

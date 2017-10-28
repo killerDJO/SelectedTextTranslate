@@ -2,7 +2,7 @@
 #include "Presentation\MessageBus.h"
 
 SettingsComponent::SettingsComponent(ServiceRegistry* serviceRegistry, View* parentView)
-    : Component<SettingsView>(new SettingsView(serviceRegistry->Get<CommonContext>(), parentView, this))
+    : Component<SettingsView>(new SettingsView(serviceRegistry->Get<ViewContext>(), parentView, this, this))
 {
     settingsProvider = serviceRegistry->Get<SettingsProvider>();
     viewModelsStore = serviceRegistry->Get<ViewModelsStore>();

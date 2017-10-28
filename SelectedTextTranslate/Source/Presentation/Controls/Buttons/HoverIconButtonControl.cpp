@@ -5,7 +5,7 @@
 
 map<tuple<DWORD, int, int>, HDC> HoverIconButtonControl::iconsCache = map<tuple<DWORD, int, int>, HDC>();
 
-HoverIconButtonControl::HoverIconButtonControl(CommonContext* context, View* parentWindow)
+HoverIconButtonControl::HoverIconButtonControl(ViewContext* context, View* parentWindow)
     : HoverButtonControl(context, parentWindow)
 {
     hoverIconResource = 0;

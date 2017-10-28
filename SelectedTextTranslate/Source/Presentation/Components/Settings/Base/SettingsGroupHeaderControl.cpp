@@ -1,7 +1,7 @@
 #include "Presentation\Components\Settings\Base\SettingsGroupHeaderControl.h"
 #include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
 
-SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, View* parentWindow)
+SettingsGroupHeaderControl::SettingsGroupHeaderControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
     this->contentState = SettingsGroupContentState::Default;

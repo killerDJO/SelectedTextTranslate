@@ -1,11 +1,11 @@
 #pragma once
 #include "Presentation\Framework\Rendering\Dto\RenderDescriptor.h"
 #include "Presentation\Components\Settings\Base\SettingsGroupHeaderControl.h"
-#include "Presentation\Framework\Views\ComponentView.h"
+#include "Presentation\Framework\Views\ChildComponentView.h"
 #include "Presentation\Components\Settings\Base\SettingsGroupViewModel.h"
 
 template<typename TSettings>
-class SettingsGroupView : public ComponentView<SettingsGroupViewModel<TSettings>*>
+class SettingsGroupView : public ChildComponentView<SettingsGroupViewModel<TSettings>*>
 {
 private:
     int borderWidth;
@@ -16,7 +16,7 @@ protected:
     virtual void RenderSettingsContent(RenderDescriptor renderDescriptor, TSettings* settings) = 0;
 
 public:
-    SettingsGroupView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
+    SettingsGroupView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder, IComponent* component);
 
     void UpdateHeader();
 
@@ -25,8 +25,8 @@ public:
 };
 
 template <typename TSettings>
-SettingsGroupView<TSettings>::SettingsGroupView(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
-    : ComponentView<SettingsGroupViewModel<TSettings>*>(context, parentView, modelHolder)
+SettingsGroupView<TSettings>::SettingsGroupView(ViewContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder, IComponent* component)
+    : ChildComponentView<SettingsGroupViewModel<TSettings>*>(context, parentView, modelHolder, component)
 {
     this->PaddingX = this->PaddingY = this->ScaleProvider->Scale(5);
     this->borderWidth = this->ScaleProvider->Scale(1);

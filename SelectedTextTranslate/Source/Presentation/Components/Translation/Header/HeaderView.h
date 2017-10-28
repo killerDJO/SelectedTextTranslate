@@ -3,10 +3,10 @@
 #include "Utilities\Subscribeable.h"
 #include "Presentation\Framework\Rendering\Dto\RenderDescriptor.h"
 #include "Presentation\Framework\ModelHolder.h"
-#include "Presentation\Framework\Views\ComponentView.h"
+#include "Presentation\Framework\Views\ChildComponentView.h"
 #include "Presentation\Components\Translation\TranslationViewModel.h"
 
-class HeaderView : public ComponentView<TranslationViewModel*>
+class HeaderView : public ChildComponentView<TranslationViewModel*>
 {
 private:
     void PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput);
@@ -20,7 +20,7 @@ protected:
     Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
-    HeaderView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder);
+    HeaderView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);
 
     Subscribeable<> OnPlayText;
     Subscribeable<> OnForceTranslation;

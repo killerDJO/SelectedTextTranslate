@@ -3,12 +3,12 @@
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 #include "Presentation\Components\Settings\Base\SettingsGroupView.h"
 #include "Presentation\Framework\ModelHolder.h"
-#include "Presentation\Framework\Views\ComponentView.h"
+#include "Presentation\Framework\Views\ChildComponentView.h"
 #include "Presentation\Components\Settings\Base\SettingsGroupComponent.h"
 #include "Presentation\Framework\Rendering\Dto\RenderResult.h"
 #include "Presentation\Components\Settings\SettingsViewModel.h"
 
-class SettingsView : public ComponentView<SettingsViewModel*>
+class SettingsView : public ChildComponentView<SettingsViewModel*>
 {
 private:
     HoverFlatButtonControl* saveButton;
@@ -34,7 +34,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    SettingsView(CommonContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder);
+    SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder, IComponent* component);
 
     Subscribeable<> OnSaveSettings;
     Subscribeable<> OnResetSettings;

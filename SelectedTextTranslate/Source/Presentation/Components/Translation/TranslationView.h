@@ -3,7 +3,7 @@
 #include "Presentation\Components\Translation\TranslationViewModel.h"
 #include "Presentation\Components\Translation\Content\TranslateResultComponent.h"
 
-class TranslationView : public ComponentView<TranslationViewModel*>
+class TranslationView : public ChildComponentView<TranslationViewModel*>
 {
 private:
     int headerHeight;
@@ -18,7 +18,7 @@ protected:
     Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
-    TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder);
+    TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);
 
     void Initialize() override;
     void Resize() override;

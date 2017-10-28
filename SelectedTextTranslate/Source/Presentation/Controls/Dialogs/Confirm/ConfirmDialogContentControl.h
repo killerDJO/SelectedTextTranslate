@@ -24,7 +24,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    ConfirmDialogContentControl(CommonContext* context, View* parentWindow);
+    ConfirmDialogContentControl(ViewContext* context, View* parentWindow);
     ~ConfirmDialogContentControl();
 
     void SetDimensions(Point position, int width);

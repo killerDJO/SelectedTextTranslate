@@ -11,7 +11,7 @@ protected:
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-    ChildView(CommonContext* context, View* parentView);
+    ChildView(ViewContext* context, View* parentView);
 
     void Initialize() override;
 

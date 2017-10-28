@@ -18,7 +18,7 @@ protected:
     void RenderStatesDeviceContexts() override;
 
 public:
-    HoverTextButtonControl(CommonContext* context, View* parentWindow);
+    HoverTextButtonControl(ViewContext* context, View* parentWindow);
     ~HoverTextButtonControl();
 
     void SetPosition(Point position);

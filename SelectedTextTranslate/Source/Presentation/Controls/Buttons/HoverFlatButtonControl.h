@@ -18,7 +18,7 @@ protected:
     void RenderStatesDeviceContexts() override;
 
 public:
-    HoverFlatButtonControl(CommonContext* context, View* parentWindow);
+    HoverFlatButtonControl(ViewContext* context, View* parentWindow);
     ~HoverFlatButtonControl();
 
     void Initialize() override;

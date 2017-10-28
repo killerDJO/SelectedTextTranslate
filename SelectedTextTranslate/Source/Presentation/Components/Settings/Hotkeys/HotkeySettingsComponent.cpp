@@ -3,7 +3,7 @@
 #include "Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h"
 
 HotkeySettingsComponent::HotkeySettingsComponent(ServiceRegistry* serviceRegistry, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
-    : SettingsGroupComponent<HotkeySettings, HotkeySettingsView>(new HotkeySettingsView(serviceRegistry->Get<CommonContext>(), parentView, modelHolder), modelHolder)
+    : SettingsGroupComponent<HotkeySettings, HotkeySettingsView>(new HotkeySettingsView(serviceRegistry->Get<ViewContext>(), parentView, modelHolder, this), modelHolder)
 {
 }
 

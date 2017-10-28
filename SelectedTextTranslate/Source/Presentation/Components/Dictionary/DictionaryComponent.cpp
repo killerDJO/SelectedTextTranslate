@@ -3,7 +3,7 @@
 #include "BusinessLogic\Dictionary\DictionaryService.h"
 
 DictionaryComponent::DictionaryComponent(ServiceRegistry* serviceRegistry, View* parentView)
-    : Component(new DictionaryView(serviceRegistry->Get<CommonContext>(), parentView, this))
+    : Component(new DictionaryView(serviceRegistry->Get<ViewContext>(), parentView, this, this))
 {
     dictionaryService = serviceRegistry->Get<DictionaryService>();
     CurrentView->OnShowTranslation.Subscribe(bind(&DictionaryComponent::ProcessShowTranslation, this, placeholders::_1));

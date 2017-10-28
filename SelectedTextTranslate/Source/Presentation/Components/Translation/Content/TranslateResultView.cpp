@@ -1,8 +1,8 @@
 ﻿#include "Presentation\Components\Translation\Content\TranslateResultView.h"
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
-TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder)
-    : ComponentView(context, parentView, modelHolder)
+TranslateResultView::TranslateResultView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component)
+    : ChildComponentView(context, parentView, modelHolder, component)
 {
     this->Name = L"TranslateResultWindow";
 }

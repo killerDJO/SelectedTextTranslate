@@ -1,7 +1,7 @@
 #include "Presentation\Controls\Buttons\Base\HoverButtonControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-HoverButtonControl::HoverButtonControl(CommonContext* context, View* parentWindow)
+HoverButtonControl::HoverButtonControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
     this->OnClick = Subscribeable<>();

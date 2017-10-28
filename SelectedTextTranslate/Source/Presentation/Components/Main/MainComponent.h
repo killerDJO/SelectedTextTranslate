@@ -14,6 +14,8 @@ private:
     TextPlayer* textPlayer;
     TranslationService* translationService;
     ViewModelsStore* viewModelsStore;
+    ScaleProvider* scaleProvider;
+    ViewContext* commonContext;
 
     void ProcessHotkey(int hotkey) const;
     void ProcessVisibilityChange(bool isVisible);
@@ -24,6 +26,7 @@ private:
 
 public:
     MainComponent(ServiceRegistry* serviceRegistry);
+    ~MainComponent() override;
 
     void SetLayout(LayoutDescriptor layout) override;
     MainViewModel* GetModel() override;

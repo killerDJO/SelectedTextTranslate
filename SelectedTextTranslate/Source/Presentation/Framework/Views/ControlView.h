@@ -4,5 +4,5 @@
 class ControlView : public ChildView
 {
 public:
-    ControlView(CommonContext* context, View* parentView);
+    ControlView(ViewContext* context, View* parentView);
 };

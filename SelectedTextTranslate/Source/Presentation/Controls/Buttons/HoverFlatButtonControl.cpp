@@ -1,6 +1,6 @@
 #include "Presentation\Controls\Buttons\HoverFlatButtonControl.h"
 
-HoverFlatButtonControl::HoverFlatButtonControl(CommonContext* context, View* parentWindow)
+HoverFlatButtonControl::HoverFlatButtonControl(ViewContext* context, View* parentWindow)
     : HoverButtonControl(context, parentWindow)
 {
     this->defaultFont = RenderingProvider->CreateCustomFont(FontSizes::Normal);

@@ -3,7 +3,7 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-View::View(CommonContext* context)
+View::View(ViewContext* context)
     : NativeWindowHolder()
 {
     if(context == nullptr)
@@ -12,11 +12,11 @@ View::View(CommonContext* context)
     }
 
     Context = context;
-    ScaleProvider = context->Get<::ScaleProvider>();
-    ScrollProvider = context->Get<::ScrollProvider>();
-    RenderingProvider = context->Get<::RenderingProvider>();
-    RenderingContext = context->Get<::RenderingContext>();
-    DeviceContextProvider = context->Get<::DeviceContextProvider>();
+    ScaleProvider = context->GetScaleProvider();
+    ScrollProvider = context->GetScrollProvider();
+    RenderingProvider = context->GetRenderingProvider();
+    RenderingContext = context->GetRenderingContext();
+    DeviceContextProvider = context->GetDeviceContextProvider();
 
     Layout = LayoutDescriptor();
     State = ViewStateDescriptor();
@@ -334,7 +334,7 @@ LRESULT View::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     }
     catch (const SelectedTextTranslateException& error)
     {
-        ExceptionHelper::HandleNonFatalException(Context->Get<Logger>(), Context->GetErrorHandler(), L"Error occurred.", error);
+        ExceptionHelper::HandleNonFatalException(Context->GetLogger(), Context->GetErrorHandler(), L"Error occurred.", error);
     }
     catch (...)
     {

@@ -1,7 +1,7 @@
 #include "Presentation\Components\Translation\TranslationView.h"
 
-TranslationView::TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder)
-    : ComponentView(context, parentView, modelHolder)
+TranslationView::TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component)
+    : ChildComponentView(context, parentView, modelHolder, component)
 {
     headerHeight = ScaleProvider->Scale(50);
     separatorHeight = ScaleProvider->Scale(1);
@@ -14,7 +14,7 @@ TranslationView::TranslationView(CommonContext* context, View* parentView, Model
 
 void TranslationView::Initialize()
 {
-    ComponentView::Initialize();
+    ChildComponentView::Initialize();
 
     LayoutDescriptor headerWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),

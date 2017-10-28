@@ -34,7 +34,7 @@ protected:
     Size RenderContent(Renderer* renderer) override;
 
 public:
-    MainView(CommonContext* context, ModelHolder<MainViewModel*>* modelHolder);
+    MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder);
 
     void Initialize() override;
     void SetLayout(::LayoutDescriptor layout);

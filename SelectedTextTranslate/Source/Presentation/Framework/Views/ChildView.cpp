@@ -3,16 +3,16 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
 
-ChildView::ChildView(CommonContext* context, View* parentView)
+ChildView::ChildView(ViewContext* context, View* parentView)
     : View(context)
 {
-    if(parentView == nullptr)
+    if (parentView == nullptr)
     {
-        throw SelectedTextTranslateFatalException(L"Parent window must be provided.");
+        throw SelectedTextTranslateFatalException(L"Parent view must be provided.");
     }
 
-    this->ParentView = parentView;
-    this->IsLayered = false;
+    ParentView = parentView;
+    IsLayered = false;
 
     parentView->AddChildView(this);
 }
@@ -40,7 +40,7 @@ void ChildView::Initialize()
 
     SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
 
-    if(IsLayered)
+    if (IsLayered)
     {
         SetWindowLongPtr(Handle, GWL_EXSTYLE, GetWindowLongPtr(Handle, GWL_EXSTYLE) | WS_EX_LAYERED);
         AssertCriticalWinApiResult(SetLayeredWindowAttributes(Handle, 0, 255, LWA_ALPHA));

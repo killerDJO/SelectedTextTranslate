@@ -3,7 +3,7 @@
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogContentControl.h"
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayControl.h"
 
-ConfirmDialogControl::ConfirmDialogControl(CommonContext* context, View* parentView)
+ConfirmDialogControl::ConfirmDialogControl(ViewContext* context, View* parentView)
     : ControlView(context, parentView)
 {
     this->ClassName = L"STT_CONFIRM_DIALOG";

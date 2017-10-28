@@ -13,7 +13,7 @@
 #include "Presentation\Framework\Providers\ScaleProvider.h"
 #include "Presentation\Framework\Providers\DeviceContextProvider.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
-#include "Presentation\Framework\CommonContext.h"
+#include "Presentation\Framework\ViewContext.h"
 #include "Presentation\Framework\ViewModelsStore.h"
 
 ServiceRegistry* ServiceRegistryCreator::GetServiceRegistry()
@@ -58,7 +58,7 @@ void ServiceRegistryCreator::RegisterPresentation(ServiceRegistry* applicationRe
     applicationRegistry->RegisterSingleton<ViewModelsStore>([](ServiceRegistry* registry) { return new ViewModelsStore(); });
     applicationRegistry->RegisterSingleton<MessageBus>([](ServiceRegistry* registry) { return new MessageBus(); });
     applicationRegistry->RegisterSingleton<TrayIcon>([](ServiceRegistry* registry) { return new TrayIcon(registry); });
-    applicationRegistry->RegisterSingleton<CommonContext>([](ServiceRegistry* registry) { return new CommonContext(registry); });
+    applicationRegistry->RegisterSingleton<ViewContext>([](ServiceRegistry* registry) { return new ViewContext(registry); });
 
     applicationRegistry->RegisterSingleton<ScaleProvider>([](ServiceRegistry* registry) { return new ScaleProvider(); });
     applicationRegistry->RegisterSingleton<DeviceContextProvider>([](ServiceRegistry* registry) { return new DeviceContextProvider(); });

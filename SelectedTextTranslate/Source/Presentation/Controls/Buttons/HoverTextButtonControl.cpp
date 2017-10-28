@@ -1,6 +1,6 @@
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
-HoverTextButtonControl::HoverTextButtonControl(CommonContext* context, View* parentWindow)
+HoverTextButtonControl::HoverTextButtonControl(ViewContext* context, View* parentWindow)
     : HoverButtonControl(context, parentWindow)
 {
     defaultFont = RenderingProvider->CreateCustomFont(FontSizes::Normal);

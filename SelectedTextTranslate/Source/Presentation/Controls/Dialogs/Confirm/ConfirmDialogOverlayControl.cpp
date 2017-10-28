@@ -1,7 +1,7 @@
 #include "Presentation\Controls\Dialogs\Confirm\ConfirmDialogOverlayControl.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-ConfirmDialogOverlayControl::ConfirmDialogOverlayControl(CommonContext* context, View* parentWindow)
+ConfirmDialogOverlayControl::ConfirmDialogOverlayControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
     this->ClassName = L"STT_CONFIRM_DIALOG_OVERLAY";

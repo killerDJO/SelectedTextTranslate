@@ -1,9 +1,9 @@
 #pragma once
 #include "Utilities\Subscribeable.h"
 #include "BusinessLogic\Dictionary\Dto\DictionaryRecord.h"
-#include "Presentation\Framework\Views\ComponentView.h"
+#include "Presentation\Framework\Views\ChildComponentView.h"
 
-class DictionaryView : public ComponentView<vector<DictionaryRecord>>
+class DictionaryView : public ChildComponentView<vector<DictionaryRecord>>
 {
 private:
     int iconSize;
@@ -12,7 +12,7 @@ protected:
     Size RenderContent(Renderer* renderer, vector<DictionaryRecord> model) override;
 
 public:
-    DictionaryView(CommonContext* context, View* parentView, ModelHolder<vector<DictionaryRecord>>* modelHolder);
+    DictionaryView(ViewContext* context, View* parentView, ModelHolder<vector<DictionaryRecord>>* modelHolder, IComponent* component);
 
     Subscribeable<int> OnShowTranslation;
 };

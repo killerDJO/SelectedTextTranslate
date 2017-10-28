@@ -4,7 +4,7 @@
 #include "Presentation\Controls\Buttons\HoverFlatButtonControl.h"
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
-ConfirmDialogContentControl::ConfirmDialogContentControl(CommonContext* context, View* parentWindow)
+ConfirmDialogContentControl::ConfirmDialogContentControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
     this->ClassName = L"STT_CONFIRM_DIALOG_CONTENT";

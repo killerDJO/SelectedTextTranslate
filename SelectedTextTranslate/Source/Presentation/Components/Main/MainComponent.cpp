@@ -3,7 +3,7 @@
 #include "BusinessLogic\Translation\TextExtractor.h"
 
 MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
-    : Component(new MainView(serviceRegistry->Get<CommonContext>(), this))
+    : Component(new MainView(serviceRegistry->Get<ViewContext>(), this))
 {
     hotkeysRegistry = serviceRegistry->Get<HotkeysRegistry>();
     textExtractor = serviceRegistry->Get<TextExtractor>();
@@ -74,4 +74,9 @@ void MainComponent::ProcessVisibilityChange(bool isVisible)
         hotkeysRegistry->UnregisterZoomInHotkey(CurrentView->GetHandle());
         hotkeysRegistry->UnregisterZoomOutHotkey(CurrentView->GetHandle());
     }
+}
+
+MainComponent::~MainComponent()
+{
+    delete CurrentView;
 }

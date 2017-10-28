@@ -390,6 +390,9 @@
     <ClCompile Include="Source\ServiceRegistryCreator.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Presentation\Framework\ViewContext.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -598,9 +601,6 @@
     <ClInclude Include="Source\Presentation\Framework\Views\ChildView.h">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\Views\ComponentView.h">
-      <Filter>Source\Presentation\Framework\Views</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Presentation\MessageBus.h">
       <Filter>Source\Presentation</Filter>
     </ClInclude>
@@ -688,10 +688,13 @@
     </ClInclude>
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\Enums\InstantiationTypes.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\ServiceInfo.h" />
-    <ClInclude Include="Source\Presentation\Framework\CommonContext.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\IServiceInfo.h" />
     <ClInclude Include="Source\ServiceRegistryCreator.h" />
     <ClInclude Include="Source\Presentation\Framework\ViewModelsStore.h" />
+    <ClInclude Include="Source\Presentation\Framework\ViewContext.h" />
+    <ClInclude Include="Source\Presentation\Framework\Views\ChildComponentView.h">
+      <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

@@ -10,7 +10,6 @@ protected:
     LayoutDescriptor Layout;
 
     Component(TView* view);
-    ~Component() override;
 
 public:
     void SetLayout(LayoutDescriptor layout) override;
@@ -31,12 +30,6 @@ Component<TView>::Component(TView* view)
 {
     static_assert(is_base_of<View, TView>::value, "TView must inherit from View");
     CurrentView = view;
-}
-
-template <class TView>
-Component<TView>::~Component()
-{
-    delete CurrentView;
 }
 
 template <class TView>
