@@ -1,9 +1,9 @@
 #include "Presentation\Components\Translation\TranslationComponent.h"
 
-TranslationComponent::TranslationComponent(CommonContext* context, View* parentView)
-    : Component(context, new TranslationView(context, parentView, this))
+TranslationComponent::TranslationComponent(ServiceRegistry* serviceRegistry, View* parentView)
+    : Component( new TranslationView(serviceRegistry->Get<CommonContext>(), parentView, this))
 {
-    translationService = context->Get<TranslationService>();
+    translationService = serviceRegistry->Get<TranslationService>();
     CurrentView->OnForceTranslation.Subscribe(bind(&TranslationComponent::ForceTranslation, this));
     CurrentView->OnTranslateSuggestion.Subscribe(bind(&TranslationComponent::TranslateSuggestion, this));
     translationViewModel = nullptr;

@@ -1,11 +1,11 @@
 #include "BusinessLogic\Translation\TextPlayer.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TextPlayer::TextPlayer(CompositionRoot* root, ErrorHandler* errorHandler)
+TextPlayer::TextPlayer(ServiceRegistry* registry, ErrorHandler* errorHandler)
 {
-    this->translationService = root->GetService<TranslationService>();
-    this->requestProvider = root->GetService<RequestProvider>();
-    this->logger = root->GetService<Logger>();
+    this->translationService = registry->Get<TranslationService>();
+    this->requestProvider = registry->Get<RequestProvider>();
+    this->logger = registry->Get<Logger>();
     this->errorHandler = errorHandler;
 }
 

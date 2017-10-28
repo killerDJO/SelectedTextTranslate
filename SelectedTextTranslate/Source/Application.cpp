@@ -8,13 +8,14 @@
 #include "Presentation\Framework\Providers\DeviceContextProvider.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
 #include "Presentation\Framework\Rendering\RenderingContext.h"
-#include "Infrastructure\CompositionRoot.h"
+#include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 #include "Presentation\MessageBus.h"
 #include "Presentation\Providers\HotkeysRegistry.h"
 #include "Presentation\Providers\TrayIcon.h"
 #include "BusinessLogic\Translation\TextExtractor.h"
 #include "BusinessLogic\Translation\TextPlayer.h"
 #include "Presentation\Components\Main\MainComponent.h"
+#include "ApplicationServiceRegistry.h"
 
 Application::Application()
 {
@@ -32,22 +33,23 @@ int Application::Run(HINSTANCE hInstance) const
     ULONG_PTR gdiplusToken;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
-    Logger* logger = new Logger();
+    ServiceRegistry* serviceRegistry = ApplicationServiceRegistry::GetServiceRegistry();
+    Logger* logger = serviceRegistry->Get<Logger>();
+
     logger->Log(LogLevels::Trace, L"Application start.");
 
     int result;
     try
     {
         ExceptionHelper::SetupStructuredExceptionsTranslation();
-        result = BootstrapApplication(logger, hInstance);
+        result = BootstrapApplication(serviceRegistry);
+        delete serviceRegistry;
     }
     catch (...)
     {
         ExceptionHelper::TerminateOnException(logger);
         return -1;
     }
-
-    delete logger;
 
     ReleaseMutex(mutex);
     CloseHandle(mutex);
@@ -57,39 +59,17 @@ int Application::Run(HINSTANCE hInstance) const
     return result;
 }
 
-int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
+int Application::BootstrapApplication(ServiceRegistry* serviceRegistry) const
 {
-    CompositionRoot* root = new CompositionRoot();
-    root->RegisterService(logger);
-    root->RegisterService(new SettingsProvider(root));
-    
-    Settings settings = root->GetService<SettingsProvider>()->GetSettings();
-    root->RegisterService(new MessageBus());
-    root->RegisterService(new HotkeysRegistry(settings.GetHotkeySettings(), root));
-    root->RegisterService(new TrayIcon(root, hInstance));
+    Logger* logger = serviceRegistry->Get<Logger>();
+    MainComponent mainComponent = MainComponent(serviceRegistry);
+    mainComponent.SetLayout(GetMainComponentLayout(serviceRegistry->Get<ScaleProvider>()));
 
-    root->RegisterService(new SqliteProvider());
-    root->RegisterService(new DictionaryService(root));
-    root->RegisterService(new TextExtractor());
-    root->RegisterService(new RequestProvider(root));
-    root->RegisterService(new TranslatePageParser(root));
-    root->RegisterService(new TranslationService(root));
-    root->RegisterService(new TextPlayer(root, root->GetService<TrayIcon>()));
-    root->RegisterService(new ScaleProvider());
-    root->RegisterService(new DeviceContextProvider());
-    root->RegisterService(new ScrollProvider());
-    root->RegisterService(new RenderingProvider(root));
-    root->RegisterService(new RenderingContext(root));
-
-    CommonContext viewContext = CommonContext(hInstance, root, root->GetService<TrayIcon>());
-
-    MainComponent mainComponent = MainComponent(&viewContext);
-    mainComponent.SetLayout(GetMainWindowDescriptor(root->GetService<ScaleProvider>()));
-
-    root->GetService<TrayIcon>()->Initialize();
+    serviceRegistry->Get<TrayIcon>()->Initialize();
     mainComponent.Initialize();
 
-    root->GetService<MessageBus>()->OnExit.Subscribe(bind(&Application::Exit, this));
+    serviceRegistry->Get<MessageBus>()->OnExit.Subscribe(bind(&Application::Exit, this));
+
     logger->Log(LogLevels::Trace, L"Application initialized.");
 
     MSG msg;
@@ -99,7 +79,6 @@ int Application::BootstrapApplication(Logger* logger, HINSTANCE hInstance) const
         DispatchMessage(&msg);
     }
 
-    delete root;
     logger->Log(LogLevels::Trace, L"Application shutdown.");
 
     return msg.wParam;
@@ -110,7 +89,7 @@ void Application::Exit() const
     PostQuitMessage(0);
 }
 
-LayoutDescriptor Application::GetMainWindowDescriptor(ScaleProvider* scaleProvider) const
+LayoutDescriptor Application::GetMainComponentLayout(ScaleProvider* scaleProvider) const
 {
     int padding = 5;
 

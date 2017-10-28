@@ -51,7 +51,7 @@ private:
     void SetEnabledState();
 
 public:
-    TrayIcon(CompositionRoot* root, HINSTANCE instance);
+    TrayIcon(ServiceRegistry* registry);
     ~TrayIcon() override;
 
     void Initialize() override;

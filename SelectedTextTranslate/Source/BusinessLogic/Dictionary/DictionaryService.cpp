@@ -3,10 +3,10 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Utilities\StringUtilities.h"
 
-DictionaryService::DictionaryService(CompositionRoot* root)
+DictionaryService::DictionaryService(ServiceRegistry* registry)
 {
-    this->logger = root->GetService<Logger>();
-    this->sqliteProvider = root->GetService<SqliteProvider>();
+    this->logger = registry->Get<Logger>();
+    this->sqliteProvider = registry->Get<SqliteProvider>();
 
     this->database = sqliteProvider->OpenDatabase(L"dictionary.db");
 

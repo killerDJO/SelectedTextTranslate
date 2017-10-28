@@ -16,7 +16,7 @@ private:
     View* renderingRoot;
 
 public:
-    RenderingContext(CompositionRoot* root);
+    RenderingContext(ServiceRegistry* registry);
 
     Renderer* GetRenderer() const;
     void ReleaseRenderer(Renderer* renderer) const;

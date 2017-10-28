@@ -36,7 +36,7 @@ void MainView::Initialize()
         Layout.GetSize().GetHeight(),
         nullptr,
         nullptr,
-        Context->GetInstance(),
+        Instance,
         nullptr);
     AssertCriticalWinApiResult(Handle);
     SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
@@ -49,7 +49,7 @@ void MainView::Initialize()
     Context->Get<MessageBus>()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
 }
 
-void MainView::SetLayout(::LayoutDescriptor layout)
+void MainView::SetLayout(LayoutDescriptor layout)
 {
     Layout = layout;
 }
@@ -67,10 +67,10 @@ void MainView::CreateChildComponents()
 {
     DestroyChildViews();
 
-    translationComponent = new TranslationComponent(Context, this);
+    translationComponent = new TranslationComponent(Context->GetServiceRegistry(), this);
     InitializeComponent(translationComponent, ApplicationViews::TranslateResult);
 
-    dictionaryComponent = new DictionaryComponent(Context, this);
+    dictionaryComponent = new DictionaryComponent(Context->GetServiceRegistry(), this);
     dictionaryComponent->OnShowTranslation.Subscribe([this](wstring input)
     {
         translationComponent->Translate(input, false);
@@ -79,7 +79,7 @@ void MainView::CreateChildComponents()
     });
     InitializeComponent(dictionaryComponent, ApplicationViews::Dictionary);
 
-    settingsComponent = new SettingsComponent(Context, this);
+    settingsComponent = new SettingsComponent(Context->GetServiceRegistry(), this);
     InitializeComponent(settingsComponent, ApplicationViews::Settings);
 
     confirmDialog = new ConfirmDialogControl(Context, this);
@@ -90,7 +90,7 @@ void MainView::CreateChildComponents()
 
 void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
 {
-    ::LayoutDescriptor initialLayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    LayoutDescriptor initialLayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
         GetModel()->GetLayoutDescriptor(view).GetSize(),
         OverflowModes::Stretch,
@@ -103,10 +103,10 @@ void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
-    windowClass->hIcon = LoadIcon(Context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIcon = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIcon);
 
-    windowClass->hIconSm = LoadIcon(Context->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIconSm = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIconSm);
 
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);

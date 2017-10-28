@@ -1,48 +1,39 @@
 #pragma once
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
-#include "Infrastructure\CompositionRoot.h"
-
-class ScrollProvider;
-class RenderingContext;
+#include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 
 class CommonContext
 {
-    HINSTANCE hInstance;
-    ErrorHandler* errorHandler;
-    CompositionRoot* compositionRoot;
+private:
+    ServiceRegistry* serviceRegistry;
 
 public:
-    CommonContext(
-        HINSTANCE hInstance,
-        CompositionRoot* compositionRoot,
-        ErrorHandler* errorHandler);
+    CommonContext(ServiceRegistry* registry);
 
-    HINSTANCE GetInstance() const;
     ErrorHandler* GetErrorHandler() const;
+    ServiceRegistry* GetServiceRegistry() const;
 
     template <typename TService>
     TService* Get() const;
 };
 
-inline CommonContext::CommonContext(HINSTANCE hInstance, CompositionRoot* compositionRoot, ErrorHandler* errorHandler)
+inline CommonContext::CommonContext(ServiceRegistry* registry)
 {
-    this->hInstance = hInstance;
-    this->compositionRoot = compositionRoot;
-    this->errorHandler = errorHandler;
-}
-
-inline HINSTANCE CommonContext::GetInstance() const
-{
-    return hInstance;
+    this->serviceRegistry = registry;
 }
 
 inline ErrorHandler* CommonContext::GetErrorHandler() const
 {
-    return errorHandler;
+    return serviceRegistry->Get<ErrorHandler>();
+}
+
+inline ServiceRegistry* CommonContext::GetServiceRegistry() const
+{
+    return serviceRegistry;
 }
 
 template <typename TService>
 TService* CommonContext::Get() const
 {
-    return compositionRoot->GetService<TService>();
+    return serviceRegistry->Get<TService>();
 }

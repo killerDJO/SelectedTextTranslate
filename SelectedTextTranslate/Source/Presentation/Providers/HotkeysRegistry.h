@@ -1,7 +1,7 @@
 #pragma once
 #include "BusinessLogic\Settings\Dto\HotkeySettings.h"
 #include "Presentation\Providers\Dto\HotkeyInfo.h"
-#include "Infrastructure\CompositionRoot.h"
+#include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 
 class HotkeysRegistry
 {
@@ -20,7 +20,7 @@ private:
     void UpdateHotkeysInfo();
 
 public:
-    HotkeysRegistry(HotkeySettings settings, CompositionRoot* root);
+    HotkeysRegistry(ServiceRegistry* registry);
 
     void SetHotkeysSettings(HotkeySettings settings);
 

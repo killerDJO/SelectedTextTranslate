@@ -122,13 +122,13 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
 
 Gdiplus::Metafile* HoverIconButtonControl::LoadMetafileFromResource(DWORD resourceId) const
 {
-    HRSRC hResource = FindResource(Context->GetInstance(), MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    HRSRC hResource = FindResource(Instance, MAKEINTRESOURCE(resourceId), RT_RCDATA);
     AssertCriticalWinApiResult(hResource);
 
-    DWORD imageSize = SizeofResource(Context->GetInstance(), hResource);
+    DWORD imageSize = SizeofResource(Instance, hResource);
     AssertCriticalWinApiResult(imageSize);
 
-    void* pResourceData = LockResource(LoadResource(Context->GetInstance(), hResource));
+    void* pResourceData = LockResource(LoadResource(Instance, hResource));
     AssertCriticalWinApiResult(pResourceData);
 
     HGLOBAL globalBuffer = GlobalAlloc(GMEM_MOVEABLE, imageSize);

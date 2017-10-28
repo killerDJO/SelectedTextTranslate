@@ -2,31 +2,30 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
-#include "Presentation\Framework\Providers\ScrollProvider.h"
 
 View::View(CommonContext* context)
-    : NativeWindowHolder(context->GetInstance())
+    : NativeWindowHolder()
 {
     if(context == nullptr)
     {
         throw SelectedTextTranslateFatalException(L"View context must be provided.");
     }
 
-    this->Context = context;
-    this->ScaleProvider = context->Get<::ScaleProvider>();
-    this->ScrollProvider = context->Get<::ScrollProvider>();
-    this->RenderingProvider = context->Get<::RenderingProvider>();
-    this->RenderingContext = context->Get<::RenderingContext>();
-    this->DeviceContextProvider = context->Get<::DeviceContextProvider>();
+    Context = context;
+    ScaleProvider = context->Get<::ScaleProvider>();
+    ScrollProvider = context->Get<::ScrollProvider>();
+    RenderingProvider = context->Get<::RenderingProvider>();
+    RenderingContext = context->Get<::RenderingContext>();
+    DeviceContextProvider = context->Get<::DeviceContextProvider>();
 
-    this->Layout = ::LayoutDescriptor();
-    this->State = ::ViewStateDescriptor();
-    this->ActiveChildViews = vector<View*>();
-    this->destroyedChildViews = vector<View*>();
+    Layout = LayoutDescriptor();
+    State = ViewStateDescriptor();
+    ActiveChildViews = vector<View*>();
+    destroyedChildViews = vector<View*>();
 
-    this->ClassName = nullptr;
-    this->DeviceContextBuffer = nullptr;
-    this->Name = wstring();
+    ClassName = nullptr;
+    DeviceContextBuffer = nullptr;
+    Name = wstring();
 }
 
 void View::Initialize()

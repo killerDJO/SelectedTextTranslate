@@ -1,16 +1,17 @@
 #include "Presentation\Providers\HotkeysRegistry.h"
 #include "Presentation\MessageBus.h"
+#include "BusinessLogic\Settings\SettingsProvider.h"
 
-HotkeysRegistry::HotkeysRegistry(HotkeySettings settings, CompositionRoot* root)
+HotkeysRegistry::HotkeysRegistry(ServiceRegistry* registry)
 {
     this->hotkeysRegistry = vector<HotkeyInfo>();
     this->isSuspended = false;
     this->hotkeyIdToHotkeyMap = map<int, int>();
 
-    SetHotkeysSettings(settings);
+    SetHotkeysSettings(registry->Get<SettingsProvider>()->GetSettings().GetHotkeySettings());
 
-    root->GetService<MessageBus>()->OnSuspendHotkeys.Subscribe(bind(&HotkeysRegistry::SuspendHotkeys, this));
-    root->GetService<MessageBus>()->OnEnableHotkeys.Subscribe(bind(&HotkeysRegistry::EnableHotkeys, this));
+    registry->Get<MessageBus>()->OnSuspendHotkeys.Subscribe(bind(&HotkeysRegistry::SuspendHotkeys, this));
+    registry->Get<MessageBus>()->OnEnableHotkeys.Subscribe(bind(&HotkeysRegistry::EnableHotkeys, this));
 }
 
 void HotkeysRegistry::SetHotkeysSettings(HotkeySettings settings)

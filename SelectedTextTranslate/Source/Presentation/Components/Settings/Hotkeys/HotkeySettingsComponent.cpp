@@ -2,8 +2,8 @@
 #include "Presentation\Framework\Views\View.h"
 #include "Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h"
 
-HotkeySettingsComponent::HotkeySettingsComponent(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
-    : SettingsGroupComponent<HotkeySettings, HotkeySettingsView>(context, new HotkeySettingsView(context, parentView, modelHolder), modelHolder)
+HotkeySettingsComponent::HotkeySettingsComponent(ServiceRegistry* serviceRegistry, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder)
+    : SettingsGroupComponent<HotkeySettings, HotkeySettingsView>(new HotkeySettingsView(serviceRegistry->Get<CommonContext>(), parentView, modelHolder), modelHolder)
 {
 }
 

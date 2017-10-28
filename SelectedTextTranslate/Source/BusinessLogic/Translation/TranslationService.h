@@ -26,7 +26,7 @@ private:
     wstring SendTranslationRequest(wstring sentence, bool forceTranslation) const;
 
 public:
-    TranslationService(CompositionRoot* root);
+    TranslationService(ServiceRegistry* registry);
 
     TranslateResult TranslateSentence(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const;
     wstring GetHash(wstring sentence) const;

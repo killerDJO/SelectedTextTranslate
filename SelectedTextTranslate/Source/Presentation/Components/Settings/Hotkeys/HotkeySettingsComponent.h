@@ -7,7 +7,7 @@
 class HotkeySettingsComponent : public SettingsGroupComponent<HotkeySettings, HotkeySettingsView>
 {
 public:
-    HotkeySettingsComponent(CommonContext* context, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder);
+    HotkeySettingsComponent(ServiceRegistry* serviceRegistry, View* parentView, ModelHolder<SettingsGroupViewModel<HotkeySettings>*>* modelHolder);
 
     bool IsValid() override;
 };

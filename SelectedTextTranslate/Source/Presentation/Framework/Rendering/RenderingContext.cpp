@@ -1,9 +1,9 @@
 #include "Presentation\Framework\Rendering\RenderingContext.h"
 
-RenderingContext::RenderingContext(CompositionRoot* root)
+RenderingContext::RenderingContext(ServiceRegistry* registry)
 {
-    this->deviceContextProvider = root->GetService<DeviceContextProvider>();
-    this->renderingProvider = root->GetService<RenderingProvider>();
+    this->deviceContextProvider = registry->Get<DeviceContextProvider>();
+    this->renderingProvider = registry->Get<RenderingProvider>();
 
     this->renderingRoot = nullptr;
 }

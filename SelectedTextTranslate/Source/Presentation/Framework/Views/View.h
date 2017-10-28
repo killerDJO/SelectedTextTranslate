@@ -5,10 +5,12 @@
 #include "Presentation\Framework\Rendering\RenderingContext.h"
 #include "Presentation\Framework\Rendering\Renderer.h"
 #include "Presentation\Framework\NativeWindowHolder.h"
+#include "Presentation\Framework\Providers\ScrollProvider.h"
 #include "Presentation\Framework\CommonContext.h"
 
 class CommonContext;
 class Renderer;
+class ScrollProvider;
 
 class View : public NativeWindowHolder
 {
@@ -53,7 +55,7 @@ public:
     View(CommonContext* context);
     ~View() override;
 
-    ::LayoutDescriptor GetLayout() const;
+    LayoutDescriptor GetLayout() const;
 
     Size GetContentSize() const;
     Size GetSize() const;

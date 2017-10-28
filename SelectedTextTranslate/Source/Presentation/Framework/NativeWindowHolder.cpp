@@ -2,13 +2,13 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-NativeWindowHolder::NativeWindowHolder(HINSTANCE instance)
+NativeWindowHolder::NativeWindowHolder()
 {
-    this->Instance = instance;
-    this->BaseWindowProcedure = DefWindowProc;
+    Instance = GetModuleHandle(nullptr);
+    BaseWindowProcedure = DefWindowProc;
 
-    this->Handle = nullptr;
-    this->ClassName = nullptr;
+    Handle = nullptr;
+    ClassName = nullptr;
 }
 
 void NativeWindowHolder::Initialize()
@@ -46,14 +46,14 @@ HWND NativeWindowHolder::GetHandle() const
 
 LRESULT NativeWindowHolder::WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    NativeWindowHolder* instance = (NativeWindowHolder*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+    NativeWindowHolder* windowHolder = (NativeWindowHolder*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
-    if (instance == nullptr)
+    if (windowHolder == nullptr)
     {
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
-    return instance->ExecuteWindowProcedure(message, wParam, lParam);
+    return windowHolder->ExecuteWindowProcedure(message, wParam, lParam);
 }
 
 LRESULT NativeWindowHolder::CallBaseWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) const

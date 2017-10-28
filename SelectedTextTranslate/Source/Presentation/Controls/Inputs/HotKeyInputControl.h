@@ -1,5 +1,6 @@
 #pragma once
 #include "Presentation\Framework\Views\ControlView.h"
+#include "Utilities\Subscribeable.h"
 
 class HotKeyInputControl : public ControlView
 {

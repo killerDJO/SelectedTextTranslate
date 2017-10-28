@@ -8,6 +8,7 @@ private:
     Logger* logger;
 
 public:
+    virtual ~ErrorHandler() = default;
     ErrorHandler(Logger* logger);
 
     Subscribeable<> OnErrorShow;

@@ -2,12 +2,12 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-TrayIcon::TrayIcon(CompositionRoot* root, HINSTANCE instance)
-    : NativeWindowHolder(instance), ErrorHandler(logger)
+TrayIcon::TrayIcon(ServiceRegistry* registry)
+    : NativeWindowHolder(), ErrorHandler(logger)
 {
-    logger = root->GetService<Logger>();
-    hotkeysRegistry = root->GetService<HotkeysRegistry>();
-    messageBus = root->GetService<MessageBus>();
+    logger = registry->Get<Logger>();
+    hotkeysRegistry = registry->Get<HotkeysRegistry>();
+    messageBus = registry->Get<MessageBus>();
 
     ClassName = L"STT_TRAY";
     menu = nullptr;

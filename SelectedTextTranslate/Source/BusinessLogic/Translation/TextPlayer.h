@@ -22,7 +22,7 @@ private:
     static DWORD WINAPI Play(LPVOID arg);
 
 public:
-    TextPlayer(CompositionRoot* root, ErrorHandler* errorHandler);
+    TextPlayer(ServiceRegistry* registry, ErrorHandler* errorHandler);
 
     void PlayText(wstring text);
 };

@@ -2,13 +2,14 @@
 #include "Presentation\Providers\TrayIcon.h"
 #include "BusinessLogic\Translation\TextExtractor.h"
 
-MainComponent::MainComponent(CommonContext* context)
-    : Component(context, new MainView(context, this))
+MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
+    : Component(new MainView(serviceRegistry->Get<CommonContext>(), this))
 {
-    hotkeysRegistry = context->Get<HotkeysRegistry>();
-    textExtractor = context->Get<TextExtractor>();
-    textPlayer = context->Get<TextPlayer>();
-    messageBus = context->Get<MessageBus>();
+    hotkeysRegistry = serviceRegistry->Get<HotkeysRegistry>();
+    textExtractor = serviceRegistry->Get<TextExtractor>();
+    textPlayer = serviceRegistry->Get<TextPlayer>();
+    messageBus = serviceRegistry->Get<MessageBus>();
+    translationService = serviceRegistry->Get<TranslationService>();
 
     messageBus->OnPlaySelectedText.Subscribe(bind(&MainComponent::PlaySelectedText, this));
     messageBus->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary));
@@ -33,7 +34,7 @@ MainViewModel* MainComponent::GetModel()
 void MainComponent::PlaySelectedText() const
 {
     wstring selectedText = textExtractor->GetSelectedText();
-    TranslateResult translateResult = Context->Get<TranslationService>()->TranslateSentence(selectedText, false, false);
+    TranslateResult translateResult = translationService->TranslateSentence(selectedText, false, false);
     textPlayer->PlayText(translateResult.GetSentence().GetOrigin());
 }
 

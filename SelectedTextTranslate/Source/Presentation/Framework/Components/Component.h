@@ -7,10 +7,9 @@ class Component : public IComponent
 {
 protected:
     TView* CurrentView;
-    CommonContext* Context;
     LayoutDescriptor Layout;
 
-    Component(CommonContext* context, TView* view);
+    Component(TView* view);
     ~Component() override;
 
 public:
@@ -28,11 +27,10 @@ public:
 };
 
 template <class TView>
-Component<TView>::Component(CommonContext* context, TView* view)
+Component<TView>::Component(TView* view)
 {
     static_assert(is_base_of<View, TView>::value, "TView must inherit from View");
     CurrentView = view;
-    Context = context;
 }
 
 template <class TView>

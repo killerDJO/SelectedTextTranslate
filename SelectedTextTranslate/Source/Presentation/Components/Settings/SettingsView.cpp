@@ -39,7 +39,7 @@ RenderResult SettingsView::CreateSettingsGroups(RenderDescriptor renderDescripto
 
 RenderResult SettingsView::CreateHotkeySettingsGroup(RenderDescriptor renderDescriptor)
 {
-    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(Context, this, GetModel()->GetHotkeySettingsViewModel());
+    HotkeySettingsComponent* hotkeySettingsComponent = new HotkeySettingsComponent(Context->GetServiceRegistry(), this, GetModel()->GetHotkeySettingsViewModel());
     RenderPosition renderPosition = AddSettingsGroup(renderDescriptor, hotkeySettingsComponent);
 
     return RenderResult(renderPosition);

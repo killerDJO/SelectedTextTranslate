@@ -14,7 +14,7 @@ protected:
     ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder;
 
 public:
-    SettingsGroupComponent(CommonContext* context, TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
+    SettingsGroupComponent(TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder);
 
     void Initialize() override;
     virtual bool IsValid() = 0;
@@ -23,8 +23,8 @@ public:
 };
 
 template <typename TSettings, typename TView>
-SettingsGroupComponent<TSettings, TView>::SettingsGroupComponent(CommonContext* context, TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
-    : Component<TView>(context, view)
+SettingsGroupComponent<TSettings, TView>::SettingsGroupComponent(TView* view, ModelHolder<SettingsGroupViewModel<TSettings>*>* modelHolder)
+    : Component<TView>(view)
 {
     this->modelHolder = modelHolder;
     this->CurrentView->OnSettingsChanged.Subscribe(bind(&SettingsGroupComponent::ProcessChange, this));

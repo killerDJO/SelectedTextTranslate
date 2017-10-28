@@ -1,9 +1,9 @@
 #include "BusinessLogic\Settings\SettingsProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-SettingsProvider::SettingsProvider(CompositionRoot* root)
+SettingsProvider::SettingsProvider(ServiceRegistry* registry)
 {
-    this->logger = root->GetService<Logger>();
+    this->logger = registry->Get<Logger>();
     this->settingsFileName = L"settings.json";
 }
 

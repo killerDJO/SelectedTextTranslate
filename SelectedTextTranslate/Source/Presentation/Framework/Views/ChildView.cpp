@@ -33,7 +33,7 @@ void ChildView::Initialize()
         Layout.GetSize().GetHeight(),
         ParentView->GetHandle(),
         nullptr,
-        Context->GetInstance(),
+        Instance,
         nullptr);
 
     AssertCriticalWinApiResult(Handle);

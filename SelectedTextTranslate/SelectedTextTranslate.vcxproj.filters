@@ -387,6 +387,9 @@
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ApplicationServiceRegistry.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -595,9 +598,6 @@
     <ClInclude Include="Source\Presentation\Framework\Views\ChildView.h">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\CommonContext.h">
-      <Filter>Source\Presentation\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Views\ComponentView.h">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClInclude>
@@ -630,9 +630,6 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupViewModel.h">
       <Filter>Source\Presentation\Components\Settings\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Infrastructure\CompositionRoot.h">
-      <Filter>Source\Infrastructure</Filter>
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Main\MainComponent.h">
       <Filter>Source\Presentation\Components\Main</Filter>
@@ -686,6 +683,14 @@
     <ClInclude Include="Source\Presentation\Framework\Components\Component.h">
       <Filter>Source\Presentation\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Infrastructure\ServiceRegistry\ServiceRegistry.h">
+      <Filter>Source\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Infrastructure\ServiceRegistry\Enums\InstantiationTypes.h" />
+    <ClInclude Include="Source\Infrastructure\ServiceRegistry\ServiceInfo.h" />
+    <ClInclude Include="Source\ApplicationServiceRegistry.h" />
+    <ClInclude Include="Source\Presentation\Framework\CommonContext.h" />
+    <ClInclude Include="Source\Infrastructure\ServiceRegistry\IServiceInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

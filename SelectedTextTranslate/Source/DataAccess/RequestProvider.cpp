@@ -3,9 +3,9 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Utilities\StringUtilities.h"
 
-RequestProvider::RequestProvider(CompositionRoot* root)
+RequestProvider::RequestProvider(ServiceRegistry* registry)
 {
-    this->logger = root->GetService<Logger>();
+    logger = registry->Get<Logger>();
     buffer = new unsigned char[BufferSize];
 }
 

@@ -2,10 +2,10 @@
 #include "Presentation\Components\Dictionary\DictionaryView.h"
 #include "BusinessLogic\Dictionary\DictionaryService.h"
 
-DictionaryComponent::DictionaryComponent(CommonContext* context, View* parentView)
-    : Component(context, new DictionaryView(context, parentView, this))
+DictionaryComponent::DictionaryComponent(ServiceRegistry* serviceRegistry, View* parentView)
+    : Component(new DictionaryView(serviceRegistry->Get<CommonContext>(), parentView, this))
 {
-    dictionaryService = context->Get<DictionaryService>();
+    dictionaryService = serviceRegistry->Get<DictionaryService>();
     CurrentView->OnShowTranslation.Subscribe(bind(&DictionaryComponent::ProcessShowTranslation, this, placeholders::_1));
 }
 

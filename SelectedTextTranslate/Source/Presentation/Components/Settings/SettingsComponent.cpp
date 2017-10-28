@@ -1,26 +1,26 @@
 #include "Presentation\Components\Settings\SettingsComponent.h"
 #include "Presentation\MessageBus.h"
 
-SettingsComponent::SettingsComponent(CommonContext* context, View* parentView)
-    : Component<SettingsView>(context, new SettingsView(context, parentView, this))
+SettingsComponent::SettingsComponent(ServiceRegistry* serviceRegistry, View* parentView)
+    : Component<SettingsView>(new SettingsView(serviceRegistry->Get<CommonContext>(), parentView, this))
 {
-    settingsProvider = context->Get<SettingsProvider>();
+    settingsProvider = serviceRegistry->Get<SettingsProvider>();
     settingsViewModel = new SettingsViewModel(settingsProvider->GetSettings());
 
-    CurrentView->OnSaveSettings.Subscribe([context, this]
+    CurrentView->OnSaveSettings.Subscribe([this]
     {
         UpdateSettings(settingsViewModel->GetCurrentSettings());
     });
 
-    CurrentView->OnCancelChanges.Subscribe([context, this]
+    CurrentView->OnCancelChanges.Subscribe([this]
     {
         settingsViewModel->CancelChanges();
         CurrentView->Render(true);
     });
 
-    CurrentView->OnResetSettings.Subscribe([context, this]
+    CurrentView->OnResetSettings.Subscribe([serviceRegistry, this]
     {
-        context->Get<MessageBus>()->OnConfirmRequested.Notify(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
+        serviceRegistry->Get<MessageBus>()->OnConfirmRequested.Notify(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
     });
 }
 

@@ -11,5 +11,5 @@ private:
     void ExpandCategory(int categoryIndex) const;
 
 public:
-    TranslateResultComponent(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder);
+    TranslateResultComponent(ServiceRegistry* serviceRegistry, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder);
 };

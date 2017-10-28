@@ -16,7 +16,7 @@ private:
     void RecreateViewModel(TranslateResult translateResult);
 
 public:
-    TranslationComponent(CommonContext* context, View* parentView);
+    TranslationComponent(ServiceRegistry* serviceRegistry, View* parentView);
 
     void Translate(wstring input, bool incrementTranslationsCount);
 

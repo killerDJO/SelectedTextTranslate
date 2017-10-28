@@ -2,12 +2,12 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Utilities\StringUtilities.h"
 
-TranslationService::TranslationService(CompositionRoot* root)
+TranslationService::TranslationService(ServiceRegistry* registry)
 {
-    this->requestProvider = root->GetService<RequestProvider>();
-    this->translatePageParser = root->GetService<TranslatePageParser>();
-    this->logger = root->GetService<Logger>();
-    this->dictionaryService = root->GetService<DictionaryService>();
+    this->requestProvider = registry->Get<RequestProvider>();
+    this->translatePageParser = registry->Get<TranslatePageParser>();
+    this->logger = registry->Get<Logger>();
+    this->dictionaryService = registry->Get<DictionaryService>();
 }
 
 TranslateResult TranslationService::TranslateSentence(wstring sentence, bool incrementTranslationsCount, bool forceTranslation) const

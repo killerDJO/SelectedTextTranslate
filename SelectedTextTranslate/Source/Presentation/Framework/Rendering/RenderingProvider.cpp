@@ -1,12 +1,12 @@
 #include "Presentation\Framework\Rendering\RenderingProvider.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
-RenderingProvider::RenderingProvider(CompositionRoot* root)
+RenderingProvider::RenderingProvider(ServiceRegistry* registry)
 {
-    this->scaleProvider = root->GetService<ScaleProvider>();
-    this->deviceContextProvider = root->GetService<DeviceContextProvider>();
+    scaleProvider = registry->Get<ScaleProvider>();
+    deviceContextProvider = registry->Get<DeviceContextProvider>();
 
-    this->emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(1, 1));
+    emptyDeviceContext = deviceContextProvider->CreateDeviceContext(Size(1, 1));
 }
 
 Size RenderingProvider::GetTextSize(wstring text, Font* font) const

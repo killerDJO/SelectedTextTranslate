@@ -2,10 +2,10 @@
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Utilities\StringUtilities.h"
 
-TranslatePageParser::TranslatePageParser(CompositionRoot* root)
+TranslatePageParser::TranslatePageParser(ServiceRegistry* registry)
 {
-    this->requestProvider = root->GetService<RequestProvider>();
-    this->logger = root->GetService<Logger>();
+    this->requestProvider = registry->Get<RequestProvider>();
+    this->logger = registry->Get<Logger>();
 
     tkk1 = 0;
     tkk2 = 0;

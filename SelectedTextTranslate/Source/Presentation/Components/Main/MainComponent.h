@@ -12,6 +12,7 @@ private:
     MessageBus* messageBus;
     TextExtractor* textExtractor;
     TextPlayer* textPlayer;
+    TranslationService* translationService;
 
     MainViewModel* viewModel;
 
@@ -23,7 +24,7 @@ private:
     void ShowApplicatonView(ApplicationViews applicationView) const;
 
 public:
-    MainComponent(CommonContext* context);
+    MainComponent(ServiceRegistry* serviceRegistry);
     ~MainComponent();
 
     void SetLayout(LayoutDescriptor layout) override;

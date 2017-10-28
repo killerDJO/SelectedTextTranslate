@@ -16,7 +16,7 @@ protected:
     virtual LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-    NativeWindowHolder(HINSTANCE instance);
+    NativeWindowHolder();
     virtual ~NativeWindowHolder();
 
     virtual void Initialize();

@@ -1,7 +1,7 @@
 #pragma once
 #include "Infrastructure\Logging\Logger.h"
 #include "BusinessLogic\Settings\Dto\Settings.h"
-#include "Infrastructure\CompositionRoot.h"
+#include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 
 class SettingsProvider
 {
@@ -12,7 +12,7 @@ private:
     Settings CreateDefaultSettings() const;
 
 public:
-    SettingsProvider(CompositionRoot* root);
+    SettingsProvider(ServiceRegistry* registry);
 
     Settings GetSettings() const;
     void UpdateSettings(Settings settings) const;
