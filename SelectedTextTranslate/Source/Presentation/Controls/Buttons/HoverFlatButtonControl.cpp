@@ -10,7 +10,7 @@ HoverFlatButtonControl::HoverFlatButtonControl(ViewContext* context, View* paren
     this->paddingY = ScaleProvider->Scale(5);
     this->borderWidth = ScaleProvider->Scale(1);
     this->ClassName = L"STT_HOVERFLATBUTTON";
-    this->Layout = ::LayoutDescriptor();
+    this->Layout = LayoutDescriptor();
 }
 
 void HoverFlatButtonControl::SetPosition(Point position)

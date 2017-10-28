@@ -50,6 +50,9 @@ private:
     void SetSuspendedState();
     void SetEnabledState();
 
+protected:
+    DWORD GetWindowStyle() const override;
+
 public:
     TrayIcon(ServiceRegistry* registry);
     ~TrayIcon() override;

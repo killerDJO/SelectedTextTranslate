@@ -31,6 +31,8 @@ private:
 
 protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
+    DWORD GetExtendedWindowStyles() const override;
+    DWORD GetWindowStyle() const override;
     Size RenderContent(Renderer* renderer) override;
 
 public:

@@ -33,10 +33,47 @@ void NativeWindowHolder::Initialize()
 
         AssertCriticalWinApiResult(RegisterClassEx(&windowClass));
     }
+
+    Rect rectangle = GetWindowRectangle();
+    Handle = CreateWindowEx(
+        GetExtendedWindowStyles(),
+        ClassName,
+        nullptr,
+        GetWindowStyle(),
+        rectangle.GetX(),
+        rectangle.GetY(),
+        rectangle.GetWidth(),
+        rectangle.GetHeight(),
+        GetWindowParent(),
+        nullptr,
+        Instance,
+        nullptr);
+    AssertCriticalWinApiResult(Handle);
+    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
 }
 
 void NativeWindowHolder::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
+}
+
+DWORD NativeWindowHolder::GetWindowStyle() const
+{
+    return 0;
+}
+
+HWND NativeWindowHolder::GetWindowParent() const
+{
+    return nullptr;
+}
+
+Rect NativeWindowHolder::GetWindowRectangle() const
+{
+    return Rect(0, 0, 0, 0);
+}
+
+DWORD NativeWindowHolder::GetExtendedWindowStyles() const
+{
+    return 0;
 }
 
 HWND NativeWindowHolder::GetHandle() const

@@ -7,7 +7,10 @@ protected:
     View* ParentView;
     bool IsLayered;
 
-    Point GetInitialViewOffset() override;
+    Point GetInitialViewOffset() const override;
+    DWORD GetWindowStyle() const override;
+    HWND GetWindowParent() const override;
+
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:

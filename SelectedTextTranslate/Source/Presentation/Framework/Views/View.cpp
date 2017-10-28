@@ -20,7 +20,7 @@ View::View(ViewContext* context)
 
     Layout = LayoutDescriptor();
     State = ViewStateDescriptor();
-    ActiveChildViews = vector<View*>();
+    activeChildViews = vector<View*>();
     destroyedChildViews = vector<View*>();
 
     ClassName = nullptr;
@@ -32,7 +32,7 @@ void View::Initialize()
 {
     if(Layout.IsEmpty())
     {
-        throw SelectedTextTranslateException(L"Descriptor must be set for window");
+        throw SelectedTextTranslateException(L"Descriptor must be set for view");
     }
 
     DeviceContextBuffer = new ::DeviceContextBuffer(DeviceContextProvider, Layout.GetSize());
@@ -43,6 +43,37 @@ void View::Initialize()
 
     NativeWindowHolder::Initialize();
     State.SetViewState(ViewStates::Initialized);
+}
+
+Rect View::GetWindowRectangle() const
+{
+    Point offset = GetInitialViewOffset();
+    Point position = Point(
+        Layout.GetPosition().GetX() - offset.GetX(),
+        Layout.GetPosition().GetY() - offset.GetY());
+    return Rect(position, Layout.GetSize());
+}
+
+Point View::GetInitialViewOffset() const
+{
+    return Point(0, 0);
+}
+
+DWORD View::GetWindowStyle() const
+{
+    int scrollStyle = 0;
+
+    if (Layout.GetOverflowX() == OverflowModes::Scroll)
+    {
+        scrollStyle |= WS_HSCROLL;
+    }
+
+    if (Layout.GetOverflowY() == OverflowModes::Scroll)
+    {
+        scrollStyle |= WS_VSCROLL;
+    }
+
+    return NativeWindowHolder::GetWindowStyle() | scrollStyle | WS_CLIPCHILDREN;
 }
 
 void View::InitializeAndRender(bool preserveScrolls)
@@ -125,9 +156,9 @@ void View::ApplyViewState(bool preserveScrolls)
     ApplyViewPosition(preserveScrolls);
 
     // Important to draw child windows first
-    for (size_t i = 0; i < ActiveChildViews.size(); ++i)
+    for (size_t i = 0; i < activeChildViews.size(); ++i)
     {
-        View* childView = ActiveChildViews[i];
+        View* childView = activeChildViews[i];
         if (childView->IsVisible())
         {
             childView->Show();
@@ -175,10 +206,6 @@ void View::ApplyViewPosition(bool preserveScrolls)
     SendMessage(Handle, WM_NCPAINT, NULL, NULL);
 }
 
-Point View::GetInitialViewOffset()
-{
-    return Point(0, 0);
-}
 
 void View::Draw(bool drawChildren)
 {
@@ -199,22 +226,22 @@ void View::Draw(bool drawChildren)
 
 void View::DrawChildViews()
 {
-    for (size_t i = 0; i < ActiveChildViews.size(); ++i)
+    for (size_t i = 0; i < activeChildViews.size(); ++i)
     {
-        View* childView = ActiveChildViews[i];
+        View* childView = activeChildViews[i];
         childView->Draw(true);
     }
 }
 
 void View::AddChildView(View* childView)
 {
-    ActiveChildViews.push_back(childView);
+    activeChildViews.push_back(childView);
 }
 
 void View::DestroyChildViews()
 {
-    destroyedChildViews.insert(destroyedChildViews.end(), ActiveChildViews.begin(), ActiveChildViews.end());
-    ActiveChildViews = vector<View*>();
+    destroyedChildViews.insert(destroyedChildViews.end(), activeChildViews.begin(), activeChildViews.end());
+    activeChildViews = vector<View*>();
 }
 
 void View::DestroyChildViews(vector<View*>& childViews) const
@@ -231,23 +258,6 @@ void View::DestroyChildViews(vector<View*>& childViews) const
 void View::Resize()
 {
     // By default, do nothing on resize.
-}
-
-DWORD View::GetScrollStyle() const
-{
-    int scrollStyle = 0;
-
-    if (Layout.GetOverflowX() == OverflowModes::Scroll)
-    {
-        scrollStyle |= WS_HSCROLL;
-    }
-
-    if (Layout.GetOverflowY() == OverflowModes::Scroll)
-    {
-        scrollStyle |= WS_VSCROLL;
-    }
-
-    return scrollStyle;
 }
 
 Size View::GetSize() const
@@ -390,7 +400,7 @@ View::~View()
 {
     delete DeviceContextBuffer;
 
-    DestroyChildViews(ActiveChildViews);
+    DestroyChildViews(activeChildViews);
     DestroyChildViews(destroyedChildViews);
 
     State.SetViewState(ViewStates::Destroyed);

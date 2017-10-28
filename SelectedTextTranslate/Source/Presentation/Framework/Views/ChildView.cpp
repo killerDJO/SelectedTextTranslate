@@ -21,25 +21,6 @@ void ChildView::Initialize()
 {
     View::Initialize();
 
-    Point offset = GetInitialViewOffset();
-
-    Handle = CreateWindow(
-        ClassName,
-        nullptr,
-        WS_CHILD | WS_CLIPCHILDREN,
-        Layout.GetPosition().GetX() - offset.GetX(),
-        Layout.GetPosition().GetY() - offset.GetY(),
-        Layout.GetSize().GetWidth(),
-        Layout.GetSize().GetHeight(),
-        ParentView->GetHandle(),
-        nullptr,
-        Instance,
-        nullptr);
-
-    AssertCriticalWinApiResult(Handle);
-
-    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
-
     if (IsLayered)
     {
         SetWindowLongPtr(Handle, GWL_EXSTYLE, GetWindowLongPtr(Handle, GWL_EXSTYLE) | WS_EX_LAYERED);
@@ -53,12 +34,22 @@ void ChildView::EnableLayeredMode()
     this->IsLayered = true;
 }
 
-Point ChildView::GetInitialViewOffset()
+Point ChildView::GetInitialViewOffset() const
 {
     int offsetY = ScrollProvider->GetCurrentScrollOffset(ParentView, ScrollBars::Vertical);
     int offsetX = ScrollProvider->GetCurrentScrollOffset(ParentView, ScrollBars::Horizontal);
 
     return Point(offsetX, offsetY);
+}
+
+DWORD ChildView::GetWindowStyle() const
+{
+    return View::GetWindowStyle() | WS_CHILD;
+}
+
+HWND ChildView::GetWindowParent() const
+{
+    return ParentView->GetHandle();
 }
 
 LRESULT ChildView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)

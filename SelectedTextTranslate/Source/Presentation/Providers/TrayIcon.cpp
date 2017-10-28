@@ -36,16 +36,17 @@ void TrayIcon::Initialize()
 {
     NativeWindowHolder::Initialize();
 
-    Handle = CreateWindow(ClassName, nullptr, WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, Instance, nullptr);
-    AssertCriticalWinApiResult(Handle);
-    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
-
     WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
     AssertWinApiResult(WM_TASKBARCREATED);
 
     RegisterHotkeys();
     CreateMenu();
     CreateTrayIcon();
+}
+
+DWORD TrayIcon::GetWindowStyle() const
+{
+    return NativeWindowHolder::GetWindowStyle() | WS_POPUP;
 }
 
 void TrayIcon::CreateMenu()

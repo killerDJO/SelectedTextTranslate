@@ -1,4 +1,5 @@
 #pragma once
+#include "Presentation\Framework\Dto\Positioning\Rect.h"
 
 class NativeWindowHolder
 {
@@ -8,7 +9,12 @@ protected:
 
     HWND Handle;
     wchar_t* ClassName;
+
     virtual void SpecifyWindowClass(WNDCLASSEX* windowClass);
+    virtual DWORD GetExtendedWindowStyles() const;
+    virtual DWORD GetWindowStyle() const;
+    virtual HWND GetWindowParent() const;
+    virtual Rect GetWindowRectangle() const;
 
     static LRESULT CALLBACK WindowProcedureWrapper(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT CallBaseWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) const;

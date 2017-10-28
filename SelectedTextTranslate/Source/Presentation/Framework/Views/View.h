@@ -16,6 +16,7 @@ class View : public NativeWindowHolder
 {
 private:
     vector<View*> destroyedChildViews;
+    vector<View*> activeChildViews;
 
     void DrawChildViews();
     void DestroyChildViews(vector<View*>& childViews) const;
@@ -33,17 +34,18 @@ protected:
     wstring Name;
 
     DeviceContextBuffer* DeviceContextBuffer;
-    vector<View*> ActiveChildViews;
-
-    DWORD GetScrollStyle() const;
 
     void DestroyChildViews();
 
+    DWORD GetWindowStyle() const override;
+    Rect GetWindowRectangle() const override;
+
+    virtual Point GetInitialViewOffset() const;
     void ApplyViewState(bool preserveScrolls);
     void ApplyViewPosition(bool preserveScrolls);
+
     Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
-    virtual Point GetInitialViewOffset();
 
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;

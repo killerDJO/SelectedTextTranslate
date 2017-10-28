@@ -25,28 +25,22 @@ void MainView::Initialize()
 {
     View::Initialize();
 
-    Handle = CreateWindowEx(
-        WS_EX_TOOLWINDOW,
-        ClassName,
-        nullptr,
-        WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        Layout.GetPosition().GetX(),
-        Layout.GetPosition().GetY(),
-        Layout.GetSize().GetWidth(),
-        Layout.GetSize().GetHeight(),
-        nullptr,
-        nullptr,
-        Instance,
-        nullptr);
-    AssertCriticalWinApiResult(Handle);
-    SetWindowLongPtr(Handle, GWLP_USERDATA, (LONG_PTR)this);
-
     CreateChildComponents();
 
     Minimize();
 
     Context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainView::Minimize, this));
     Context->GetMessageBus()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
+}
+
+DWORD MainView::GetExtendedWindowStyles() const
+{
+    return WS_EX_TOOLWINDOW;
+}
+
+DWORD MainView::GetWindowStyle() const
+{
+    return View::GetWindowStyle() | WS_SIZEBOX | WS_POPUP;
 }
 
 void MainView::SetLayout(LayoutDescriptor layout)
@@ -84,8 +78,8 @@ void MainView::CreateChildComponents()
 
     confirmDialog = new ConfirmDialogControl(Context, this);
     confirmDialog->SetSize(GetClientSize());
-    confirmDialog->MakeHidden();
     confirmDialog->Initialize();
+    confirmDialog->MakeHidden();
 }
 
 void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
@@ -96,8 +90,8 @@ void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
         OverflowModes::Stretch,
         OverflowModes::Stretch);
     component->SetLayout(initialLayoutDescriptor);
-    component->MakeHidden();
     component->Initialize();
+    component->MakeHidden();
     viewToComponentMap[view] = component;
 }
 
@@ -140,9 +134,9 @@ Size MainView::RenderContent(Renderer* renderer)
         throw SelectedTextTranslateFatalException(L"View must set before rendering.");
     }
 
-    for (size_t i = 0; i < ActiveChildViews.size(); ++i)
+    for (auto viewToComponent : viewToComponentMap)
     {
-        ActiveChildViews[i]->MakeHidden();
+        viewToComponent.second->MakeHidden();
     }
 
     IComponent* componentToShow = GetComponentToShow();
