@@ -6,7 +6,7 @@
 #include "Presentation\Framework\Rendering\DeviceContextBuffer.h"
 #include "Presentation\Framework\Rendering\RenderingProvider.h"
 #include "Presentation\Framework\Views\View.h"
-#include "Presentation\Framework\IComponent.h"
+#include "Presentation\Framework\Components\IComponent.h"
 
 class RenderingContext;
 class View;

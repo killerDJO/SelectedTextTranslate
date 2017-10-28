@@ -342,9 +342,6 @@
     <ClCompile Include="Source\Presentation\Components\Main\MainComponent.cpp">
       <Filter>Source\Presentation\Components\Main</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.cpp">
-      <Filter>Source\Presentation\Components\Translation\Content</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Presentation\Framework\Views\ControlView.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -385,6 +382,9 @@
       <Filter>Source\Presentation\Providers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Presentation\Components\Main\MainViewModel.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -595,13 +595,7 @@
     <ClInclude Include="Source\Presentation\Framework\Views\ChildView.h">
       <Filter>Source\Presentation\Framework\Views</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\Component.h">
-      <Filter>Source\Presentation\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\CommonContext.h">
-      <Filter>Source\Presentation\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\IComponent.h">
       <Filter>Source\Presentation\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Views\ComponentView.h">
@@ -642,9 +636,6 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Main\MainComponent.h">
       <Filter>Source\Presentation\Components\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.h">
-      <Filter>Source\Presentation\Components\Translation\Content</Filter>
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationComponent.h">
       <Filter>Source\Presentation\Components\Translation</Filter>
@@ -688,6 +679,13 @@
       <Filter>Source\Presentation\Providers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Presentation\Components\Main\MainViewModel.h" />
+    <ClInclude Include="Source\Presentation\Components\Translation\TranslationViewModel.h" />
+    <ClInclude Include="Source\Presentation\Framework\Components\IComponent.h">
+      <Filter>Source\Presentation\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Components\Component.h">
+      <Filter>Source\Presentation\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

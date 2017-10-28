@@ -1,5 +1,5 @@
 #pragma once
-#include "Presentation\Framework\Component.h"
+#include "Presentation\Framework\Components\Component.h"
 #include "Presentation\Components\Main\MainView.h"
 #include "Presentation\Providers\TrayIcon.h"
 #include "BusinessLogic\Translation\TextExtractor.h"

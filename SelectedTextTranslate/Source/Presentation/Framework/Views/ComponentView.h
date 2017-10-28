@@ -1,5 +1,5 @@
 #pragma once
-#include "Presentation\Framework\Component.h"
+#include "Presentation\Framework\Components\Component.h"
 #include "Presentation\Framework\ModelHolder.h"
 #include "Presentation\Framework\Views\ChildView.h"
 

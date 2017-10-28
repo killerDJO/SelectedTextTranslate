@@ -20,7 +20,6 @@
     <ClCompile Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Settings\SettingsViewModel.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultComponent.cpp" />
-    <ClCompile Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\Header\HeaderComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Main\MainComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Dictionary\DictionaryComponent.cpp" />
@@ -97,6 +96,7 @@
     <ClCompile Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationComponent.cpp" />
+    <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Presentation\Components\Main\MainViewModel.h" />
@@ -108,7 +108,6 @@
     <ClInclude Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Settings\SettingsViewModel.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultComponent.h" />
-    <ClInclude Include="Source\Presentation\Components\Translation\Content\TranslateResultViewModel.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\Header\HeaderComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Main\MainComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Dictionary\DictionaryComponent.h" />
@@ -129,8 +128,8 @@
     <ClInclude Include="Source\Presentation\Components\Settings\Base\SettingsGroupHeaderControl.h" />
     <ClInclude Include="Source\Presentation\Components\Settings\Base\Enums\SettingsGroupVisibilityState.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\RenderingProvider.h" />
-    <ClInclude Include="Source\Presentation\Framework\Component.h" />
-    <ClInclude Include="Source\Presentation\Framework\IComponent.h" />
+    <ClInclude Include="Source\Presentation\Framework\Components\Component.h" />
+    <ClInclude Include="Source\Presentation\Framework\Components\IComponent.h" />
     <ClInclude Include="Source\Presentation\Framework\Views\ComponentView.h" />
     <ClInclude Include="Source\Presentation\Providers\Dto\HotkeyInfo.h" />
     <ClInclude Include="Source\Presentation\Framework\ModelHolder.h" />
@@ -198,6 +197,7 @@
     <ClInclude Include="Source\Presentation\Framework\Dto\Positioning\Point.h" />
     <ClInclude Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationComponent.h" />
+    <ClInclude Include="Source\Presentation\Components\Translation\TranslationViewModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

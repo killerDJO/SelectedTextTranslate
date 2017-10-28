@@ -1,6 +1,6 @@
 #include "Presentation\Components\Translation\Header\HeaderComponent.h"
 
-HeaderComponent::HeaderComponent(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
+HeaderComponent::HeaderComponent(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder)
     : Component(context, new HeaderView(context, parentView, modelHolder))
 {
     this->textPlayer = context->Get<TextPlayer>();
@@ -13,5 +13,5 @@ HeaderComponent::HeaderComponent(CommonContext* context, View* parentView, Model
 
 void HeaderComponent::PlayText() const
 {
-    textPlayer->PlayText(modelHolder->GetModel().GetSentence().GetOrigin());
+    textPlayer->PlayText(modelHolder->GetModel()->GetTranslateResult().GetSentence().GetOrigin());
 }

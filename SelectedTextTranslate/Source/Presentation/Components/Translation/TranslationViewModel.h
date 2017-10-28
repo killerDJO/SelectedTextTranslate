@@ -1,15 +1,14 @@
 #pragma once
 #include "BusinessLogic\Translation\Dto\TranslateResult.h"
 
-class TranslateResultViewModel
+class TranslationViewModel
 {
 private:
     TranslateResult translateResult;
     map<int, bool> translateResultCategoryExpandedMap;
 
 public:
-    TranslateResultViewModel();
-    TranslateResultViewModel(TranslateResult translateResult);
+    TranslationViewModel(TranslateResult translateResult);
 
     TranslateResult GetTranslateResult() const;
 

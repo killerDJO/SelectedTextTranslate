@@ -3,19 +3,20 @@
 #include "Presentation\Controls\Buttons\HoverIconButtonControl.h"
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
-HeaderView::HeaderView(CommonContext* context, View* parentWindow, ModelHolder<TranslateResult>* modelHolder)
-    : ComponentView<TranslateResult>(context, parentWindow, modelHolder)
+HeaderView::HeaderView(CommonContext* context, View* parentWindow, ModelHolder<TranslationViewModel*>* modelHolder)
+    : ComponentView<TranslationViewModel*>(context, parentWindow, modelHolder)
 {
     Name = L"TranlsateResultHeaderWindow";
 }
 
-Size HeaderView::RenderContent(Renderer* renderer, TranslateResult model)
+Size HeaderView::RenderContent(Renderer* renderer, TranslationViewModel* model)
 {
     DestroyChildViews();
 
-    if(!model.IsEmptyResult())
+    TranslateResult translateResult = model->GetTranslateResult();
+    if(!translateResult.IsEmptyResult())
     {
-        return RenderTranslationResult(renderer, model);
+        return RenderTranslationResult(renderer, translateResult);
     }
     else
     {
@@ -23,11 +24,11 @@ Size HeaderView::RenderContent(Renderer* renderer, TranslateResult model)
     }
 }
 
-Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult model)
+Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult translateResult)
 {
     RenderPosition renderPosition = RenderPosition(PaddingX, LineHeight);
 
-    TranslateResultSentence sentence = model.GetSentence();
+    TranslateResultSentence sentence = translateResult.GetSentence();
     renderer->PrintText(sentence.GetTranslation(), FontHeader, Colors::Black, renderPosition);
 
     renderPosition = renderPosition.MoveY(LineHeight);
@@ -46,7 +47,7 @@ Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult mod
     renderPosition = renderer->PrintText(sentence.GetOrigin(), FontSmall, Colors::Gray, renderPosition);
 
     RenderDescriptor actionRenderDescriptor = RenderDescriptor(renderer, renderPosition.MoveX(1));
-    if (model.IsInputCorrected())
+    if (translateResult.IsInputCorrected())
     {
         PrintInputCorrectionWarning(actionRenderDescriptor, sentence.GetInput());
     }

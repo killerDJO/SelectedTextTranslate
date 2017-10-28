@@ -2,21 +2,23 @@
 #include "BusinessLogic\Translation\TranslationService.h"
 #include "Presentation\Framework\Views\View.h"
 #include "Presentation\Components\Translation\TranslationView.h"
+#include "Presentation\Components\Translation\TranslationViewModel.h"
 
-class TranslationComponent : public Component<TranslationView>, public ModelHolder<TranslateResult>
+class TranslationComponent : public Component<TranslationView>, public ModelHolder<TranslationViewModel*>
 {
 private:
     TranslationService* translationService;
 
-    TranslateResult translateResult;
+    TranslationViewModel* translationViewModel;
 
     void ForceTranslation();
     void TranslateSuggestion();
+    void RecreateViewModel(TranslateResult translateResult);
 
 public:
     TranslationComponent(CommonContext* context, View* parentView);
 
     void Translate(wstring input, bool incrementTranslationsCount);
 
-    TranslateResult GetModel() override;
+    TranslationViewModel* GetModel() override;
 };

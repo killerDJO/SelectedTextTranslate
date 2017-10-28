@@ -1,5 +1,5 @@
 #pragma once
-#include "Presentation\Framework\Component.h"
+#include "Presentation\Framework\Components\Component.h"
 #include "BusinessLogic\Dictionary\Dto\DictionaryRecord.h"
 #include "Presentation\Framework\ModelHolder.h"
 #include "BusinessLogic\Dictionary\DictionaryService.h"

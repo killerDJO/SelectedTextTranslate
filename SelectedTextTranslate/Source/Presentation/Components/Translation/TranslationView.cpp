@@ -1,6 +1,6 @@
 #include "Presentation\Components\Translation\TranslationView.h"
 
-TranslationView::TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder)
+TranslationView::TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
     headerHeight = ScaleProvider->Scale(50);
@@ -16,7 +16,7 @@ void TranslationView::Initialize()
 {
     ComponentView::Initialize();
 
-    ::LayoutDescriptor headerWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    LayoutDescriptor headerWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
         Size(0, headerHeight),
         OverflowModes::Stretch,
@@ -27,7 +27,7 @@ void TranslationView::Initialize()
     headerComponent->OnForceTranslation.Subscribe(&OnForceTranslation);
     headerComponent->Initialize();
 
-    ::LayoutDescriptor translateResultWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    LayoutDescriptor translateResultWindowDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, headerComponent->GetBoundingRect().GetBottom() + separatorHeight),
         Size(0, 0),
         OverflowModes::Stretch,
@@ -37,13 +37,12 @@ void TranslationView::Initialize()
     translateResultComponent->Initialize();
 }
 
-Size TranslationView::RenderContent(Renderer* renderer, TranslateResult model)
+Size TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* model)
 {
     headerComponent->Render();
 
     Size contentSize;
-
-    if (model.IsEmptyResult())
+    if (model->GetTranslateResult().IsEmptyResult())
     {
         translateResultComponent->MakeHidden();
 
@@ -86,7 +85,7 @@ void TranslationView::Resize()
 
     Renderer* renderer = RenderingContext->GetRenderer();
 
-    if(GetModel().IsEmptyResult())
+    if(GetModel()->GetTranslateResult().IsEmptyResult())
     {
         renderer->DrawRect(Rect(0, headerHeight, State.GetSize().GetWidth(), State.GetSize().GetHeight() - headerHeight), LightGrayBrush);
     }

@@ -3,17 +3,17 @@
 #include "Presentation\Framework\Rendering\Dto\RenderDescriptor.h"
 #include "Presentation\Framework\Rendering\Dto\RenderResult.h"
 #include "Presentation\Framework\Views\ComponentView.h"
-#include "Presentation\Components\Translation\Content\TranslateResultViewModel.h"
+#include "Presentation\Components\Translation\TranslationViewModel.h"
 
-class TranslateResultView : public ComponentView<TranslateResultViewModel>
+class TranslateResultView : public ComponentView<TranslationViewModel*>
 {
 private:
-    RenderResult CreateExpandButton(TranslateResultViewModel model, RenderDescriptor renderDescriptor, TranslateResultCategory category, int categoryIndex, int showedCount);
+    RenderResult CreateExpandButton(TranslationViewModel* model, RenderDescriptor renderDescriptor, TranslateResultCategory category, int categoryIndex, int showedCount);
 
 protected:
-    Size RenderContent(Renderer* renderer, TranslateResultViewModel model) override;
+    Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
-    TranslateResultView(CommonContext* context, View* parentWindow, ModelHolder<TranslateResultViewModel>* modelHolder);
+    TranslateResultView(CommonContext* context, View* parentWindow, ModelHolder<TranslationViewModel*>* modelHolder);
     Subscribeable<int> OnExpandCategory;
 };

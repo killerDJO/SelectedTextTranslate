@@ -1,8 +1,9 @@
 #pragma once
 #include "Presentation\Components\Translation\Header\HeaderComponent.h"
+#include "Presentation\Components\Translation\TranslationViewModel.h"
 #include "Presentation\Components\Translation\Content\TranslateResultComponent.h"
 
-class TranslationView : public ComponentView<TranslateResult>
+class TranslationView : public ComponentView<TranslationViewModel*>
 {
 private:
     int headerHeight;
@@ -14,10 +15,10 @@ private:
     void RenderSeparator(Renderer* renderer, int width) const;
 
 protected:
-    Size RenderContent(Renderer* renderer, TranslateResult model) override;
+    Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
-    TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslateResult>* modelHolder);
+    TranslationView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder);
 
     void Initialize() override;
     void Resize() override;

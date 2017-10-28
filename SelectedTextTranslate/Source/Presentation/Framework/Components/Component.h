@@ -1,6 +1,6 @@
 #pragma once
 #include "Presentation\Framework\Views\View.h"
-#include "Presentation\Framework\IComponent.h"
+#include "Presentation\Framework\Components\IComponent.h"
 
 template<class TView>
 class Component : public IComponent

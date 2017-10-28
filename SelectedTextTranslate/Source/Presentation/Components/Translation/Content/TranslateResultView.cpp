@@ -1,19 +1,19 @@
 ﻿#include "Presentation\Components\Translation\Content\TranslateResultView.h"
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 
-TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslateResultViewModel>* modelHolder)
+TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
     this->Name = L"TranslateResultWindow";
 }
 
-Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewModel model)
+Size TranslateResultView::RenderContent(Renderer* renderer, TranslationViewModel* model)
 {
     DestroyChildViews();
 
     RenderPosition renderPosition = RenderPosition(PaddingX, LineHeight);
 
-    vector<TranslateResultCategory> translateCategories = model.GetTranslateResult().GetTranslateCategories();
+    vector<TranslateResultCategory> translateCategories = model->GetTranslateResult().GetTranslateCategories();
     for (size_t i = 0; i < translateCategories.size(); ++i)
     {
         TranslateResultCategory category = translateCategories[i];
@@ -26,7 +26,7 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewM
         renderPosition = renderer->PrintText(partOfSpeech.c_str(), FontItalic, Colors::Gray, renderPosition.MoveX(1));
 
         vector<TranslateResultCategoryEntry> showedEntries(0);
-        if (model.IsExpanded(i))
+        if (model->IsExpanded(i))
         {
             showedEntries = categoryEntries;
         }
@@ -94,7 +94,7 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewM
 }
 
 RenderResult TranslateResultView::CreateExpandButton(
-    TranslateResultViewModel model,
+    TranslationViewModel* model,
     RenderDescriptor renderDescriptor,
     TranslateResultCategory category,
     int categoryIndex,
@@ -102,10 +102,10 @@ RenderResult TranslateResultView::CreateExpandButton(
 {
     DWORD hiddenCount = category.GetEntries().size() - showedCount;
 
-    if (model.IsExpanded(categoryIndex) || hiddenCount > 0) {
+    if (model->IsExpanded(categoryIndex) || hiddenCount > 0) {
         wstring text;
 
-        if (!model.IsExpanded(categoryIndex)) {
+        if (!model->IsExpanded(categoryIndex)) {
             if (hiddenCount == 1) {
                 text = L"show " + to_wstring(hiddenCount) + L" more result";
             }

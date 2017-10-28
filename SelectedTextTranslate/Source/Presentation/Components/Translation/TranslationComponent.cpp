@@ -3,29 +3,42 @@
 TranslationComponent::TranslationComponent(CommonContext* context, View* parentView)
     : Component(context, new TranslationView(context, parentView, this))
 {
-    this->translationService = context->Get<TranslationService>();
+    translationService = context->Get<TranslationService>();
     CurrentView->OnForceTranslation.Subscribe(bind(&TranslationComponent::ForceTranslation, this));
+    CurrentView->OnTranslateSuggestion.Subscribe(bind(&TranslationComponent::TranslateSuggestion, this));
+    translationViewModel = nullptr;
 }
 
 void TranslationComponent::Translate(wstring input, bool incrementTranslationsCount)
 {
-    translateResult = translationService->TranslateSentence(input, incrementTranslationsCount, false);
+    RecreateViewModel(translationService->TranslateSentence(input, incrementTranslationsCount, false));
     Render();
 }
 
 void TranslationComponent::ForceTranslation()
 {
-    translateResult = translationService->TranslateSentence(translateResult.GetSentence().GetInput(), false, true);
+    RecreateViewModel(translationService->TranslateSentence(translationViewModel->GetTranslateResult().GetSentence().GetInput(), false, true));
     Render();
 }
 
 void TranslationComponent::TranslateSuggestion()
 {
-    translateResult = translationService->TranslateSentence(translateResult.GetSentence().GetInput(), false, true);
+    RecreateViewModel(translationService->TranslateSentence(translationViewModel->GetTranslateResult().GetSentence().GetSuggestion(), false, true));
     Render();
 }
 
-TranslateResult TranslationComponent::GetModel()
+void TranslationComponent::RecreateViewModel(TranslateResult translateResult)
 {
-    return translateResult;
+    if(translationViewModel != nullptr)
+    {
+        delete translationViewModel;
+        translationViewModel = nullptr;
+    }
+
+    translationViewModel = new TranslationViewModel(translateResult);
+}
+
+TranslationViewModel* TranslationComponent::GetModel()
+{
+    return translationViewModel;
 }
