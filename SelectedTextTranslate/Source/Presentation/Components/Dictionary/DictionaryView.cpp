@@ -5,7 +5,7 @@
 DictionaryView::DictionaryView(CommonContext* context, View* parentWindow, ModelHolder<vector<DictionaryRecord>>* modelHolder)
     : ComponentView(context, parentWindow, modelHolder)
 {
-    ViewName = L"DictionaryWindow";
+    Name = L"DictionaryWindow";
     iconSize = ScaleProvider->Scale(16);
 }
 

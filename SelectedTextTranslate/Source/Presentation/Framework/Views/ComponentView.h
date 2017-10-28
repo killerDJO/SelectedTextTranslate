@@ -61,7 +61,7 @@ ComponentView<TModel>::ComponentView(CommonContext* context, View* parentView, M
 template <class TModel>
 void ComponentView<TModel>::Render(bool preserveScrolls)
 {
-    bool isStretchWindow = LayoutDescriptor.GetOverflowX() == OverflowModes::Stretch || LayoutDescriptor.GetOverflowY() == OverflowModes::Stretch;
+    bool isStretchWindow = Layout.GetOverflowX() == OverflowModes::Stretch || Layout.GetOverflowY() == OverflowModes::Stretch;
     if (isStretchWindow && !RenderingContext->IsRenderingInProgress())
     {
         ParentView->Render(preserveScrolls);
@@ -76,7 +76,7 @@ template <class TModel>
 void ComponentView<TModel>::SetLayout(::LayoutDescriptor layoutDescriptor)
 {
     AssertViewNotInitialized();
-    this->LayoutDescriptor = layoutDescriptor;
+    this->Layout = layoutDescriptor;
 }
 
 template <class TModel>

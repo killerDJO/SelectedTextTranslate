@@ -18,7 +18,7 @@ void HoverTextButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
-    LayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
+    Layout = LayoutDescriptor::CreateLayoutDescriptor(
         position,
         Size(1, 1),
         OverflowModes::Stretch,
@@ -95,13 +95,13 @@ void HoverTextButtonControl::RenderStatesDeviceContexts()
 {
     Size textSize = RenderingProvider->GetTextSize(text.c_str(), GetFont());
 
-    ViewStateDescriptor.EnsureSize(textSize);
+    State.EnsureSize(textSize);
 
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(ViewStateDescriptor.GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(ViewStateDescriptor.GetSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(ViewStateDescriptor.GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
-    DeviceContextBuffer->Resize(ViewStateDescriptor.GetSize());
+    DeviceContextBuffer->Resize(State.GetSize());
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverColor);

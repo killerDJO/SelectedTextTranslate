@@ -12,16 +12,16 @@ TranslateResultViewModel TranslateResultComponent::GetModel()
 {
     TranslateResult model = modelHolder->GetModel();
 
-    if (!model.EqualTo(contentModel.GetTranslateResult()))
+    if (!model.EqualTo(viewModel.GetTranslateResult()))
     {
-        contentModel = TranslateResultViewModel(model);
+        viewModel = TranslateResultViewModel(model);
     }
 
-    return contentModel;
+    return viewModel;
 }
 
 void TranslateResultComponent::ExpandCategory(int categoryIndex)
 {
-    contentModel.ToggleCategory(categoryIndex);
+    viewModel.ToggleCategory(categoryIndex);
     Render(true);
 }

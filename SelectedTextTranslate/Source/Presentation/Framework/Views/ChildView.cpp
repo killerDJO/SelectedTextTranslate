@@ -27,10 +27,10 @@ void ChildView::Initialize()
         ClassName,
         nullptr,
         WS_CHILD | WS_CLIPCHILDREN,
-        LayoutDescriptor.GetPosition().GetX() - offset.GetX(),
-        LayoutDescriptor.GetPosition().GetY() - offset.GetY(),
-        LayoutDescriptor.GetSize().GetWidth(),
-        LayoutDescriptor.GetSize().GetHeight(),
+        Layout.GetPosition().GetX() - offset.GetX(),
+        Layout.GetPosition().GetY() - offset.GetY(),
+        Layout.GetSize().GetWidth(),
+        Layout.GetSize().GetHeight(),
         ParentView->GetHandle(),
         nullptr,
         Context->GetInstance(),
@@ -73,8 +73,8 @@ LRESULT ChildView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
         AssertCriticalWinApiResult(GetWindowRect(Handle, &rcWindow));
-        AssertCriticalWinApiResult(MoveWindow(Handle, pos.x, pos.y, ViewStateDescriptor.GetSize().GetWidth(), ViewStateDescriptor.GetSize().GetHeight(), FALSE));
-        ViewStateDescriptor.SetPosition(Point(pos.x, pos.y));
+        AssertCriticalWinApiResult(MoveWindow(Handle, pos.x, pos.y, State.GetSize().GetWidth(), State.GetSize().GetHeight(), FALSE));
+        State.SetPosition(Point(pos.x, pos.y));
 
         return TRUE;
     }

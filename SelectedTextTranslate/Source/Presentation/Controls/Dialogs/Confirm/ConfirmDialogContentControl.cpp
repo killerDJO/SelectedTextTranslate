@@ -31,14 +31,14 @@ void ConfirmDialogContentControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
 
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
 }
 
 void ConfirmDialogContentControl::SetTitle(wstring title)
 {
     this->title = title;
 
-    if (ViewStateDescriptor.GetViewState() != ViewStates::New)
+    if (State.GetViewState() != ViewStates::New)
     {
         Render();
     }
@@ -104,7 +104,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     cancelButton->SetBackgroundColor(Colors::Background);
     cancelButton->InitializeAndRender();
 
-    return ViewStateDescriptor.GetSize();
+    return State.GetSize();
 }
 
 ConfirmDialogContentControl::~ConfirmDialogContentControl()

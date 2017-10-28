@@ -26,7 +26,7 @@ void ConfirmDialogControl::Initialize()
 void ConfirmDialogControl::SetSize(Size size)
 {
     AssertViewNotInitialized();
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
 }
 
 void ConfirmDialogControl::Show()

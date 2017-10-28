@@ -26,9 +26,9 @@ protected:
     RenderingContext* RenderingContext;
     DeviceContextProvider* DeviceContextProvider;
 
-    LayoutDescriptor LayoutDescriptor;
-    ViewStateDescriptor ViewStateDescriptor;
-    wstring ViewName;
+    LayoutDescriptor Layout;
+    ViewStateDescriptor State;
+    wstring Name;
 
     DeviceContextBuffer* DeviceContextBuffer;
     vector<View*> ActiveChildViews;

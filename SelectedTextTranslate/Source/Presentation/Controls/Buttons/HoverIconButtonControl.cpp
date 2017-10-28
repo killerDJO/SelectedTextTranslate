@@ -18,7 +18,7 @@ HoverIconButtonControl::HoverIconButtonControl(CommonContext* context, View* par
 HoverIconButtonControl* HoverIconButtonControl::SetDimensions(Point position, Size size)
 {
     AssertViewNotInitialized();
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
     return this;
 }
 

@@ -26,7 +26,7 @@ HotKeyInputControl::HotKeyInputControl(CommonContext* context, View* parentWindo
 void HotKeyInputControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    LayoutDescriptor = LayoutDescriptor::CreateLayoutWindowDescriptor(position);
+    Layout = LayoutDescriptor::CreateLayoutWindowDescriptor(position);
 }
 
 void HotKeyInputControl::SetFont(Font* font)
@@ -102,7 +102,7 @@ bool HotKeyInputControl::IsValid() const
 void HotKeyInputControl::Initialize()
 {
     Size hotkeyInputSize = Size(width, lineHeight + padding * 2 + borderWidth * 2);
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(LayoutDescriptor.GetPosition(), hotkeyInputSize);
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(Layout.GetPosition(), hotkeyInputSize);
 
     // Ensure that the common control DLL is loaded.
     INITCOMMONCONTROLSEX icex;

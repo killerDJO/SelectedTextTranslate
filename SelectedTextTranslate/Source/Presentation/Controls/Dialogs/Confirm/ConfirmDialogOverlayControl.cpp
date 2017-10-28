@@ -19,13 +19,13 @@ void ConfirmDialogOverlayControl::Initialize()
 void ConfirmDialogOverlayControl::SetSize(Size size)
 {
     AssertViewNotInitialized();
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size);
 }
 
 Size ConfirmDialogOverlayControl::RenderContent(Renderer* renderer)
 {
-    renderer->DrawRect(Rect(Point(0, 0), ViewStateDescriptor.GetSize()), backgroundBrush);
-    return ViewStateDescriptor.GetSize();
+    renderer->DrawRect(Rect(Point(0, 0), State.GetSize()), backgroundBrush);
+    return State.GetSize();
 }
 
 ConfirmDialogOverlayControl::~ConfirmDialogOverlayControl()

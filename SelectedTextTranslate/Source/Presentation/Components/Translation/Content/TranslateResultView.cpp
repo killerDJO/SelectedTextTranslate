@@ -4,7 +4,7 @@
 TranslateResultView::TranslateResultView(CommonContext* context, View* parentView, ModelHolder<TranslateResultViewModel>* modelHolder)
     : ComponentView(context, parentView, modelHolder)
 {
-    this->ViewName = L"TranslateResultWindow";
+    this->Name = L"TranslateResultWindow";
 }
 
 Size TranslateResultView::RenderContent(Renderer* renderer, TranslateResultViewModel model)

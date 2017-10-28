@@ -9,7 +9,7 @@ TranslationView::TranslationView(CommonContext* context, View* parentView, Model
     headerComponent = nullptr;
     translateResultComponent = nullptr;
 
-    ViewName = L"TranslationWindow";
+    Name = L"TranslationWindow";
 }
 
 void TranslationView::Initialize()
@@ -72,9 +72,9 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslateResult model)
 void TranslationView::Resize()
 {
     Size parentSize = ParentView->GetSize();
-    LayoutDescriptor.SetSize(parentSize);
+    Layout.SetSize(parentSize);
 
-    ViewStateDescriptor.EnsureSize(parentSize);
+    State.EnsureSize(parentSize);
 
     Size bufferingDeviceContextSize = DeviceContextBuffer->GetSize();
     bufferingDeviceContextSize = Size(
@@ -88,10 +88,10 @@ void TranslationView::Resize()
 
     if(GetModel().IsEmptyResult())
     {
-        renderer->DrawRect(Rect(0, headerHeight, ViewStateDescriptor.GetSize().GetWidth(), ViewStateDescriptor.GetSize().GetHeight() - headerHeight), LightGrayBrush);
+        renderer->DrawRect(Rect(0, headerHeight, State.GetSize().GetWidth(), State.GetSize().GetHeight() - headerHeight), LightGrayBrush);
     }
 
-    RenderSeparator(renderer, max(ViewStateDescriptor.GetContentSize().GetWidth(), ViewStateDescriptor.GetSize().GetWidth()));
+    RenderSeparator(renderer, max(State.GetContentSize().GetWidth(), State.GetSize().GetWidth()));
 
     renderer->Render(DeviceContextBuffer);
     RenderingContext->ReleaseRenderer(renderer);

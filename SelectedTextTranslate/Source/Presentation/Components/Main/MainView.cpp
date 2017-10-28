@@ -11,7 +11,7 @@ MainView::MainView(CommonContext* context, ModelHolder<MainViewModel*>* modelHol
     : View(context)
 {
     this->ClassName = L"STT_MAIN";
-    this->ViewName = L"MainWindow";
+    this->Name = L"MainWindow";
 
     this->modelHolder = modelHolder;
 
@@ -30,10 +30,10 @@ void MainView::Initialize()
         ClassName,
         nullptr,
         WS_SIZEBOX | WS_POPUP | WS_CLIPCHILDREN | GetScrollStyle(),
-        LayoutDescriptor.GetPosition().GetX(),
-        LayoutDescriptor.GetPosition().GetY(),
-        LayoutDescriptor.GetSize().GetWidth(),
-        LayoutDescriptor.GetSize().GetHeight(),
+        Layout.GetPosition().GetX(),
+        Layout.GetPosition().GetY(),
+        Layout.GetSize().GetWidth(),
+        Layout.GetSize().GetHeight(),
         nullptr,
         nullptr,
         Context->GetInstance(),
@@ -51,14 +51,14 @@ void MainView::Initialize()
 
 void MainView::SetLayout(::LayoutDescriptor layout)
 {
-    LayoutDescriptor = layout;
+    Layout = layout;
 }
 
 void MainView::Render(bool preserveScrolls)
 {
-    LayoutDescriptor = GetModel()->GetCurrentLayoutDescriptor();
-    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
-    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
+    Layout = GetModel()->GetCurrentLayoutDescriptor();
+    State.SetPosition(Layout.GetPosition());
+    State.SetSize(Layout.GetSize());
     View::Render(preserveScrolls);
     Maximize();
 }
@@ -168,7 +168,7 @@ void MainView::Scale(double scaleFactorAdjustment)
 
 void MainView::Resize()
 {
-    if (ViewStateDescriptor.GetViewState() == ViewStates::Rendering)
+    if (State.GetViewState() == ViewStates::Rendering)
     {
         return;
     }
@@ -178,18 +178,18 @@ void MainView::Resize()
     int newWidth = windowRect.right - windowRect.left;
     int newHeight = windowRect.bottom - windowRect.top;
 
-    if (LayoutDescriptor.GetSize().GetWidth() == newWidth && LayoutDescriptor.GetSize().GetHeight() == newHeight)
+    if (Layout.GetSize().GetWidth() == newWidth && Layout.GetSize().GetHeight() == newHeight)
     {
         return;
     }
 
-    LayoutDescriptor.SetSize(Size(newWidth, newHeight));
-    ViewStateDescriptor.SetSize(LayoutDescriptor.GetSize());
+    Layout.SetSize(Size(newWidth, newHeight));
+    State.SetSize(Layout.GetSize());
 
-    LayoutDescriptor.SetPosition(Point(windowRect.left, windowRect.top));
-    ViewStateDescriptor.SetPosition(LayoutDescriptor.GetPosition());
+    Layout.SetPosition(Point(windowRect.left, windowRect.top));
+    State.SetPosition(Layout.GetPosition());
 
-    DeviceContextBuffer->Resize(ViewStateDescriptor.GetSize());
+    DeviceContextBuffer->Resize(State.GetSize());
 
     // Clear background
     Renderer* renderer = RenderingContext->GetRenderer();
@@ -198,9 +198,9 @@ void MainView::Resize()
 
     IComponent* currentComponent = GetComponentToShow();
     currentComponent->Resize();
-    ViewStateDescriptor.SetContentSize(currentComponent->GetBoundingRect().GetSize());
+    State.SetContentSize(currentComponent->GetBoundingRect().GetSize());
 
-    GetModel()->GetViewDescriptor().SetLayoutDescriptor(LayoutDescriptor);
+    GetModel()->GetViewDescriptor().SetLayoutDescriptor(Layout);
 
     ApplyViewState(true);
 }

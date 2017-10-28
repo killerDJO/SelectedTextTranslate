@@ -15,13 +15,13 @@ SettingsGroupHeaderControl::SettingsGroupHeaderControl(CommonContext* context, V
     this->lineHeight = this->fontNormal->GetHeight();
 
     this->ClassName = L"STT_SETTINGS_GROUP_HEADER";
-    this->ViewName = L"SettingsGroupHeaderControl";
+    this->Name = L"SettingsGroupHeaderControl";
 }
 
 SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
     return this;
 }
 
@@ -61,7 +61,7 @@ SettingsGroupVisibilityState SettingsGroupHeaderControl::GetVisibilityState() co
 void SettingsGroupHeaderControl::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
-    LayoutDescriptor = LayoutDescriptor::CreateFixedLayoutDescriptor(LayoutDescriptor.GetPosition(), Size(LayoutDescriptor.GetSize().GetWidth(), headerHeight));
+    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(Layout.GetPosition(), Size(Layout.GetSize().GetWidth(), headerHeight));
     ControlView::Initialize();
 }
 

@@ -6,7 +6,7 @@
 HeaderView::HeaderView(CommonContext* context, View* parentWindow, ModelHolder<TranslateResult>* modelHolder)
     : ComponentView<TranslateResult>(context, parentWindow, modelHolder)
 {
-    this->ViewName = L"TranlsateResultHeaderWindow";
+    Name = L"TranlsateResultHeaderWindow";
 }
 
 Size HeaderView::RenderContent(Renderer* renderer, TranslateResult model)

@@ -7,7 +7,7 @@
 class TranslateResultComponent : public Component<TranslateResultView>, ModelHolder<TranslateResultViewModel>
 {
 private:
-    TranslateResultViewModel contentModel;
+    TranslateResultViewModel viewModel;
     ModelHolder<TranslateResult>* modelHolder;
 
     void ExpandCategory(int categoryIndex);
