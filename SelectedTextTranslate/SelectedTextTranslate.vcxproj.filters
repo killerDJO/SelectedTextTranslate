@@ -691,6 +691,7 @@
     <ClInclude Include="Source\Presentation\Framework\CommonContext.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\IServiceInfo.h" />
     <ClInclude Include="Source\ServiceRegistryCreator.h" />
+    <ClInclude Include="Source\Presentation\Framework\ViewModelsStore.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">

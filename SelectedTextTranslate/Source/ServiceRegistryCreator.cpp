@@ -14,6 +14,7 @@
 #include "Presentation\Framework\Providers\DeviceContextProvider.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
 #include "Presentation\Framework\CommonContext.h"
+#include "Presentation\Framework\ViewModelsStore.h"
 
 ServiceRegistry* ServiceRegistryCreator::GetServiceRegistry()
 {
@@ -54,6 +55,7 @@ void ServiceRegistryCreator::RegisterBusinessLogic(ServiceRegistry* applicationR
 
 void ServiceRegistryCreator::RegisterPresentation(ServiceRegistry* applicationRegistry)
 {
+    applicationRegistry->RegisterSingleton<ViewModelsStore>([](ServiceRegistry* registry) { return new ViewModelsStore(); });
     applicationRegistry->RegisterSingleton<MessageBus>([](ServiceRegistry* registry) { return new MessageBus(); });
     applicationRegistry->RegisterSingleton<TrayIcon>([](ServiceRegistry* registry) { return new TrayIcon(registry); });
     applicationRegistry->RegisterSingleton<CommonContext>([](ServiceRegistry* registry) { return new CommonContext(registry); });

@@ -100,6 +100,7 @@
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Presentation\Framework\ViewModelsStore.h" />
     <ClInclude Include="Source\ServiceRegistryCreator.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\IServiceInfo.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\ServiceInfo.h" />

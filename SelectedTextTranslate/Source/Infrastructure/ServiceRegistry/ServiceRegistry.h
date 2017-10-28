@@ -7,12 +7,7 @@ class ServiceRegistry
 {
 private:
     map<string, IServiceInfo*> servicesMap;
-
-    template<typename TService>
-    bool IsServiceRegistered() const;
-
-    template<typename TService>
-    const char* GetSeriviceName() const;
+    vector<string> dependenciesChain;
 
     template<typename TService>
     void AssertServiceIsNotRegistered() const;
@@ -20,7 +15,12 @@ private:
     template<typename TService>
     void CheckCircularDependencies() const;
 
-    vector<string> dependenciesChain;
+protected:
+    template<typename TService>
+    bool IsServiceRegistered() const;
+
+    template<typename TService>
+    const char* GetSeriviceName() const;
 
 public:
     ~ServiceRegistry();
@@ -36,6 +36,9 @@ public:
 
     template<typename TService>
     void Register(function<TService*(ServiceRegistry*)> serviceFactory, InstantiationTypes instantiationType, bool ownInstance = true);
+
+    template<typename TService>
+    void Unregister();
 };
 
 template <typename TService>
@@ -56,6 +59,14 @@ void ServiceRegistry::Register(function<TService*(ServiceRegistry*)> serviceFact
 {
     AssertServiceIsNotRegistered<TService>();
     servicesMap[GetSeriviceName<TService>()] = new ServiceInfo<TService>(serviceFactory, instantiationType, ownInstance);
+}
+
+template <typename TService>
+void ServiceRegistry::Unregister()
+{
+    const char* serviceName = GetSeriviceName<TService>();
+    delete servicesMap[serviceName];
+    servicesMap.erase(serviceName);
 }
 
 template <typename TService>

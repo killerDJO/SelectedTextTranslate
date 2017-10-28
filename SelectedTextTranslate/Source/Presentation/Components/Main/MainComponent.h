@@ -13,19 +13,17 @@ private:
     TextExtractor* textExtractor;
     TextPlayer* textPlayer;
     TranslationService* translationService;
-
-    MainViewModel* viewModel;
+    ViewModelsStore* viewModelsStore;
 
     void ProcessHotkey(int hotkey) const;
     void ProcessVisibilityChange(bool isVisible);
 
     void PlaySelectedText() const;
     void TranslateSelectedText() const;
-    void ShowApplicatonView(ApplicationViews applicationView) const;
+    void ShowApplicatonView(ApplicationViews applicationView);
 
 public:
     MainComponent(ServiceRegistry* serviceRegistry);
-    ~MainComponent();
 
     void SetLayout(LayoutDescriptor layout) override;
     MainViewModel* GetModel() override;

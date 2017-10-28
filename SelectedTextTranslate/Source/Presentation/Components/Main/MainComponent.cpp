@@ -10,6 +10,7 @@ MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
     textPlayer = serviceRegistry->Get<TextPlayer>();
     messageBus = serviceRegistry->Get<MessageBus>();
     translationService = serviceRegistry->Get<TranslationService>();
+    viewModelsStore = serviceRegistry->Get<ViewModelsStore>();
 
     messageBus->OnPlaySelectedText.Subscribe(bind(&MainComponent::PlaySelectedText, this));
     messageBus->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary));
@@ -23,12 +24,12 @@ MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
 void MainComponent::SetLayout(LayoutDescriptor layout)
 {
     Component::SetLayout(layout);
-    viewModel = new MainViewModel(ApplicationViews::None, layout);
+    viewModelsStore->Store(new MainViewModel(ApplicationViews::None, layout));
 }
 
 MainViewModel* MainComponent::GetModel()
 {
-    return viewModel;
+    return viewModelsStore->Get<MainViewModel>();
 }
 
 void MainComponent::PlaySelectedText() const
@@ -44,9 +45,9 @@ void MainComponent::TranslateSelectedText() const
     CurrentView->Translate(selectedText);
 }
 
-void MainComponent::ShowApplicatonView(ApplicationViews applicationView) const
+void MainComponent::ShowApplicatonView(ApplicationViews applicationView)
 {
-    viewModel->SetApplicationView(applicationView);
+    GetModel()->SetApplicationView(applicationView);
     CurrentView->Render();
 }
 
@@ -72,13 +73,5 @@ void MainComponent::ProcessVisibilityChange(bool isVisible)
     {
         hotkeysRegistry->UnregisterZoomInHotkey(CurrentView->GetHandle());
         hotkeysRegistry->UnregisterZoomOutHotkey(CurrentView->GetHandle());
-    }
-}
-
-MainComponent::~MainComponent()
-{
-    if(viewModel != nullptr)
-    {
-        delete viewModel;
     }
 }

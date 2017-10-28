@@ -3,17 +3,17 @@
 #include "Presentation\Components\Settings\SettingsView.h"
 #include "BusinessLogic\Settings\SettingsProvider.h"
 #include "Presentation\Components\Settings\SettingsViewModel.h"
+#include "Presentation\Framework\ViewModelsStore.h"
 
 class SettingsComponent : public Component<SettingsView>, public ModelHolder<SettingsViewModel*>
 {
 private:
     SettingsProvider* settingsProvider;
-    SettingsViewModel* settingsViewModel;
+    ViewModelsStore* viewModelsStore;
 
 public:
     SettingsComponent(ServiceRegistry* serviceRegistry, View* parentView);
-    ~SettingsComponent();
 
     SettingsViewModel* GetModel() override;
-    void UpdateSettings(Settings settings) const;
+    void UpdateSettings(Settings settings);
 };

@@ -5,16 +5,18 @@ SettingsComponent::SettingsComponent(ServiceRegistry* serviceRegistry, View* par
     : Component<SettingsView>(new SettingsView(serviceRegistry->Get<CommonContext>(), parentView, this))
 {
     settingsProvider = serviceRegistry->Get<SettingsProvider>();
-    settingsViewModel = new SettingsViewModel(settingsProvider->GetSettings());
+    viewModelsStore = serviceRegistry->Get<ViewModelsStore>();
+
+    viewModelsStore->EnsureDefault(new SettingsViewModel(settingsProvider->GetSettings()));
 
     CurrentView->OnSaveSettings.Subscribe([this]
     {
-        UpdateSettings(settingsViewModel->GetCurrentSettings());
+        UpdateSettings(GetModel()->GetCurrentSettings());
     });
 
     CurrentView->OnCancelChanges.Subscribe([this]
     {
-        settingsViewModel->CancelChanges();
+        GetModel()->CancelChanges();
         CurrentView->Render(true);
     });
 
@@ -26,17 +28,12 @@ SettingsComponent::SettingsComponent(ServiceRegistry* serviceRegistry, View* par
 
 SettingsViewModel* SettingsComponent::GetModel()
 {
-    return settingsViewModel;
+    return viewModelsStore->Get<SettingsViewModel>();
 }
 
-void SettingsComponent::UpdateSettings(Settings settings) const
+void SettingsComponent::UpdateSettings(Settings settings)
 {
     settingsProvider->UpdateSettings(settings);
-    settingsViewModel->SetSettings(settings);
+    GetModel()->SetSettings(settings);
     CurrentView->Render(true);
-}
-
-SettingsComponent::~SettingsComponent()
-{
-    delete settingsViewModel;
 }
