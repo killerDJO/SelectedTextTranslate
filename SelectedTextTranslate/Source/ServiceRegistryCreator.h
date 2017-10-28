@@ -1,7 +1,7 @@
 #pragma once
 #include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 
-class ApplicationServiceRegistry
+class ServiceRegistryCreator
 {
 private:
     static void RegisterInfrastructure(ServiceRegistry* applicationRegistry);

@@ -15,7 +15,7 @@
     <Image Include="Resources\SelectedTextTranslateDisabled.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ApplicationServiceRegistry.cpp" />
+    <ClCompile Include="Source\ServiceRegistryCreator.cpp" />
     <ClCompile Include="Source\Presentation\Components\Main\MainViewModel.cpp" />
     <ClCompile Include="Source\Presentation\Components\Settings\SettingsComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.cpp" />
@@ -100,7 +100,7 @@
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ApplicationServiceRegistry.h" />
+    <ClInclude Include="Source\ServiceRegistryCreator.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\IServiceInfo.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\ServiceInfo.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\Enums\InstantiationTypes.h" />

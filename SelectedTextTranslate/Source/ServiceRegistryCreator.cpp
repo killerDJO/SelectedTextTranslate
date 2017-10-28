@@ -1,4 +1,4 @@
-#include "ApplicationServiceRegistry.h"
+#include "ServiceRegistryCreator.h"
 #include "BusinessLogic\Settings\SettingsProvider.h"
 #include "Presentation\MessageBus.h"
 #include "Presentation\Providers\HotkeysRegistry.h"
@@ -15,7 +15,7 @@
 #include "Presentation\Framework\Providers\ScrollProvider.h"
 #include "Presentation\Framework\CommonContext.h"
 
-ServiceRegistry* ApplicationServiceRegistry::GetServiceRegistry()
+ServiceRegistry* ServiceRegistryCreator::GetServiceRegistry()
 {
     ServiceRegistry* applicationRegistry = new ServiceRegistry();
 
@@ -27,19 +27,19 @@ ServiceRegistry* ApplicationServiceRegistry::GetServiceRegistry()
     return applicationRegistry;
 }
 
-void ApplicationServiceRegistry::RegisterInfrastructure(ServiceRegistry* applicationRegistry)
+void ServiceRegistryCreator::RegisterInfrastructure(ServiceRegistry* applicationRegistry)
 {
     applicationRegistry->RegisterSingleton<Logger>([](ServiceRegistry* registry) { return new Logger(); });
     applicationRegistry->RegisterSingleton<ErrorHandler>([](ServiceRegistry* registry) { return registry->Get<TrayIcon>(); }, false);
 }
 
-void ApplicationServiceRegistry::RegisterDataAccess(ServiceRegistry* applicationRegistry)
+void ServiceRegistryCreator::RegisterDataAccess(ServiceRegistry* applicationRegistry)
 {
     applicationRegistry->RegisterSingleton<SqliteProvider>([](ServiceRegistry* registry) { return new SqliteProvider(); });
     applicationRegistry->RegisterSingleton<RequestProvider>([](ServiceRegistry* registry) { return new RequestProvider(registry); });
 }
 
-void ApplicationServiceRegistry::RegisterBusinessLogic(ServiceRegistry* applicationRegistry)
+void ServiceRegistryCreator::RegisterBusinessLogic(ServiceRegistry* applicationRegistry)
 {
     applicationRegistry->RegisterSingleton<DictionaryService>([](ServiceRegistry* registry) { return new DictionaryService(registry); });
 
@@ -52,7 +52,7 @@ void ApplicationServiceRegistry::RegisterBusinessLogic(ServiceRegistry* applicat
     applicationRegistry->RegisterSingleton<HotkeysRegistry>([](ServiceRegistry* registry) { return new HotkeysRegistry(registry); });
 }
 
-void ApplicationServiceRegistry::RegisterPresentation(ServiceRegistry* applicationRegistry)
+void ServiceRegistryCreator::RegisterPresentation(ServiceRegistry* applicationRegistry)
 {
     applicationRegistry->RegisterSingleton<MessageBus>([](ServiceRegistry* registry) { return new MessageBus(); });
     applicationRegistry->RegisterSingleton<TrayIcon>([](ServiceRegistry* registry) { return new TrayIcon(registry); });

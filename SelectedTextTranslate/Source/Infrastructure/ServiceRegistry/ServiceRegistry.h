@@ -17,6 +17,11 @@ private:
     template<typename TService>
     void AssertServiceIsNotRegistered() const;
 
+    template<typename TService>
+    void CheckCircularDependencies() const;
+
+    vector<string> dependenciesChain;
+
 public:
     ~ServiceRegistry();
 
@@ -32,6 +37,44 @@ public:
     template<typename TService>
     void Register(function<TService*(ServiceRegistry*)> serviceFactory, InstantiationTypes instantiationType, bool ownInstance = true);
 };
+
+template <typename TService>
+void ServiceRegistry::RegisterSingleton(TService* service, bool ownInstance)
+{
+    AssertServiceIsNotRegistered<TService>();
+    servicesMap[GetSeriviceName<TService>()] = new ServiceInfo<TService>(service, ownInstance);
+}
+
+template <typename TService>
+void ServiceRegistry::RegisterSingleton(function<TService*(ServiceRegistry*)> serviceFactory, bool ownInstance)
+{
+    Register<TService>(serviceFactory, Singleton, ownInstance);
+}
+
+template <typename TService>
+void ServiceRegistry::Register(function<TService*(ServiceRegistry*)> serviceFactory, InstantiationTypes instantiationType, bool ownInstance)
+{
+    AssertServiceIsNotRegistered<TService>();
+    servicesMap[GetSeriviceName<TService>()] = new ServiceInfo<TService>(serviceFactory, instantiationType, ownInstance);
+}
+
+template <typename TService>
+TService* ServiceRegistry::Get()
+{
+    const char* serviceName = GetSeriviceName<TService>();
+    if (!IsServiceRegistered<TService>())
+    {
+        throw SelectedTextTranslateFatalException(StringUtilities::Format(L"%hs is not registered", serviceName));
+    }
+
+    CheckCircularDependencies<TService>();
+
+    dependenciesChain.push_back(serviceName);
+    TService* instance = reinterpret_cast<TService*>(servicesMap[serviceName]->GetInstance(this));
+    dependenciesChain.pop_back();
+
+    return instance;
+}
 
 template <typename TService>
 bool ServiceRegistry::IsServiceRegistered() const
@@ -56,35 +99,19 @@ void ServiceRegistry::AssertServiceIsNotRegistered() const
 }
 
 template <typename TService>
-TService* ServiceRegistry::Get()
+void ServiceRegistry::CheckCircularDependencies() const
 {
     const char* serviceName = GetSeriviceName<TService>();
-    if (!IsServiceRegistered<TService>())
+    if (find(dependenciesChain.begin(), dependenciesChain.end(), serviceName) != dependenciesChain.end())
     {
-        throw SelectedTextTranslateFatalException(StringUtilities::Format(L"%hs is not registered", serviceName));
+        string trace;
+        for (string dependency: dependenciesChain)
+        {
+            trace += dependency + ", ";
+        }
+        trace += serviceName;
+        throw SelectedTextTranslateFatalException(StringUtilities::Format(L"Dependencies loop is detected. Trace: %hs.", trace.c_str()));
     }
-
-    return reinterpret_cast<TService*>(servicesMap[serviceName]->GetInstance(this));
-}
-
-template <typename TService>
-void ServiceRegistry::RegisterSingleton(TService* service, bool ownInstance)
-{
-    AssertServiceIsNotRegistered<TService>();
-    servicesMap[GetSeriviceName<TService>()] = new ServiceInfo<TService>(service, ownInstance);
-}
-
-template <typename TService>
-void ServiceRegistry::RegisterSingleton(function<TService*(ServiceRegistry*)> serviceFactory, bool ownInstance)
-{
-    Register<TService>(serviceFactory, Singleton, ownInstance);
-}
-
-template <typename TService>
-void ServiceRegistry::Register(function<TService*(ServiceRegistry*)> serviceFactory, InstantiationTypes instantiationType, bool ownInstance)
-{
-    AssertServiceIsNotRegistered<TService>();
-    servicesMap[GetSeriviceName<TService>()] = new ServiceInfo<TService>(serviceFactory, instantiationType, ownInstance);
 }
 
 inline ServiceRegistry::~ServiceRegistry()

@@ -15,7 +15,7 @@
 #include "BusinessLogic\Translation\TextExtractor.h"
 #include "BusinessLogic\Translation\TextPlayer.h"
 #include "Presentation\Components\Main\MainComponent.h"
-#include "ApplicationServiceRegistry.h"
+#include "ServiceRegistryCreator.h"
 
 Application::Application()
 {
@@ -33,7 +33,7 @@ int Application::Run(HINSTANCE hInstance) const
     ULONG_PTR gdiplusToken;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
-    ServiceRegistry* serviceRegistry = ApplicationServiceRegistry::GetServiceRegistry();
+    ServiceRegistry* serviceRegistry = ServiceRegistryCreator::GetServiceRegistry();
     Logger* logger = serviceRegistry->Get<Logger>();
 
     logger->Log(LogLevels::Trace, L"Application start.");

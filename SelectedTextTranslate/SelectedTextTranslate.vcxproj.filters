@@ -387,7 +387,7 @@
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ApplicationServiceRegistry.cpp">
+    <ClCompile Include="Source\ServiceRegistryCreator.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -688,9 +688,9 @@
     </ClInclude>
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\Enums\InstantiationTypes.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\ServiceInfo.h" />
-    <ClInclude Include="Source\ApplicationServiceRegistry.h" />
     <ClInclude Include="Source\Presentation\Framework\CommonContext.h" />
     <ClInclude Include="Source\Infrastructure\ServiceRegistry\IServiceInfo.h" />
+    <ClInclude Include="Source\ServiceRegistryCreator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\translate.emf">
