@@ -268,13 +268,13 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_HOTKEY:
     {
-        OnHotkey.Notify(wParam);
+        OnHotkey(wParam);
         return View::WindowProcedure(message, wParam, lParam);
     }
 
     case WM_SHOWWINDOW:
     {
-        OnVisibilityChanged.Notify(wParam == TRUE);
+        OnVisibilityChanged(wParam == TRUE);
         break;
     }
 

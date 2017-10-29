@@ -41,7 +41,7 @@ LRESULT HoverButtonControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
         state = ButtonStates::Hovered;
         Render();
 
-        OnClick.Notify();
+        OnClick();
 
         return TRUE;
     }

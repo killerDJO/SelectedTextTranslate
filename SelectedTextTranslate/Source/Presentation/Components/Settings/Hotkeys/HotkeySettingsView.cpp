@@ -87,7 +87,7 @@ RenderResult HotkeySettingsView::RenderHotkeyEditControl(
     {
         hotkeySetter(settings, newHotkey);
         SetHotkeyInputsValiationState();
-        OnSettingsChanged.Notify();
+        OnSettingsChanged();
     });
     hotKeyInputWindow->InitializeAndRender();
     hotkeyInputWindows.push_back(hotKeyInputWindow);

@@ -102,7 +102,7 @@ LRESULT SettingsGroupHeaderControl::WindowProcedure(UINT message, WPARAM wParam,
 {
     if(message == WM_LBUTTONUP)
     {
-        OnSettingsToggled.Notify();
+        OnSettingsToggled();
         return TRUE;
     }
 

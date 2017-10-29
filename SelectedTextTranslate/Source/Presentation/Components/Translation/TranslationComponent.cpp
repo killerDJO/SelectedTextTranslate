@@ -34,7 +34,7 @@ void TranslationComponent::TranslateSelectedText() const
 void TranslationComponent::Translate(wstring input, bool incrementTranslationsCount, bool forceTranslation) const
 {
     viewModelsStore->Store(new TranslationViewModel(translationService->TranslateSentence(input, incrementTranslationsCount, forceTranslation)));
-    messageBus->OnShowTranslation.Notify();
+    messageBus->OnShowTranslation();
 }
 
 void TranslationComponent::ForceTranslation()

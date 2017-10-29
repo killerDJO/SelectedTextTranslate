@@ -54,7 +54,7 @@ void SettingsGroupComponent<TSettings, TView>::ProcessChange()
 {
     UpdateState();
     this->CurrentView->UpdateHeader();
-    OnSettingsChanged.Notify();
+    OnSettingsChanged();
 }
 
 template <typename TSettings, typename TView>

@@ -15,7 +15,7 @@ void DictionaryComponent::ProcessShowTranslation(int wordInDictionaryIndex) cons
 {
     vector<DictionaryRecord> dictionaryRecords = dictionaryService->GetTopRecords(200);
     DictionaryRecord recordToTranslate = dictionaryRecords[wordInDictionaryIndex];
-    messageBus->OnTranslateText.Notify(recordToTranslate.GetWord(), false);
+    messageBus->OnTranslateText(recordToTranslate.GetWord(), false);
 }
 
 vector<DictionaryRecord> DictionaryComponent::GetModel()

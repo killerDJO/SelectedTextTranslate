@@ -22,7 +22,7 @@ SettingsComponent::SettingsComponent(ServiceRegistry* serviceRegistry, View* par
 
     CurrentView->OnResetSettings.Subscribe([serviceRegistry, this]
     {
-        serviceRegistry->Get<MessageBus>()->OnConfirmRequested.Notify(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
+        serviceRegistry->Get<MessageBus>()->OnConfirmRequested(L"Confirm settings reset", [this] { UpdateSettings(Settings()); });
     });
 }
 

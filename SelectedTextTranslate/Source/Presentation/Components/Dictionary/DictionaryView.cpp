@@ -39,7 +39,7 @@ Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> 
         renderPosition = renderPosition.SetX(PaddingX);
 
         HoverIconButtonControl* translateButton = new HoverIconButtonControl(Context, this);
-        translateButton->OnClick.Subscribe([i, this] { OnShowTranslation.Notify(i); });
+        translateButton->OnClick.Subscribe([i, this] { OnShowTranslation(i); });
         translateButton
             ->SetDimensions(renderPosition.MoveY(-FontNormal->GetAscent() + 1).GetPosition(), Size(iconSize, iconSize))
             ->SetNormalIconResource(IDR_TRANSLATE_INACTIVE)

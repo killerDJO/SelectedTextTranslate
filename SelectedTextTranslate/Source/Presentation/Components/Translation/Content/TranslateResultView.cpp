@@ -123,7 +123,7 @@ RenderResult TranslateResultView::CreateExpandButton(
         expandButton->SetText(text);
         expandButton->OnClick.Subscribe([categoryIndex, this]()
         {
-            OnExpandCategory.Notify(categoryIndex);
+            OnExpandCategory(categoryIndex);
         });
         expandButton->InitializeAndRender();
 

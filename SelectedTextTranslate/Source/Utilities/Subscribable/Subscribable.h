@@ -18,6 +18,7 @@ public:
 
     void UnsubscribeAll();
 
+    void operator()(Types ... args);
     void Notify(Types ... args);
 };
 
@@ -57,6 +58,12 @@ void Subscribable<Types...>::RemoveSubscription(int id)
             break;
         }
     }
+}
+
+template <class ... Types>
+void Subscribable<Types...>::operator()(Types... args)
+{
+    Notify(forward<Types>(args)...);
 }
 
 template <class ... Types>

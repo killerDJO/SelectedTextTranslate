@@ -172,7 +172,7 @@ LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
         RenderToBuffer();
         ShowCustomCaret();
         InvalidateRect(Handle, nullptr, TRUE);
-        Context->GetMessageBus()->OnSuspendHotkeys.Notify();
+        Context->GetMessageBus()->OnSuspendHotkeys();
         return TRUE;
     }
 
@@ -182,7 +182,7 @@ LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
         RenderToBuffer();
         AssertCriticalWinApiResult(HideCaret(Handle));
         InvalidateRect(Handle, nullptr, TRUE);
-        Context->GetMessageBus()->OnEnableHotkeys.Notify();
+        Context->GetMessageBus()->OnEnableHotkeys();
         return TRUE;
     }
 
@@ -218,7 +218,7 @@ LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM 
 
         if(message == WM_KEYUP)
         {
-            OnHotkeyChanged.Notify(currentHotkey);
+            OnHotkeyChanged(currentHotkey);
         }
         else
         {
@@ -290,6 +290,6 @@ void HotKeyInputControl::RenderBorder(Renderer* renderer) const
 
 HotKeyInputControl::~HotKeyInputControl()
 {
-    Context->GetMessageBus()->OnEnableHotkeys.Notify();
+    Context->GetMessageBus()->OnEnableHotkeys();
     delete defaultFont;
 }

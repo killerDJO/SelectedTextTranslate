@@ -98,11 +98,11 @@ void TrayIcon::RegisterHotkeys()
 {
     hotkeysRegistry->RegisterTranslateHotkey(Handle, [this]() -> void
     {
-        return messageBus->OnTranslateSelectedText.Notify();
+        return messageBus->OnTranslateSelectedText();
     });
     hotkeysRegistry->RegisterPlayTextHotkey(Handle, [this]() -> void
     {
-        return messageBus->OnPlaySelectedText.Notify();
+        return messageBus->OnPlaySelectedText();
     });
 }
 
@@ -116,13 +116,13 @@ void TrayIcon::ShowError(wstring message)
 
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));
 
-    OnErrorShow.Notify();
+    OnErrorShow();
 }
 
 void TrayIcon::SetSuspendedState()
 {
     isSuspended = true;
-    messageBus->OnSuspendHotkeys.Notify();
+    messageBus->OnSuspendHotkeys();
     DestroyTrayIconMenu();
     CreateMenu();
     SetTrayIconImage(IDI_APP_ICON_DISABLED);
@@ -131,7 +131,7 @@ void TrayIcon::SetSuspendedState()
 void TrayIcon::SetEnabledState()
 {
     isSuspended = false;
-    messageBus->OnEnableHotkeys.Notify();
+    messageBus->OnEnableHotkeys();
     DestroyTrayIconMenu();
     CreateMenu();
     SetTrayIconImage(IDI_APP_ICON);
@@ -162,7 +162,7 @@ LRESULT TrayIcon::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
     {
         if (lParam == WM_LBUTTONUP)
         {
-            messageBus->OnTranslateSelectedText.Notify();
+            messageBus->OnTranslateSelectedText();
         }
 
         if (lParam == WM_RBUTTONUP)
