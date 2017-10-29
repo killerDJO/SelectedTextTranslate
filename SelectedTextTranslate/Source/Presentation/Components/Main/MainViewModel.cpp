@@ -20,9 +20,9 @@ void MainViewModel::SetApplicationView(ApplicationViews applicationView)
     this->applicationView = applicationView;
 }
 
-ViewDescriptor MainViewModel::GetViewDescriptor()
+ViewDescriptor* MainViewModel::GetViewDescriptor()
 {
-    return applicationViewDescriptors[applicationView];
+    return &applicationViewDescriptors[applicationView];
 }
 
 LayoutDescriptor MainViewModel::GetLayoutDescriptor(ApplicationViews applicationView)

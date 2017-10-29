@@ -9,12 +9,11 @@
 MainView::MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder)
     : View(context)
 {
-    this->ClassName = L"STT_MAIN";
-    this->Name = L"MainWindow";
-
     this->modelHolder = modelHolder;
 
-    this->confirmDialog = nullptr;
+    ClassName = L"STT_MAIN";
+    Name = L"MainWindow";
+    confirmDialog = nullptr;
 }
 
 void MainView::Initialize()
@@ -170,7 +169,7 @@ void MainView::Resize()
     currentComponent->Resize();
     State.SetContentSize(currentComponent->GetBoundingRect().GetSize());
 
-    GetModel()->GetViewDescriptor().SetLayoutDescriptor(Layout);
+    GetModel()->GetViewDescriptor()->SetLayoutDescriptor(Layout);
 
     ApplyViewState(true);
 }
@@ -193,14 +192,14 @@ void MainView::ShowConfirmDialog(wstring title, function<void()> onConfirm)
     confirmDialog->OnConfirm.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
     confirmDialog->OnCancel.UnsubscribeAll();
     confirmDialog->OnCancel.Subscribe(bind(&MainView::ApplyViewPosition, this, true));
+    confirmDialog->MakeVisible();
     confirmDialog->Render();
-    confirmDialog->Show();
     ScrollProvider->HideScrollbars(this);
 }
 
 bool MainView::IsResizeLocked() const
 {
-    return confirmDialog->IsVisible() || !GetModel()->GetViewDescriptor().IsResizeable();
+    return confirmDialog->IsVisible() || !GetModel()->GetViewDescriptor()->IsResizeable();
 }
 
 LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
@@ -238,6 +237,7 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
             newSize = windowRect;
             return 0;
         }
+        Resize();
 
         return TRUE;
     }

@@ -18,7 +18,7 @@ public:
     ApplicationViews GetApplicationView() const;
     void SetApplicationView(ApplicationViews applicationView);
 
-    ViewDescriptor GetViewDescriptor();
+    ViewDescriptor* GetViewDescriptor();
     LayoutDescriptor GetLayoutDescriptor(ApplicationViews applicationView);
     LayoutDescriptor GetCurrentLayoutDescriptor();
 

@@ -23,7 +23,6 @@ void ChildView::Initialize()
 
     if (IsLayered)
     {
-        SetWindowLongPtr(Handle, GWL_EXSTYLE, GetWindowLongPtr(Handle, GWL_EXSTYLE) | WS_EX_LAYERED);
         AssertCriticalWinApiResult(SetLayeredWindowAttributes(Handle, 0, 255, LWA_ALPHA));
     }
 }
@@ -45,6 +44,11 @@ Point ChildView::GetInitialViewOffset() const
 DWORD ChildView::GetWindowStyle() const
 {
     return View::GetWindowStyle() | WS_CHILD;
+}
+
+DWORD ChildView::GetExtendedWindowStyles() const
+{
+    return View::GetExtendedWindowStyles() | (IsLayered ? WS_EX_LAYERED : 0);
 }
 
 HWND ChildView::GetWindowParent() const

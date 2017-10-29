@@ -56,15 +56,15 @@ Size SettingsGroupView<TSettings>::RenderContent(Renderer* renderer, SettingsGro
         ->SetTitle(model->GetName())
         ->SetContentState(model->GetContentState())
         ->SetVisibilityState(model->GetVisibilityState())
-        ->SetDimensions(Point(0, 0), GetBoundingRect().GetWidth())
+        ->SetDimensions(Point(0, 0), this->Layout.GetSize().GetWidth())
         ->InitializeAndRender();
 
     renderer->UpdateRenderedContentSize(headerControl);
 
     if (model->GetVisibilityState() == SettingsGroupVisibilityState::Expanded)
     {
-        RenderSettingsContent(RenderDescriptor(renderer, Point(PaddingX * 2, headerControl->GetBoundingRect().GetBottom())), model->GetSettings());
-        Rect contentBorderRect = Rect(Point(0, 0), Size(GetBoundingRect().GetWidth(), renderer->GetSize().GetHeight()));
+        RenderSettingsContent(RenderDescriptor(renderer, Point(this->PaddingX * 2, headerControl->GetBoundingRect().GetBottom())), model->GetSettings());
+        Rect contentBorderRect = Rect(Point(0, 0), Size(this->Layout.GetSize().GetWidth(), renderer->GetSize().GetHeight()));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, borderWidth, Colors::Gray);
     }
 

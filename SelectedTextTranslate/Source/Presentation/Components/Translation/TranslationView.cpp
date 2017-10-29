@@ -70,8 +70,8 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* mo
 
 void TranslationView::Resize()
 {
-    Size parentSize = ParentView->GetBoundingRect().GetSize();
-    Layout.SetSize(parentSize);
+    Size parentSize = ParentView->GetAvailableClientSize();
+    Layout.SetSize(Size(parentSize.GetWidth(), 0));
 
     State.EnsureSize(parentSize);
 

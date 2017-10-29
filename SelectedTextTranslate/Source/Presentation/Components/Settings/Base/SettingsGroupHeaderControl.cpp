@@ -69,7 +69,7 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), GetBoundingRect().GetSize()), backgroundBrush, borderWidth, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), Layout.GetSize()), backgroundBrush, borderWidth, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontNormal->GetAscent());
 
@@ -87,7 +87,7 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 
     HoverIconButtonControl* expandButton = new HoverIconButtonControl(Context, this);
     expandButton->SetDimensions(
-        Point(GetBoundingRect().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, ScaleProvider).GetY()),
+        Point(Layout.GetSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, ScaleProvider).GetY()),
         Size(iconSize, iconSize));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);

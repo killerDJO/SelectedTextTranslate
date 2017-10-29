@@ -95,7 +95,7 @@ void HoverTextButtonControl::RenderStatesDeviceContexts()
 {
     Size textSize = RenderingProvider->GetTextSize(text.c_str(), GetFont());
 
-    State.EnsureSize(textSize);
+    State.SetSize(textSize);
 
     stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
     stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State.GetSize());

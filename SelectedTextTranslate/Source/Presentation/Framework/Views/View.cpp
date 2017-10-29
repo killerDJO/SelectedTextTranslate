@@ -32,7 +32,7 @@ void View::Initialize()
 {
     if(Layout.IsEmpty())
     {
-        throw SelectedTextTranslateException(L"Descriptor must be set for view");
+        throw SelectedTextTranslateException(L"Layout must be set for view");
     }
 
     DeviceContextBuffer = new ::DeviceContextBuffer(DeviceContextProvider, Layout.GetSize());
@@ -114,7 +114,6 @@ void View::Render(bool preserveScrolls)
         State.SetHeight(contentSize.GetHeight());
     }
 
-    State.SetViewState(ViewStates::Rendering);
     State.SetContentSize(contentSize);
 
     if (RenderingContext->IsRenderingRoot(this))
@@ -122,6 +121,7 @@ void View::Render(bool preserveScrolls)
         ApplyViewState(preserveScrolls);
     }
 
+    State.SetViewState(ViewStates::Rendered);
     RenderingContext->EndRender(this);
 }
 
@@ -216,6 +216,13 @@ void View::Draw(bool drawChildren)
 {
     AssertViewInitialized();
 
+    if (!IsVisible())
+    {
+        return;
+    }
+
+    printf("Draw: %ls, %ls, children: %d\n", Name.c_str(), ClassName, drawChildren);
+
     if (drawChildren)
     {
         // Important to draw child windows before drawing parent window.
@@ -267,7 +274,9 @@ void View::Resize()
 
 Size View::GetAvailableClientSize() const
 {
-    Size currentClientSize = GetCurrentClientSize();
+    RECT clientRect;
+    AssertCriticalWinApiResult(GetClientRect(Handle, &clientRect));
+    Size currentClientSize = Size(clientRect.right, clientRect.bottom);
 
     // Do not count showed scrollbars towards client size
     Size availablClientSize = Size(
@@ -277,12 +286,6 @@ Size View::GetAvailableClientSize() const
     return availablClientSize;
 }
 
-Size View::GetCurrentClientSize() const
-{
-    RECT clientRect;
-    AssertCriticalWinApiResult(GetClientRect(Handle, &clientRect));
-    return Size(clientRect.right, clientRect.bottom);
-}
 
 Size View::GetContentSize() const
 {

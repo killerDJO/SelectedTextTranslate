@@ -70,8 +70,8 @@ void HoverIconButtonControl::Initialize()
 
 void HoverIconButtonControl::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(Layout.GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(Layout.GetSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalIconResource);
@@ -80,12 +80,12 @@ void HoverIconButtonControl::RenderStatesDeviceContexts()
 
 void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const
 {
-    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, GetBoundingRect().GetWidth(), GetBoundingRect().GetHeight());
+    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, Layout.GetSize().GetWidth(), Layout.GetSize().GetHeight());
 
     if (iconsCache.count(cacheKey) != 0)
     {
         HDC renderedDC = iconsCache[cacheKey];
-        DeviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, GetBoundingRect().GetSize());
+        DeviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, Layout.GetSize());
         return;
     }
 
@@ -111,12 +111,12 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
     BOOL converstionSucceded;
     AssertGdiPlusResult(iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded));
 
-    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, GetBoundingRect().GetWidth(), GetBoundingRect().GetHeight()));
+    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, Layout.GetSize().GetWidth(), Layout.GetSize().GetHeight()));
 
     delete iconMetafile;
 
-    HDC cachedDC = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
-    DeviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, GetBoundingRect().GetSize());
+    HDC cachedDC = DeviceContextProvider->CreateDeviceContext(Layout.GetSize());
+    DeviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, Layout.GetSize());
     iconsCache[cacheKey] = cachedDC;
 }
 

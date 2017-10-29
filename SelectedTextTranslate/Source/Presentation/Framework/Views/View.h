@@ -62,7 +62,6 @@ public:
 
     Size GetContentSize() const;
     Size GetAvailableClientSize() const;
-    Size GetCurrentClientSize() const;
     Rect GetBoundingRect() const;
 
     void MakeVisible();
