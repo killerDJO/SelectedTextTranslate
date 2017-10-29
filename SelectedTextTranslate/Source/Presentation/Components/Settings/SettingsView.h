@@ -26,7 +26,7 @@ private:
 
     void CreateControls(RenderDescriptor renderDescriptor);
     RenderResult CreateSaveButtonControl(RenderDescriptor renderDescriptor);
-    HoverTextButtonControl* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback);
+    HoverTextButtonControl* CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribable<>* clickCallback);
 
     void SetButtonsState() const;
 
@@ -36,9 +36,9 @@ protected:
 public:
     SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder, IComponent* component);
 
-    Subscribeable<> OnSaveSettings;
-    Subscribeable<> OnResetSettings;
-    Subscribeable<> OnCancelChanges;
+    Subscribable<> OnSaveSettings;
+    Subscribable<> OnResetSettings;
+    Subscribable<> OnCancelChanges;
 };
 
 template <typename TSettings, typename TView>

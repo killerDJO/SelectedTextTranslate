@@ -99,6 +99,7 @@
     <ClCompile Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationComponent.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationViewModel.cpp" />
+    <ClCompile Include="Source\Utilities\Subscribable\SubscriptionDisposer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Presentation\Framework\ViewModelsStore.h" />
@@ -197,7 +198,7 @@
     <ClInclude Include="Source\Presentation\Framework\Dto\LayoutDescriptor.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationView.h" />
     <ClInclude Include="Source\Presentation\Providers\TrayIcon.h" />
-    <ClInclude Include="Source\Utilities\Subscribeable.h" />
+    <ClInclude Include="Source\Utilities\Subscribable\Subscribable.h" />
     <ClInclude Include="Source\DataAccess\SqliteProvider.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.h" />
     <ClInclude Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.h" />
@@ -205,6 +206,8 @@
     <ClInclude Include="Source\Presentation\Framework\Dto\ViewStateDescriptor.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationComponent.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationViewModel.h" />
+    <ClInclude Include="Source\Utilities\Subscribable\SubscribableCallback.h" />
+    <ClInclude Include="Source\Utilities\Subscribable\SubscriptionDisposer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Resource.rc" />

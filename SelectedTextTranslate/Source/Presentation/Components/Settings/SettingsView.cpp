@@ -102,7 +102,7 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
         saveButton->GetBoundingRect().GetY() + saveButton->GetTextBaseline()));
 }
 
-HoverTextButtonControl* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback)
+HoverTextButtonControl* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribable<>* clickCallback)
 {
     HoverTextButtonControl* button = new HoverTextButtonControl(Context, this);
     button->SetFont(FontSmallUnderscored);

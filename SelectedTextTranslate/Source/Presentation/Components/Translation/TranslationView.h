@@ -23,6 +23,6 @@ public:
     void Initialize() override;
     void Resize() override;
 
-    Subscribeable<> OnForceTranslation;
-    Subscribeable<> OnTranslateSuggestion;
+    Subscribable<> OnForceTranslation;
+    Subscribable<> OnTranslateSuggestion;
 };

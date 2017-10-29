@@ -23,8 +23,8 @@ ConfirmDialogContentControl::ConfirmDialogContentControl(ViewContext* context, V
 
     this->headerFont = RenderingProvider->CreateCustomFont(FontSizes::Normal, false, false, true);
 
-    this->OnConfirm = Subscribeable<>();
-    this->OnCancel = Subscribeable<>();
+    this->OnConfirm = Subscribable<>();
+    this->OnCancel = Subscribable<>();
 }
 
 void ConfirmDialogContentControl::SetDimensions(Point position, int width)

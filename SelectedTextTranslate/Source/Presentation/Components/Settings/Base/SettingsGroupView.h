@@ -20,8 +20,8 @@ public:
 
     void UpdateHeader();
 
-    Subscribeable<> OnSettingsToggled;
-    Subscribeable<> OnSettingsChanged;
+    Subscribable<> OnSettingsToggled;
+    Subscribable<> OnSettingsChanged;
 };
 
 template <typename TSettings>

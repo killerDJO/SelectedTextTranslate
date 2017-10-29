@@ -5,13 +5,19 @@
 template<class TView>
 class Component : public IComponent
 {
+private:
+    vector<SubscriptionDisposer*> subscriptionDisposers;
+
 protected:
     TView* CurrentView;
     LayoutDescriptor Layout;
 
-    Component(TView* view);
+    void RegisterForDispose(SubscriptionDisposer* disposer);
 
 public:
+    Component(TView* view);
+    virtual ~Component();
+
     void SetLayout(LayoutDescriptor layout) override;
 
     Rect GetBoundingRect() const override;
@@ -24,6 +30,12 @@ public:
     void MakeHidden() const override;
     void Resize() const override;
 };
+
+template <class TView>
+void Component<TView>::RegisterForDispose(SubscriptionDisposer* disposer)
+{
+    subscriptionDisposers.push_back(disposer);
+}
 
 template <class TView>
 Component<TView>::Component(TView* view)
@@ -80,4 +92,13 @@ template <class TView>
 void Component<TView>::Resize() const
 {
     CurrentView->Resize();
+}
+
+template <class TView>
+Component<TView>::~Component()
+{
+    for(auto disposer : subscriptionDisposers)
+    {
+        delete disposer;
+    }
 }

@@ -10,8 +10,8 @@ ConfirmDialogControl::ConfirmDialogControl(ViewContext* context, View* parentVie
 
     this->dialogContentView = nullptr;
     this->title = wstring();
-    this->OnConfirm = Subscribeable<>();
-    this->OnCancel = Subscribeable<>();
+    this->OnConfirm = Subscribable<>();
+    this->OnCancel = Subscribable<>();
 
     this->IsLayered = false;
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities\Subscribeable.h"
+#include "Utilities\Subscribable\Subscribable.h"
 #include "Presentation\Controls\Buttons\Base\Enums\ButtonStates.h"
 #include "Presentation\Framework\Views\ControlView.h"
 
@@ -21,7 +21,7 @@ public:
     HoverButtonControl(ViewContext* context, View* parentWindow);
     virtual ~HoverButtonControl();
 
-    Subscribeable<> OnClick;
+    Subscribable<> OnClick;
 
     void Initialize() override;
 

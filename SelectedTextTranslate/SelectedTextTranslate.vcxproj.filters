@@ -393,6 +393,9 @@
     <ClCompile Include="Source\Presentation\Framework\ViewContext.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utilities\Subscribable\SubscriptionDisposer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\SelectedTextTranslate.ico">
@@ -410,9 +413,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utilities\StringUtilities.h">
-      <Filter>Source\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utilities\Subscribeable.h">
       <Filter>Source\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="PrecompiledHeaders\stdafx.h">
@@ -694,6 +694,11 @@
     <ClInclude Include="Source\Presentation\Framework\ViewContext.h" />
     <ClInclude Include="Source\Presentation\Framework\Views\ChildComponentView.h">
       <Filter>Source\Presentation\Framework\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\Subscribable\SubscribableCallback.h" />
+    <ClInclude Include="Source\Utilities\Subscribable\SubscriptionDisposer.h" />
+    <ClInclude Include="Source\Utilities\Subscribable\Subscribable.h">
+      <Filter>Source\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

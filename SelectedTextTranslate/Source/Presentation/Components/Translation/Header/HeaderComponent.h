@@ -15,6 +15,6 @@ private:
 public:
     HeaderComponent(ServiceRegistry* serviceRegistry, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder);
 
-    Subscribeable<> OnForceTranslation;
-    Subscribeable<> OnTranslateSuggestion;
+    Subscribable<> OnForceTranslation;
+    Subscribable<> OnTranslateSuggestion;
 };

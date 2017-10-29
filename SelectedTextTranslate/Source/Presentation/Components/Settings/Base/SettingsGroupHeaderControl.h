@@ -39,5 +39,5 @@ public:
 
     void Initialize() override;
 
-    Subscribeable<> OnSettingsToggled;
+    Subscribable<> OnSettingsToggled;
 };

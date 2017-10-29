@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities\Subscribeable.h"
+#include "Utilities\Subscribable\Subscribable.h"
 #include "BusinessLogic\Dictionary\Dto\DictionaryRecord.h"
 #include "Presentation\Framework\Views\ChildComponentView.h"
 
@@ -14,5 +14,5 @@ protected:
 public:
     DictionaryView(ViewContext* context, View* parentView, ModelHolder<vector<DictionaryRecord>>* modelHolder, IComponent* component);
 
-    Subscribeable<int> OnShowTranslation;
+    Subscribable<int> OnShowTranslation;
 };

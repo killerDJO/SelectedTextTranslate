@@ -80,7 +80,7 @@ void HeaderView::PrintSuggestion(RenderDescriptor renderDescriptor, wstring sugg
     PrintHeaderAction(renderDescriptor, L"maybe you meant", suggestion, &OnTranslateSuggestion);
 }
 
-void HeaderView::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribeable<>* actionCallback)
+void HeaderView::PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribable<>* actionCallback)
 {
     TextRenderResult originLineRenderResult = renderDescriptor.GetRenderer()->PrintText(
         StringUtilities::Format(L" (%ls ", actionDescription.c_str()),

@@ -19,7 +19,7 @@ private:
     const int MenuSuspendItemId = 3007;
     const int MenuEnableItemId = 3008;
 
-    map<int, Subscribeable<>*> menuActionsToSubscribeableMap;
+    map<int, Subscribable<>*> menuActionsToSubscribeableMap;
 
     UINT WM_TASKBARCREATED;
     HMENU menu;
@@ -44,8 +44,8 @@ private:
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
-    Subscribeable<> OnSuspend;
-    Subscribeable<> OnEnable;
+    Subscribable<> OnSuspend;
+    Subscribable<> OnEnable;
 
     void SetSuspendedState();
     void SetEnabledState();

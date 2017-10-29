@@ -44,6 +44,6 @@ public:
     void Show() override;
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
 
-    Subscribeable<int> OnHotkey;
-    Subscribeable<bool> OnVisibilityChanged;
+    Subscribable<int> OnHotkey;
+    Subscribable<bool> OnVisibilityChanged;
 };

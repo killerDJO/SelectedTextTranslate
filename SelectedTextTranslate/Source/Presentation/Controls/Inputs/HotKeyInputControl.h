@@ -1,6 +1,6 @@
 #pragma once
 #include "Presentation\Framework\Views\ControlView.h"
-#include "Utilities\Subscribeable.h"
+#include "Utilities\Subscribable\Subscribable.h"
 
 class HotKeyInputControl : public ControlView
 {
@@ -58,5 +58,5 @@ public:
 
     void Initialize() override;
 
-    Subscribeable<DWORD> OnHotkeyChanged;
+    Subscribable<DWORD> OnHotkeyChanged;
 };

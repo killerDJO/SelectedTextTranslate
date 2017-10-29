@@ -252,7 +252,7 @@ int ScrollProvider::ComputeScrollAdjustment(HWND windowHandle, SCROLLINFO scroll
         totalAdjustment += commmonAdjustment + (position < abs(nonScrolledAmount) % availbleLines ? 1 : 0);
     }
 
-    int signedAdjustment = copysign(1, currentScrollPosition - scrollInfo.nPos) * copysign(1, nonScrolledAmount) * totalAdjustment;
+    int signedAdjustment = roundToInt(copysign(1, currentScrollPosition - scrollInfo.nPos) * copysign(1, nonScrolledAmount) * totalAdjustment);
 
     return signedAdjustment;
 }

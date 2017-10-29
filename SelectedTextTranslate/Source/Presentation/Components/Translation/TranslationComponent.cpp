@@ -13,9 +13,9 @@ TranslationComponent::TranslationComponent(ServiceRegistry* serviceRegistry, Vie
     CurrentView->OnForceTranslation.Subscribe(bind(&TranslationComponent::ForceTranslation, this));
     CurrentView->OnTranslateSuggestion.Subscribe(bind(&TranslationComponent::TranslateSuggestion, this));
 
-    messageBus->OnTranslateText.Subscribe(bind(&TranslationComponent::Translate, this, placeholders::_1, placeholders::_2, false));
-    messageBus->OnTranslateSelectedText.Subscribe(bind(&TranslationComponent::TranslateSelectedText, this));
-    messageBus->OnPlaySelectedText.Subscribe(bind(&TranslationComponent::PlaySelectedText, this));
+    RegisterForDispose(messageBus->OnTranslateText.Subscribe(bind(&TranslationComponent::Translate, this, placeholders::_1, placeholders::_2, false)));
+    RegisterForDispose(messageBus->OnTranslateSelectedText.Subscribe(bind(&TranslationComponent::TranslateSelectedText, this)));
+    RegisterForDispose(messageBus->OnPlaySelectedText.Subscribe(bind(&TranslationComponent::PlaySelectedText, this)));
 }
 
 void TranslationComponent::PlaySelectedText() const

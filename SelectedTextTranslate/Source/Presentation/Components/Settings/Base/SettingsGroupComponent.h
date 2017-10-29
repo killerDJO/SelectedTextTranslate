@@ -19,7 +19,7 @@ public:
     void Initialize() override;
     virtual bool IsValid() = 0;
 
-    Subscribeable<> OnSettingsChanged;
+    Subscribable<> OnSettingsChanged;
 };
 
 template <typename TSettings, typename TView>

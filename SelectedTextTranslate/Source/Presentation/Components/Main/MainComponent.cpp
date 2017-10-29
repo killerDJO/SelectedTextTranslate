@@ -8,12 +8,12 @@ MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
     messageBus = serviceRegistry->Get<MessageBus>();
     viewModelsStore = serviceRegistry->Get<ViewModelsStore>();
 
-    messageBus->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary));
-    messageBus->OnShowSettings.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Settings));
-    messageBus->OnShowTranslation.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::TranslateResult));
-    messageBus->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, CurrentView, placeholders::_1, placeholders::_2));
+    RegisterForDispose(messageBus->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary)));
+    RegisterForDispose(messageBus->OnShowSettings.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Settings)));
+    RegisterForDispose(messageBus->OnShowTranslation.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::TranslateResult)));
+    RegisterForDispose(messageBus->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, CurrentView, placeholders::_1, placeholders::_2)));
 
-    serviceRegistry->Get<ErrorHandler>()->OnErrorShow.Subscribe(bind(&MainView::Hide, CurrentView));
+    RegisterForDispose(serviceRegistry->Get<ErrorHandler>()->OnErrorShow.Subscribe(bind(&MainView::Hide, CurrentView)));
 
     CurrentView->OnHotkey.Subscribe(bind(&MainComponent::ProcessHotkey, this, placeholders::_1));
     CurrentView->OnVisibilityChanged.Subscribe(bind(&MainComponent::ProcessVisibilityChange, this, placeholders::_1));

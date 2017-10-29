@@ -1,19 +1,19 @@
 #pragma once
-#include "Utilities\Subscribeable.h"
+#include "Utilities\Subscribable\Subscribable.h"
 
 class MessageBus
 {
 public:
-    Subscribeable<wstring, function<void()>> OnConfirmRequested;
-    Subscribeable<> OnSuspendHotkeys;
-    Subscribeable<> OnEnableHotkeys;
+    Subscribable<wstring, function<void()>> OnConfirmRequested;
+    Subscribable<> OnSuspendHotkeys;
+    Subscribable<> OnEnableHotkeys;
 
-    Subscribeable<> OnExit;
-    Subscribeable<> OnPlaySelectedText;
-    Subscribeable<> OnTranslateSelectedText;
-    Subscribeable<wstring, bool> OnTranslateText;
+    Subscribable<> OnExit;
+    Subscribable<> OnPlaySelectedText;
+    Subscribable<> OnTranslateSelectedText;
+    Subscribable<wstring, bool> OnTranslateText;
 
-    Subscribeable<> OnShowDictionary;
-    Subscribeable<> OnShowSettings;
-    Subscribeable<> OnShowTranslation;
+    Subscribable<> OnShowDictionary;
+    Subscribable<> OnShowSettings;
+    Subscribable<> OnShowTranslation;
 };

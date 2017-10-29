@@ -25,6 +25,6 @@ public:
 
     void Show() override;
 
-    Subscribeable<> OnConfirm;
-    Subscribeable<> OnCancel;
+    Subscribable<> OnConfirm;
+    Subscribable<> OnCancel;
 };

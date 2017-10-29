@@ -15,5 +15,5 @@ protected:
 
 public:
     TranslateResultView(ViewContext* context, View* parentWindow, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);
-    Subscribeable<int> OnExpandCategory;
+    Subscribable<int> OnExpandCategory;
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include "Infrastructure\Logging\Logger.h"
-#include "Utilities\Subscribeable.h"
+#include "Utilities\Subscribable\Subscribable.h"
 
 class ErrorHandler
 {
@@ -11,7 +11,7 @@ public:
     virtual ~ErrorHandler() = default;
     ErrorHandler(Logger* logger);
 
-    Subscribeable<> OnErrorShow;
+    Subscribable<> OnErrorShow;
 
     virtual void ShowError(wstring message) = 0;
     virtual void HandleFatalException();

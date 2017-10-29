@@ -4,7 +4,7 @@
 HoverButtonControl::HoverButtonControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
-    this->OnClick = Subscribeable<>();
+    this->OnClick = Subscribable<>();
     this->state = ButtonStates::Normal;
     this->stateToDeviceContextMap = map<ButtonStates, HDC>();
 }

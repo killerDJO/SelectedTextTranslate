@@ -22,7 +22,7 @@ TrayIcon::TrayIcon(ServiceRegistry* registry)
 
 void TrayIcon::InitializeMenuActionsToSubscribeableMap()
 {
-    this->menuActionsToSubscribeableMap = map<int, Subscribeable<>*>();
+    this->menuActionsToSubscribeableMap = map<int, Subscribable<>*>();
 
     menuActionsToSubscribeableMap[MenuExitItemId] = &messageBus->OnExit;
     menuActionsToSubscribeableMap[MenuTranslateItemId] = &messageBus->OnTranslateSelectedText;
