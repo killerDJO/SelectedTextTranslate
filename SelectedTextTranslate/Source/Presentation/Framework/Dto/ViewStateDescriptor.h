@@ -35,7 +35,7 @@ public:
     void MakeHidden();
     bool IsVisible() const;
 
-    void EnsureWidth(int width);
-    void EnsureHeight(int height);
+    void SetWidth(int width);
+    void SetHeight(int height);
     void EnsureSize(Size size);
 };

@@ -76,24 +76,18 @@ bool ViewStateDescriptor::IsVisible() const
     return isVisible;
 }
 
-void ViewStateDescriptor::EnsureWidth(int width)
+void ViewStateDescriptor::SetWidth(int width)
 {
-    if(size.GetWidth() < width)
-    {
-        size = Size(width, size.GetHeight());
-    }
+    size = Size(width, size.GetHeight());
 }
 
-void ViewStateDescriptor::EnsureHeight(int height)
+void ViewStateDescriptor::SetHeight(int height)
 {
-    if (size.GetHeight() < height)
-    {
-        size = Size(size.GetWidth(), height);
-    }
+    size = Size(size.GetWidth(), height);
 }
 
 void ViewStateDescriptor::EnsureSize(Size size)
 {
-    EnsureWidth(size.GetWidth());
-    EnsureHeight(size.GetHeight());
+    SetWidth(size.GetWidth());
+    SetHeight(size.GetHeight());
 }

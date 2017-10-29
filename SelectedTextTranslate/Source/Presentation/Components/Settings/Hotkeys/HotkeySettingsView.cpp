@@ -94,7 +94,7 @@ RenderResult HotkeySettingsView::RenderHotkeyEditControl(
 
     renderDescriptor.GetRenderer()->UpdateRenderedContentSize(hotKeyInputWindow);
 
-    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetSize().GetHeight()));
+    return RenderResult(renderPosition.MoveY(hotKeyInputWindow->GetBoundingRect().GetHeight()));
 }
 
 void HotkeySettingsView::SetHotkeyInputsValiationState()

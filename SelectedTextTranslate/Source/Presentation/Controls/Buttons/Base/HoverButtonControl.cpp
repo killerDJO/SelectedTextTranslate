@@ -17,7 +17,7 @@ void HoverButtonControl::Initialize()
 
 Size HoverButtonControl::RenderContent(Renderer* renderer)
 {
-    renderer->DrawDeviceContext(stateToDeviceContextMap[state], GetSize());
+    renderer->DrawDeviceContext(stateToDeviceContextMap[state], GetBoundingRect().GetSize());
     return renderer->GetSize();
 }
 

@@ -47,8 +47,8 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* mo
         translateResultComponent->MakeHidden();
 
         Size backgroundSize = Size(
-            max(ParentView->GetSize().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
-            ParentView->GetSize().GetHeight() - headerHeight);
+            max(ParentView->GetBoundingRect().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
+            ParentView->GetBoundingRect().GetHeight() - headerHeight);
         renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), BackgroundBrush);
 
         contentSize = headerComponent->GetBoundingRect().GetSize();
@@ -63,14 +63,14 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* mo
             headerComponent->GetBoundingRect().GetHeight() + translateResultComponent->GetBoundingRect().GetHeight());
     }
 
-    RenderSeparator(renderer, max(GetSize().GetWidth(), contentSize.GetWidth()));
+    RenderSeparator(renderer, max(GetBoundingRect().GetWidth(), contentSize.GetWidth()));
 
     return contentSize;
 }
 
 void TranslationView::Resize()
 {
-    Size parentSize = ParentView->GetSize();
+    Size parentSize = ParentView->GetBoundingRect().GetSize();
     Layout.SetSize(parentSize);
 
     State.EnsureSize(parentSize);

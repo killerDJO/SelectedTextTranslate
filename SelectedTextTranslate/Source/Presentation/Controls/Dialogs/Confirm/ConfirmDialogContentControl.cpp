@@ -59,7 +59,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), GetSize()), nullptr, borderWidth, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), GetBoundingRect().GetSize()), nullptr, borderWidth, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
@@ -69,7 +69,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
         .SetY(lineHeight)
         .SetX(0);
 
-    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(GetSize().GetWidth(), borderWidth)), grayBrush);
+    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(GetBoundingRect().GetWidth(), borderWidth)), grayBrush);
 
     renderPosition = renderPosition
         .SetY(roundToInt(1.5 * lineHeight) + fontSmall->GetAscent())
@@ -78,7 +78,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 
     renderPosition = renderPosition.SetY(roundToInt(lineHeight * 2.5)).SetX(0);
     renderer->DrawBorderedRect(
-        Rect(renderPosition.GetPosition(), Size(GetSize().GetWidth(), GetSize().GetHeight() - renderPosition.GetY())),
+        Rect(renderPosition.GetPosition(), Size(GetBoundingRect().GetWidth(), GetBoundingRect().GetHeight() - renderPosition.GetY())),
         backgroundBrush,
         borderWidth,
         Colors::Gray);
@@ -86,7 +86,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     HoverFlatButtonControl* confirmButton = new HoverFlatButtonControl(Context, this);
     confirmButton->SetText(L"Confirm");
     confirmButton->SetPosition(Point(
-        GetSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
+        GetBoundingRect().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
         renderPosition.GetY() + paddingX));
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();
@@ -97,8 +97,8 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     cancelButton->SetText(L"Cancel");
     cancelButton->SetFont(fontSmallUnderscored);
     cancelButton->SetPosition(Point(
-        confirmButton->GetPosition().GetX() - paddingX - textWidth,
-        confirmButton->GetPosition().GetY() + confirmButton->GetTextBaseline() - fontSmallUnderscored->GetAscent()));
+        confirmButton->GetBoundingRect().GetX() - paddingX - textWidth,
+        confirmButton->GetBoundingRect().GetY() + confirmButton->GetTextBaseline() - fontSmallUnderscored->GetAscent()));
     cancelButton->OnClick.Subscribe(&OnCancel);
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);

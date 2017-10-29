@@ -1,5 +1,4 @@
 #pragma once
-#include "Presentation\Framework\Dto\Positioning\Size.h"
 #include "Presentation\Framework\Enums\ScrollBars.h"
 #include "Presentation\Framework\Views\View.h"
 
@@ -17,10 +16,9 @@ private:
     void InitializeScrollbar(HWND windowHandle, int contentDimension, int windowDimension, ScrollBars scrollBar, int initialPosition) const;
 
     SCROLLINFO GetWindowScrollInfo(View* window, ScrollBars scrollBar) const;
-    void SetScrollPosition(View* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int scrollOffset) const;
+    void SetScrollPosition(View* window, SCROLLINFO scrollInfo, ScrollBars scrollBar, int currentScrollPosition) const;
     void ProcessScroll(View* window, WPARAM wParam, LPARAM lParam, ScrollBars scrollBar) const;
-
-    Size AlignWithScrollingGrid(Size size) const;
+    int ComputeScrollAdjustment(HWND windowHandle, SCROLLINFO scrollInfo, ScrollBars scrollBar, int currentScrollPosition) const;
 
 public:
     ScrollProvider();

@@ -99,7 +99,7 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
 
     return RenderResult(Point(
         saveButton->GetBoundingRect().GetRight(),
-        saveButton->GetPosition().GetY() + saveButton->GetTextBaseline()));
+        saveButton->GetBoundingRect().GetY() + saveButton->GetTextBaseline()));
 }
 
 HoverTextButtonControl* SettingsView::CreateTextButtonControl(RenderDescriptor renderDescriptor, wstring text, Subscribeable<>* clickCallback)

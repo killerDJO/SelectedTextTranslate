@@ -63,7 +63,7 @@ void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
 {
     LayoutDescriptor initialLayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
         Point(0, 0),
-        GetModel()->GetLayoutDescriptor(view).GetSize(),
+        Size(GetAvailableClientSize().GetWidth(), 0),
         OverflowModes::Stretch,
         OverflowModes::Stretch);
     component->SetLayout(initialLayoutDescriptor);
@@ -75,13 +75,15 @@ void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
 void MainView::CreateConfirmDialog()
 {
     confirmDialog = new ConfirmDialogControl(Context, this);
-    confirmDialog->SetSize(GetClientSize());
+    confirmDialog->SetSize(GetAvailableClientSize());
     confirmDialog->Initialize();
     confirmDialog->MakeHidden();
 }
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
+    View::SpecifyWindowClass(windowClass);
+
     windowClass->hIcon = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIcon);
 

@@ -47,6 +47,7 @@ protected:
     Size RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
 
+    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
@@ -60,9 +61,8 @@ public:
     LayoutDescriptor GetLayout() const;
 
     Size GetContentSize() const;
-    Size GetSize() const;
-    Size GetClientSize() const;
-    Point GetPosition() const;
+    Size GetAvailableClientSize() const;
+    Size GetCurrentClientSize() const;
     Rect GetBoundingRect() const;
 
     void MakeVisible();

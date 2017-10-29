@@ -273,7 +273,7 @@ void HotKeyInputControl::RenderBorder(Renderer* renderer) const
 {
     Rect borderRect = Rect(
         Point(0, 0),
-        GetClientSize());
+        GetAvailableClientSize());
 
     Colors borderColor = Colors::Gray;
     if(!isValid)

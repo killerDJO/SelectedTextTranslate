@@ -90,10 +90,10 @@ int HoverFlatButtonControl::GetTextBaseline() const
 
 void HoverFlatButtonControl::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Pressed] = DeviceContextProvider->CreateDeviceContext(GetSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
+    stateToDeviceContextMap[ButtonStates::Pressed] = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(GetBoundingRect().GetSize());
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], Colors::Button, Colors::LightGray, Colors::Black);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], Colors::ButtonHovered, Colors::Blue, Colors::Black);
@@ -108,7 +108,7 @@ void HoverFlatButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors 
     Brush* backgroundBrush = RenderingProvider->CreateCustomBrush(backgroundColor);
 
     renderer->DrawBorderedRect(
-        Rect(Point(0, 0), GetSize()),
+        Rect(Point(0, 0), GetBoundingRect().GetSize()),
         backgroundBrush,
         borderWidth,
         borderColor);
@@ -117,10 +117,10 @@ void HoverFlatButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors 
         text.c_str(),
         GetFont(),
         fontColor,
-        Point(GetSize().GetWidth() / 2, GetTextBaseline()),
+        Point(GetBoundingRect().GetWidth() / 2, GetTextBaseline()),
         TA_CENTER);
 
-    renderer->Render(deviceContext, GetSize());
+    renderer->Render(deviceContext, GetBoundingRect().GetSize());
 
     RenderingContext->ReleaseRenderer(renderer);
 

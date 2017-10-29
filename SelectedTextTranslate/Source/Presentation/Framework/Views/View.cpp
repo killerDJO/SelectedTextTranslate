@@ -45,6 +45,12 @@ void View::Initialize()
     State.SetViewState(ViewStates::Initialized);
 }
 
+void View::SpecifyWindowClass(WNDCLASSEX* windowClass)
+{
+    // Reserve for scrolling
+    windowClass->cbWndExtra = 2 * sizeof(LONG_PTR);
+}
+
 Rect View::GetWindowRectangle() const
 {
     Point offset = GetInitialViewOffset();
@@ -100,12 +106,12 @@ void View::Render(bool preserveScrolls)
 
     if (Layout.GetOverflowX() == OverflowModes::Stretch && contentSize.GetWidth() > Layout.GetSize().GetWidth())
     {
-        State.EnsureWidth(contentSize.GetWidth());
+        State.SetWidth(contentSize.GetWidth());
     }
 
     if (Layout.GetOverflowY() == OverflowModes::Stretch && contentSize.GetHeight() > Layout.GetSize().GetHeight())
     {
-        State.EnsureHeight(contentSize.GetHeight());
+        State.SetHeight(contentSize.GetHeight());
     }
 
     State.SetViewState(ViewStates::Rendering);
@@ -156,21 +162,21 @@ void View::ApplyViewState(bool preserveScrolls)
     if (IsVisible())
     {
         Show();
+
+        ApplyViewPosition(preserveScrolls);
+
+        // Important to draw child windows first
+        for (View* childView : activeChildViews)
+        {
+            childView->ApplyViewState(preserveScrolls);
+        }
+
+        Draw(false);
     }
     else
     {
         Hide();
     }
-
-    ApplyViewPosition(preserveScrolls);
-
-    // Important to draw child windows first
-    for (View* childView : activeChildViews)
-    {
-        childView->ApplyViewState(preserveScrolls);
-    }
-
-    Draw(false);
 }
 
 void View::ApplyViewPosition(bool preserveScrolls)
@@ -219,7 +225,7 @@ void View::Draw(bool drawChildren)
 
     HDC deviceContext = GetDC(Handle);
     AssertCriticalWinApiResult(deviceContext);
-    DeviceContextBuffer->Render(deviceContext, GetSize());
+    DeviceContextBuffer->Render(deviceContext, State.GetSize());
     AssertCriticalWinApiResult(ReleaseDC(Handle, deviceContext));
 }
 
@@ -259,33 +265,23 @@ void View::Resize()
     // By default, do nothing on resize.
 }
 
-Size View::GetSize() const
+Size View::GetAvailableClientSize() const
 {
-    return State.GetSize();
+    Size currentClientSize = GetCurrentClientSize();
+
+    // Do not count showed scrollbars towards client size
+    Size availablClientSize = Size(
+        currentClientSize.GetWidth() + ScrollProvider->GetScrollBarSize(this, ScrollBars::Vertical),
+        currentClientSize.GetHeight() + ScrollProvider->GetScrollBarSize(this, ScrollBars::Horizontal));
+
+    return availablClientSize;
 }
 
-Size View::GetClientSize() const
+Size View::GetCurrentClientSize() const
 {
     RECT clientRect;
     AssertCriticalWinApiResult(GetClientRect(Handle, &clientRect));
-
-    Size availablClientSize = Size(
-        clientRect.right + ScrollProvider->GetScrollBarSize(this, ScrollBars::Vertical),
-        clientRect.bottom + ScrollProvider->GetScrollBarSize(this, ScrollBars::Horizontal));
-
-    RECT windowRect;
-    AssertCriticalWinApiResult(GetWindowRect(Handle, &windowRect));
-    Size currentWindowSize = Size(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
-
-    // Important to compute the future window size in case window has been scaled but changes not yet applied
-    double scaleFactor = double(windowRect.right - windowRect.left) / currentWindowSize.GetWidth();
-
-    int horizontalFrame = roundToInt((currentWindowSize.GetWidth() - availablClientSize.GetWidth()) * scaleFactor);
-    int verticalFrame = roundToInt((currentWindowSize.GetHeight() - availablClientSize.GetHeight()) * scaleFactor);
-
-    Size scaledClientSize = Size(currentWindowSize.GetWidth() - horizontalFrame, currentWindowSize.GetHeight() - verticalFrame);
-
-    return scaledClientSize;
+    return Size(clientRect.right, clientRect.bottom);
 }
 
 Size View::GetContentSize() const
@@ -293,16 +289,9 @@ Size View::GetContentSize() const
     return State.GetContentSize();
 }
 
-Point View::GetPosition() const
-{
-    return State.GetPosition();
-}
-
 Rect View::GetBoundingRect() const
 {
-    Point positon = GetPosition();
-    Size size = GetSize();
-    return Rect(positon, size);
+    return State.GetBoundingRect();
 }
 
 void View::MakeVisible()
