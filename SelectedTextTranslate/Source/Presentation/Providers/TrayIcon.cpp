@@ -3,7 +3,7 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TrayIcon::TrayIcon(ServiceRegistry* registry)
-    : NativeWindowHolder(), ErrorHandler(logger)
+    : NativeWindowHolder(), ErrorHandler(registry->Get<Logger>())
 {
     logger = registry->Get<Logger>();
     hotkeysRegistry = registry->Get<HotkeysRegistry>();

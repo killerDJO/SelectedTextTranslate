@@ -5,7 +5,6 @@
 #include "Presentation\Components\Main\Enums\ApplicationViews.h"
 #include "Presentation\Components\Translation\TranslationComponent.h"
 #include "Presentation\Framework\Providers\ScrollProvider.h"
-#include "Presentation\MessageBus.h"
 
 MainView::MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder)
     : View(context)
@@ -15,9 +14,6 @@ MainView::MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolde
 
     this->modelHolder = modelHolder;
 
-    this->dictionaryComponent = nullptr;
-    this->translationComponent = nullptr;
-    this->settingsComponent = nullptr;
     this->confirmDialog = nullptr;
 }
 
@@ -26,11 +22,7 @@ void MainView::Initialize()
     View::Initialize();
 
     CreateChildComponents();
-
-    Minimize();
-
-    Context->GetErrorHandler()->OnErrorShow.Subscribe(bind(&MainView::Minimize, this));
-    Context->GetMessageBus()->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, this, placeholders::_1, placeholders::_2));
+    MakeHidden();
 }
 
 DWORD MainView::GetExtendedWindowStyles() const
@@ -53,33 +45,18 @@ void MainView::Render(bool preserveScrolls)
     Layout = GetModel()->GetCurrentLayoutDescriptor();
     State.SetPosition(Layout.GetPosition());
     State.SetSize(Layout.GetSize());
+    MakeVisible();
     View::Render(preserveScrolls);
-    Maximize();
 }
 
 void MainView::CreateChildComponents()
 {
     DestroyChildViews();
 
-    translationComponent = new TranslationComponent(Context->GetServiceRegistry(), this);
-    InitializeComponent(translationComponent, ApplicationViews::TranslateResult);
-
-    dictionaryComponent = new DictionaryComponent(Context->GetServiceRegistry(), this);
-    dictionaryComponent->OnShowTranslation.Subscribe([this](wstring input)
-    {
-        translationComponent->Translate(input, false);
-        GetModel()->SetApplicationView(ApplicationViews::TranslateResult);
-        Render();
-    });
-    InitializeComponent(dictionaryComponent, ApplicationViews::Dictionary);
-
-    settingsComponent = new SettingsComponent(Context->GetServiceRegistry(), this);
-    InitializeComponent(settingsComponent, ApplicationViews::Settings);
-
-    confirmDialog = new ConfirmDialogControl(Context, this);
-    confirmDialog->SetSize(GetClientSize());
-    confirmDialog->Initialize();
-    confirmDialog->MakeHidden();
+    InitializeComponent(new TranslationComponent(Context->GetServiceRegistry(), this), ApplicationViews::TranslateResult);
+    InitializeComponent(new DictionaryComponent(Context->GetServiceRegistry(), this), ApplicationViews::Dictionary);
+    InitializeComponent(new SettingsComponent(Context->GetServiceRegistry(), this), ApplicationViews::Settings);
+    CreateConfirmDialog();
 }
 
 void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
@@ -93,6 +70,14 @@ void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
     component->Initialize();
     component->MakeHidden();
     viewToComponentMap[view] = component;
+}
+
+void MainView::CreateConfirmDialog()
+{
+    confirmDialog = new ConfirmDialogControl(Context, this);
+    confirmDialog->SetSize(GetClientSize());
+    confirmDialog->Initialize();
+    confirmDialog->MakeHidden();
 }
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -110,21 +95,10 @@ void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
     AssertCriticalWinApiResult(windowClass->hbrBackground);
 }
 
-void MainView::Minimize()
+void MainView::Show()
 {
-    Hide();
-}
-
-void MainView::Maximize()
-{
-    Show();
+    View::Show();
     SwitchToThisWindow(Handle, TRUE);
-}
-
-void MainView::Translate(wstring input) const
-{
-    GetModel()->SetApplicationView(ApplicationViews::TranslateResult);
-    translationComponent->Translate(input, true);
 }
 
 Size MainView::RenderContent(Renderer* renderer)
@@ -272,7 +246,7 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         {
         case SC_MINIMIZE:
         case SC_CLOSE:
-            Minimize();
+            Hide();
             return 0;
         default:
             break;
@@ -281,19 +255,19 @@ LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         return View::WindowProcedure(message, wParam, lParam);
     }
 
-    case WM_HOTKEY:
-    {
-        OnHotkey.Notify(wParam);
-        return View::WindowProcedure(message, wParam, lParam);
-    }
-
     case WM_ACTIVATE:
     {
         if (wParam == WA_INACTIVE)
         {
-            Minimize();
+            Hide();
         }
         return TRUE;
+    }
+
+    case WM_HOTKEY:
+    {
+        OnHotkey.Notify(wParam);
+        return View::WindowProcedure(message, wParam, lParam);
     }
 
     case WM_SHOWWINDOW:

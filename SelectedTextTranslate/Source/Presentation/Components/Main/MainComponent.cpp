@@ -1,21 +1,19 @@
 #include "Presentation\Components\Main\MainComponent.h"
 #include "Presentation\Providers\TrayIcon.h"
-#include "BusinessLogic\Translation\TextExtractor.h"
 
 MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
     : Component(new MainView(serviceRegistry->Get<ViewContext>(), this))
 {
     hotkeysRegistry = serviceRegistry->Get<HotkeysRegistry>();
-    textExtractor = serviceRegistry->Get<TextExtractor>();
-    textPlayer = serviceRegistry->Get<TextPlayer>();
     messageBus = serviceRegistry->Get<MessageBus>();
-    translationService = serviceRegistry->Get<TranslationService>();
     viewModelsStore = serviceRegistry->Get<ViewModelsStore>();
 
-    messageBus->OnPlaySelectedText.Subscribe(bind(&MainComponent::PlaySelectedText, this));
     messageBus->OnShowDictionary.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Dictionary));
     messageBus->OnShowSettings.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::Settings));
-    messageBus->OnTranslateSelectedText.Subscribe(bind(&MainComponent::TranslateSelectedText, this));
+    messageBus->OnShowTranslation.Subscribe(bind(&MainComponent::ShowApplicatonView, this, ApplicationViews::TranslateResult));
+    messageBus->OnConfirmRequested.Subscribe(bind(&MainView::ShowConfirmDialog, CurrentView, placeholders::_1, placeholders::_2));
+
+    serviceRegistry->Get<ErrorHandler>()->OnErrorShow.Subscribe(bind(&MainView::Hide, CurrentView));
 
     CurrentView->OnHotkey.Subscribe(bind(&MainComponent::ProcessHotkey, this, placeholders::_1));
     CurrentView->OnVisibilityChanged.Subscribe(bind(&MainComponent::ProcessVisibilityChange, this, placeholders::_1));
@@ -30,19 +28,6 @@ void MainComponent::SetLayout(LayoutDescriptor layout)
 MainViewModel* MainComponent::GetModel()
 {
     return viewModelsStore->Get<MainViewModel>();
-}
-
-void MainComponent::PlaySelectedText() const
-{
-    wstring selectedText = textExtractor->GetSelectedText();
-    TranslateResult translateResult = translationService->TranslateSentence(selectedText, false, false);
-    textPlayer->PlayText(translateResult.GetSentence().GetOrigin());
-}
-
-void MainComponent::TranslateSelectedText() const
-{
-    wstring selectedText = textExtractor->GetSelectedText();
-    CurrentView->Translate(selectedText);
 }
 
 void MainComponent::ShowApplicatonView(ApplicationViews applicationView)

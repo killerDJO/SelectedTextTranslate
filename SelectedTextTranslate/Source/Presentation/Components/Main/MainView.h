@@ -10,9 +10,6 @@
 class MainView : public View
 {
 private:
-    TranslationComponent* translationComponent;
-    DictionaryComponent* dictionaryComponent;
-    SettingsComponent* settingsComponent;
     ConfirmDialogControl* confirmDialog;
 
     ModelHolder<MainViewModel*>* modelHolder;
@@ -20,11 +17,11 @@ private:
 
     void CreateChildComponents();
     void InitializeComponent(IComponent* component, ApplicationViews view);
+    void CreateConfirmDialog();
 
     IComponent* GetComponentToShow();
     MainViewModel* GetModel() const;
 
-    void ShowConfirmDialog(wstring title, function<void()> onConfirm);
     bool IsResizeLocked() const;
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -39,16 +36,13 @@ public:
     MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder);
 
     void Initialize() override;
-    void SetLayout(::LayoutDescriptor layout);
+    void SetLayout(LayoutDescriptor layout);
     void Render(bool preserveScrolls = false) override;
     void Resize() override;
-
-    void Translate(wstring input) const;
-
-    void Minimize();
-    void Maximize();
-
     void Scale(double scaleFactorAjustment);
+
+    void Show() override;
+    void ShowConfirmDialog(wstring title, function<void()> onConfirm);
 
     Subscribeable<int> OnHotkey;
     Subscribeable<bool> OnVisibilityChanged;

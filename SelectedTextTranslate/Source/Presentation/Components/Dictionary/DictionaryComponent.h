@@ -9,13 +9,12 @@ class DictionaryComponent : public Component<DictionaryView>, public ModelHolder
 {
 private:
     DictionaryService* dictionaryService;
+    MessageBus* messageBus;
 
-    void ProcessShowTranslation(int index);
+    void ProcessShowTranslation(int index) const;
 
 public:
     DictionaryComponent(ServiceRegistry* serviceRegistry, View* parentView);
 
     vector<DictionaryRecord> GetModel() override;
-
-    Subscribeable<wstring> OnShowTranslation;
 };

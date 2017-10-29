@@ -11,6 +11,9 @@ public:
     Subscribeable<> OnExit;
     Subscribeable<> OnPlaySelectedText;
     Subscribeable<> OnTranslateSelectedText;
+    Subscribeable<wstring, bool> OnTranslateText;
+
     Subscribeable<> OnShowDictionary;
     Subscribeable<> OnShowSettings;
+    Subscribeable<> OnShowTranslation;
 };

@@ -153,21 +153,20 @@ void View::ApplyViewState(bool preserveScrolls)
     // Child windows should be destroyed first
     DestroyChildViews(destroyedChildViews);
 
+    if (IsVisible())
+    {
+        Show();
+    }
+    else
+    {
+        Hide();
+    }
+
     ApplyViewPosition(preserveScrolls);
 
     // Important to draw child windows first
-    for (size_t i = 0; i < activeChildViews.size(); ++i)
+    for (View* childView : activeChildViews)
     {
-        View* childView = activeChildViews[i];
-        if (childView->IsVisible())
-        {
-            childView->Show();
-        }
-        else
-        {
-            childView->Hide();
-        }
-
         childView->ApplyViewState(preserveScrolls);
     }
 

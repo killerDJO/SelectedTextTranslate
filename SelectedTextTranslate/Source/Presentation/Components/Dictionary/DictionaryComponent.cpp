@@ -6,14 +6,16 @@ DictionaryComponent::DictionaryComponent(ServiceRegistry* serviceRegistry, View*
     : Component(new DictionaryView(serviceRegistry->Get<ViewContext>(), parentView, this, this))
 {
     dictionaryService = serviceRegistry->Get<DictionaryService>();
+    messageBus = serviceRegistry->Get<MessageBus>();
+
     CurrentView->OnShowTranslation.Subscribe(bind(&DictionaryComponent::ProcessShowTranslation, this, placeholders::_1));
 }
 
-void DictionaryComponent::ProcessShowTranslation(int wordInDictionaryIndex)
+void DictionaryComponent::ProcessShowTranslation(int wordInDictionaryIndex) const
 {
     vector<DictionaryRecord> dictionaryRecords = dictionaryService->GetTopRecords(200);
     DictionaryRecord recordToTranslate = dictionaryRecords[wordInDictionaryIndex];
-    OnShowTranslation.Notify(recordToTranslate.GetWord());
+    messageBus->OnTranslateText.Notify(recordToTranslate.GetWord(), false);
 }
 
 vector<DictionaryRecord> DictionaryComponent::GetModel()
