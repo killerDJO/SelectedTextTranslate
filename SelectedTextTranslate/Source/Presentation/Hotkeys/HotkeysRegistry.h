@@ -1,6 +1,6 @@
 #pragma once
 #include "BusinessLogic\Settings\Dto\HotkeySettings.h"
-#include "Presentation\Providers\Dto\HotkeyInfo.h"
+#include "Presentation\Hotkeys\\Dto\HotkeyInfo.h"
 #include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 
 class HotkeysRegistry

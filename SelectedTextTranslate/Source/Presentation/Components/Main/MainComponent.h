@@ -1,7 +1,7 @@
 #pragma once
 #include "Presentation\Framework\Components\Component.h"
 #include "Presentation\Components\Main\MainView.h"
-#include "Presentation\Providers\TrayIcon.h"
+#include "Presentation\TrayIcon.h"
 #include "Presentation\Components\Main\MainViewModel.h"
 
 class MainComponent : public Component<MainView>, ModelHolder<MainViewModel*>

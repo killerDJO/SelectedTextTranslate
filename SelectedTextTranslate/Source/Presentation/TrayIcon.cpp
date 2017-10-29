@@ -1,4 +1,4 @@
-#include "Presentation\Providers\TrayIcon.h"
+#include "Presentation\TrayIcon.h"
 #include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 

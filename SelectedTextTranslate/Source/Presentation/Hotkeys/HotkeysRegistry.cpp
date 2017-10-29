@@ -1,4 +1,4 @@
-#include "Presentation\Providers\HotkeysRegistry.h"
+#include "Presentation\Hotkeys\HotkeysRegistry.h"
 #include "Presentation\MessageBus.h"
 #include "BusinessLogic\Settings\SettingsProvider.h"
 

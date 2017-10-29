@@ -1,5 +1,5 @@
-#include "Presentation\Providers\Dto\HotkeyInfo.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
+#include "Presentation\Hotkeys\Dto\HotkeyInfo.h"
 
 HotkeyInfo::HotkeyInfo()
 {

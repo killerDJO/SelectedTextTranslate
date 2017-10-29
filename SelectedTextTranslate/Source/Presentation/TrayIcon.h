@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\ErrorHandler.h"
 #include "Infrastructure\Logging\Logger.h"
 #include "Presentation\Framework\NativeWindowHolder.h"
-#include "Presentation\Providers\HotkeysRegistry.h"
+#include "Presentation\Hotkeys\HotkeysRegistry.h"
 #include "Presentation\MessageBus.h"
 
 class TrayIcon : public NativeWindowHolder, public ErrorHandler

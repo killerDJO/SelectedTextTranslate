@@ -40,7 +40,7 @@
     <ClCompile Include="Source\Presentation\Controls\Dialogs\Confirm\ConfirmDialogControl.cpp" />
     <ClCompile Include="Source\Presentation\Components\Settings\Base\SettingsGroupHeaderControl.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\RenderingProvider.cpp" />
-    <ClCompile Include="Source\Presentation\Providers\Dto\HotkeyInfo.cpp" />
+    <ClCompile Include="Source\Presentation\Hotkeys\Dto\HotkeyInfo.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ErrorHandler.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.cpp" />
@@ -59,7 +59,7 @@
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.cpp" />
     <ClCompile Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.cpp" />
-    <ClCompile Include="Source\Presentation\Providers\HotkeysRegistry.cpp" />
+    <ClCompile Include="Source\Presentation\Hotkeys\HotkeysRegistry.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\DeviceContextBuffer.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Providers\DeviceContextProvider.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Providers\ScaleProvider.cpp" />
@@ -92,7 +92,7 @@
     <ClCompile Include="Source\Presentation\Components\Main\MainView.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Views\View.cpp" />
     <ClCompile Include="Source\Presentation\Components\Translation\TranslationView.cpp" />
-    <ClCompile Include="Source\Presentation\Providers\TrayIcon.cpp" />
+    <ClCompile Include="Source\Presentation\TrayIcon.cpp" />
     <ClCompile Include="Source\DataAccess\SqliteProvider.cpp" />
     <ClCompile Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.cpp" />
     <ClCompile Include="Source\Presentation\Components\Main\Dto\ViewDescriptor.cpp" />
@@ -140,7 +140,7 @@
     <ClInclude Include="Source\Presentation\Framework\Components\Component.h" />
     <ClInclude Include="Source\Presentation\Framework\Components\IComponent.h" />
     <ClInclude Include="Source\Presentation\Framework\Views\ChildComponentView.h" />
-    <ClInclude Include="Source\Presentation\Providers\Dto\HotkeyInfo.h" />
+    <ClInclude Include="Source\Presentation\Hotkeys\Dto\HotkeyInfo.h" />
     <ClInclude Include="Source\Presentation\Framework\ModelHolder.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\Base\SelectedTextTranslateBaseException.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateFatalException.h" />
@@ -159,7 +159,7 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\ExceptionHelper.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
-    <ClInclude Include="Source\Presentation\Providers\HotkeysRegistry.h" />
+    <ClInclude Include="Source\Presentation\Hotkeys\HotkeysRegistry.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\DeviceContextBuffer.h" />
     <ClInclude Include="Source\Presentation\Framework\Enums\ViewStates.h" />
     <ClInclude Include="Source\Presentation\Framework\Providers\DeviceContextProvider.h" />
@@ -197,7 +197,7 @@
     <ClInclude Include="Source\Presentation\Framework\Views\View.h" />
     <ClInclude Include="Source\Presentation\Framework\Dto\LayoutDescriptor.h" />
     <ClInclude Include="Source\Presentation\Components\Translation\TranslationView.h" />
-    <ClInclude Include="Source\Presentation\Providers\TrayIcon.h" />
+    <ClInclude Include="Source\Presentation\TrayIcon.h" />
     <ClInclude Include="Source\Utilities\Subscribable\Subscribable.h" />
     <ClInclude Include="Source\DataAccess\SqliteProvider.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\Dto\TextRenderResult.h" />

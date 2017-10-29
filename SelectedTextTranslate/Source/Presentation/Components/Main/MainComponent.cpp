@@ -1,5 +1,5 @@
 #include "Presentation\Components\Main\MainComponent.h"
-#include "Presentation\Providers\TrayIcon.h"
+#include "Presentation\TrayIcon.h"
 
 MainComponent::MainComponent(ServiceRegistry* serviceRegistry)
     : Component(new MainView(serviceRegistry->Get<ViewContext>(), this))

@@ -2,7 +2,7 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 #include "Infrastructure\ServiceRegistry\ServiceRegistry.h"
 #include "Presentation\MessageBus.h"
-#include "Presentation\Providers\TrayIcon.h"
+#include "Presentation\TrayIcon.h"
 #include "Presentation\Components\Main\MainComponent.h"
 #include "ServiceRegistryCreator.h"
 
