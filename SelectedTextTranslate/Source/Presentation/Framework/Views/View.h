@@ -1,7 +1,5 @@
 #pragma once
-#include "Presentation\Framework\Dto\LayoutDescriptor.h"
 #include "Presentation\Framework\Dto\ViewStateDescriptor.h"
-#include "Presentation\Framework\Rendering\DeviceContextBuffer.h"
 #include "Presentation\Framework\Rendering\RenderingContext.h"
 #include "Presentation\Framework\Rendering\Renderer.h"
 #include "Presentation\Framework\NativeWindowHolder.h"
@@ -11,6 +9,7 @@
 class ViewContext;
 class Renderer;
 class ScrollProvider;
+class ViewStateDescriptor;
 
 class View : public NativeWindowHolder
 {
@@ -29,11 +28,8 @@ protected:
     RenderingContext* RenderingContext;
     DeviceContextProvider* DeviceContextProvider;
 
-    LayoutDescriptor Layout;
-    ViewStateDescriptor State;
+    ViewStateDescriptor* State;
     wstring Name;
-
-    DeviceContextBuffer* DeviceContextBuffer;
 
     void DestroyChildViews();
 
@@ -44,7 +40,7 @@ protected:
     void ApplyViewState(bool preserveScrolls);
     void ApplyViewPosition(bool preserveScrolls);
 
-    Size RenderToBuffer();
+    void RenderToBuffer();
     virtual Size RenderContent(Renderer* renderer) = 0;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
@@ -58,14 +54,12 @@ public:
     View(ViewContext* context);
     ~View() override;
 
-    LayoutDescriptor GetLayout() const;
-
     Size GetContentSize() const;
     Size GetAvailableClientSize() const;
     Rect GetBoundingRect() const;
 
-    void MakeVisible();
-    void MakeHidden();
+    void MakeVisible() const;
+    void MakeHidden() const;
     bool IsVisible() const;
 
     virtual void Show();
@@ -77,6 +71,4 @@ public:
     void Draw(bool drawChildren = false);
     void Initialize() override;
     void InitializeAndRender(bool preserveScrolls = false);
-
-    virtual void Resize();
 };

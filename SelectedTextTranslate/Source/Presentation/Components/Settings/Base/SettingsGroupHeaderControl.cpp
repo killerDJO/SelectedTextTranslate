@@ -21,7 +21,7 @@ SettingsGroupHeaderControl::SettingsGroupHeaderControl(ViewContext* context, Vie
 SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
-    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0));
+    State->SetLayout(LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, 0)));
     return this;
 }
 
@@ -61,7 +61,7 @@ SettingsGroupVisibilityState SettingsGroupHeaderControl::GetVisibilityState() co
 void SettingsGroupHeaderControl::Initialize()
 {
     int headerHeight = lineHeight + paddingY * 2;
-    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(Layout.GetPosition(), Size(Layout.GetSize().GetWidth(), headerHeight));
+    State->SetLayout(LayoutDescriptor::CreateFixedLayoutDescriptor(State->GetLayout().GetPosition(), Size(State->GetLayout().GetSize().GetWidth(), headerHeight)));
     ControlView::Initialize();
 }
 
@@ -69,7 +69,7 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), Layout.GetSize()), backgroundBrush, borderWidth, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), State->GetWindowSize()), backgroundBrush, borderWidth, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY + fontNormal->GetAscent());
 
@@ -87,7 +87,7 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 
     HoverIconButtonControl* expandButton = new HoverIconButtonControl(Context, this);
     expandButton->SetDimensions(
-        Point(Layout.GetSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, ScaleProvider).GetY()),
+        Point(State->GetWindowSize().GetWidth() - iconSize - paddingX, renderPosition.MoveY(-iconSize).MoveY(2, ScaleProvider).GetY()),
         Size(iconSize, iconSize));
     expandButton->SetNormalIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND_INACTIVE : IDR_COLLAPSE_INACTIVE);
     expandButton->SetHoverIconResource(visibilityState == SettingsGroupVisibilityState::Collapsed ? IDR_EXPAND : IDR_COLLAPSE);

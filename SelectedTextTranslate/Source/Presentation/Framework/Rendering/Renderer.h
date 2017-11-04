@@ -24,8 +24,6 @@ private:
 
     vector<function<void(HDC)>> renderActions;
 
-    void ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const;
-
 public:
     Renderer(RenderingProvider* renderingProvider, DeviceContextProvider* deviceContextProvider);
     ~Renderer();

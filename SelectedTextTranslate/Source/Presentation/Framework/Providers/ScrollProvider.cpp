@@ -63,12 +63,12 @@ void ScrollProvider::HideScrollbars(View* view) const
 
 void ScrollProvider::ProcessScrollMessages(View* view, UINT message, WPARAM wParam, LPARAM lParam) const
 {
-    if (message == WM_HSCROLL && view->GetLayout().GetOverflowX() == OverflowModes::Scroll && IsScrollBarVisible(view, ScrollBars::Horizontal))
+    if (message == WM_HSCROLL && IsScrollBarVisible(view, ScrollBars::Horizontal))
     {
         ProcessScroll(view, wParam, lParam, ScrollBars::Horizontal);
     }
 
-    if (message == WM_VSCROLL && view->GetLayout().GetOverflowY() == OverflowModes::Scroll && IsScrollBarVisible(view, ScrollBars::Vertical))
+    if (message == WM_VSCROLL && IsScrollBarVisible(view, ScrollBars::Vertical))
     {
         ProcessScroll(view, wParam, lParam, ScrollBars::Vertical);
     }

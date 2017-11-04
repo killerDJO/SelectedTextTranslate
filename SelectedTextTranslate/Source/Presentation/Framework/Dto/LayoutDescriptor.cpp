@@ -32,7 +32,7 @@ LayoutDescriptor LayoutDescriptor::CreateFixedLayoutDescriptor(Point position, S
     return LayoutDescriptor(position, windowSize, OverflowModes::Fixed, OverflowModes::Fixed);
 }
 
-LayoutDescriptor LayoutDescriptor::CreateLayoutWindowDescriptor(Point position)
+LayoutDescriptor LayoutDescriptor::CreateStretchViewLayout(Point position)
 {
     return LayoutDescriptor(position, Size(0, 0), OverflowModes::Stretch, OverflowModes::Stretch);
 }

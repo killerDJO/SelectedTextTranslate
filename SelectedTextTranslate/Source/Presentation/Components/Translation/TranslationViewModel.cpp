@@ -4,9 +4,12 @@ TranslationViewModel::TranslationViewModel(TranslateResult translateResult)
 {
     this->translateResult = translateResult;
 
-    for (size_t i = 0; i < translateResult.GetTranslateCategories().size(); ++i)
+    if(!translateResult.IsEmptyResult())
     {
-        translateResultCategoryExpandedMap[i] = false;
+        for (size_t i = 0; i < translateResult.GetTranslateCategories().size(); ++i)
+        {
+            translateResultCategoryExpandedMap[i] = false;
+        }
     }
 }
 

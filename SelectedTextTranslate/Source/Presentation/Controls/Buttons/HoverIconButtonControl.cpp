@@ -18,7 +18,7 @@ HoverIconButtonControl::HoverIconButtonControl(ViewContext* context, View* paren
 HoverIconButtonControl* HoverIconButtonControl::SetDimensions(Point position, Size size)
 {
     AssertViewNotInitialized();
-    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(position, size);
+    State->SetLayout(LayoutDescriptor::CreateFixedLayoutDescriptor(position, size));
     return this;
 }
 
@@ -70,8 +70,8 @@ void HoverIconButtonControl::Initialize()
 
 void HoverIconButtonControl::RenderStatesDeviceContexts()
 {
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(Layout.GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(Layout.GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalIconResource);
@@ -80,12 +80,12 @@ void HoverIconButtonControl::RenderStatesDeviceContexts()
 
 void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD iconResource) const
 {
-    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, Layout.GetSize().GetWidth(), Layout.GetSize().GetHeight());
+    tuple<int, int, int> cacheKey = tuple<int, int, int>(iconResource, State->GetWindowSize().GetWidth(), State->GetWindowSize().GetHeight());
 
     if (iconsCache.count(cacheKey) != 0)
     {
         HDC renderedDC = iconsCache[cacheKey];
-        DeviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, Layout.GetSize());
+        DeviceContextProvider->CopyDeviceContext(renderedDC, deviceContext, State->GetWindowSize());
         return;
     }
 
@@ -98,7 +98,7 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
         renderer->SetBackground(backgroundBrush);
     }
 
-    renderer->Render(deviceContext, DeviceContextBuffer->GetSize());
+    renderer->Render(deviceContext, State->GetWindowSize());
 
     RenderingContext->ReleaseRenderer(renderer);
 
@@ -111,12 +111,12 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
     BOOL converstionSucceded;
     AssertGdiPlusResult(iconMetafile->ConvertToEmfPlus(&graphics, &converstionSucceded));
 
-    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, Layout.GetSize().GetWidth(), Layout.GetSize().GetHeight()));
+    AssertGdiPlusResult(graphics.DrawImage(iconMetafile, 0, 0, State->GetWindowSize().GetWidth(), State->GetWindowSize().GetHeight()));
 
     delete iconMetafile;
 
-    HDC cachedDC = DeviceContextProvider->CreateDeviceContext(Layout.GetSize());
-    DeviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, Layout.GetSize());
+    HDC cachedDC = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
+    DeviceContextProvider->CopyDeviceContext(deviceContext, cachedDC, State->GetWindowSize());
     iconsCache[cacheKey] = cachedDC;
 }
 

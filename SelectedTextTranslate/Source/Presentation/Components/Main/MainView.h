@@ -23,6 +23,7 @@ private:
     MainViewModel* GetModel() const;
 
     bool IsResizeLocked() const;
+    void Resize();
 
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
@@ -36,9 +37,9 @@ public:
     MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder);
 
     void Initialize() override;
-    void SetLayout(LayoutDescriptor layout);
+    void SetLayout(LayoutDescriptor layout) const;
     void Render(bool preserveScrolls = false) override;
-    void Resize() override;
+    
     void Scale(double scaleFactorAjustment);
 
     void Show() override;

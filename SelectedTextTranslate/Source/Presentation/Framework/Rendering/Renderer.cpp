@@ -112,17 +112,6 @@ const Brush* Renderer::GetBackgroundBrush() const
         : backgroundBrush;
 }
 
-void Renderer::ClearDeviceContext(HDC deviceContext, Size deviceContextSize) const
-{
-    RECT rect;
-    rect.top = 0;
-    rect.left = 0;
-    rect.bottom = deviceContextSize.GetHeight();
-    rect.right = deviceContextSize.GetWidth();
-
-    AssertCriticalWinApiResult(FillRect(deviceContext, &rect, GetBackgroundBrush()->GetHandle()));
-}
-
 Size Renderer::GetSize() const
 {
     return renderedSize;
@@ -130,7 +119,7 @@ Size Renderer::GetSize() const
 
 void Renderer::Render(HDC deviceContext, Size deviceContextSize)
 {
-    ClearDeviceContext(deviceContext, deviceContextSize);
+    deviceContextProvider->ClearDeviceContext(deviceContext, deviceContextSize, GetBackgroundBrush()->GetHandle());
 
     for (size_t i = 0; i < renderActions.size(); ++i)
     {

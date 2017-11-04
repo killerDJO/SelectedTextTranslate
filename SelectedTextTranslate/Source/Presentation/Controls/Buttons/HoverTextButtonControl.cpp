@@ -17,12 +17,12 @@ HoverTextButtonControl::HoverTextButtonControl(ViewContext* context, View* paren
 void HoverTextButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    // Important to give window initial size. Otherwise it will not be initially showed in layered mode.
-    Layout = LayoutDescriptor::CreateLayoutDescriptor(
+    // Important to give window initial size. Otherwise it will not be initially shown in layered mode.
+    State->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
         position,
         Size(1, 1),
         OverflowModes::Stretch,
-        OverflowModes::Stretch);
+        OverflowModes::Stretch));
 }
 
 void HoverTextButtonControl::SetNormalColor(Colors normalColor)
@@ -95,13 +95,14 @@ void HoverTextButtonControl::RenderStatesDeviceContexts()
 {
     Size textSize = RenderingProvider->GetTextSize(text.c_str(), GetFont());
 
-    State.SetSize(textSize);
+    LayoutDescriptor layout = State->GetLayout();
+    layout.SetSize(textSize);
+    State->SetLayout(layout);
 
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(State.GetSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
-    DeviceContextBuffer->Resize(State.GetSize());
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Hovered], hoverColor);
@@ -116,7 +117,7 @@ void HoverTextButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors 
     renderer->SetBackground(backgroundBrush);
 
     renderer->PrintText(text.c_str(), GetFont(), color, Point(0, GetFont()->GetAscent()));
-    renderer->Render(deviceContext, DeviceContextBuffer->GetSize());
+    renderer->Render(deviceContext, State->GetWindowSize());
 
     RenderingContext->ReleaseRenderer(renderer);
 

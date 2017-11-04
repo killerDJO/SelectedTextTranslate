@@ -21,6 +21,7 @@ public:
     void SetLayout(LayoutDescriptor layout) override;
 
     Rect GetBoundingRect() const override;
+    Size GetContentSize() const override;
     void Render(bool preserveScrolls = false) const override;
 
     void Initialize() override;
@@ -28,7 +29,6 @@ public:
 
     void MakeVisible() const override;
     void MakeHidden() const override;
-    void Resize() const override;
 };
 
 template <class TView>
@@ -55,6 +55,12 @@ template <class TView>
 Rect Component<TView>::GetBoundingRect() const
 {
     return CurrentView->GetBoundingRect();
+}
+
+template <class TView>
+Size Component<TView>::GetContentSize() const
+{
+    return CurrentView->GetContentSize();
 }
 
 template <class TView>
@@ -86,12 +92,6 @@ template <class TView>
 void Component<TView>::MakeHidden() const
 {
     CurrentView->MakeHidden();
-}
-
-template <class TView>
-void Component<TView>::Resize() const
-{
-    CurrentView->Resize();
 }
 
 template <class TView>

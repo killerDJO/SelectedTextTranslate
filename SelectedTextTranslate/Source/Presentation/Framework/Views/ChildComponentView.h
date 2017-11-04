@@ -65,7 +65,7 @@ ChildComponentView<TModel>::ChildComponentView(ViewContext* context, View* paren
 template <class TModel>
 void ChildComponentView<TModel>::Render(bool preserveScrolls)
 {
-    bool isStretchWindow = Layout.GetOverflowX() == OverflowModes::Stretch || Layout.GetOverflowY() == OverflowModes::Stretch;
+    bool isStretchWindow = State->GetLayout().GetOverflowX() == OverflowModes::Stretch || State->GetLayout().GetOverflowY() == OverflowModes::Stretch;
     if (isStretchWindow && !RenderingContext->IsRenderingInProgress())
     {
         ParentView->Render(preserveScrolls);
@@ -79,8 +79,7 @@ void ChildComponentView<TModel>::Render(bool preserveScrolls)
 template <class TModel>
 void ChildComponentView<TModel>::SetLayout(LayoutDescriptor layoutDescriptor)
 {
-    AssertViewNotInitialized();
-    this->Layout = layoutDescriptor;
+    State->SetLayout(layoutDescriptor);
 }
 
 template <class TModel>
@@ -93,7 +92,7 @@ TModel ChildComponentView<TModel>::GetModel() const
 template <class TModel>
 Size ChildComponentView<TModel>::RenderContent(Renderer* renderer, TModel model)
 {
-    return this->RenderContent(renderer);
+    return RenderContent(renderer);
 }
 
 template <class TModel>

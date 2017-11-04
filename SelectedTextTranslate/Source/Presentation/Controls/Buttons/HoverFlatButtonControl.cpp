@@ -10,13 +10,12 @@ HoverFlatButtonControl::HoverFlatButtonControl(ViewContext* context, View* paren
     this->paddingY = ScaleProvider->Scale(5);
     this->borderWidth = ScaleProvider->Scale(1);
     this->ClassName = L"STT_HOVERFLATBUTTON";
-    this->Layout = LayoutDescriptor();
 }
 
 void HoverFlatButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    Layout.SetPosition(position);
+    State->SetPosition(position);
 }
 
 void HoverFlatButtonControl::SetFont(Font* font)
@@ -74,11 +73,11 @@ Size HoverFlatButtonControl::GetComputedSize() const
 
 void HoverFlatButtonControl::Initialize()
 {
-    Layout = LayoutDescriptor::CreateLayoutDescriptor(
-        Layout.GetPosition(),
+    State->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
+        State->GetPosition(),
         GetComputedSize(),
         OverflowModes::Fixed,
-        OverflowModes::Fixed);
+        OverflowModes::Fixed));
 
     HoverButtonControl::Initialize();
 }

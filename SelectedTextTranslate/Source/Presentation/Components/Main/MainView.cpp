@@ -34,16 +34,14 @@ DWORD MainView::GetWindowStyle() const
     return View::GetWindowStyle() | WS_SIZEBOX | WS_POPUP;
 }
 
-void MainView::SetLayout(LayoutDescriptor layout)
+void MainView::SetLayout(LayoutDescriptor layout) const
 {
-    Layout = layout;
+    State->SetLayout(layout);
 }
 
 void MainView::Render(bool preserveScrolls)
 {
-    Layout = GetModel()->GetCurrentLayoutDescriptor();
-    State.SetPosition(Layout.GetPosition());
-    State.SetSize(Layout.GetSize());
+    SetLayout(GetModel()->GetCurrentLayoutDescriptor());
     MakeVisible();
     View::Render(preserveScrolls);
 }
@@ -60,12 +58,7 @@ void MainView::CreateChildComponents()
 
 void MainView::InitializeComponent(IComponent* component, ApplicationViews view)
 {
-    LayoutDescriptor initialLayoutDescriptor = LayoutDescriptor::CreateLayoutDescriptor(
-        Point(0, 0),
-        Size(GetAvailableClientSize().GetWidth(), 0),
-        OverflowModes::Stretch,
-        OverflowModes::Stretch);
-    component->SetLayout(initialLayoutDescriptor);
+    component->SetLayout(LayoutDescriptor::CreateStretchViewLayout(Point(0, 0)));
     component->Initialize();
     component->MakeHidden();
     viewToComponentMap[view] = component;
@@ -119,7 +112,7 @@ Size MainView::RenderContent(Renderer* renderer)
     componentToShow->MakeVisible();
     componentToShow->Render();
 
-    return componentToShow->GetBoundingRect().GetSize();
+    return componentToShow->GetContentSize();
 }
 
 void MainView::Scale(double scaleFactorAdjustment)
@@ -137,41 +130,28 @@ void MainView::Scale(double scaleFactorAdjustment)
 
 void MainView::Resize()
 {
-    if (State.GetViewState() == ViewStates::Rendering)
+    if (State->GetViewState() == ViewStates::Rendering)
     {
         return;
     }
 
     RECT windowRect;
     AssertCriticalWinApiResult(GetWindowRect(Handle, &windowRect));
-    int newWidth = windowRect.right - windowRect.left;
-    int newHeight = windowRect.bottom - windowRect.top;
+    Size newSize = Size(
+        windowRect.right - windowRect.left,
+        windowRect.bottom - windowRect.top);
 
-    if (Layout.GetSize().GetWidth() == newWidth && Layout.GetSize().GetHeight() == newHeight)
+    if (State->GetWindowSize().Equals(newSize))
     {
         return;
     }
 
-    Layout.SetSize(Size(newWidth, newHeight));
-    State.SetSize(Layout.GetSize());
+    LayoutDescriptor layout = State->GetLayout();
+    layout.SetSize(newSize);
+    layout.SetPosition(Point(windowRect.left, windowRect.top));
+    GetModel()->GetViewDescriptor()->SetLayoutDescriptor(layout);
 
-    Layout.SetPosition(Point(windowRect.left, windowRect.top));
-    State.SetPosition(Layout.GetPosition());
-
-    DeviceContextBuffer->Resize(State.GetSize());
-
-    // Clear background
-    Renderer* renderer = RenderingContext->GetRenderer();
-    renderer->Render(DeviceContextBuffer);
-    RenderingContext->ReleaseRenderer(renderer);
-
-    IComponent* currentComponent = GetComponentToShow();
-    currentComponent->Resize();
-    State.SetContentSize(currentComponent->GetBoundingRect().GetSize());
-
-    GetModel()->GetViewDescriptor()->SetLayoutDescriptor(Layout);
-
-    ApplyViewState(true);
+    Render(true);
 }
 
 IComponent* MainView::GetComponentToShow()

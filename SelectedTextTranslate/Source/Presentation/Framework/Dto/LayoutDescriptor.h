@@ -20,7 +20,7 @@ public:
 
     static LayoutDescriptor CreateLayoutDescriptor(Point position, Size size, OverflowModes overflowX, OverflowModes overflowY);
     static LayoutDescriptor CreateFixedLayoutDescriptor(Point position, Size size);
-    static LayoutDescriptor CreateLayoutWindowDescriptor(Point position);
+    static LayoutDescriptor CreateStretchViewLayout(Point position);
 
     Point GetPosition() const;
     Size GetSize() const;

@@ -3,39 +3,55 @@
 #include "Presentation\Framework\Dto\Positioning\Size.h"
 #include "Presentation\Framework\Dto\Positioning\Rect.h"
 #include "Presentation\Framework\Enums\ViewStates.h"
+#include "Presentation\Framework\Rendering\DeviceContextBuffer.h"
+#include "Presentation\Framework\Dto\LayoutDescriptor.h"
+#include "Presentation\Framework\Rendering\Renderer.h"
+
+class Renderer;
 
 class ViewStateDescriptor
 {
 private:
-    Size size;
+    LayoutDescriptor layout;
+
+    Size windowSize;
     Size contentSize;
     Point position;
     bool isVisible;
+
     ViewStates viewState;
 
+    DeviceContextProvider* deviceContextProvider;
+    DeviceContextBuffer* deviceContextBuffer;
+
+    void StretchToSize(Size size);
+
 public:
-    ViewStateDescriptor();
-    ViewStateDescriptor(Size size, Point position, bool isVisible);
+    ViewStateDescriptor(DeviceContextProvider* deviceContextProvider);
+    ~ViewStateDescriptor();
 
-    Size GetSize() const;
-    void SetSize(Size size);
+    void SetLayout(LayoutDescriptor layout);
+    LayoutDescriptor GetLayout() const;
 
-    Size GetContentSize() const;
-    void SetContentSize(Size contentSize);
+    void ResetToLayout();
+
+    void UpdateContent(Renderer* renderer);
+    DeviceContextBuffer* GetDeviceContextBuffer() const;
+
+    Size GetWindowSize() const;
+    
+    Rect GetBoundingRect() const;
 
     Point GetPosition() const;
     void SetPosition(Point position);
 
+    Size GetContentSize() const;
+    void SetContentSize(Size contentSize);
+
     ViewStates GetViewState() const;
     void SetViewState(ViewStates viewState);
-
-    Rect GetBoundingRect() const;
 
     void MakeVisible();
     void MakeHidden();
     bool IsVisible() const;
-
-    void SetWidth(int width);
-    void SetHeight(int height);
-    void EnsureSize(Size size);
 };

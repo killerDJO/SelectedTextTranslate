@@ -21,7 +21,6 @@ public:
     TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);
 
     void Initialize() override;
-    void Resize() override;
 
     Subscribable<> OnForceTranslation;
     Subscribable<> OnTranslateSuggestion;

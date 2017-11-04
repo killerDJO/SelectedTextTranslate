@@ -30,15 +30,14 @@ ConfirmDialogContentControl::ConfirmDialogContentControl(ViewContext* context, V
 void ConfirmDialogContentControl::SetDimensions(Point position, int width)
 {
     AssertViewNotInitialized();
-
-    Layout = LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height));
+    State->SetLayout(LayoutDescriptor::CreateFixedLayoutDescriptor(position, Size(width, height)));
 }
 
 void ConfirmDialogContentControl::SetTitle(wstring title)
 {
     this->title = title;
 
-    if (State.GetViewState() != ViewStates::New)
+    if (State->GetViewState() != ViewStates::New)
     {
         Render();
     }
@@ -59,7 +58,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), Layout.GetSize()), nullptr, borderWidth, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), State->GetWindowSize()), nullptr, borderWidth, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
@@ -69,7 +68,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
         .SetY(lineHeight)
         .SetX(0);
 
-    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(Layout.GetSize().GetWidth(), borderWidth)), grayBrush);
+    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(State->GetWindowSize().GetWidth(), borderWidth)), grayBrush);
 
     renderPosition = renderPosition
         .SetY(roundToInt(1.5 * lineHeight) + fontSmall->GetAscent())
@@ -78,7 +77,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 
     renderPosition = renderPosition.SetY(roundToInt(lineHeight * 2.5)).SetX(0);
     renderer->DrawBorderedRect(
-        Rect(renderPosition.GetPosition(), Size(Layout.GetSize().GetWidth(), Layout.GetSize().GetHeight() - renderPosition.GetY())),
+        Rect(renderPosition.GetPosition(), Size(State->GetWindowSize().GetWidth(), State->GetWindowSize().GetHeight() - renderPosition.GetY())),
         backgroundBrush,
         borderWidth,
         Colors::Gray);
@@ -86,7 +85,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     HoverFlatButtonControl* confirmButton = new HoverFlatButtonControl(Context, this);
     confirmButton->SetText(L"Confirm");
     confirmButton->SetPosition(Point(
-        Layout.GetSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
+        State->GetWindowSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
         renderPosition.GetY() + paddingX));
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();
@@ -104,7 +103,7 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     cancelButton->SetBackgroundColor(Colors::Background);
     cancelButton->InitializeAndRender();
 
-    return State.GetSize();
+    return State->GetWindowSize();
 }
 
 ConfirmDialogContentControl::~ConfirmDialogContentControl()

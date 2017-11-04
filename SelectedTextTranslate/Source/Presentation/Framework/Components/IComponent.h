@@ -9,6 +9,7 @@ public:
     virtual void SetLayout(LayoutDescriptor layoutDescriptor) = 0;
 
     virtual Rect GetBoundingRect() const = 0;
+    virtual Size GetContentSize() const = 0;
     virtual void Render(bool preserveScrolls = false) const = 0;
 
     virtual void Initialize() = 0;
@@ -16,5 +17,4 @@ public:
 
     virtual void MakeVisible() const = 0;
     virtual void MakeHidden() const = 0;
-    virtual void Resize() const = 0;
 };
