@@ -64,7 +64,7 @@ void ViewStateDescriptor::StretchToSize(Size size)
     contentSize = windowSize.Max(contentSize);
 }
 
-Size ViewStateDescriptor::GetWindowSize() const
+Size ViewStateDescriptor::GetViewSize() const
 {
     return windowSize;
 }

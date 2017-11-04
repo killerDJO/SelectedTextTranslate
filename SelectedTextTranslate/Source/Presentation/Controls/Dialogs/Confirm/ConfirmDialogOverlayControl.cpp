@@ -24,7 +24,7 @@ void ConfirmDialogOverlayControl::SetSize(Size size)
 
 void ConfirmDialogOverlayControl::RenderContent(Renderer* renderer)
 {
-    renderer->DrawRect(Rect(Point(0, 0), State->GetWindowSize()), backgroundBrush);
+    renderer->DrawRect(Rect(Point(0, 0), State->GetViewSize()), backgroundBrush);
 }
 
 ConfirmDialogOverlayControl::~ConfirmDialogOverlayControl()

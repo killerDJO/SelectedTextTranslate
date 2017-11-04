@@ -99,9 +99,9 @@ void HoverTextButtonControl::RenderStatesDeviceContexts()
     layout.SetSize(textSize);
     State->SetLayout(layout);
 
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
@@ -117,7 +117,7 @@ void HoverTextButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors 
     renderer->SetBackground(backgroundBrush);
 
     renderer->PrintText(text.c_str(), GetFont(), color, Point(0, GetFont()->GetAscent()));
-    renderer->Render(deviceContext, State->GetWindowSize());
+    renderer->Render(deviceContext, State->GetViewSize());
 
     RenderingContext->ReleaseRenderer(renderer);
 

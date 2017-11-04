@@ -56,11 +56,11 @@ void ConfirmDialogControl::RenderContent(Renderer* renderer)
     DestroyChildViews();
 
     ConfirmDialogOverlayControl* overlayWindow = new ConfirmDialogOverlayControl(Context, this);
-    overlayWindow->SetSize(State->GetWindowSize());
+    overlayWindow->SetSize(State->GetViewSize());
     overlayWindow->InitializeAndRender();
 
     int dialogContentWidth = ScaleProvider->Scale(200);
-    int paddingX = roundToInt((State->GetWindowSize().GetWidth() - dialogContentWidth) / 2);
+    int paddingX = roundToInt((State->GetViewSize().GetWidth() - dialogContentWidth) / 2);
     int paddingY = ScaleProvider->Scale(50);
 
     dialogContentView = new ConfirmDialogContentControl(Context, this);

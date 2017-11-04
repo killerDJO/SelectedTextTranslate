@@ -52,7 +52,7 @@ Rect View::GetWindowRectangle() const
     Point position = Point(
         State->GetPosition().GetX() - offset.GetX(),
         State->GetPosition().GetY() - offset.GetY());
-    return Rect(position, State->GetWindowSize());
+    return Rect(position, State->GetViewSize());
 }
 
 Point View::GetInitialViewOffset() const
@@ -168,8 +168,8 @@ void View::ApplyViewPosition(bool preserveScrolls)
         Handle,
         State->GetPosition().GetX() - offset.GetX(),
         State->GetPosition().GetY() - offset.GetY(),
-        State->GetWindowSize().GetWidth(),
-        State->GetWindowSize().GetHeight(),
+        State->GetViewSize().GetWidth(),
+        State->GetViewSize().GetHeight(),
         FALSE));
 
     // Important to initialize scroll only after window has been moved
@@ -205,10 +205,10 @@ void View::Draw(bool drawChildren)
     HDC deviceContext = GetDC(Handle);
     AssertCriticalWinApiResult(deviceContext);
 
-    HDC tempDc = DeviceContextProvider->CreateDeviceContext(State->GetWindowSize());
-    DeviceContextProvider->ClearDeviceContext(tempDc, State->GetWindowSize(), (HBRUSH)GetStockObject(WHITE_BRUSH));
+    HDC tempDc = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
+    DeviceContextProvider->ClearDeviceContext(tempDc, State->GetViewSize(), (HBRUSH)GetStockObject(WHITE_BRUSH));
     State->GetDeviceContextBuffer()->Render(tempDc, State->GetDeviceContextBuffer()->GetSize());
-    DeviceContextProvider->CopyDeviceContext(tempDc, deviceContext, State->GetWindowSize());
+    DeviceContextProvider->CopyDeviceContext(tempDc, deviceContext, State->GetViewSize());
     DeviceContextProvider->DeleteDeviceContext(tempDc);
 
     AssertCriticalWinApiResult(ReleaseDC(Handle, deviceContext));

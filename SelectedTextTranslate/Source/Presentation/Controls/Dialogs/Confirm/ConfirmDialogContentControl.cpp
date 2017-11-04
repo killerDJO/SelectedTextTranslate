@@ -58,7 +58,7 @@ void ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
-    renderer->DrawBorderedRect(Rect(Point(0, 0), State->GetWindowSize()), nullptr, borderWidth, Colors::Gray);
+    renderer->DrawBorderedRect(Rect(Point(0, 0), State->GetViewSize()), nullptr, borderWidth, Colors::Gray);
 
     RenderPosition renderPosition = RenderPosition(paddingX, paddingY);
 
@@ -68,7 +68,7 @@ void ConfirmDialogContentControl::RenderContent(Renderer* renderer)
         .SetY(lineHeight)
         .SetX(0);
 
-    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(State->GetWindowSize().GetWidth(), borderWidth)), grayBrush);
+    renderer->DrawRect(Rect(renderPosition.GetPosition(), Size(State->GetViewSize().GetWidth(), borderWidth)), grayBrush);
 
     renderPosition = renderPosition
         .SetY(roundToInt(1.5 * lineHeight) + fontSmall->GetAscent())
@@ -77,7 +77,7 @@ void ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 
     renderPosition = renderPosition.SetY(roundToInt(lineHeight * 2.5)).SetX(0);
     renderer->DrawBorderedRect(
-        Rect(renderPosition.GetPosition(), Size(State->GetWindowSize().GetWidth(), State->GetWindowSize().GetHeight() - renderPosition.GetY())),
+        Rect(renderPosition.GetPosition(), Size(State->GetViewSize().GetWidth(), State->GetViewSize().GetHeight() - renderPosition.GetY())),
         backgroundBrush,
         borderWidth,
         Colors::Gray);
@@ -85,7 +85,7 @@ void ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     HoverFlatButtonControl* confirmButton = new HoverFlatButtonControl(Context, this);
     confirmButton->SetText(L"Confirm");
     confirmButton->SetPosition(Point(
-        State->GetWindowSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
+        State->GetViewSize().GetWidth() - paddingX - confirmButton->GetComputedSize().GetWidth(),
         renderPosition.GetY() + paddingX));
     confirmButton->OnClick.Subscribe(&OnConfirm);
     confirmButton->EnableLayeredMode();

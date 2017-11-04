@@ -47,8 +47,8 @@ void TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* mo
         translateResultComponent->MakeHidden();
 
         Size backgroundSize = Size(
-            max(State->GetWindowSize().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
-            State->GetWindowSize().GetHeight() - headerHeight);
+            max(State->GetViewSize().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
+            State->GetViewSize().GetHeight() - headerHeight);
         renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), LightGrayBrush);
     }
     else

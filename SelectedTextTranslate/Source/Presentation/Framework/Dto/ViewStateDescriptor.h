@@ -16,7 +16,7 @@ private:
 
     Size windowSize;
 
-    //In case of the Scrollable window used to detirmine size of content to scroll. For other window types always equal to the window size.
+    //In case of the Scrollable view used to detirmine size of content to scroll. For other window types always equal to the window size.
     Size contentSize;
 
     Point position;
@@ -41,7 +41,7 @@ public:
     void UpdateContent(Renderer* renderer);
     DeviceContextBuffer* GetDeviceContextBuffer() const;
 
-    Size GetWindowSize() const;
+    Size GetViewSize() const;
     
     Rect GetBoundingRect() const;
 

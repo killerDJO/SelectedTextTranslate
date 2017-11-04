@@ -138,7 +138,7 @@ void MainView::Resize()
         windowRect.right - windowRect.left,
         windowRect.bottom - windowRect.top);
 
-    if (State->GetWindowSize().Equals(newSize))
+    if (State->GetViewSize().Equals(newSize))
     {
         return;
     }
