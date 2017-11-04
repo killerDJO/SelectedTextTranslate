@@ -21,7 +21,7 @@ private:
     Font* headerFont;
 
 protected:
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
 public:
     ConfirmDialogContentControl(ViewContext* context, View* parentWindow);

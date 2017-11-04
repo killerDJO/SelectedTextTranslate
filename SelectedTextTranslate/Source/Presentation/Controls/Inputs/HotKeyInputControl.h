@@ -29,7 +29,7 @@ private:
     void RenderBorder(Renderer* renderer) const;
 
 protected:
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
 public:
     HotKeyInputControl(ViewContext* context, View* parentWindow);

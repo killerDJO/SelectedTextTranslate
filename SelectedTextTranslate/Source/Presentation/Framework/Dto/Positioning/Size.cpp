@@ -25,3 +25,11 @@ bool Size::Equals(Size size) const
 {
     return size.width == width && size.height == height;
 }
+
+Size Size::Max(Size otherSize) const
+{
+    return Size(
+        max(width, otherSize.GetWidth()),
+        max(height, otherSize.GetHeight())
+    );
+}

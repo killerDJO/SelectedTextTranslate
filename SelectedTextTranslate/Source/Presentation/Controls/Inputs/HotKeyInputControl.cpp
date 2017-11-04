@@ -133,7 +133,7 @@ void HotKeyInputControl::SubclassNativeControl()
     SendMessage(Handle, HKM_SETHOTKEY, currentHotkey, 0);
 }
 
-Size HotKeyInputControl::RenderContent(Renderer* renderer)
+void HotKeyInputControl::RenderContent(Renderer* renderer)
 {
     RenderBorder(renderer);
 
@@ -157,8 +157,6 @@ Size HotKeyInputControl::RenderContent(Renderer* renderer)
             Colors::Black,
             RenderPosition(textOffset, fontAscent + textOffset));
     }
-
-    return renderer->GetSize();
 }
 
 LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)

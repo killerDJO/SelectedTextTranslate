@@ -9,22 +9,22 @@ HeaderView::HeaderView(ViewContext* context, View* parentView, ModelHolder<Trans
     Name = L"TranlsateResultHeaderWindow";
 }
 
-Size HeaderView::RenderContent(Renderer* renderer, TranslationViewModel* model)
+void HeaderView::RenderContent(Renderer* renderer, TranslationViewModel* model)
 {
     DestroyChildViews();
 
     TranslateResult translateResult = model->GetTranslateResult();
     if(!translateResult.IsEmptyResult())
     {
-        return RenderTranslationResult(renderer, translateResult);
+        RenderTranslationResult(renderer, translateResult);
     }
     else
     {
-        return RenderEmptyResult(renderer);
+        RenderEmptyResult(renderer);
     }
 }
 
-Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult translateResult)
+void HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult translateResult)
 {
     RenderPosition renderPosition = RenderPosition(PaddingX, LineHeight);
 
@@ -57,17 +57,13 @@ Size HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult tra
     }
 
     renderer->IncreaseWidth(PaddingX);
-
-    return renderer->GetSize();
 }
 
-Size HeaderView::RenderEmptyResult(Renderer* renderer) const
+void HeaderView::RenderEmptyResult(Renderer* renderer) const
 {
     int curY = State->GetWindowSize().GetHeight() / 2 + FontHeader->GetHeight() / 2;
 
     renderer->PrintText(wstring(L"No text data selected"), FontHeader, Colors::Gray, RenderPosition(PaddingX, curY));
-
-    return renderer->GetSize();
 }
 
 void HeaderView::PrintInputCorrectionWarning(RenderDescriptor renderDescriptor, wstring originalInput)

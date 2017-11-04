@@ -13,11 +13,11 @@ private:
     void PrintSuggestion(RenderDescriptor renderDescriptor, wstring suggestion);
     void PrintHeaderAction(RenderDescriptor renderDescriptor, wstring actionDescription, wstring actionText, Subscribable<>* actionCallback);
 
-    Size RenderTranslationResult(Renderer* renderer, TranslateResult translateResult);
-    Size RenderEmptyResult(Renderer* renderer) const;
+    void RenderTranslationResult(Renderer* renderer, TranslateResult translateResult);
+    void RenderEmptyResult(Renderer* renderer) const;
 
 protected:
-    Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
+    void RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
     HeaderView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);

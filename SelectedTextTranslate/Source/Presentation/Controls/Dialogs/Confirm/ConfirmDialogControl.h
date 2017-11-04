@@ -10,7 +10,7 @@ private:
     ConfirmDialogContentControl* dialogContentView;
 
 protected:
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
 public:
     ConfirmDialogControl(ViewContext* context, View* parentView);

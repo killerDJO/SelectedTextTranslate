@@ -11,7 +11,7 @@ private:
     RenderResult CreateExpandButton(TranslationViewModel* model, RenderDescriptor renderDescriptor, TranslateResultCategory category, int categoryIndex, int showedCount);
 
 protected:
-    Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
+    void RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
     TranslateResultView(ViewContext* context, View* parentWindow, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);

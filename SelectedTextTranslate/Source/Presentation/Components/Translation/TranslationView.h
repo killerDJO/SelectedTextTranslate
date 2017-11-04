@@ -15,7 +15,7 @@ private:
     void RenderSeparator(Renderer* renderer, int width) const;
 
 protected:
-    Size RenderContent(Renderer* renderer, TranslationViewModel* model) override;
+    void RenderContent(Renderer* renderer, TranslationViewModel* model) override;
 
 public:
     TranslationView(ViewContext* context, View* parentView, ModelHolder<TranslationViewModel*>* modelHolder, IComponent* component);

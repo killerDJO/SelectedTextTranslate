@@ -39,9 +39,9 @@ protected:
     virtual Point GetInitialViewOffset() const;
     void ApplyViewState(bool preserveScrolls);
     void ApplyViewPosition(bool preserveScrolls);
-
+    
     void RenderToBuffer();
-    virtual Size RenderContent(Renderer* renderer) = 0;
+    virtual void RenderContent(Renderer* renderer) = 0;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
     LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;

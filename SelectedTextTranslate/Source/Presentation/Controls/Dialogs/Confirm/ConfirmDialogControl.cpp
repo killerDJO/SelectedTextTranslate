@@ -51,7 +51,7 @@ wstring ConfirmDialogControl::GetTitle() const
     return title;
 }
 
-Size ConfirmDialogControl::RenderContent(Renderer* renderer)
+void ConfirmDialogControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
@@ -71,11 +71,6 @@ Size ConfirmDialogControl::RenderContent(Renderer* renderer)
     dialogContentView->OnCancel.Subscribe(&OnCancel);
     dialogContentView->OnCancel.Subscribe(bind(&View::Hide, this));
     dialogContentView->InitializeAndRender();
-
-    renderer->UpdateRenderedContentSize(overlayWindow);
-    renderer->UpdateRenderedContentSize(dialogContentView);
-
-    return renderer->GetSize();
 }
 
 ConfirmDialogControl::~ConfirmDialogControl()

@@ -13,7 +13,7 @@ protected:
     ButtonStates state;
     map<ButtonStates, HDC> stateToDeviceContextMap;
 
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
     virtual void RenderStatesDeviceContexts() = 0;
 

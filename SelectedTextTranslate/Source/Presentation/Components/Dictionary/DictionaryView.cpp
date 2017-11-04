@@ -9,7 +9,7 @@ DictionaryView::DictionaryView(ViewContext* context, View* parentWindow, ModelHo
     iconSize = ScaleProvider->Scale(16);
 }
 
-Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> model)
+void DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> model)
 {
     DestroyChildViews();
 
@@ -48,6 +48,4 @@ Size DictionaryView::RenderContent(Renderer* renderer, vector<DictionaryRecord> 
     }
 
     renderer->IncreaseWidth(PaddingX);
-
-    return renderer->GetSize();
 }

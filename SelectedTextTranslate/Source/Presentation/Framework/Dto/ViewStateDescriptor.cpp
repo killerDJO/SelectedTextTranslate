@@ -23,7 +23,7 @@ void ViewStateDescriptor::ResetToLayout()
 {
     windowSize = layout.GetSize();
     position = layout.GetPosition();
-    contentSize = Size(0, 0);
+    contentSize = layout.GetSize();
 }
 
 void ViewStateDescriptor::UpdateContent(Renderer* renderer)
@@ -60,6 +60,8 @@ void ViewStateDescriptor::StretchToSize(Size size)
     {
         windowSize = Size(windowSize.GetWidth(), size.GetHeight());
     }
+
+    contentSize = windowSize.Max(contentSize);
 }
 
 Size ViewStateDescriptor::GetWindowSize() const
@@ -75,7 +77,7 @@ Size ViewStateDescriptor::GetContentSize() const
 void ViewStateDescriptor::SetContentSize(Size contentSize)
 {
     StretchToSize(contentSize);
-    this->contentSize = contentSize;
+    this->contentSize = contentSize.Max(this->contentSize);
 }
 
 Point ViewStateDescriptor::GetPosition() const

@@ -19,7 +19,7 @@ private:
     wstring title;
 
 protected:
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
     LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:

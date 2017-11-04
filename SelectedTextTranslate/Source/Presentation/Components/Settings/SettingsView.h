@@ -31,7 +31,7 @@ private:
     void SetButtonsState() const;
 
 protected:
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
 public:
     SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder, IComponent* component);

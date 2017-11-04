@@ -22,10 +22,9 @@ void ConfirmDialogOverlayControl::SetSize(Size size)
     State->SetLayout(LayoutDescriptor::CreateFixedLayoutDescriptor(Point(0, 0), size));
 }
 
-Size ConfirmDialogOverlayControl::RenderContent(Renderer* renderer)
+void ConfirmDialogOverlayControl::RenderContent(Renderer* renderer)
 {
     renderer->DrawRect(Rect(Point(0, 0), State->GetWindowSize()), backgroundBrush);
-    return State->GetWindowSize();
 }
 
 ConfirmDialogOverlayControl::~ConfirmDialogOverlayControl()

@@ -9,7 +9,7 @@ private:
     int iconSize;
 
 protected:
-    Size RenderContent(Renderer* renderer, vector<DictionaryRecord> model) override;
+    void RenderContent(Renderer* renderer, vector<DictionaryRecord> model) override;
 
 public:
     DictionaryView(ViewContext* context, View* parentView, ModelHolder<vector<DictionaryRecord>>* modelHolder, IComponent* component);

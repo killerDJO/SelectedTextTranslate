@@ -24,7 +24,11 @@ void ScrollProvider::InitializeScrollbars(
     }
 
     Size clientSize = window->GetAvailableClientSize();
-    Size contentSize = window->GetContentSize();
+
+    Size contentSize = Size(
+        window->GetContentSize().GetWidth() - verticalScrollBarWidth,
+        window->GetContentSize().GetHeight() - horizontalScrollBarHeight
+    );
 
     bool horizontalScrollWillBeShown = initializeHorizontalScroll && clientSize.GetWidth() < contentSize.GetWidth();
     bool verticalScrollWillBeShown = initializeVerticalScroll && clientSize.GetHeight() < contentSize.GetHeight();

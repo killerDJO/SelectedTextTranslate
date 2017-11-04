@@ -15,7 +15,10 @@ private:
     LayoutDescriptor layout;
 
     Size windowSize;
+
+    //In case of the Scrollable window used to detirmine size of content to scroll. For other window types always equal to the window size.
     Size contentSize;
+
     Point position;
     bool isVisible;
 

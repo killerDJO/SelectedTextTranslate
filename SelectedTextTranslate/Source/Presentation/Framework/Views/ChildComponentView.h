@@ -27,8 +27,8 @@ protected:
     ModelHolder<TModel>* CurrentModelHolder;
 
     TModel GetModel() const;
-    virtual Size RenderContent(Renderer* renderer, TModel model);
-    Size RenderContent(Renderer* renderer) override;
+    virtual void RenderContent(Renderer* renderer, TModel model);
+    void RenderContent(Renderer* renderer) override;
 
 public:
     ChildComponentView(ViewContext* context, View* parentView, ModelHolder<TModel>* modelHolder, IComponent* component);
@@ -90,13 +90,13 @@ TModel ChildComponentView<TModel>::GetModel() const
 }
 
 template <class TModel>
-Size ChildComponentView<TModel>::RenderContent(Renderer* renderer, TModel model)
+void ChildComponentView<TModel>::RenderContent(Renderer* renderer, TModel model)
 {
     return RenderContent(renderer);
 }
 
 template <class TModel>
-Size ChildComponentView<TModel>::RenderContent(Renderer* renderer)
+void ChildComponentView<TModel>::RenderContent(Renderer* renderer)
 {
     return RenderContent(renderer, GetModel());
 }

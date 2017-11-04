@@ -54,7 +54,7 @@ void ConfirmDialogContentControl::Initialize()
     AssertCriticalWinApiResult(SetWindowPos(Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
-Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
+void ConfirmDialogContentControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
@@ -102,8 +102,6 @@ Size ConfirmDialogContentControl::RenderContent(Renderer* renderer)
     cancelButton->EnableLayeredMode();
     cancelButton->SetBackgroundColor(Colors::Background);
     cancelButton->InitializeAndRender();
-
-    return State->GetWindowSize();
 }
 
 ConfirmDialogContentControl::~ConfirmDialogContentControl()

@@ -31,7 +31,7 @@ protected:
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
     DWORD GetExtendedWindowStyles() const override;
     DWORD GetWindowStyle() const override;
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
 public:
     MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder);

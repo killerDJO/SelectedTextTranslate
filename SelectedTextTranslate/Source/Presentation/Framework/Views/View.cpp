@@ -108,8 +108,20 @@ void View::RenderToBuffer()
 {
     Renderer* renderer = RenderingContext->GetRenderer();
 
-    Size contentSize = RenderContent(renderer);
-    State->SetContentSize(contentSize);
+    RenderContent(renderer);
+
+    Size childViewsSize;
+    for (View* childView : activeChildViews)
+    {
+        if(childView->IsVisible())
+        {
+            childViewsSize = childViewsSize.Max(Size(
+                childView->GetBoundingRect().GetRight(),
+                childView->GetBoundingRect().GetBottom()));
+        }
+    }
+
+    State->SetContentSize(childViewsSize);
     State->UpdateContent(renderer);
 
     RenderingContext->ReleaseRenderer(renderer);

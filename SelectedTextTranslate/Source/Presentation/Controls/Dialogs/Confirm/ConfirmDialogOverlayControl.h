@@ -7,7 +7,7 @@ private:
     Brush* backgroundBrush;
 
 protected:
-    Size RenderContent(Renderer* renderer) override;
+    void RenderContent(Renderer* renderer) override;
 
 public:
     ConfirmDialogOverlayControl(ViewContext* context, View* parentWindow);

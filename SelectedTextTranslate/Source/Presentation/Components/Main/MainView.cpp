@@ -95,7 +95,7 @@ void MainView::Show()
     SwitchToThisWindow(Handle, TRUE);
 }
 
-Size MainView::RenderContent(Renderer* renderer)
+void MainView::RenderContent(Renderer* renderer)
 {
     if (GetModel()->GetApplicationView() == ApplicationViews::None)
     {
@@ -108,11 +108,8 @@ Size MainView::RenderContent(Renderer* renderer)
     }
 
     IComponent* componentToShow = GetComponentToShow();
-
     componentToShow->MakeVisible();
     componentToShow->Render();
-
-    return componentToShow->GetContentSize();
 }
 
 void MainView::Scale(double scaleFactorAdjustment)

@@ -65,7 +65,7 @@ void SettingsGroupHeaderControl::Initialize()
     ControlView::Initialize();
 }
 
-Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
+void SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
 
@@ -94,8 +94,6 @@ Size SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
     expandButton->SetBackgroundBrush(backgroundBrush);
     expandButton->OnClick.Subscribe(&OnSettingsToggled);
     expandButton->InitializeAndRender();
-
-    return renderer->GetSize();
 }
 
 LRESULT SettingsGroupHeaderControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)

@@ -40,8 +40,6 @@ public:
 
     void IncreaseWidth(int widthToAdd);
     void IncreaseHeight(int heightToAdd);
-    void UpdateRenderedContentSize(View* view);
-    void UpdateRenderedContentSize(IComponent* component);
     void UpdateRenderedContentSize(Rect rect);
     void UpdateRenderedContentSize(Size size);
 

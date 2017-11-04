@@ -3,7 +3,6 @@
 #include "Presentation\Controls\Buttons\HoverTextButtonControl.h"
 #include "Presentation\Framework\Rendering\Dto\RenderResult.h"
 #include "Presentation\Components\Settings\Hotkeys\HotkeySettingsComponent.h"
-#include "Presentation\MessageBus.h"
 
 SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<SettingsViewModel*>* modelHolder, IComponent* component)
     : ChildComponentView(context, parentView, modelHolder, component)
@@ -15,7 +14,7 @@ SettingsView::SettingsView(ViewContext* context, View* parentView, ModelHolder<S
     this->Name = L"SettingsWindow";
 }
 
-Size SettingsView::RenderContent(Renderer* renderer)
+void SettingsView::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
     settingsGroups.clear();
@@ -29,8 +28,6 @@ Size SettingsView::RenderContent(Renderer* renderer)
     CreateControls(RenderDescriptor(renderer, renderPosition));
 
     SetButtonsState();
-
-    return renderer->GetSize();
 }
 
 RenderResult SettingsView::CreateSettingsGroups(RenderDescriptor renderDescriptor)
@@ -57,8 +54,6 @@ RenderResult SettingsView::InitializeSettingsGroup(RenderDescriptor renderDescri
         OverflowModes::Stretch));
 
     settingsGroup->InitializeAndRender();
-
-    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(settingsGroup);
 
     return RenderResult(settingsGroup->GetBoundingRect());
 }
@@ -95,8 +90,6 @@ RenderResult SettingsView::CreateSaveButtonControl(RenderDescriptor renderDescri
     saveButton->OnClick.Subscribe(&OnSaveSettings);
     saveButton->InitializeAndRender();
 
-    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(saveButton);
-
     return RenderResult(Point(
         saveButton->GetBoundingRect().GetRight(),
         saveButton->GetBoundingRect().GetY() + saveButton->GetTextBaseline()));
@@ -111,8 +104,6 @@ HoverTextButtonControl* SettingsView::CreateTextButtonControl(RenderDescriptor r
     button->SetText(text);
     button->OnClick.Subscribe(clickCallback);
     button->InitializeAndRender();
-
-    renderDescriptor.GetRenderer()->UpdateRenderedContentSize(button);
 
     return button;
 }

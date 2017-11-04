@@ -37,11 +37,11 @@ void TranslationView::Initialize()
     translateResultComponent->Initialize();
 }
 
-Size TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* model)
+void TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* model)
 {
     headerComponent->Render();
 
-    Size contentSize;
+    int maxWidth = headerComponent->GetBoundingRect().GetRight();
     if (model->GetTranslateResult().IsEmptyResult())
     {
         translateResultComponent->MakeHidden();
@@ -50,27 +50,16 @@ Size TranslationView::RenderContent(Renderer* renderer, TranslationViewModel* mo
             max(State->GetWindowSize().GetWidth(), headerComponent->GetBoundingRect().GetWidth()),
             State->GetWindowSize().GetHeight() - headerHeight);
         renderer->DrawRect(Rect(Point(0, headerHeight), backgroundSize), LightGrayBrush);
-
-        contentSize = headerComponent->GetBoundingRect().GetSize();
     }
     else
     {
         translateResultComponent->MakeVisible();
         translateResultComponent->Render();
-
-        contentSize = Size(
-            max(headerComponent->GetBoundingRect().GetWidth(), translateResultComponent->GetBoundingRect().GetWidth()),
-            headerComponent->GetBoundingRect().GetHeight() + translateResultComponent->GetBoundingRect().GetHeight());
+        maxWidth = max(maxWidth, translateResultComponent->GetBoundingRect().GetRight());
     }
 
     Size clientSize = ParentView->GetAvailableClientSize();
-    RenderSeparator(renderer, max(clientSize.GetWidth(), contentSize.GetWidth()));
-
-    contentSize = Size(
-        max(contentSize.GetWidth(), clientSize.GetWidth() - PaddingX),
-        contentSize.GetHeight());
-
-    return contentSize;
+    RenderSeparator(renderer, max(clientSize.GetWidth(), maxWidth));
 }
 
 void TranslationView::RenderSeparator(Renderer* renderer, int width) const

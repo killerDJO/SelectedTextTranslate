@@ -7,7 +7,7 @@ TranslateResultView::TranslateResultView(ViewContext* context, View* parentView,
     this->Name = L"TranslateResultWindow";
 }
 
-Size TranslateResultView::RenderContent(Renderer* renderer, TranslationViewModel* model)
+void TranslateResultView::RenderContent(Renderer* renderer, TranslationViewModel* model)
 {
     DestroyChildViews();
 
@@ -89,8 +89,6 @@ Size TranslateResultView::RenderContent(Renderer* renderer, TranslationViewModel
 
     renderer->IncreaseWidth(PaddingX);
     renderer->IncreaseHeight(PaddingY);
-
-    return renderer->GetSize();
 }
 
 RenderResult TranslateResultView::CreateExpandButton(
@@ -127,7 +125,6 @@ RenderResult TranslateResultView::CreateExpandButton(
         });
         expandButton->InitializeAndRender();
 
-        renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton);
         return RenderResult(expandButton->GetBoundingRect());
     }
 

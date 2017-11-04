@@ -14,4 +14,5 @@ public:
     int GetHeight() const;
 
     bool Equals(Size size) const;
+    Size Max(Size otherSize) const;
 };
