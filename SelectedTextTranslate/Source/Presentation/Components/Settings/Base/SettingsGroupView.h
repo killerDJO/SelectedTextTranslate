@@ -56,13 +56,13 @@ void SettingsGroupView<TSettings>::RenderContent(Renderer* renderer, SettingsGro
         ->SetTitle(model->GetName())
         ->SetContentState(model->GetContentState())
         ->SetVisibilityState(model->GetVisibilityState())
-        ->SetDimensions(Point(0, 0), this->State->GetViewSize().GetWidth())
+        ->SetDimensions(Point(0, 0), this->ViewState->GetViewSize().GetWidth())
         ->InitializeAndRender();
 
     if (model->GetVisibilityState() == SettingsGroupVisibilityState::Expanded)
     {
         RenderSettingsContent(RenderDescriptor(renderer, Point(this->PaddingX * 2, headerControl->GetBoundingRect().GetBottom())), model->GetSettings());
-        Rect contentBorderRect = Rect(Point(0, 0), Size(this->State->GetViewSize().GetWidth(), renderer->GetSize().GetHeight()));
+        Rect contentBorderRect = Rect(Point(0, 0), Size(this->ViewState->GetViewSize().GetWidth(), renderer->GetSize().GetHeight()));
         renderer->DrawBorderedRect(contentBorderRect, nullptr, borderWidth, Colors::Gray);
     }
 }

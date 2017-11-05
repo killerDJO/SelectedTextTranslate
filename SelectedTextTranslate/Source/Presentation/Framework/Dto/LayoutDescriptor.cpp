@@ -71,3 +71,8 @@ bool LayoutDescriptor::IsEmpty() const
 {
     return isEmpty;
 }
+
+bool LayoutDescriptor::IsFixedLayout() const
+{
+    return overflowX == OverflowModes::Fixed && overflowY == OverflowModes::Fixed;
+}

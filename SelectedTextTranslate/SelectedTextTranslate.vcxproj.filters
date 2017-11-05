@@ -496,9 +496,6 @@
     <ClInclude Include="Source\Presentation\Framework\Enums\ScrollBars.h">
       <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Presentation\Framework\Enums\ViewStates.h">
-      <Filter>Source\Presentation\Framework\Enums</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Presentation\Framework\Providers\DeviceContextProvider.h">
       <Filter>Source\Presentation\Framework\Providers</Filter>
     </ClInclude>
@@ -699,6 +696,9 @@
     </ClInclude>
     <ClInclude Include="Source\Presentation\TrayIcon.h">
       <Filter>Source\Presentation\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Presentation\Framework\Enums\ViewStatus.h">
+      <Filter>Source\Presentation\Framework\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

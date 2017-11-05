@@ -28,7 +28,7 @@ protected:
     RenderingContext* RenderingContext;
     DeviceContextProvider* DeviceContextProvider;
 
-    ViewStateDescriptor* State;
+    ViewStateDescriptor* ViewState;
     wstring Name;
 
     void DestroyChildViews();
@@ -39,8 +39,10 @@ protected:
     virtual Point GetInitialViewOffset() const;
     void ApplyViewState(bool preserveScrolls);
     void ApplyViewPosition(bool preserveScrolls);
-    
+    void DrawFromBuffer();
+
     void RenderToBuffer();
+    Size ComputeContentSize(Renderer* renderer);
     virtual void RenderContent(Renderer* renderer) = 0;
 
     void SpecifyWindowClass(WNDCLASSEX* windowClass) override;

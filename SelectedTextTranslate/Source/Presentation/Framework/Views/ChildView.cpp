@@ -68,8 +68,8 @@ LRESULT ChildView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
         RECT rcWindow;
         POINTS pos = MAKEPOINTS(lParam);
         AssertCriticalWinApiResult(GetWindowRect(Handle, &rcWindow));
-        AssertCriticalWinApiResult(MoveWindow(Handle, pos.x, pos.y, State->GetViewSize().GetWidth(), State->GetViewSize().GetHeight(), FALSE));
-        State->SetPosition(Point(pos.x, pos.y));
+        AssertCriticalWinApiResult(MoveWindow(Handle, pos.x, pos.y, ViewState->GetViewSize().GetWidth(), ViewState->GetViewSize().GetHeight(), FALSE));
+        ViewState->SetPosition(Point(pos.x, pos.y));
 
         return TRUE;
     }

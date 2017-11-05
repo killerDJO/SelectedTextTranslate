@@ -2,7 +2,7 @@
 #include "Presentation\Framework\Dto\Positioning\Point.h"
 #include "Presentation\Framework\Dto\Positioning\Size.h"
 #include "Presentation\Framework\Dto\Positioning\Rect.h"
-#include "Presentation\Framework\Enums\ViewStates.h"
+#include "Presentation\Framework\Enums\ViewStatus.h"
 #include "Presentation\Framework\Rendering\DeviceContextBuffer.h"
 #include "Presentation\Framework\Dto\LayoutDescriptor.h"
 #include "Presentation\Framework\Rendering\Renderer.h"
@@ -14,7 +14,7 @@ class ViewStateDescriptor
 private:
     LayoutDescriptor layout;
 
-    Size windowSize;
+    Size viewSize;
 
     //In case of the Scrollable view used to detirmine size of content to scroll. For other window types always equal to the window size.
     Size contentSize;
@@ -22,12 +22,13 @@ private:
     Point position;
     bool isVisible;
 
-    ViewStates viewState;
+    ViewStatus viewStatus;
 
     DeviceContextProvider* deviceContextProvider;
     DeviceContextBuffer* deviceContextBuffer;
 
     void StretchToSize(Size size);
+    void AssertLayoutIsSet() const;
 
 public:
     ViewStateDescriptor(DeviceContextProvider* deviceContextProvider);
@@ -38,21 +39,20 @@ public:
 
     void ResetToLayout();
 
-    void UpdateContent(Renderer* renderer);
+    void UpdateDeviceContext(Renderer* renderer);
+    void SetContentSize(Size newContentSize);
+
     DeviceContextBuffer* GetDeviceContextBuffer() const;
 
     Size GetViewSize() const;
-    
+    Size GetContentSize() const;
     Rect GetBoundingRect() const;
 
     Point GetPosition() const;
     void SetPosition(Point position);
 
-    Size GetContentSize() const;
-    void SetContentSize(Size contentSize);
-
-    ViewStates GetViewState() const;
-    void SetViewState(ViewStates viewState);
+    ViewStatus GetViewStatus() const;
+    void SetViewStatus(ViewStatus viewStatus);
 
     void MakeVisible();
     void MakeHidden();

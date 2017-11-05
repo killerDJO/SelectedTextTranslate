@@ -7,6 +7,4 @@ enum class OverflowModes
     Stretch = 2,
 
     Scroll = 3,
-
-    FillParent = 4
 };

@@ -36,7 +36,7 @@ DWORD MainView::GetWindowStyle() const
 
 void MainView::SetLayout(LayoutDescriptor layout) const
 {
-    State->SetLayout(layout);
+    ViewState->SetLayout(layout);
 }
 
 void MainView::Render(bool preserveScrolls)
@@ -127,7 +127,7 @@ void MainView::Scale(double scaleFactorAdjustment)
 
 void MainView::Resize()
 {
-    if (State->GetViewState() == ViewStates::Rendering)
+    if (ViewState->GetViewStatus() == ViewStatus::Rendering)
     {
         return;
     }
@@ -138,12 +138,12 @@ void MainView::Resize()
         windowRect.right - windowRect.left,
         windowRect.bottom - windowRect.top);
 
-    if (State->GetViewSize().Equals(newSize))
+    if (ViewState->GetViewSize().Equals(newSize))
     {
         return;
     }
 
-    LayoutDescriptor layout = State->GetLayout();
+    LayoutDescriptor layout = ViewState->GetLayout();
     layout.SetSize(newSize);
     layout.SetPosition(Point(windowRect.left, windowRect.top));
     GetModel()->GetViewDescriptor()->SetLayoutDescriptor(layout);

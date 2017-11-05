@@ -18,7 +18,7 @@ void HoverTextButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
     // Important to give window initial size. Otherwise it will not be initially shown in layered mode.
-    State->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
+    ViewState->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
         position,
         Size(1, 1),
         OverflowModes::Stretch,
@@ -95,13 +95,13 @@ void HoverTextButtonControl::RenderStatesDeviceContexts()
 {
     Size textSize = RenderingProvider->GetTextSize(text.c_str(), GetFont());
 
-    LayoutDescriptor layout = State->GetLayout();
+    LayoutDescriptor layout = ViewState->GetLayout();
     layout.SetSize(textSize);
-    State->SetLayout(layout);
+    ViewState->SetLayout(layout);
 
-    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
-    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
-    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
+    stateToDeviceContextMap[ButtonStates::Normal] = DeviceContextProvider->CreateDeviceContext(ViewState->GetViewSize());
+    stateToDeviceContextMap[ButtonStates::Hovered] = DeviceContextProvider->CreateDeviceContext(ViewState->GetViewSize());
+    stateToDeviceContextMap[ButtonStates::Disabled] = DeviceContextProvider->CreateDeviceContext(ViewState->GetViewSize());
     stateToDeviceContextMap[ButtonStates::Pressed] = stateToDeviceContextMap[ButtonStates::Hovered];
 
     RenderStateDeviceContext(stateToDeviceContextMap[ButtonStates::Normal], normalColor);
@@ -117,7 +117,7 @@ void HoverTextButtonControl::RenderStateDeviceContext(HDC deviceContext, Colors 
     renderer->SetBackground(backgroundBrush);
 
     renderer->PrintText(text.c_str(), GetFont(), color, Point(0, GetFont()->GetAscent()));
-    renderer->Render(deviceContext, State->GetViewSize());
+    renderer->Render(deviceContext, ViewState->GetViewSize());
 
     RenderingContext->ReleaseRenderer(renderer);
 

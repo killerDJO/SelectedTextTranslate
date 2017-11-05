@@ -18,7 +18,7 @@ View::View(ViewContext* context)
     RenderingContext = context->GetRenderingContext();
     DeviceContextProvider = context->GetDeviceContextProvider();
 
-    State = new ViewStateDescriptor(DeviceContextProvider);
+    ViewState = new ViewStateDescriptor(DeviceContextProvider);
     activeChildViews = vector<View*>();
     destroyedChildViews = vector<View*>();
 
@@ -28,16 +28,16 @@ View::View(ViewContext* context)
 
 void View::Initialize()
 {
-    if(State->GetLayout().IsEmpty())
+    if(ViewState->GetLayout().IsEmpty())
     {
         throw SelectedTextTranslateException(L"Layout must be set for view");
     }
 
-    State->MakeVisible();
+    ViewState->MakeVisible();
 
     NativeWindowHolder::Initialize();
 
-    State->SetViewState(ViewStates::Initialized);
+    ViewState->SetViewStatus(ViewStatus::Initialized);
 }
 
 void View::SpecifyWindowClass(WNDCLASSEX* windowClass)
@@ -50,9 +50,9 @@ Rect View::GetWindowRectangle() const
 {
     Point offset = GetInitialViewOffset();
     Point position = Point(
-        State->GetPosition().GetX() - offset.GetX(),
-        State->GetPosition().GetY() - offset.GetY());
-    return Rect(position, State->GetViewSize());
+        ViewState->GetPosition().GetX() - offset.GetX(),
+        ViewState->GetPosition().GetY() - offset.GetY());
+    return Rect(position, ViewState->GetViewSize());
 }
 
 Point View::GetInitialViewOffset() const
@@ -64,12 +64,12 @@ DWORD View::GetWindowStyle() const
 {
     int scrollStyle = 0;
 
-    if (State->GetLayout().GetOverflowX() == OverflowModes::Scroll)
+    if (ViewState->GetLayout().GetOverflowX() == OverflowModes::Scroll)
     {
         scrollStyle |= WS_HSCROLL;
     }
 
-    if (State->GetLayout().GetOverflowY() == OverflowModes::Scroll)
+    if (ViewState->GetLayout().GetOverflowY() == OverflowModes::Scroll)
     {
         scrollStyle |= WS_VSCROLL;
     }
@@ -89,9 +89,9 @@ void View::Render(bool preserveScrolls)
     AssertViewInitialized();
 
     RenderingContext->BeginRender(this);
+    ViewState->SetViewStatus(ViewStatus::Rendering);
 
-    State->SetViewState(ViewStates::Rendering);
-    State->ResetToLayout();
+    ViewState->ResetToLayout();
 
     RenderToBuffer();
 
@@ -100,7 +100,7 @@ void View::Render(bool preserveScrolls)
         ApplyViewState(preserveScrolls);
     }
 
-    State->SetViewState(ViewStates::Rendered);
+    ViewState->SetViewStatus(ViewStatus::Rendered);
     RenderingContext->EndRender(this);
 }
 
@@ -110,21 +110,26 @@ void View::RenderToBuffer()
 
     RenderContent(renderer);
 
-    Size childViewsSize;
+    ViewState->SetContentSize(ComputeContentSize(renderer));
+    ViewState->UpdateDeviceContext(renderer);
+
+    RenderingContext->ReleaseRenderer(renderer);
+}
+
+Size View::ComputeContentSize(Renderer* renderer)
+{
+    Size contentSize = renderer->GetSize();
     for (View* childView : activeChildViews)
     {
-        if(childView->IsVisible())
+        if (childView->IsVisible())
         {
-            childViewsSize = childViewsSize.Max(Size(
+            contentSize = contentSize.Max(Size(
                 childView->GetBoundingRect().GetRight(),
                 childView->GetBoundingRect().GetBottom()));
         }
     }
 
-    State->SetContentSize(childViewsSize);
-    State->UpdateContent(renderer);
-
-    RenderingContext->ReleaseRenderer(renderer);
+    return contentSize;
 }
 
 void View::ApplyViewState(bool preserveScrolls)
@@ -166,17 +171,17 @@ void View::ApplyViewPosition(bool preserveScrolls)
     Point offset = GetInitialViewOffset();
     AssertCriticalWinApiResult(MoveWindow(
         Handle,
-        State->GetPosition().GetX() - offset.GetX(),
-        State->GetPosition().GetY() - offset.GetY(),
-        State->GetViewSize().GetWidth(),
-        State->GetViewSize().GetHeight(),
+        ViewState->GetPosition().GetX() - offset.GetX(),
+        ViewState->GetPosition().GetY() - offset.GetY(),
+        ViewState->GetViewSize().GetWidth(),
+        ViewState->GetViewSize().GetHeight(),
         FALSE));
 
     // Important to initialize scroll only after window has been moved
     ScrollProvider->InitializeScrollbars(
         this,
-        State->GetLayout().GetOverflowX() == OverflowModes::Scroll,
-        State->GetLayout().GetOverflowY() == OverflowModes::Scroll,
+        ViewState->GetLayout().GetOverflowX() == OverflowModes::Scroll,
+        ViewState->GetLayout().GetOverflowY() == OverflowModes::Scroll,
         verticalScrollPosition,
         horizontalScrollPosition);
 
@@ -202,14 +207,19 @@ void View::Draw(bool drawChildren)
         DrawChildViews();
     }
 
+    DrawFromBuffer();
+}
+
+void View::DrawFromBuffer()
+{
     HDC deviceContext = GetDC(Handle);
     AssertCriticalWinApiResult(deviceContext);
 
-    HDC tempDc = DeviceContextProvider->CreateDeviceContext(State->GetViewSize());
-    DeviceContextProvider->ClearDeviceContext(tempDc, State->GetViewSize(), (HBRUSH)GetStockObject(WHITE_BRUSH));
-    State->GetDeviceContextBuffer()->Render(tempDc, State->GetDeviceContextBuffer()->GetSize());
-    DeviceContextProvider->CopyDeviceContext(tempDc, deviceContext, State->GetViewSize());
-    DeviceContextProvider->DeleteDeviceContext(tempDc);
+    HDC fullWindowBuffer = DeviceContextProvider->CreateDeviceContext(ViewState->GetViewSize());
+    DeviceContextProvider->ClearDeviceContext(fullWindowBuffer, ViewState->GetViewSize(), (HBRUSH)GetStockObject(WHITE_BRUSH));
+    ViewState->GetDeviceContextBuffer()->Render(fullWindowBuffer, ViewState->GetDeviceContextBuffer()->GetSize());
+    DeviceContextProvider->CopyDeviceContext(fullWindowBuffer, deviceContext, ViewState->GetViewSize());
+    DeviceContextProvider->DeleteDeviceContext(fullWindowBuffer);
 
     AssertCriticalWinApiResult(ReleaseDC(Handle, deviceContext));
 }
@@ -262,27 +272,27 @@ Size View::GetAvailableClientSize() const
 
 Size View::GetContentSize() const
 {
-    return State->GetContentSize();
+    return ViewState->GetContentSize();
 }
 
 Rect View::GetBoundingRect() const
 {
-    return State->GetBoundingRect();
+    return ViewState->GetBoundingRect();
 }
 
 void View::MakeVisible() const
 {
-    State->MakeVisible();
+    ViewState->MakeVisible();
 }
 
 void View::MakeHidden() const
 {
-    State->MakeHidden();
+    ViewState->MakeHidden();
 }
 
 bool View::IsVisible() const
 {
-    return State->IsVisible();
+    return ViewState->IsVisible();
 }
 
 void View::Show()
@@ -346,7 +356,7 @@ LRESULT View::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 
 void View::AssertViewInitialized() const
 {
-    if (State->GetViewState() == ViewStates::New)
+    if (ViewState->GetViewStatus() == ViewStatus::New)
     {
         throw SelectedTextTranslateFatalException(L"View has not been initialized.");
     }
@@ -354,7 +364,7 @@ void View::AssertViewInitialized() const
 
 void View::AssertViewNotInitialized() const
 {
-    if (State->GetViewState() != ViewStates::New)
+    if (ViewState->GetViewStatus() != ViewStatus::New)
     {
         throw SelectedTextTranslateFatalException(L"View has been already initialized.");
     }
@@ -362,7 +372,7 @@ void View::AssertViewNotInitialized() const
 
 View::~View()
 {
-    delete State;
+    delete ViewState;
 
     DestroyChildViews(activeChildViews);
     DestroyChildViews(destroyedChildViews);

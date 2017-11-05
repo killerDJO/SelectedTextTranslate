@@ -161,7 +161,7 @@
     <ClInclude Include="Source\Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h" />
     <ClInclude Include="Source\Presentation\Hotkeys\HotkeysRegistry.h" />
     <ClInclude Include="Source\Presentation\Framework\Rendering\DeviceContextBuffer.h" />
-    <ClInclude Include="Source\Presentation\Framework\Enums\ViewStates.h" />
+    <ClInclude Include="Source\Presentation\Framework\Enums\ViewStatus.h" />
     <ClInclude Include="Source\Presentation\Framework\Providers\DeviceContextProvider.h" />
     <ClInclude Include="Source\Presentation\Framework\Providers\ScaleProvider.h" />
     <ClInclude Include="Source\Presentation\Framework\Enums\OverflowModes.h" />

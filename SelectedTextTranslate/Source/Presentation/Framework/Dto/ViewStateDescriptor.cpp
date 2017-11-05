@@ -4,7 +4,7 @@ ViewStateDescriptor::ViewStateDescriptor( DeviceContextProvider* deviceContextPr
     this->deviceContextProvider = deviceContextProvider;
     deviceContextBuffer = nullptr;
     isVisible = false;
-    viewState = ViewStates::New;
+    viewStatus = ViewStatus::New;
 }
 
 void ViewStateDescriptor::SetLayout(LayoutDescriptor layout)
@@ -21,13 +21,17 @@ LayoutDescriptor ViewStateDescriptor::GetLayout() const
 
 void ViewStateDescriptor::ResetToLayout()
 {
-    windowSize = layout.GetSize();
+    AssertLayoutIsSet();
+
+    viewSize = layout.GetSize();
     position = layout.GetPosition();
-    contentSize = layout.GetSize();
+    contentSize = Size(0, 0);
 }
 
-void ViewStateDescriptor::UpdateContent(Renderer* renderer)
+void ViewStateDescriptor::UpdateDeviceContext(Renderer* renderer)
 {
+    AssertLayoutIsSet();
+
     Size renderedSize = renderer->GetSize();
     Size allowedRenderedSize = Size(
         layout.GetOverflowX() == OverflowModes::Fixed ? layout.GetSize().GetWidth() : renderedSize.GetWidth(),
@@ -40,33 +44,31 @@ void ViewStateDescriptor::UpdateContent(Renderer* renderer)
     }
 
     renderer->Render(deviceContextBuffer);
-
-    StretchToSize(allowedRenderedSize);
 }
 
 DeviceContextBuffer* ViewStateDescriptor::GetDeviceContextBuffer() const
 {
+    AssertLayoutIsSet();
+
     return deviceContextBuffer;
 }
 
 void ViewStateDescriptor::StretchToSize(Size size)
 {
-    if (layout.GetOverflowX() == OverflowModes::Stretch && size.GetWidth() > windowSize.GetWidth())
+    if (layout.GetOverflowX() == OverflowModes::Stretch && size.GetWidth() > viewSize.GetWidth())
     {
-        windowSize = Size(size.GetWidth(), windowSize.GetHeight());
+        viewSize = Size(size.GetWidth(), viewSize.GetHeight());
     }
 
-    if (layout.GetOverflowY() == OverflowModes::Stretch && size.GetHeight() > windowSize.GetHeight())
+    if (layout.GetOverflowY() == OverflowModes::Stretch && size.GetHeight() > viewSize.GetHeight())
     {
-        windowSize = Size(windowSize.GetWidth(), size.GetHeight());
+        viewSize = Size(viewSize.GetWidth(), size.GetHeight());
     }
-
-    contentSize = windowSize.Max(contentSize);
 }
 
 Size ViewStateDescriptor::GetViewSize() const
 {
-    return windowSize;
+    return viewSize;
 }
 
 Size ViewStateDescriptor::GetContentSize() const
@@ -74,10 +76,12 @@ Size ViewStateDescriptor::GetContentSize() const
     return contentSize;
 }
 
-void ViewStateDescriptor::SetContentSize(Size contentSize)
+void ViewStateDescriptor::SetContentSize(Size newContentSize)
 {
+    AssertLayoutIsSet();
+
+    contentSize = newContentSize;
     StretchToSize(contentSize);
-    this->contentSize = contentSize.Max(this->contentSize);
 }
 
 Point ViewStateDescriptor::GetPosition() const
@@ -90,19 +94,19 @@ void ViewStateDescriptor::SetPosition(Point position)
     this->position = position;
 }
 
-ViewStates ViewStateDescriptor::GetViewState() const
+ViewStatus ViewStateDescriptor::GetViewStatus() const
 {
-    return viewState;
+    return viewStatus;
 }
 
-void ViewStateDescriptor::SetViewState(ViewStates viewState)
+void ViewStateDescriptor::SetViewStatus(ViewStatus viewStatus)
 {
-    this->viewState = viewState;
+    this->viewStatus = viewStatus;
 }
 
 Rect ViewStateDescriptor::GetBoundingRect() const
 {
-    return Rect(position, windowSize);
+    return Rect(position, viewSize);
 }
 
 void ViewStateDescriptor::MakeVisible()
@@ -118,6 +122,14 @@ void ViewStateDescriptor::MakeHidden()
 bool ViewStateDescriptor::IsVisible() const
 {
     return isVisible;
+}
+
+void ViewStateDescriptor::AssertLayoutIsSet() const
+{
+    if (layout.IsEmpty())
+    {
+        throw SelectedTextTranslateFatalException(L"Layout is not set.");
+    }
 }
 
 ViewStateDescriptor::~ViewStateDescriptor()

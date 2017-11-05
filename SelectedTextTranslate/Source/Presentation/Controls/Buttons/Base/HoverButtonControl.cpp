@@ -115,7 +115,7 @@ void HoverButtonControl::ChangeButtonState(ButtonStates newState)
 {
     state = newState;
 
-    if (State->GetViewState() != ViewStates::New)
+    if (ViewState->GetViewStatus() != ViewStatus::New)
     {
         Render();
     }

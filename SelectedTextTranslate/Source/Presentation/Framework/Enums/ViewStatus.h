@@ -1,6 +1,6 @@
 #pragma once
 
-enum class ViewStates
+enum class ViewStatus
 {
     New = 0,
 

@@ -61,7 +61,7 @@ void HeaderView::RenderTranslationResult(Renderer* renderer, TranslateResult tra
 
 void HeaderView::RenderEmptyResult(Renderer* renderer) const
 {
-    int curY = State->GetViewSize().GetHeight() / 2 + FontHeader->GetHeight() / 2;
+    int curY = ViewState->GetViewSize().GetHeight() / 2 + FontHeader->GetHeight() / 2;
 
     renderer->PrintText(wstring(L"No text data selected"), FontHeader, Colors::Gray, RenderPosition(PaddingX, curY));
 }

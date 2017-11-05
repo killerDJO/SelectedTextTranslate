@@ -95,7 +95,7 @@ void ScrollProvider::InitializeScrollbar(HWND windowHandle, int contentDimension
 {
     int scrollChar = GetScrollChar(scrollBar);
     int numberOfLines = roundToInt(contentDimension * 1.0 / scrollChar);
-    int availableLines = int(floor(windowDimension * 1.0 / scrollChar));
+    int availableLines = roundToInt(windowDimension * 1.0 / scrollChar);
 
     // There might be amount of content which is not part of the scroll because it's not evenly divided by scroll char
     // It is be spread between rest of scroll positions by scrolling logic

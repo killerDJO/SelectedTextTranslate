@@ -31,4 +31,5 @@ public:
     void SetSize(Size size);
 
     bool IsEmpty() const;
+    bool IsFixedLayout() const;
 };

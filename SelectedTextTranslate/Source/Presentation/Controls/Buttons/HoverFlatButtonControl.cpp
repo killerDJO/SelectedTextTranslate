@@ -15,7 +15,7 @@ HoverFlatButtonControl::HoverFlatButtonControl(ViewContext* context, View* paren
 void HoverFlatButtonControl::SetPosition(Point position)
 {
     AssertViewNotInitialized();
-    State->SetPosition(position);
+    ViewState->SetPosition(position);
 }
 
 void HoverFlatButtonControl::SetFont(Font* font)
@@ -73,8 +73,8 @@ Size HoverFlatButtonControl::GetComputedSize() const
 
 void HoverFlatButtonControl::Initialize()
 {
-    State->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
-        State->GetPosition(),
+    ViewState->SetLayout(LayoutDescriptor::CreateLayoutDescriptor(
+        ViewState->GetPosition(),
         GetComputedSize(),
         OverflowModes::Fixed,
         OverflowModes::Fixed));

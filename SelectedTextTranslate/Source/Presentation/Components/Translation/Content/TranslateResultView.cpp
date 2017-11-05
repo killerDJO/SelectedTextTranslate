@@ -124,6 +124,7 @@ RenderResult TranslateResultView::CreateExpandButton(
             OnExpandCategory(categoryIndex);
         });
         expandButton->InitializeAndRender();
+        renderDescriptor.GetRenderer()->UpdateRenderedContentSize(expandButton->GetBoundingRect());
 
         return RenderResult(expandButton->GetBoundingRect());
     }
