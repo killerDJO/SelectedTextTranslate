@@ -6,13 +6,8 @@
 ConfirmDialogControl::ConfirmDialogControl(ViewContext* context, View* parentView)
     : ControlView(context, parentView)
 {
-    this->ClassName = L"STT_CONFIRM_DIALOG";
-
     this->dialogContentView = nullptr;
     this->title = wstring();
-    this->OnConfirm = Subscribable<>();
-    this->OnCancel = Subscribable<>();
-
     this->IsLayered = false;
 }
 
@@ -20,7 +15,12 @@ void ConfirmDialogControl::Initialize()
 {
     ControlView::Initialize();
 
-    AssertCriticalWinApiResult(SetWindowPos(Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
+    AssertCriticalWinApiResult(SetWindowPos(Window->GetHandle(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
+}
+
+void ConfirmDialogControl::SpecifyWindow(NativeWindowHolder* window)
+{
+    window->SetClassName(L"STT_CONFIRM_DIALOG");
 }
 
 void ConfirmDialogControl::SetSize(Size size)
@@ -31,8 +31,13 @@ void ConfirmDialogControl::SetSize(Size size)
 
 void ConfirmDialogControl::Show()
 {
-    ControlView::Show();
-    AssertWinApiResult(SetFocus(Handle));
+    Window->Show();
+    Window->Focus();
+}
+
+void ConfirmDialogControl::Hide()
+{
+    Window->Hide();
 }
 
 void ConfirmDialogControl::SetTitle(wstring title)
@@ -67,9 +72,9 @@ void ConfirmDialogControl::RenderContent(Renderer* renderer)
     dialogContentView->SetDimensions(Point(paddingX, paddingY), dialogContentWidth);
     dialogContentView->SetTitle(title);
     dialogContentView->OnConfirm.Subscribe(&OnConfirm);
-    dialogContentView->OnConfirm.Subscribe(bind(&View::Hide, this));
+    dialogContentView->OnConfirm.Subscribe(bind(&ConfirmDialogControl::Hide, this));
     dialogContentView->OnCancel.Subscribe(&OnCancel);
-    dialogContentView->OnCancel.Subscribe(bind(&View::Hide, this));
+    dialogContentView->OnCancel.Subscribe(bind(&ConfirmDialogControl::Hide, this));
     dialogContentView->InitializeAndRender();
 }
 

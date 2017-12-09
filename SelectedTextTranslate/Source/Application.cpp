@@ -51,10 +51,9 @@ int Application::Run(HINSTANCE hInstance) const
 int Application::BootstrapApplication(ServiceRegistry* serviceRegistry) const
 {
     Logger* logger = serviceRegistry->Get<Logger>();
+
     MainComponent mainComponent = MainComponent(serviceRegistry);
     mainComponent.SetLayout(GetMainComponentLayout(serviceRegistry->Get<ScaleProvider>()));
-
-    serviceRegistry->Get<TrayIcon>()->Initialize();
     mainComponent.Initialize();
 
     serviceRegistry->Get<MessageBus>()->OnExit.Subscribe(bind(&Application::Exit, this));

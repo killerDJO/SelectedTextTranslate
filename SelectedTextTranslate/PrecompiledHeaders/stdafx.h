@@ -45,3 +45,4 @@
 #include "..\Resources\resource.h"
 
 using namespace std;
+using namespace placeholders;

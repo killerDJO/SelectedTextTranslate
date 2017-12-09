@@ -23,7 +23,7 @@ void ChildView::Initialize()
 
     if (IsLayered)
     {
-        AssertCriticalWinApiResult(SetLayeredWindowAttributes(Handle, 0, 255, LWA_ALPHA));
+        AssertCriticalWinApiResult(SetLayeredWindowAttributes(Window->GetHandle(), 0, 255, LWA_ALPHA));
     }
 }
 
@@ -31,6 +31,18 @@ void ChildView::EnableLayeredMode()
 {
     AssertViewNotInitialized();
     this->IsLayered = true;
+}
+
+void ChildView::SpecifyWindow(NativeWindowHolder* window)
+{
+    window
+        ->AddStyles(WS_CHILD)
+        ->AddExtendedStyles(IsLayered ? WS_EX_LAYERED : 0)
+        ->SetParent(ParentView->GetWindow()->GetHandle())
+        // This message should be processed in order to enable scrolling.
+        // It's sent to child windows after ScrollWindow on parent is called.
+        ->SetMessageHandler(WM_MOVE, bind(&ChildView::ProcessMove, this, _1, _2))
+        ->SetMessageHandler(WM_LBUTTONDOWN, bind(&ChildView::ProcessButtonDown, this, _1, _2));
 }
 
 Point ChildView::GetInitialViewOffset() const
@@ -41,46 +53,16 @@ Point ChildView::GetInitialViewOffset() const
     return Point(offsetX, offsetY);
 }
 
-DWORD ChildView::GetWindowStyle() const
+LRESULT ChildView::ProcessMove(WPARAM wParam, LPARAM lParam)
 {
-    return View::GetWindowStyle() | WS_CHILD;
+    POINTS pos = MAKEPOINTS(lParam);
+    Window->Move(Rect(pos.x, pos.y, ViewState->GetViewSize().GetWidth(), ViewState->GetViewSize().GetHeight()));
+    ViewState->SetPosition(Point(pos.x, pos.y));
+    return TRUE;
 }
 
-DWORD ChildView::GetExtendedWindowStyles() const
+LRESULT ChildView::ProcessButtonDown(WPARAM wParam, LPARAM lParam)
 {
-    return View::GetExtendedWindowStyles() | (IsLayered ? WS_EX_LAYERED : 0);
-}
-
-HWND ChildView::GetWindowParent() const
-{
-    return ParentView->GetHandle();
-}
-
-LRESULT ChildView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-
-    // This message should be processed in order to enable scrolling.
-    // It's sent to child windows after ScrollWindow on parent is called.
-    case WM_MOVE:
-    {
-        RECT rcWindow;
-        POINTS pos = MAKEPOINTS(lParam);
-        AssertCriticalWinApiResult(GetWindowRect(Handle, &rcWindow));
-        AssertCriticalWinApiResult(MoveWindow(Handle, pos.x, pos.y, ViewState->GetViewSize().GetWidth(), ViewState->GetViewSize().GetHeight(), FALSE));
-        ViewState->SetPosition(Point(pos.x, pos.y));
-
-        return TRUE;
-    }
-
-    case WM_LBUTTONDOWN:
-    {
-        AssertCriticalWinApiResult(SetFocus(Handle));
-        return TRUE;
-    }
-
-    default:
-        return View::WindowProcedure(message, wParam, lParam);
-    }
+    Window->Focus();
+    return TRUE;
 }

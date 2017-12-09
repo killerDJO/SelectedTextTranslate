@@ -15,6 +15,8 @@ private:
     ModelHolder<MainViewModel*>* modelHolder;
     map<ApplicationViews, IComponent*> viewToComponentMap;
 
+    void SpecifyWindowClass(WNDCLASSEX* windowClass);
+
     void CreateChildComponents();
     void InitializeComponent(IComponent* component, ApplicationViews view);
     void CreateConfirmDialog();
@@ -25,13 +27,15 @@ private:
     bool IsResizeLocked() const;
     void Resize();
 
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+    LRESULT ProcessSetCursor(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure);
+    LRESULT ProcessSysCommand(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure);
+    LRESULT ProcessActivate(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessHotkey(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure);
+    LRESULT ProcessShowWindow(WPARAM wParam, LPARAM lParam);
 
 protected:
-    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
-    DWORD GetExtendedWindowStyles() const override;
-    DWORD GetWindowStyle() const override;
     void RenderContent(Renderer* renderer) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolder);
@@ -39,11 +43,11 @@ public:
     void Initialize() override;
     void SetLayout(LayoutDescriptor layout) const;
     void Render(bool preserveScrolls = false) override;
-    
     void Scale(double scaleFactorAjustment);
 
-    void Show() override;
     void ShowConfirmDialog(wstring title, function<void()> onConfirm);
+
+    void Hide();
 
     Subscribable<int> OnHotkey;
     Subscribable<bool> OnVisibilityChanged;

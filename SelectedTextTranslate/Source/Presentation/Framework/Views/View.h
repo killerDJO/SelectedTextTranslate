@@ -11,12 +11,21 @@ class Renderer;
 class ScrollProvider;
 class ViewStateDescriptor;
 
-class View : public NativeWindowHolder
+class View
 {
 private:
     vector<View*> destroyedChildViews;
     vector<View*> activeChildViews;
 
+    DWORD GetScrollStyle() const;
+    Rect GetWindowBoundingRect() const;
+
+    void ApplyViewState(bool preserveScrolls);
+
+    void RenderToBuffer();
+    Size ComputeContentSize(Renderer* renderer);
+
+    void DrawFromBuffer();
     void DrawChildViews();
     void DestroyChildViews(vector<View*>& childViews) const;
 
@@ -28,33 +37,26 @@ protected:
     RenderingContext* RenderingContext;
     DeviceContextProvider* DeviceContextProvider;
 
+    NativeWindowHolder* Window;
     ViewStateDescriptor* ViewState;
     wstring Name;
 
     void DestroyChildViews();
-
-    DWORD GetWindowStyle() const override;
-    Rect GetWindowRectangle() const override;
-
-    virtual Point GetInitialViewOffset() const;
-    void ApplyViewState(bool preserveScrolls);
-    void ApplyViewPosition(bool preserveScrolls);
-    void DrawFromBuffer();
-
-    void RenderToBuffer();
-    Size ComputeContentSize(Renderer* renderer);
-    virtual void RenderContent(Renderer* renderer) = 0;
-
-    void SpecifyWindowClass(WNDCLASSEX* windowClass) override;
-    LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
-
     void AssertViewInitialized() const;
     void AssertViewNotInitialized() const;
 
+    virtual void SpecifyWindow(NativeWindowHolder* window);
+    virtual Point GetInitialViewOffset() const;
+    virtual void RenderContent(Renderer* renderer) = 0;
+
+    //TODO: move to private
+    void ApplyViewPosition(bool preserveScrolls);
+
 public:
     View(ViewContext* context);
-    ~View() override;
+    virtual ~View();
+
+    NativeWindowHolder* GetWindow() const;
 
     Size GetContentSize() const;
     Size GetAvailableClientSize() const;
@@ -64,13 +66,10 @@ public:
     void MakeHidden() const;
     bool IsVisible() const;
 
-    virtual void Show();
-    virtual void Hide();
-
     void AddChildView(View* childView);
 
+    virtual void Initialize();
     virtual void Render(bool preserveScrolls = false);
-    void Draw(bool drawChildren = false);
-    void Initialize() override;
     void InitializeAndRender(bool preserveScrolls = false);
+    void Draw(bool drawChildren = false);
 };

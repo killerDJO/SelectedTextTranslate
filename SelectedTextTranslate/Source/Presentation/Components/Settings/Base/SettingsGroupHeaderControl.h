@@ -19,8 +19,8 @@ private:
     wstring title;
 
 protected:
+    void SpecifyWindow(NativeWindowHolder* window) override;
     void RenderContent(Renderer* renderer) override;
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
     SettingsGroupHeaderControl(ViewContext* context, View* parentView);

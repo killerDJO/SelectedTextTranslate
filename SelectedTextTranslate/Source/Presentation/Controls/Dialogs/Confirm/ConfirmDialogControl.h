@@ -11,6 +11,7 @@ private:
 
 protected:
     void RenderContent(Renderer* renderer) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     ConfirmDialogControl(ViewContext* context, View* parentView);
@@ -23,7 +24,8 @@ public:
 
     void Initialize() override;
 
-    void Show() override;
+    void Show();
+    void Hide();
 
     Subscribable<> OnConfirm;
     Subscribable<> OnCancel;

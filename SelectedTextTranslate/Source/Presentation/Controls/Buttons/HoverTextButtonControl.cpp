@@ -10,8 +10,11 @@ HoverTextButtonControl::HoverTextButtonControl(ViewContext* context, View* paren
     disabledColor = Colors::LightGray;
     backgroundColor = Colors::White;
     text = wstring();
+}
 
-    ClassName = L"STT_HOVERTEXTBUTTON";
+void HoverTextButtonControl::SpecifyWindow(NativeWindowHolder* window)
+{
+    window->SetClassName(L"STT_HOVERTEXTBUTTON");
 }
 
 void HoverTextButtonControl::SetPosition(Point position)

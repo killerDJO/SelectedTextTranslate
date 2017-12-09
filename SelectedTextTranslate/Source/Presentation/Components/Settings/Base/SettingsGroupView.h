@@ -13,6 +13,7 @@ private:
 
 protected:
     void RenderContent(Renderer* renderer, SettingsGroupViewModel<TSettings>* model) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
     virtual void RenderSettingsContent(RenderDescriptor renderDescriptor, TSettings* settings) = 0;
 
 public:
@@ -30,8 +31,13 @@ SettingsGroupView<TSettings>::SettingsGroupView(ViewContext* context, View* pare
 {
     this->PaddingX = this->PaddingY = this->ScaleProvider->Scale(5);
     this->borderWidth = this->ScaleProvider->Scale(1);
-    this->ClassName = L"STT_SETTINGS_GROUP";
     this->headerControl = nullptr;
+}
+
+template <typename TSettings>
+void SettingsGroupView<TSettings>::SpecifyWindow(NativeWindowHolder* window)
+{
+    window->SetClassName(L"STT_SETTINGS_GROUP");
 }
 
 template <typename TSettings>

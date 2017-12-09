@@ -6,13 +6,19 @@
 class HoverButtonControl : public ControlView
 {
 private:
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
     void ChangeButtonState(ButtonStates newState);
+
+    LRESULT ProcessLeftButtonUp(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessLeftButtonDown(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessMouseMove(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessMouseHover(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessMouseLeave(WPARAM wParam, LPARAM lParam);
 
 protected:
     ButtonStates state;
     map<ButtonStates, HDC> stateToDeviceContextMap;
 
+    void SpecifyWindow(NativeWindowHolder* window) override;
     void RenderContent(Renderer* renderer) override;
 
     virtual void RenderStatesDeviceContexts() = 0;

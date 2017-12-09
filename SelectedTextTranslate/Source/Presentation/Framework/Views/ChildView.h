@@ -3,16 +3,16 @@
 
 class ChildView : public View
 {
+private:
+    LRESULT ProcessMove(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessButtonDown(WPARAM wParam, LPARAM lParam);
+
 protected:
     View* ParentView;
     bool IsLayered;
 
+    void SpecifyWindow(NativeWindowHolder* window) override;
     Point GetInitialViewOffset() const override;
-    DWORD GetWindowStyle() const override;
-    DWORD GetExtendedWindowStyles() const override;
-    HWND GetWindowParent() const override;
-
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
     ChildView(ViewContext* context, View* parentView);

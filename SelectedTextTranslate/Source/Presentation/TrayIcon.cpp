@@ -1,23 +1,37 @@
 #include "Presentation\TrayIcon.h"
-#include "Infrastructure\ErrorHandling\Exceptions\SelectedTextTranslateException.h"
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 TrayIcon::TrayIcon(ServiceRegistry* registry)
-    : NativeWindowHolder(), ErrorHandler(registry->Get<Logger>())
+    : ErrorHandler(registry->Get<Logger>())
 {
     logger = registry->Get<Logger>();
     hotkeysRegistry = registry->Get<HotkeysRegistry>();
     messageBus = registry->Get<MessageBus>();
 
-    ClassName = L"STT_TRAY";
     menu = nullptr;
-    WM_TASKBARCREATED = 0;
+    WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
+    AssertCriticalWinApiResult(WM_TASKBARCREATED);
     isSuspended = false;
 
     OnEnable.Subscribe(bind(&TrayIcon::SetEnabledState, this));
     OnSuspend.Subscribe(bind(&TrayIcon::SetSuspendedState, this));
 
     InitializeMenuActionsToSubscribeableMap();
+    CreateNativeWindow();
+    RegisterHotkeys();
+    CreateMenu();
+    CreateTrayIcon();
+}
+
+void TrayIcon::CreateNativeWindow()
+{
+    window = new NativeWindowHolder(this, logger);
+    window
+        ->SetClassName(L"STT_TRAY")
+        ->AddStyles(WS_POPUP)
+        ->SetMessageHandler(WM_TRAYICON, bind(&TrayIcon::ProcessTrayIconMessage, this, _1, _2))
+        ->SetMessageHandler(WM_TASKBARCREATED, bind(&TrayIcon::ProcessTaskBarCreatedMessage, this, _1, _2))
+        ->SetProxyMessageHandler(WM_HOTKEY, bind(&TrayIcon::ProcessHotkeyMessage, this, _1, _2, _3));
 }
 
 void TrayIcon::InitializeMenuActionsToSubscribeableMap()
@@ -30,23 +44,6 @@ void TrayIcon::InitializeMenuActionsToSubscribeableMap()
     menuActionsToSubscribeableMap[MenuSettingsItemId] = &messageBus->OnShowSettings;
     menuActionsToSubscribeableMap[MenuSuspendItemId] = &OnSuspend;
     menuActionsToSubscribeableMap[MenuEnableItemId] = &OnEnable;
-}
-
-void TrayIcon::Initialize()
-{
-    NativeWindowHolder::Initialize();
-
-    WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
-    AssertWinApiResult(WM_TASKBARCREATED);
-
-    RegisterHotkeys();
-    CreateMenu();
-    CreateTrayIcon();
-}
-
-DWORD TrayIcon::GetWindowStyle() const
-{
-    return NativeWindowHolder::GetWindowStyle() | WS_POPUP;
 }
 
 void TrayIcon::CreateMenu()
@@ -77,12 +74,12 @@ void TrayIcon::CreateTrayIcon()
     memset(&notifyIconData, 0, sizeof(NOTIFYICONDATA));
 
     notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
-    notifyIconData.hWnd = Handle;
+    notifyIconData.hWnd = window->GetHandle();
     notifyIconData.uID = TrayIconId;
     notifyIconData.uVersion = NOTIFYICON_VERSION_4;
     notifyIconData.uFlags = NIF_ICON | NIF_TIP | NIF_INFO | NIF_MESSAGE;
     notifyIconData.uCallbackMessage = WM_TRAYICON;
-    notifyIconData.hIcon = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
+    notifyIconData.hIcon = LoadIcon(window->GetInstance(), MAKEINTRESOURCE(IDI_APP_ICON));
     wcscpy_s(notifyIconData.szTip, L"Selected text translate..");
 
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
@@ -90,17 +87,17 @@ void TrayIcon::CreateTrayIcon()
 
 void TrayIcon::SetTrayIconImage(DWORD imageResource)
 {
-    notifyIconData.hIcon = LoadIcon(Instance, MAKEINTRESOURCE(imageResource));
+    notifyIconData.hIcon = LoadIcon(window->GetInstance(), MAKEINTRESOURCE(imageResource));
     AssertCriticalWinApiResult(Shell_NotifyIcon(NIM_MODIFY, &notifyIconData));
 }
 
 void TrayIcon::RegisterHotkeys()
 {
-    hotkeysRegistry->RegisterTranslateHotkey(Handle, [this]() -> void
+    hotkeysRegistry->RegisterTranslateHotkey(window->GetHandle(), [this]() -> void
     {
         return messageBus->OnTranslateSelectedText();
     });
-    hotkeysRegistry->RegisterPlayTextHotkey(Handle, [this]() -> void
+    hotkeysRegistry->RegisterPlayTextHotkey(window->GetHandle(), [this]() -> void
     {
         return messageBus->OnPlaySelectedText();
     });
@@ -137,62 +134,39 @@ void TrayIcon::SetEnabledState()
     SetTrayIconImage(IDI_APP_ICON);
 }
 
-LRESULT TrayIcon::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT TrayIcon::ProcessTrayIconMessage(WPARAM wParam, LPARAM lParam)
 {
-    try
+    if (lParam == WM_LBUTTONUP)
     {
-        ExceptionHelper::SetupStructuredExceptionsTranslation();
-        return WindowProcedure(message, wParam, lParam);
-    }
-    catch (const SelectedTextTranslateException& error)
-    {
-        ExceptionHelper::HandleNonFatalException(logger, this, L"Error occurred.", error);
-    }
-    catch (...)
-    {
-        HandleFatalException();
+        messageBus->OnTranslateSelectedText();
     }
 
-    return -1;
+    if (lParam == WM_RBUTTONUP)
+    {
+        POINT curPoint;
+        AssertWinApiResult(GetCursorPos(&curPoint));
+        SetForegroundWindow(window->GetHandle());
+        UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, window->GetHandle(), nullptr);
+
+        if (clicked != 0)
+        {
+            menuActionsToSubscribeableMap[clicked]->Notify();
+        }
+    }
+
+    return 0;
 }
 
-LRESULT TrayIcon::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT TrayIcon::ProcessTaskBarCreatedMessage(WPARAM wParam, LPARAM lParam)
 {
-    if(message == WM_TRAYICON)
-    {
-        if (lParam == WM_LBUTTONUP)
-        {
-            messageBus->OnTranslateSelectedText();
-        }
+    AssertWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
+    return 0;
+}
 
-        if (lParam == WM_RBUTTONUP)
-        {
-            POINT curPoint;
-            AssertWinApiResult(GetCursorPos(&curPoint));
-            SetForegroundWindow(Handle);
-            UINT clicked = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_NONOTIFY, curPoint.x, curPoint.y, 0, Handle, nullptr);
-
-            if(clicked != 0)
-            {
-                menuActionsToSubscribeableMap[clicked]->Notify();
-            }
-        }
-
-        return 0;
-    }
-
-    if (message == WM_TASKBARCREATED)
-    {
-        AssertWinApiResult(Shell_NotifyIcon(NIM_ADD, &notifyIconData));
-        return 0;
-    }
-
-    if (message == WM_HOTKEY)
-    {
-        hotkeysRegistry->ProcessHotkey(wParam);
-    }
-
-    return NativeWindowHolder::WindowProcedure(message, wParam, lParam);
+LRESULT TrayIcon::ProcessHotkeyMessage(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure)
+{
+    hotkeysRegistry->ProcessHotkey(wParam);
+    return baseProcedure();
 }
 
 void TrayIcon::DestroyTrayIcon()

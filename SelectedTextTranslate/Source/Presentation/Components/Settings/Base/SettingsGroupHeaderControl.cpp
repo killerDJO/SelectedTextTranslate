@@ -13,9 +13,6 @@ SettingsGroupHeaderControl::SettingsGroupHeaderControl(ViewContext* context, Vie
     this->paddingX = this->paddingY = ScaleProvider->Scale(5);
     this->borderWidth = ScaleProvider->Scale(1);
     this->lineHeight = this->fontNormal->GetHeight();
-
-    this->ClassName = L"STT_SETTINGS_GROUP_HEADER";
-    this->Name = L"SettingsGroupHeaderControl";
 }
 
 SettingsGroupHeaderControl* SettingsGroupHeaderControl::SetDimensions(Point position, int width)
@@ -65,6 +62,13 @@ void SettingsGroupHeaderControl::Initialize()
     ControlView::Initialize();
 }
 
+void SettingsGroupHeaderControl::SpecifyWindow(NativeWindowHolder* window)
+{
+    window
+        ->SetClassName(L"STT_SETTINGS_GROUP_HEADER")
+        ->SetMessageHandler(WM_LBUTTONUP, bind(&Subscribable<>::Notify, OnSettingsToggled), TRUE);
+}
+
 void SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
 {
     DestroyChildViews();
@@ -94,17 +98,6 @@ void SettingsGroupHeaderControl::RenderContent(Renderer* renderer)
     expandButton->SetBackgroundBrush(backgroundBrush);
     expandButton->OnClick.Subscribe(&OnSettingsToggled);
     expandButton->InitializeAndRender();
-}
-
-LRESULT SettingsGroupHeaderControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
-{
-    if(message == WM_LBUTTONUP)
-    {
-        OnSettingsToggled();
-        return TRUE;
-    }
-
-    return ControlView::WindowProcedure(message, wParam, lParam);
 }
 
 SettingsGroupHeaderControl::~SettingsGroupHeaderControl()

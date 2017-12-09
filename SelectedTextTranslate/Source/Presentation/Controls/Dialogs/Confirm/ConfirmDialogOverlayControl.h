@@ -8,6 +8,7 @@ private:
 
 protected:
     void RenderContent(Renderer* renderer) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     ConfirmDialogOverlayControl(ViewContext* context, View* parentWindow);

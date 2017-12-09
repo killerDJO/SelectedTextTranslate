@@ -20,8 +20,6 @@ private:
 
     vector<pair<DWORD, wstring>> controlToDisplayNameMap;
 
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
-
     void SubclassNativeControl();
     void ShowCustomCaret() const;
     wstring GetHotkeyDisplayString() const;
@@ -30,6 +28,7 @@ private:
 
 protected:
     void RenderContent(Renderer* renderer) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     HotKeyInputControl(ViewContext* context, View* parentWindow);

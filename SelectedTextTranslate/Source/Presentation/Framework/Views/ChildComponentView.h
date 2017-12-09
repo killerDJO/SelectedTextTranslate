@@ -29,13 +29,14 @@ protected:
     TModel GetModel() const;
     virtual void RenderContent(Renderer* renderer, TModel model);
     void RenderContent(Renderer* renderer) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     ChildComponentView(ViewContext* context, View* parentView, ModelHolder<TModel>* modelHolder, IComponent* component);
     ~ChildComponentView() override;
 
     void Render(bool preserveScrolls = false) override;
-    virtual void SetLayout(::LayoutDescriptor layoutDescriptor);
+    virtual void SetLayout(LayoutDescriptor layout);
 };
 
 template <class TModel>
@@ -58,8 +59,6 @@ ChildComponentView<TModel>::ChildComponentView(ViewContext* context, View* paren
     LightGrayBrush = RenderingProvider->CreateCustomBrush(Colors::LightGray);
     GrayBrush = RenderingProvider->CreateCustomBrush(Colors::Gray);
     BackgroundBrush = RenderingProvider->CreateCustomBrush(Colors::Background);
-
-    ClassName = L"STT_COMPONENT";
 }
 
 template <class TModel>
@@ -77,9 +76,9 @@ void ChildComponentView<TModel>::Render(bool preserveScrolls)
 }
 
 template <class TModel>
-void ChildComponentView<TModel>::SetLayout(LayoutDescriptor layoutDescriptor)
+void ChildComponentView<TModel>::SetLayout(LayoutDescriptor layout)
 {
-    ViewState->SetLayout(layoutDescriptor);
+    ViewState->SetLayout(layout);
 }
 
 template <class TModel>
@@ -99,6 +98,12 @@ template <class TModel>
 void ChildComponentView<TModel>::RenderContent(Renderer* renderer)
 {
     return RenderContent(renderer, GetModel());
+}
+
+template <class TModel>
+void ChildComponentView<TModel>::SpecifyWindow(NativeWindowHolder* window)
+{
+    window->SetClassName(L"STT_COMPONENT");
 }
 
 template <class TModel>

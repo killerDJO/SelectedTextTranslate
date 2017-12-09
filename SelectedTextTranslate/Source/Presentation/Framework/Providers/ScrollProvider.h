@@ -31,7 +31,7 @@ public:
         int initialHorizontalScrollPostion = 0) const;
     void HideScrollbars(View* window) const;
 
-    void ProcessScrollMessages(View* window, UINT message, WPARAM wParam, LPARAM lParam) const;
+    LRESULT ProcessScrollMessages(View* window, UINT message, WPARAM wParam, LPARAM lParam) const;
 
     int GetCurrentScrollPostion(View* window, ScrollBars scrollBar) const;
     int GetCurrentScrollOffset(View* window, ScrollBars scrollBar) const;

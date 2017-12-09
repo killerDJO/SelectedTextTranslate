@@ -22,6 +22,7 @@ private:
 
 protected:
     void RenderContent(Renderer* renderer) override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     ConfirmDialogContentControl(ViewContext* context, View* parentWindow);

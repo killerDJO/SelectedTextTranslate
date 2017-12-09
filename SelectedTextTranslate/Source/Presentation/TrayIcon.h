@@ -5,7 +5,7 @@
 #include "Presentation\Hotkeys\HotkeysRegistry.h"
 #include "Presentation\MessageBus.h"
 
-class TrayIcon : public NativeWindowHolder, public ErrorHandler
+class TrayIcon : public ErrorHandler
 {
 private:
     const UINT WM_TRAYICON = WM_USER + 1;
@@ -20,6 +20,7 @@ private:
     const int MenuEnableItemId = 3008;
 
     map<int, Subscribable<>*> menuActionsToSubscribeableMap;
+    NativeWindowHolder* window;
 
     UINT WM_TASKBARCREATED;
     HMENU menu;
@@ -30,6 +31,7 @@ private:
     HotkeysRegistry* hotkeysRegistry;
     MessageBus* messageBus;
 
+    void CreateNativeWindow();
     void InitializeMenuActionsToSubscribeableMap();
 
     void CreateMenu();
@@ -41,8 +43,9 @@ private:
 
     void RegisterHotkeys();
 
-    LRESULT ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
-    LRESULT WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam) override;
+    LRESULT ProcessTrayIconMessage(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessTaskBarCreatedMessage(WPARAM wParam, LPARAM lParam);
+    LRESULT ProcessHotkeyMessage(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure);
 
     Subscribable<> OnSuspend;
     Subscribable<> OnEnable;
@@ -50,14 +53,9 @@ private:
     void SetSuspendedState();
     void SetEnabledState();
 
-protected:
-    DWORD GetWindowStyle() const override;
-
 public:
     TrayIcon(ServiceRegistry* registry);
     ~TrayIcon() override;
-
-    void Initialize() override;
 
     void ShowError(wstring message) override;
 };

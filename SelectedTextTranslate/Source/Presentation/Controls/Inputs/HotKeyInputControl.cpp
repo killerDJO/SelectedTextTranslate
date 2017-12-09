@@ -5,7 +5,6 @@
 HotKeyInputControl::HotKeyInputControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
-    this->ClassName = HOTKEY_CLASS;
     this->currentHotkey = 0;
     this->defaultFont = RenderingProvider->CreateCustomFont(FontSizes::Medium);
     this->font = nullptr;
@@ -110,27 +109,32 @@ void HotKeyInputControl::Initialize()
     icex.dwICC = ICC_HOTKEY_CLASS;
     AssertCriticalWinApiResult(InitCommonControlsEx(&icex));
 
-    ChildView::Initialize();
+    ControlView::Initialize();
 
     SubclassNativeControl();
 
     Render();
 }
 
+void HotKeyInputControl::SpecifyWindow(NativeWindowHolder* window)
+{
+    window
+        ->SetClassName(HOTKEY_CLASS)
+        ->EnableSubclassing();
+        //->SetMessageHandler(bind(&HotKeyInputControl::WindowProcedure, this, _1, _2, _3));
+}
+
 void HotKeyInputControl::SubclassNativeControl()
 {
-    BaseWindowProcedure = (WNDPROC)SetWindowLongPtr(Handle, GWLP_WNDPROC, (LONG_PTR)WindowProcedureWrapper);
-    AssertCriticalWinApiResult(BaseWindowProcedure);
-
-    LONG exStyle = GetWindowLong(Handle, GWL_EXSTYLE);
+    LONG exStyle = GetWindowLong(Window->GetHandle(), GWL_EXSTYLE);
     AssertCriticalWinApiResult(exStyle);
 
     exStyle &= ~WS_EX_CLIENTEDGE;
-    AssertCriticalWinApiResult(SetWindowLong(Handle, GWL_EXSTYLE, exStyle));
+    AssertCriticalWinApiResult(SetWindowLong(Window->GetHandle(), GWL_EXSTYLE, exStyle));
 
-    AssertCriticalWinApiResult(SetWindowPos(Handle, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER));
+    AssertCriticalWinApiResult(SetWindowPos(Window->GetHandle(), nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER));
 
-    SendMessage(Handle, HKM_SETHOTKEY, currentHotkey, 0);
+    SendMessage(Window->GetHandle(), HKM_SETHOTKEY, currentHotkey, 0);
 }
 
 void HotKeyInputControl::RenderContent(Renderer* renderer)
@@ -159,90 +163,87 @@ void HotKeyInputControl::RenderContent(Renderer* renderer)
     }
 }
 
-LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-
-    case WM_SETFOCUS:
-    {
-        hasFocus = true;
-        RenderToBuffer();
-        ShowCustomCaret();
-        InvalidateRect(Handle, nullptr, TRUE);
-        Context->GetMessageBus()->OnSuspendHotkeys();
-        return TRUE;
-    }
-
-    case WM_KILLFOCUS:
-    {
-        hasFocus = false;
-        RenderToBuffer();
-        AssertCriticalWinApiResult(HideCaret(Handle));
-        InvalidateRect(Handle, nullptr, TRUE);
-        Context->GetMessageBus()->OnEnableHotkeys();
-        return TRUE;
-    }
-
-    case WM_SETCURSOR:
-    {
-        SetCursor(LoadCursor(nullptr, IDC_IBEAM));
-        return TRUE;
-    }
-
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        AssertCriticalWinApiResult(BeginPaint(GetHandle(), &ps));
-        Draw(false);
-        EndPaint(GetHandle(), &ps);
-
-        if (GetFocus() == Handle)
-        {
-            ShowCustomCaret();
-        }
-
-        return TRUE;
-    }
-
-    case WM_KEYDOWN:
-    case WM_KEYUP:
-    {
-        int procedureResult = CallBaseWindowProcedure(message, wParam, lParam);
-        currentHotkey = SendMessage(Handle, HKM_GETHOTKEY, 0, 0);
-
-        int virtualCode = LOBYTE(LOWORD(currentHotkey));
-        int modifier = HIBYTE(LOWORD(currentHotkey));
-
-        if(message == WM_KEYUP)
-        {
-            OnHotkeyChanged(currentHotkey);
-        }
-        else
-        {
-            bool isModifierInvalid = modifier == 0 || (modifier & HOTKEYF_EXT) == HOTKEYF_EXT;
-            bool isKeyInvalid = virtualCode != 0 && MapVirtualKey(virtualCode, MAPVK_VK_TO_CHAR) == 0;
-            if (isModifierInvalid || isKeyInvalid)
-            {
-                currentHotkey = 0;
-                SendMessage(Handle, HKM_SETHOTKEY, 0, 0);
-            }
-        }
-
-        RenderToBuffer();
-        return procedureResult;
-    }
-
-    }
-
-    return ControlView::WindowProcedure(message, wParam, lParam);
-}
+//LRESULT HotKeyInputControl::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//    switch (message)
+//    {
+//
+//    case WM_SETFOCUS:
+//    {
+//        hasFocus = true;
+//        Render();
+//        ShowCustomCaret();
+//        InvalidateRect(Window->GetHandle(), nullptr, TRUE);
+//        Context->GetMessageBus()->OnSuspendHotkeys();
+//        return TRUE;
+//    }
+//
+//    case WM_KILLFOCUS:
+//    {
+//        hasFocus = false;
+//        Render();
+//        AssertCriticalWinApiResult(HideCaret(Window->GetHandle()));
+//        InvalidateRect(Window->GetHandle(), nullptr, TRUE);
+//        Context->GetMessageBus()->OnEnableHotkeys();
+//        return TRUE;
+//    }
+//
+//    case WM_SETCURSOR:
+//    {
+//        SetCursor(LoadCursor(nullptr, IDC_IBEAM));
+//        return TRUE;
+//    }
+//
+//    case WM_PAINT:
+//    {
+//        PAINTSTRUCT ps;
+//        AssertCriticalWinApiResult(BeginPaint(Window->GetHandle(), &ps));
+//        Draw(false);
+//        EndPaint(Window->GetHandle(), &ps);
+//
+//        if (GetFocus() == Window->GetHandle())
+//        {
+//            ShowCustomCaret();
+//        }
+//
+//        return TRUE;
+//    }
+//
+//    case WM_KEYDOWN:
+//    case WM_KEYUP:
+//    {
+//        int procedureResult = CallBaseWindowProcedure(message, wParam, lParam);
+//        currentHotkey = SendMessage(Window->GetHandle(), HKM_GETHOTKEY, 0, 0);
+//
+//        int virtualCode = LOBYTE(LOWORD(currentHotkey));
+//        int modifier = HIBYTE(LOWORD(currentHotkey));
+//
+//        if(message == WM_KEYUP)
+//        {
+//            OnHotkeyChanged(currentHotkey);
+//        }
+//        else
+//        {
+//            bool isModifierInvalid = modifier == 0 || (modifier & HOTKEYF_EXT) == HOTKEYF_EXT;
+//            bool isKeyInvalid = virtualCode != 0 && MapVirtualKey(virtualCode, MAPVK_VK_TO_CHAR) == 0;
+//            if (isModifierInvalid || isKeyInvalid)
+//            {
+//                currentHotkey = 0;
+//                SendMessage(Window->GetHandle(), HKM_SETHOTKEY, 0, 0);
+//            }
+//        }
+//
+//        Render();
+//    }
+//
+//    }
+//}
 
 void HotKeyInputControl::ShowCustomCaret() const
 {
-    AssertCriticalWinApiResult(CreateCaret(Handle, (HBITMAP)nullptr, 1, lineHeight));
+    AssertCriticalWinApiResult(CreateCaret(Window->GetHandle(), (HBITMAP)nullptr, 1, lineHeight));
     AssertCriticalWinApiResult(SetCaretPos(currentTextPoistion.GetX(), borderWidth + padding));
-    AssertCriticalWinApiResult(ShowCaret(Handle));
+    AssertCriticalWinApiResult(ShowCaret(Window->GetHandle()));
 }
 
 wstring HotKeyInputControl::GetHotkeyDisplayString() const

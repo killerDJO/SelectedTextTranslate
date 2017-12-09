@@ -3,7 +3,7 @@ ViewStateDescriptor::ViewStateDescriptor( DeviceContextProvider* deviceContextPr
 {
     this->deviceContextProvider = deviceContextProvider;
     deviceContextBuffer = nullptr;
-    isVisible = false;
+    isVisible = true;
     viewStatus = ViewStatus::New;
 }
 

@@ -16,6 +16,7 @@ private:
 
 protected:
     void RenderStatesDeviceContexts() override;
+    void SpecifyWindow(NativeWindowHolder* window) override;
 
 public:
     HoverIconButtonControl(ViewContext* context, View* parentWindow);

@@ -4,7 +4,6 @@
 #include "Infrastructure\ErrorHandling\ExceptionHelper.h"
 
 View::View(ViewContext* context)
-    : NativeWindowHolder()
 {
     if(context == nullptr)
     {
@@ -18,11 +17,11 @@ View::View(ViewContext* context)
     RenderingContext = context->GetRenderingContext();
     DeviceContextProvider = context->GetDeviceContextProvider();
 
+    Window = nullptr;
     ViewState = new ViewStateDescriptor(DeviceContextProvider);
     activeChildViews = vector<View*>();
     destroyedChildViews = vector<View*>();
 
-    ClassName = nullptr;
     Name = wstring();
 }
 
@@ -33,20 +32,21 @@ void View::Initialize()
         throw SelectedTextTranslateException(L"Layout must be set for view");
     }
 
-    ViewState->MakeVisible();
+    Window = new NativeWindowHolder(Context->GetErrorHandler(), Context->GetLogger());
+    Window
+        ->AddStyles(WS_CLIPCHILDREN | WS_CLIPSIBLINGS | GetScrollStyle())
+        ->SetMessageHandler(WM_ERASEBKGND, 0)
+        ->SetMessageHandler(WM_PAINT, bind(&View::Draw, this, false), 0)
+        ->SetMessageHandler(bind(&ScrollProvider::ProcessScrollMessages, ScrollProvider, this, _1, _2, _3))
+        ->SetBoundingRect(GetWindowBoundingRect());
 
-    NativeWindowHolder::Initialize();
+    SpecifyWindow(Window);
+    Window->Initialize();
 
     ViewState->SetViewStatus(ViewStatus::Initialized);
 }
 
-void View::SpecifyWindowClass(WNDCLASSEX* windowClass)
-{
-    // Reserve for scroll provider
-    windowClass->cbWndExtra = 2 * sizeof(LONG_PTR);
-}
-
-Rect View::GetWindowRectangle() const
+Rect View::GetWindowBoundingRect() const
 {
     Point offset = GetInitialViewOffset();
     Point position = Point(
@@ -55,12 +55,16 @@ Rect View::GetWindowRectangle() const
     return Rect(position, ViewState->GetViewSize());
 }
 
+void View::SpecifyWindow(NativeWindowHolder* window)
+{
+}
+
 Point View::GetInitialViewOffset() const
 {
     return Point(0, 0);
 }
 
-DWORD View::GetWindowStyle() const
+DWORD View::GetScrollStyle() const
 {
     int scrollStyle = 0;
 
@@ -74,7 +78,7 @@ DWORD View::GetWindowStyle() const
         scrollStyle |= WS_VSCROLL;
     }
 
-    return NativeWindowHolder::GetWindowStyle() | scrollStyle | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+    return scrollStyle ;
 }
 
 void View::InitializeAndRender(bool preserveScrolls)
@@ -85,7 +89,7 @@ void View::InitializeAndRender(bool preserveScrolls)
 
 void View::Render(bool preserveScrolls)
 {
-    printf("Render: %ls, %ls\n", Name.c_str(), ClassName);
+    printf("Render: %ls, %ls\n", Name.c_str(), Window->GetClass().c_str());
     AssertViewInitialized();
 
     RenderingContext->BeginRender(this);
@@ -139,7 +143,7 @@ void View::ApplyViewState(bool preserveScrolls)
 
     if (IsVisible())
     {
-        Show();
+        Window->Show();
 
         ApplyViewPosition(preserveScrolls);
 
@@ -153,7 +157,7 @@ void View::ApplyViewState(bool preserveScrolls)
     }
     else
     {
-        Hide();
+        Window->Hide();
     }
 }
 
@@ -169,13 +173,11 @@ void View::ApplyViewPosition(bool preserveScrolls)
     }
 
     Point offset = GetInitialViewOffset();
-    AssertCriticalWinApiResult(MoveWindow(
-        Handle,
+    Window->Move(Rect(
         ViewState->GetPosition().GetX() - offset.GetX(),
         ViewState->GetPosition().GetY() - offset.GetY(),
         ViewState->GetViewSize().GetWidth(),
-        ViewState->GetViewSize().GetHeight(),
-        FALSE));
+        ViewState->GetViewSize().GetHeight()));
 
     // Important to initialize scroll only after window has been moved
     ScrollProvider->InitializeScrollbars(
@@ -186,7 +188,7 @@ void View::ApplyViewPosition(bool preserveScrolls)
         horizontalScrollPosition);
 
     // Render scroll immediately
-    SendMessage(Handle, WM_NCPAINT, NULL, NULL);
+    Window->DrawNonClientArea();
 }
 
 void View::Draw(bool drawChildren)
@@ -198,7 +200,7 @@ void View::Draw(bool drawChildren)
         return;
     }
 
-    printf("Draw: %ls, %ls, children: %d\n", Name.c_str(), ClassName, drawChildren);
+    printf("Draw: %ls, %ls, children: %d\n", Name.c_str(), Window->GetClass().c_str(), drawChildren);
 
     if (drawChildren)
     {
@@ -212,7 +214,7 @@ void View::Draw(bool drawChildren)
 
 void View::DrawFromBuffer()
 {
-    HDC deviceContext = GetDC(Handle);
+    HDC deviceContext = GetDC(Window->GetHandle());
     AssertCriticalWinApiResult(deviceContext);
 
     HDC fullWindowBuffer = DeviceContextProvider->CreateDeviceContext(ViewState->GetViewSize());
@@ -221,7 +223,7 @@ void View::DrawFromBuffer()
     DeviceContextProvider->CopyDeviceContext(fullWindowBuffer, deviceContext, ViewState->GetViewSize());
     DeviceContextProvider->DeleteDeviceContext(fullWindowBuffer);
 
-    AssertCriticalWinApiResult(ReleaseDC(Handle, deviceContext));
+    AssertCriticalWinApiResult(ReleaseDC(Window->GetHandle(), deviceContext));
 }
 
 void View::DrawChildViews()
@@ -244,6 +246,7 @@ void View::DestroyChildViews()
     activeChildViews = vector<View*>();
 }
 
+
 void View::DestroyChildViews(vector<View*>& childViews) const
 {
     for (size_t i = 0; i < childViews.size(); ++i)
@@ -255,10 +258,11 @@ void View::DestroyChildViews(vector<View*>& childViews) const
     childViews.resize(0);
 }
 
+//TODO: revisit
 Size View::GetAvailableClientSize() const
 {
     RECT clientRect;
-    AssertCriticalWinApiResult(GetClientRect(Handle, &clientRect));
+    AssertCriticalWinApiResult(GetClientRect(Window->GetHandle(), &clientRect));
     Size currentClientSize = Size(clientRect.right, clientRect.bottom);
 
     // Do not count showed scrollbars towards client size
@@ -269,6 +273,10 @@ Size View::GetAvailableClientSize() const
     return availablClientSize;
 }
 
+NativeWindowHolder* View::GetWindow() const
+{
+    return Window;
+}
 
 Size View::GetContentSize() const
 {
@@ -295,65 +303,6 @@ bool View::IsVisible() const
     return ViewState->IsVisible();
 }
 
-void View::Show()
-{
-    AssertViewInitialized();
-    MakeVisible();
-    ShowWindow(GetHandle(), SW_SHOW);
-}
-
-void View::Hide()
-{
-    AssertViewInitialized();
-    MakeHidden();
-    ShowWindow(GetHandle(), SW_HIDE);
-}
-
-LRESULT View::ExecuteWindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
-{
-    try
-    {
-        ExceptionHelper::SetupStructuredExceptionsTranslation();
-        return WindowProcedure(message, wParam, lParam);
-    }
-    catch (const SelectedTextTranslateException& error)
-    {
-        ExceptionHelper::HandleNonFatalException(Context->GetLogger(), Context->GetErrorHandler(), L"Error occurred.", error);
-    }
-    catch (...)
-    {
-        Context->GetErrorHandler()->HandleFatalException();
-    }
-
-    return -1;
-}
-
-LRESULT View::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
-{
-    ScrollProvider->ProcessScrollMessages(this, message, wParam, lParam);
-
-    switch (message)
-    {
-        case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            AssertCriticalWinApiResult(BeginPaint(GetHandle(), &ps));
-            Draw(false);
-            EndPaint(GetHandle(), &ps);
-            break;
-        }
-
-        // Prevent of the background erase reduces flickering before Draw.
-        case WM_ERASEBKGND:
-            break;
-
-        default:
-            return CallBaseWindowProcedure(message, wParam, lParam);
-    }
-
-    return 0;
-}
-
 void View::AssertViewInitialized() const
 {
     if (ViewState->GetViewStatus() == ViewStatus::New)
@@ -373,6 +322,7 @@ void View::AssertViewNotInitialized() const
 View::~View()
 {
     delete ViewState;
+    delete Window;
 
     DestroyChildViews(activeChildViews);
     DestroyChildViews(destroyedChildViews);

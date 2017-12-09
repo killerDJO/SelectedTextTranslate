@@ -11,7 +11,6 @@ MainView::MainView(ViewContext* context, ModelHolder<MainViewModel*>* modelHolde
 {
     this->modelHolder = modelHolder;
 
-    ClassName = L"STT_MAIN";
     Name = L"MainWindow";
     confirmDialog = nullptr;
 }
@@ -24,14 +23,19 @@ void MainView::Initialize()
     MakeHidden();
 }
 
-DWORD MainView::GetExtendedWindowStyles() const
+void MainView::SpecifyWindow(NativeWindowHolder* window)
 {
-    return WS_EX_TOOLWINDOW;
-}
-
-DWORD MainView::GetWindowStyle() const
-{
-    return View::GetWindowStyle() | WS_SIZEBOX | WS_POPUP;
+    window
+        ->SetClassName(L"STT_MAIN")
+        ->AddExtendedStyles(WS_EX_TOOLWINDOW)
+        ->AddStyles(WS_SIZEBOX | WS_POPUP)
+        ->AddClassSpecifier(bind(&MainView::SpecifyWindowClass, this, _1))
+        ->SetMessageHandler(WM_SIZE, bind(&MainView::Resize, this), TRUE)
+        ->SetProxyMessageHandler(WM_SETCURSOR, bind(&MainView::ProcessSetCursor, this, _1, _2, _3))
+        ->SetProxyMessageHandler(WM_SYSCOMMAND, bind(&MainView::ProcessSysCommand, this, _1, _2, _3))
+        ->SetMessageHandler(WM_ACTIVATE, bind(&MainView::ProcessActivate, this, _1, _2))
+        ->SetProxyMessageHandler(WM_HOTKEY, bind(&MainView::ProcessHotkey, this, _1, _2, _3))
+        ->SetMessageHandler(WM_SHOWWINDOW, bind(&MainView::ProcessShowWindow, this, _1, _2));
 }
 
 void MainView::SetLayout(LayoutDescriptor layout) const
@@ -44,6 +48,11 @@ void MainView::Render(bool preserveScrolls)
     SetLayout(GetModel()->GetCurrentLayoutDescriptor());
     MakeVisible();
     View::Render(preserveScrolls);
+}
+
+void MainView::Hide()
+{
+    Window->Hide();
 }
 
 void MainView::CreateChildComponents()
@@ -74,25 +83,14 @@ void MainView::CreateConfirmDialog()
 
 void MainView::SpecifyWindowClass(WNDCLASSEX* windowClass)
 {
-    View::SpecifyWindowClass(windowClass);
-
-    windowClass->hIcon = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIcon = LoadIcon(windowClass->hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIcon);
 
-    windowClass->hIconSm = LoadIcon(Instance, MAKEINTRESOURCE(IDI_APP_ICON));
+    windowClass->hIconSm = LoadIcon(windowClass->hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
     AssertCriticalWinApiResult(windowClass->hIconSm);
 
     windowClass->hCursor = LoadCursor(nullptr, IDC_ARROW);
     AssertCriticalWinApiResult(windowClass->hCursor);
-
-    windowClass->hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    AssertCriticalWinApiResult(windowClass->hbrBackground);
-}
-
-void MainView::Show()
-{
-    View::Show();
-    SwitchToThisWindow(Handle, TRUE);
 }
 
 void MainView::RenderContent(Renderer* renderer)
@@ -132,20 +130,15 @@ void MainView::Resize()
         return;
     }
 
-    RECT windowRect;
-    AssertCriticalWinApiResult(GetWindowRect(Handle, &windowRect));
-    Size newSize = Size(
-        windowRect.right - windowRect.left,
-        windowRect.bottom - windowRect.top);
-
-    if (ViewState->GetViewSize().Equals(newSize))
+    Rect windowRect = Window->GetBoundingRect();
+    if (ViewState->GetViewSize().Equals(windowRect.GetSize()))
     {
         return;
     }
 
     LayoutDescriptor layout = ViewState->GetLayout();
-    layout.SetSize(newSize);
-    layout.SetPosition(Point(windowRect.left, windowRect.top));
+    layout.SetSize(windowRect.GetSize());
+    layout.SetPosition(windowRect.GetPosition());
     GetModel()->GetViewDescriptor()->SetLayoutDescriptor(layout);
 
     Render(true);
@@ -172,6 +165,7 @@ void MainView::ShowConfirmDialog(wstring title, function<void()> onConfirm)
     confirmDialog->MakeVisible();
     confirmDialog->Render();
     ScrollProvider->HideScrollbars(this);
+    confirmDialog->Show();
 }
 
 bool MainView::IsResizeLocked() const
@@ -179,85 +173,50 @@ bool MainView::IsResizeLocked() const
     return confirmDialog->IsVisible() || !GetModel()->GetViewDescriptor()->IsResizeable();
 }
 
-LRESULT MainView::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT MainView::ProcessSysCommand(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure)
 {
-    switch (message)
+    switch (wParam & 0xfff0)
     {
-    case WM_SIZE:
-    {
-        Resize();
-        return TRUE;
-    }
-
-    case WM_SETCURSOR:
-    {
-        if (IsResizeLocked())
-        {
-            SetCursor(LoadCursor(nullptr, IDC_ARROW));
-            return TRUE;
-        }
-
-        return View::WindowProcedure(message, wParam, lParam);
-    }
-
-    case WM_SIZING:
-    {
-        RECT &newSize = *(LPRECT)lParam;
-        int newWidth = newSize.right - newSize.left;
-        int newHeight = newSize.bottom - newSize.top;
-
-        Size minimumSize = GetModel()->GetMinimumSize();
-        if (IsResizeLocked() || newWidth < minimumSize.GetWidth() || newHeight < minimumSize.GetHeight())
-        {
-            RECT windowRect;
-            GetWindowRect(Handle, &windowRect);
-            newSize = windowRect;
-            return 0;
-        }
-        Resize();
-
-        return TRUE;
-    }
-
-    case WM_SYSCOMMAND:
-    {
-        switch (wParam & 0xfff0)
-        {
-        case SC_MINIMIZE:
-        case SC_CLOSE:
-            Hide();
-            return 0;
-        default:
-            break;
-        }
-
-        return View::WindowProcedure(message, wParam, lParam);
-    }
-
-    case WM_ACTIVATE:
-    {
-        if (wParam == WA_INACTIVE)
-        {
-            Hide();
-        }
-        return TRUE;
-    }
-
-    case WM_HOTKEY:
-    {
-        OnHotkey(wParam);
-        return View::WindowProcedure(message, wParam, lParam);
-    }
-
-    case WM_SHOWWINDOW:
-    {
-        OnVisibilityChanged(wParam == TRUE);
+    case SC_MINIMIZE:
+    case SC_CLOSE:
+        Hide();
+        return 0;
+    default:
         break;
     }
 
-    default:
-        return View::WindowProcedure(message, wParam, lParam);
+    return baseProcedure();
+}
+
+LRESULT MainView::ProcessActivate(WPARAM wParam, LPARAM lParam)
+{
+    if (wParam == WA_INACTIVE)
+    {
+        Hide();
     }
 
+    return TRUE;
+}
+
+LRESULT MainView::ProcessSetCursor(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure)
+{
+    if (IsResizeLocked())
+    {
+        SetCursor(LoadCursor(nullptr, IDC_ARROW));
+        return TRUE;
+    }
+
+    return baseProcedure();
+}
+
+LRESULT MainView::ProcessHotkey(WPARAM wParam, LPARAM lParam, function<LRESULT()> baseProcedure)
+{
+    OnHotkey(wParam);
+    return baseProcedure();
+}
+
+LRESULT MainView::ProcessShowWindow(WPARAM wParam, LPARAM lParam)
+{
+    OnVisibilityChanged(wParam == TRUE);
     return 0;
 }

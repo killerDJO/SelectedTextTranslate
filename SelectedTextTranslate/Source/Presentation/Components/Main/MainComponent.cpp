@@ -34,6 +34,7 @@ void MainComponent::ShowApplicatonView(ApplicationViews applicationView)
 {
     GetModel()->SetApplicationView(applicationView);
     CurrentView->Render();
+    CurrentView->GetWindow()->BringToFront();
 }
 
 void MainComponent::ProcessHotkey(int hotkey) const
@@ -47,17 +48,17 @@ void MainComponent::ProcessVisibilityChange(bool isVisible)
     if (isVisible)
     {
         hotkeysRegistry->RegisterZoomInHotkey(
-            CurrentView->GetHandle(),
+            CurrentView->GetWindow()->GetHandle(),
             [=]() -> void { CurrentView->Scale(ScaleFactor); });
 
         hotkeysRegistry->RegisterZoomOutHotkey(
-            CurrentView->GetHandle(),
+            CurrentView->GetWindow()->GetHandle(),
             [=]() -> void { CurrentView->Scale(-ScaleFactor); });
     }
     else
     {
-        hotkeysRegistry->UnregisterZoomInHotkey(CurrentView->GetHandle());
-        hotkeysRegistry->UnregisterZoomOutHotkey(CurrentView->GetHandle());
+        hotkeysRegistry->UnregisterZoomInHotkey(CurrentView->GetWindow()->GetHandle());
+        hotkeysRegistry->UnregisterZoomOutHotkey(CurrentView->GetWindow()->GetHandle());
     }
 }
 

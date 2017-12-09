@@ -7,7 +7,6 @@
 ConfirmDialogContentControl::ConfirmDialogContentControl(ViewContext* context, View* parentWindow)
     : ControlView(context, parentWindow)
 {
-    this->ClassName = L"STT_CONFIRM_DIALOG_CONTENT";
     this->IsLayered = true;
     this->paddingX = ScaleProvider->Scale(10);
     this->paddingY = ScaleProvider->Scale(5);
@@ -25,6 +24,11 @@ ConfirmDialogContentControl::ConfirmDialogContentControl(ViewContext* context, V
 
     this->OnConfirm = Subscribable<>();
     this->OnCancel = Subscribable<>();
+}
+
+void ConfirmDialogContentControl::SpecifyWindow(NativeWindowHolder* window)
+{
+    window->SetClassName(L"STT_CONFIRM_DIALOG_CONTENT");
 }
 
 void ConfirmDialogContentControl::SetDimensions(Point position, int width)
@@ -51,7 +55,7 @@ wstring ConfirmDialogContentControl::GetTitle() const
 void ConfirmDialogContentControl::Initialize()
 {
     ControlView::Initialize();
-    AssertCriticalWinApiResult(SetWindowPos(Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
+    AssertCriticalWinApiResult(SetWindowPos(Window->GetHandle(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE));
 }
 
 void ConfirmDialogContentControl::RenderContent(Renderer* renderer)

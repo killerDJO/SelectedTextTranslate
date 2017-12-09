@@ -10,7 +10,7 @@ TranslationComponent::TranslationComponent(ServiceRegistry* serviceRegistry, Vie
     textPlayer = serviceRegistry->Get<TextPlayer>();
     messageBus = serviceRegistry->Get<MessageBus>();
 
-    CurrentView->OnForceTranslation.Subscribe(bind(&TranslationComponent::ForceTranslation, this));
+    CurrentView->OnForceTranslation.Subscribe(function<void()>(bind(&TranslationComponent::ForceTranslation, this)));
     CurrentView->OnTranslateSuggestion.Subscribe(bind(&TranslationComponent::TranslateSuggestion, this));
 
     RegisterForDispose(messageBus->OnTranslateText.Subscribe(bind(&TranslationComponent::Translate, this, placeholders::_1, placeholders::_2, false)));

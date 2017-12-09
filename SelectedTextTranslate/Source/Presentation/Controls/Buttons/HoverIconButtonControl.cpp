@@ -11,8 +11,11 @@ HoverIconButtonControl::HoverIconButtonControl(ViewContext* context, View* paren
     hoverIconResource = 0;
     normalIconResource = 0;
     backgroundBrush = nullptr;
+}
 
-    ClassName = L"STT_HOVERICONBUTTON";
+void HoverIconButtonControl::SpecifyWindow(NativeWindowHolder* window)
+{
+    window->SetClassName(L"STT_HOVERICONBUTTON");
 }
 
 HoverIconButtonControl* HoverIconButtonControl::SetDimensions(Point position, Size size)
@@ -62,7 +65,7 @@ void HoverIconButtonControl::Initialize()
 {
     if(normalIconResource == 0 || hoverIconResource == 0)
     {
-        throw new SelectedTextTranslateFatalException(L"Hover and normal icon resources must be set before initialization");
+        throw new SelectedTextTranslateFatalException(L"Hover and normal icon resources must be set before initialization.");
     }
 
     HoverButtonControl::Initialize();
@@ -122,13 +125,14 @@ void HoverIconButtonControl::RenderStateDeviceContext(HDC deviceContext, DWORD i
 
 Gdiplus::Metafile* HoverIconButtonControl::LoadMetafileFromResource(DWORD resourceId) const
 {
-    HRSRC hResource = FindResource(Instance, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    HMODULE instance = GetModuleHandle(nullptr);
+    HRSRC hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), RT_RCDATA);
     AssertCriticalWinApiResult(hResource);
 
-    DWORD imageSize = SizeofResource(Instance, hResource);
+    DWORD imageSize = SizeofResource(instance, hResource);
     AssertCriticalWinApiResult(imageSize);
 
-    void* pResourceData = LockResource(LoadResource(Instance, hResource));
+    void* pResourceData = LockResource(LoadResource(instance, hResource));
     AssertCriticalWinApiResult(pResourceData);
 
     HGLOBAL globalBuffer = GlobalAlloc(GMEM_MOVEABLE, imageSize);
